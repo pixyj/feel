@@ -1,0 +1,44 @@
+#page-container {
+    margin-left: 3%;
+    margin-top: 1%;
+    margin-right: 3%;
+}
+
+.quiz-creator-question-input, .quiz-question-preview {
+    height: 200px;
+    overflow: scroll;
+}
+
+
+.quiz-creator-input-heading, .quiz-creator-preview-heading {
+    text-align: center;
+}
+
+.quiz-creator-mcq-toggle-button {
+    background-color: inherit !important;
+    color: #121212 !important;
+}
+
+.quiz-creator-choice-input {
+    height: 50px;
+}
+
+.quiz-creator-add-choice {
+    margin-bottom: 15px;
+    color: white !important;
+    font-size: 2em;
+}
+.quiz-creator-remove-choice {
+    font-size: 2em;
+    cursor: pointer;
+}
+
+
+.quiz-result-feedback {
+    margin-left: 10px;
+    font-size: 3em;
+}
+
+
+
+
