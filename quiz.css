@@ -40,5 +40,20 @@
 }
 
 
+.quiz-student-choice {
+    font-size: 1.15em;
+    cursor: pointer;
+    padding-left: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-bottom: 6px;
+}
 
+.quiz-student-choice-selected {
+    background-color: #C62828;
+    color: white;
+}
 
+.quiz-student-choice-not-selected {
+    background-color: #FFEBEE;
+}

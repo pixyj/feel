@@ -64,7 +64,7 @@ var constants = {
 var QuizModel = Backbone.Model.extend({
     
     defaults: {
-        quizType: constants.SHORT_ANSWER,
+        quizType: constants.MCQ,
         questionInput: "",
         questionDisplay: "",
         answer: ""
@@ -106,7 +106,7 @@ var ShortAnswerInputView = React.createClass({
     },
 
     updateAnswer: function(evt) {
-        var answer = evt.target.value.trim();
+        var answer = evt.target.value;
         this.props.model.set({
             answer: answer
         });
@@ -128,21 +128,35 @@ var SingleChoiceInputView = React.createClass({
         }
     },
 
+    componentDidMount: function() {
+        this.focus();
+    },
+
     render: function() {
         var domId = this.props.model.cid;
-        console.log("Choice State", this.state);
+        //console.log("Choice State", this.state);
         
 
         return (
             <div className="row">
                 <div className="col s1">
                     <form>
-                        <input type="checkbox" className="filled-in" id={domId} onChange={this.updateIsCorrect} checked={this.state.isCorrect} />
+                        <input type="checkbox" 
+                               className="filled-in" 
+                               id={domId} onChange={this.updateIsCorrect} 
+                               checked={this.state.isCorrect}
+                               ref="input" />
+
                         <label htmlFor={domId}></label>
                     </form>
                 </div>
                 <div className="col s10">
-                     <textarea className="quiz-creator-choice-input" ref="textarea" placeholder="Choice"  onKeyUp={this.updateChoiceText} onChange={this.updateChoiceText} value={this.state.choiceInput}/>   
+                     <textarea  className="quiz-creator-choice-input" 
+                                ref="textarea" placeholder="Choice"  
+                                onKeyUp={this.updateChoiceText} 
+                                onChange={this.updateChoiceText} 
+                                value={this.state.choiceInput} 
+                                onKeyDown={this.checkIfCtrlEnterPressedAndAddChoice} />   
                 </div>
                 <div className="col s1">
                     <span className="quiz-creator-remove-choice" onClick={this.removeChoice}>X</span>
@@ -151,11 +165,16 @@ var SingleChoiceInputView = React.createClass({
         );
     },
 
+    focus: function() {
+        this.refs.input.getDOMNode().focus();
+        return this;
+    },
+
     updateChoiceText: function(evt) {
 
         var choiceInput = evt.target.value;
         var choiceDisplay = mdAndMathToHtml(choiceInput);
-        console.log("updating text", choiceInput);
+        //console.log("updating text", choiceInput);
         
         this.props.model.set({
             choiceInput: choiceInput,
@@ -166,6 +185,13 @@ var SingleChoiceInputView = React.createClass({
             choiceInput: choiceInput
         });
 
+    },
+
+    checkIfCtrlEnterPressedAndAddChoice: function(evt) {
+        if(evt.ctrlKey && evt.keyCode === 13) {
+            console.log("Awesome");
+            this.props.parent.addChoice();
+        }
     },
 
     updateIsCorrect: function(evt) {
@@ -203,16 +229,21 @@ var ChoiceCollectionInputView = React.createClass({
     render: function() {
         var choices = this.props.model.choices;
         var rows = [];
+        var latestElement = null;
         for(var i = 0; i < choices.length; i++) {
             var model = choices.at(i);
             var key = model.attributes.choiceInput || model.cid;
-            rows.push(<SingleChoiceInputView key={key} model={model} />);
+            latestElement = <SingleChoiceInputView key={key} model={model} parent={this}/>
+            rows.push(latestElement);
         }
+        this.latestElement = latestElement;
 
         var plus = "\u2795";
         return (
             <div>
-                <button className="btn-floating btn-large waves-effect waves-light red quiz-creator-add-choice" onClick={this.addChoice}>{plus}</button>
+                <button className="btn-floating btn-large waves-effect waves-light red quiz-creator-add-choice" 
+                        onClick={this.addChoice}> {plus} 
+                </button>
                 {rows}
             </div>
         );
@@ -224,6 +255,10 @@ var ChoiceCollectionInputView = React.createClass({
         this.setState({
             choices: this.props.model.choices.toJSON()
         })
+    },
+
+    checkIfCtrlEnterPressedAndAddChoice: function(evt) {
+        var x = 1;
     },
 
     updateChoices: function() {
@@ -294,6 +329,7 @@ var QuizCreatorView = React.createClass({
                 quizType: constants.MCQ,
                 answer: null
             });
+
         }
         
         else {
@@ -302,6 +338,8 @@ var QuizCreatorView = React.createClass({
                 answer: ""
             });
         }
+
+        this.props.model.choices.reset();
 
         this.setState({
             quizType: this.props.model.quizType
@@ -340,7 +378,89 @@ var ShortAnswerSubmitView = React.createClass({
     }
 });
 
-var MCQSubmitView = ShortAnswerSubmitView;
+var ChoiceSingleCheckView = React.createClass({
+
+    getInitialState: function() {
+        return {
+            isSelected: false
+        }
+    },
+
+    render: function() {
+
+        var html = this.props.choice.choiceDisplay;
+
+        if(!html) {
+            html = "New Choice"
+        }
+
+        var selectedClass = "quiz-student-choice-selected";
+        var notSelectedClass = "quiz-student-choice-not-selected"
+        var selected = this.state.isSelected ? selectedClass : notSelectedClass;
+
+        var classArray = ['quiz-student-choice', selected];
+        var classes = classArray.join(" ");
+
+        return (
+            <div dangerouslySetInnerHTML={{__html: html}} className={classes} onClick={this.toggleSelection} />
+        )
+    },
+
+    toggleSelection: function() {
+        this.setState({
+            isSelected: !this.state.isSelected
+        })
+    }
+
+});
+
+var MCQSubmitView = React.createClass({
+    
+    getInitialState: function() {
+        return {
+            choices: this.props.choices.toJSON()
+        }
+    },
+
+    componentDidMount: function() {
+        this.props.choices.on("change", this.updateChoices, this);
+        this.props.choices.on("add", this.updateChoices, this);
+        this.props.choices.on("remove", this.updateChoices, this);
+    },
+
+    render: function() {
+
+        var rows = [];
+        var length = this.state.choices.length;
+        for(var i = 0; i < length; i++) {
+            var choice = this.state.choices[i];
+            var domId = "quiz-preview-checkbox-" + i;
+            var row = <ChoiceSingleCheckView choice={choice} key={domId} ref={domId}/>
+            rows.push(row);
+        }
+        return (
+            <div>
+                {rows}
+            </div>
+        );
+    },
+
+    updateChoices: function() {
+        this.setState({
+            choices: this.props.choices.toJSON()
+        })
+    },
+
+    checkAnswer: function() {
+        var wrongFound = false; 
+        var i, length = this.props.choices.length;
+        _.values(this.refs).forEach(function(view) {
+            wrongFound = !view.isCorrect();
+        });
+
+        return !wrongFound;
+    }
+});
 
 var QuizPreview = React.createClass({
 
@@ -353,26 +473,27 @@ var QuizPreview = React.createClass({
 
     componentDidMount: function() {
 
-        console.log("Preview props", this.props);
+
         this.props.model.on("change:questionDisplay", this.updatePreview, this);
         this.props.model.on("change:quizType", this.updatePreview, this);
-        
+
     },
 
     componentWillUnmount: function() {
         this.props.model.off("change:questionDisplay", this.updatePreview);
         this.props.model.off("change:quizType", this.updatePreview, this);
 
+
     },
 
     render: function() {
         var html = this.props.model.attributes.questionDisplay || "What are you waiting for?";
         var answerSubmitView;
-        if(this.state.quizType === console.SHORT_ANSWER) {
+        if(this.state.quizType === constants.SHORT_ANSWER) {
             answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" />
         }
         else {
-            answerSubmitView = <MCQSubmitView  ref="answerSubmitView" />
+            answerSubmitView = <MCQSubmitView  ref="answerSubmitView" choices={this.props.model.choices}/>
         }
 
         var feedback = this.getResultFeedback();
@@ -382,7 +503,7 @@ var QuizPreview = React.createClass({
                 <h4 className="quiz-creator-preview-heading">Preview</h4>
                 <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
                 {answerSubmitView}
-                <button className="btn waves-effect waves-light" onClick={this.checkAnswer}>Submit</button>
+                <button className="btn waves-effect waves-light btn-large" onClick={this.checkAnswer}>Submit</button>
                 <span className="quiz-result-feedback"> {feedback} </span>
             </div>
         );  
@@ -445,12 +566,14 @@ var QuizBox = React.createClass({
     }
 });
 
-React.render(
-    <QuizBox />, 
-    document.getElementById("page-container")
-);
 
+var init = function() {
 
-app.eventBus.on("awesome", function() {
-    console.log("awesome");
-});
+    React.render(
+        <QuizBox />, 
+        document.getElementById("page-container")
+    );
+
+};
+
+init();
