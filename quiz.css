@@ -24,8 +24,17 @@
     overflow: scroll;
 }
 
+.quiz-question-preview {
+    border: 2px dotted aqua; 
+    padding: 5px;
+}
 
-.quiz-creator-input-heading, .quiz-creator-preview-heading {
+.quiz-student-short-answer-input {
+    margin-top: 15px !important;
+    font-size: 1.3em !important;
+}
+
+.quiz-creator-input-heading, .quiz-creator-preview-heading, .problem-solving-top-header {
     text-align: center;
 }
 
@@ -69,4 +78,8 @@
 
 .quiz-student-choice-not-selected {
     background-color: #FFEBEE;
+}
+
+.quiz-student-guess-ago {
+    margin-left: 10px;
 }
