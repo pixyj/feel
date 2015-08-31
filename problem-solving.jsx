@@ -30,8 +30,8 @@ var ProblemSolvingBox = React.createClass({
     },
 
     render: function() {
-        var quizHeading = "Let's solve this problem";
-        var statusHeading = "Here's your progress";
+        var quizHeading = "Here's the problem";
+        var statusHeading = "Let's solve it";
         return (
             <div>
                 <div className="row">
@@ -47,59 +47,93 @@ var ProblemSolvingBox = React.createClass({
                         <h4 className="problem-solving-top-header"> {statusHeading} </h4>
                         <ol>
 
-                            <li > Understand the Problem </li>
-                            <li> Come up with a plan and execute it </li>
+                            <li > <a href="#problem-solving-understand-the-problem"> Understand the Problem </a> </li>
+                            <li> <a href="#problem-solving-plan-1">Come up with a plan and execute it </a> </li>
                             <li> Analyze your solution </li> 
                         </ol>
-                        <h5> Your Guesses so far </h5> 
-                            <ol>
-                                <li> 
-                                    <strong>1</strong> 
-                                    <label className="quiz-student-guess-ago"> 10 minutes ago based on Plan 1</label> 
-                                </li>
+                        <h5> Your progress </h5> 
+                              <div className="collection">
 
-                                <li> 
-                                    <strong>1</strong> 
-                                    <label className="quiz-student-guess-ago"> 5 minutes ago based on Plan 2</label> 
-                                </li>
+                                <a href="#!" className="collection-item">
+                                    <div className="row">
+                                        <div className="col s4">  
+                                            <strong>Guess</strong> 
+                                        </div>
 
-                                <li> 
-                                    <strong>1</strong> 
-                                    <label className="quiz-student-guess-ago"> 2 minutes ago based on Plan 3</label> 
-                                </li>
+                                        <div className="col s4">  
+                                            <strong> Result </strong> 
+                                        </div>
 
-                                <li> 
-                                    <strong>12</strong> 
-                                    <label className="quiz-student-guess-ago"> Just now </label> 
-                                    <span>is the correct answer! </span> 
-                                     
-                                </li>
-                            </ol>
+
+                                        <div className="col s4">  
+                                            <strong> When? </strong> 
+                                        </div>
+
+                                    </div> 
+                                </a>
+
+                                <a href="#!" className="collection-item">
+                                    <div className="row">
+                                        <div className="col s4">  
+                                            <strong>None. You moved on to the next plan</strong> 
+                                        </div>
+
+                                        <div className="col s4">  
+                                            <strong> Nope </strong> 
+                                        </div>
+
+
+                                        <div className="col s4">  
+                                            <label> 10 minutes ago, based on Plan 1 </label> 
+                                        </div>
+
+                                    </div> 
+                                </a>
+
+                                <a href="#!" className="collection-item">
+                                    <div className="row">
+                                        <div className="col s4">  
+                                            <strong>None. You moved on to the next plan</strong> 
+                                        </div>
+
+                                        <div className="col s4">  
+                                            <strong> Nope </strong> 
+                                        </div>
+
+
+                                        <div className="col s4">  
+                                            <label> 10 minutes ago, based on Plan 1 </label> 
+                                        </div>
+
+                                    </div> 
+                                </a>
+
+
+                              </div>
+
                     </div>
 
                 </div>
 
                 <div>
 
-                    <h5>1. Understand the problem </h5> 
-                    <textarea placeholder="State the problem in your own words and ensure you have understood the problem correctly" />
-                    <button className="btn waves-effect waves-light">Done </button> 
-
-                    <h5>3. Plan 1 </h5> 
-                    <textarea placeholder="Awesome. Explain your plan and execute it. If you obtain the solution, enter the answer." />
-                    <input type="text" placeholder="Enter your answer here" />
-                    <button className="btn waves-effect waves-light">Submit </button> 
-                    <button className="quiz-creator-mcq-toggle-button btn">This plan did not work. I need a new plan </button> 
-
-
-                    <h5>3. Plan 2 </h5> 
-                    <textarea placeholder="What's the man/woman without a Plan B? Explain your new plan and execute it. If you obtain the solution, enter the answer." />
-                    <input type="text" placeholder="Enter your answer here" />
-                    <button className="btn waves-effect waves-light">Submit </button> 
-                    <button className="quiz-creator-mcq-toggle-button btn">This plan did not work. I need a new plan </button> 
+                    <div id="problem-solving-understand-the-problem">
+                        <h5>1. Understand the problem </h5> 
+                        <textarea placeholder="State the problem in your own words and ensure you have understood the problem correctly" />
+                    </div>
+                    
+                    <div id="problem-solving-plan-1">
+                        <h5>3. Plan 1 </h5> 
+                        <span> Need any ideas?See <a href="https://en.wikipedia.org/wiki/How_to_Solve_It"> How to solve it</a>  </span>
+                        <textarea placeholder="Explain your plan and execute it. If you obtain the solution, enter the answer." />
+                        <input type="text" placeholder="Enter your answer here" />
+                        <button className="btn waves-effect waves-light btn-large">Submit </button> 
+                        <button className="problem-solving-create-plan-btn btn">This plan did not work. I need a new plan </button> 
+                    </div>
 
                     <h5>3. Analyze your solution </h5> 
                     <textarea placeholder="Congratulations on solving the problem! Look back on your problem-solving process. How could it be better?" />
+                    <button className="btn waves-effect waves-light">Done</button> 
 
                 </div>
             </div>

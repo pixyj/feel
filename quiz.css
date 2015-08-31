@@ -83,3 +83,31 @@
 .quiz-student-guess-ago {
     margin-left: 10px;
 }
+
+/* Problem solving page css 
+
+Eventually, I'll make new css files for each component/page
+#todo for entire CSS -> make it DRY, use SASS
+*/ 
+
+
+.problem-solving-create-plan-btn {
+    margin-left: 10%;
+    background-color: inherit !important;
+    color: #121212 !important;
+}
+
+.problem-solving-guess-div-table {
+    display: table; 
+    width: auto;
+}
+
+.problem-solving-guess-row {
+    display: table-row; 
+    width: auto; 
+    clear: auto;
+}
+
+.problem-solving-guess-col {
+    display: table-column;
+}

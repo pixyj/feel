@@ -46,3 +46,34 @@ var ShortAnswerSubmitModel = Backbone.Model.extend({
 
 var MCQAnswerModel = ShortAnswerSubmitModel;
 
+
+var PlanModel = Backbone.Model.extend({
+
+    defaults: {
+        planInput: "",
+        planDisplay: "",
+        guess: null,
+        result: null,
+        when: null,       
+    }
+
+});
+
+var PlanCollection = Backbone.Model.extend({
+    model: PlanModel
+});
+
+var ProblemSolvingModel = Backbone.Model.extend({
+
+    defaults: {
+        understandProblemInput: "",
+        understandProblemDisplay: "",
+        result: null    
+    },
+
+
+    initialize: function() {
+        this.planCollection = new PlanCollection();
+    }
+
+});
