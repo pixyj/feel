@@ -4,6 +4,21 @@
     margin-right: 3%;
 }
 
+.quiz-page-split-column {
+    border-top: 3px dashed aliceblue;
+    border-bottom: 3px dashed aliceblue;
+    padding-bottom: 0.75rem !important;
+}
+
+.quiz-creator-container {
+    border-left: 3px dashed aliceblue;
+    border-right: 3px dashed aliceblue;
+}
+
+.quiz-student-container {
+    border-right: 3px dashed aliceblue;
+}
+
 .quiz-creator-question-input, .quiz-question-preview {
     height: 200px;
     overflow: scroll;
@@ -25,8 +40,6 @@
 
 .quiz-creator-add-choice {
     margin-bottom: 15px;
-    color: white !important;
-    font-size: 2em;
 }
 .quiz-creator-remove-choice {
     font-size: 2em;

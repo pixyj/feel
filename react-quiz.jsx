@@ -58,7 +58,8 @@ var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
     CORRECT_FEEDBACK: "Correct",
-    WRONG_FEEDBACK: "Nope"
+    WRONG_FEEDBACK: "Nope",
+    QUESTION_PLACEHOLDER: "Enter the Question in Markdown"
 };
 
 var QuizModel = Backbone.Model.extend({
@@ -238,13 +239,14 @@ var ChoiceCollectionInputView = React.createClass({
         }
         this.latestElement = latestElement;
 
-        var plus = "\u2795";
         return (
             <div>
-                <button className="btn-floating btn-large waves-effect waves-light red quiz-creator-add-choice" 
-                        onClick={this.addChoice}> {plus} 
+                <button className="btn waves-effect waves-light quiz-creator-add-choice" onClick={this.addChoice}>
+                    Add Choice
                 </button>
+
                 {rows}
+
             </div>
         );
     },
@@ -290,7 +292,7 @@ var QuizCreatorView = React.createClass({
         return (
             <div>
                 <h4 className="quiz-creator-input-heading">Quiz</h4>
-                <textarea className="quiz-creator-question-input" placeholder="Enter a Question in Markdown" onChange={this.updateQuestionText} onKeyUp={this.updateQuestionText} />                
+                <textarea className="quiz-creator-question-input" placeholder={constants.QUESTION_PLACEHOLDER} onChange={this.updateQuestionText} onKeyUp={this.updateQuestionText} />                
                 
                 {answerInputView}
 
@@ -410,6 +412,10 @@ var ChoiceSingleCheckView = React.createClass({
         this.setState({
             isSelected: !this.state.isSelected
         })
+    },
+
+    checkAnswer: function(isCorrect) {
+        return this.state.isSelected === isCorrect;
     }
 
 });
@@ -454,9 +460,16 @@ var MCQSubmitView = React.createClass({
     checkAnswer: function() {
         var wrongFound = false; 
         var i, length = this.props.choices.length;
-        _.values(this.refs).forEach(function(view) {
-            wrongFound = !view.isCorrect();
-        });
+
+        //#todo -> make the domId thingy DRY. 
+        for(i = 0; i < length; i++) {
+            var domId = "quiz-preview-checkbox-" + i;
+            var view = this.refs[domId];
+            wrongFound = !view.checkAnswer(this.state.choices[i].isCorrect);
+            if(wrongFound) {
+                break;
+            }
+        }
 
         return !wrongFound;
     }
@@ -487,7 +500,7 @@ var QuizPreview = React.createClass({
     },
 
     render: function() {
-        var html = this.props.model.attributes.questionDisplay || "What are you waiting for?";
+        var html = this.props.model.attributes.questionDisplay || constants.QUESTION_PLACEHOLDER;
         var answerSubmitView;
         if(this.state.quizType === constants.SHORT_ANSWER) {
             answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" />
@@ -512,7 +525,8 @@ var QuizPreview = React.createClass({
     getResultFeedback: function() {
         return {
             false: constants.WRONG_FEEDBACK,
-            true: constants.CORRECT_FEEDBACK
+            true: constants.CORRECT_FEEDBACK,
+            null: ""
         }[this.state.result];
     },
 
@@ -552,13 +566,15 @@ var QuizBox = React.createClass({
         }
     },
 
+
+
     render: function() {
         return (
             <div className="row">
-                <div className="col s6">
+                <div className="col s6 quiz-page-split-column quiz-creator-container">
                     <QuizCreatorView model={this.state.quizModel}/>
                 </div>
-                <div className="col s6">
+                <div className="col s6 quiz-page-split-column quiz-student-container">
                     <QuizPreview model={this.state.quizModel} shortAnswerModel={this.state.shortAnswerModel} mcqAnswerModel={this.state.mcqAnswerModel} />
                 </div>
             </div>
