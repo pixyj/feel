@@ -18,7 +18,8 @@ var app = function() {
         quizModel: quizModel,
         shortAnswerModel: ShortAnswerSubmitModel,
         mcqAnswerModel: mcqAnswerModel,
-        problemSolvingModel: problemSolvingModel
+        problemSolvingModel: problemSolvingModel,
+        guessCollection: new GuessCollection()
     };
 
 }();
@@ -35,36 +36,108 @@ var GuessHistoryEmptyView = React.createClass({
 
 });
 
-var GuessHistoryCollectionView = React.createClass({
+var GuessHistorySingleView = React.createClass({
+    
+    getInitialState: function() {
+
+        return {
+            guess: null,
+            result: null,
+            when: null,
+            plan: null
+        };
+    },
 
     render: function() {
+
+        return (
+            <a href="#!" className="collection-item">
+                <div className="row">
+                    <div className="col s4">  
+                        <strong>Guess</strong> 
+                    </div>
+
+                    <div className="col s4">  
+                        <strong> Result </strong> 
+                    </div>
+
+
+                    <div className="col s4">  
+                        <strong> When? </strong> 
+                    </div>
+
+                </div> 
+            </a>
+        );
+    }
+});
+
+var GuessHistoryCollectionView = React.createClass({
+
+    getInitialState: function() {
+        return {
+            guesses: []
+        }
+    },
+
+    componentDidMount: function() {
+        this.props.guessCollection.on("add", this.updateViews, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.guessCollection.off("add", this.updateViews);
+    },
+
+    render: function() {
+
+        var rows = [];
+        var i, length = this.props.guessCollection.length;
+
+        for(i = 0; i < length; i++) {
+            var attrs = this.props.guessCollection.at(0).attributes;
+            var view = <GuessHistorySingleView 
+                            guess={attrs.guess}
+                            result={attrs.result}
+                            timestamp={attrs.timestamp}
+
+                        />
+            rows.append(view);
+
+        }
+
         return (
 
-            <div>
+            <div className="collection">
+                
+                <a href="#!" className="collection-item">
+                    <div className="row">
+                        <div className="col s4">  
+                            <strong>Guess</strong> 
+                        </div>
+
+                        <div className="col s4">  
+                            <strong> Result </strong> 
+                        </div>
 
 
-                <div className="collection">
-                    <a href="#!" className="collection-item">
-                        <div className="row">
-                            <div className="col s4">  
-                                <strong>Guess</strong> 
-                            </div>
+                        <div className="col s4">  
+                            <strong> When? </strong> 
+                        </div>
 
-                            <div className="col s4">  
-                                <strong> Result </strong> 
-                            </div>
+                    </div> 
+                </a>
 
-
-                            <div className="col s4">  
-                                <strong> When? </strong> 
-                            </div>
-
-                        </div> 
-                    </a>
-                </div>
+                {rows}
 
             </div>
+
         );
+    },
+
+    updateViews: function() {
+        return {
+            guesses: this.props.guessCollection.toJSON()
+        }
     }
 });
 
@@ -322,7 +395,11 @@ var ProblemSolvingBox = React.createClass({
                         <textarea placeholder="State the problem in your own words and ensure you have understood the problem correctly" />
                     </div>
 
-                    <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} quizModel={this.state.quizModel} />
+                    <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} 
+                                        quizModel={this.state.quizModel}
+                                        guessCollection={this.state.guessCollection} 
+
+                    />
                     
                 </div>
 

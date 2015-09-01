@@ -47,18 +47,33 @@ var QuizModel = Backbone.Model.extend({
         });
 
         this.choices = new ChoiceCollection(placeholderChoices);
+
+
     }
 
 });
 
+//#todo -> Should I just change it the name to `GuessModel` ?
 var ShortAnswerSubmitModel = Backbone.Model.extend({
+
+    idAttribute: "guess",
+    
     defaults: {
         guess: null,
-        result: null
+        result: null,
+        timestamp: null,
+        planIndex: null
     }
+
 });
 
 var MCQAnswerModel = ShortAnswerSubmitModel;
+
+var GuessCollection = Backbone.Collection.extend({
+    
+    model: ShortAnswerSubmitModel 
+
+});
 
 
 var PlanModel = Backbone.Model.extend({
