@@ -33,15 +33,20 @@ var QuizModel = Backbone.Model.extend({
     },
 
     initialize: function() {
-        var one = {
-            choiceInput: "Choice 1",
-            choiceDisplay: "Choice 1"
-        };
-        var two = {
-            choiceInput: "Choice 2",
-            choiceDisplay: "Choice 2"
-        };
-        this.choices = new ChoiceCollection([one, two]);
+
+        var placeholderChoices = [
+            {
+                choiceInput: "Choice 1"
+            },
+            {
+                choiceInput: "Choice 2"
+            }
+        ];
+        placeholderChoices.forEach(function(c) {
+            c.choiceDisplay = mdAndMathToHtml(c.choiceInput);
+        });
+
+        this.choices = new ChoiceCollection(placeholderChoices);
     }
 
 });

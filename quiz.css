@@ -92,7 +92,7 @@ Eventually, I'll make new css files for each component/page
 
 
 .problem-solving-create-plan-btn {
-    margin-left: 10%;
+    margin-top: 5px;
     background-color: inherit !important;
     color: #121212 !important;
 }
@@ -110,4 +110,30 @@ Eventually, I'll make new css files for each component/page
 
 .problem-solving-guess-col {
     display: table-column;
+}
+
+.problem-solving-input-and-submit {
+    margin-bottom: 20px;
+}
+
+.problem-solving-plan-heading {
+    font-size: 1.5em;
+    font-style: bolder; 
+    margin-right: 20px;
+}
+
+.problem-solving-plan-md-and-html-heading {
+    text-align: center;
+}
+
+.problem-solving-plan-md-input {
+    height: 150px;
+}
+
+.problem-solving-plan-collection {
+    margin-top: 25px;
+}
+
+.problem-solving-single-plan-container {
+    margin-top: 20px;
 }

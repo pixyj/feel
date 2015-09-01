@@ -26,6 +26,7 @@ var ShortAnswerSubmitView = React.createClass({
         this.setState({
             guess: guess
         });
+
     },
 
     checkAnswer: function(quizModel) {
@@ -193,10 +194,27 @@ var QuizAnswerSubmitView = React.createClass({
 
 });
 
+var QuizQuestionView = React.createClass({
+
+    getInitialState: function() {
+        return {
+            questionDisplay: null
+        };
+    },
+
+    render: function() {
+        var html = this.props.questionDisplay || this.state.questionDisplay || constants.QUESTION_PLACEHOLDER;
+
+        return (
+            <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
+        );
+    }
+});
+
 var QuizPreview = React.createClass({
 
     getInitialState: function() {
-        
+
         var attrs = this.props.model.toJSON();
         return attrs;
 
@@ -213,12 +231,12 @@ var QuizPreview = React.createClass({
     },
 
     render: function() {
-        var html = this.props.model.attributes.questionDisplay || constants.QUESTION_PLACEHOLDER;
 
         return (
             <div>
                 
-                <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
+                <QuizQuestionView questionDisplay={this.props.model.questionDisplay} ref="questionView" />
+                
                 <QuizAnswerSubmitView model={this.props.model} />
 
             </div>
@@ -227,8 +245,9 @@ var QuizPreview = React.createClass({
 
     updatePreview: function() {
         console.log("updatePreview called");
-        var state = this.props.model.toJSON();
-        this.setState(state);
+        this.refs.questionView.setState({
+            questionDisplay: this.props.model.attributes.questionDisplay
+        });
     }
 
 
