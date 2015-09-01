@@ -128,32 +128,24 @@ var MCQSubmitView = React.createClass({
     }
 });
 
-var QuizPreview = React.createClass({
+var QuizAnswerSubmitView = React.createClass({
 
     getInitialState: function() {
-        
-        var attrs = this.props.model.toJSON();
-        return attrs;
-
+        return this.props.model.toJSON();
     },
 
     componentDidMount: function() {
 
-
-        this.props.model.on("change:questionDisplay", this.updatePreview, this);
         this.props.model.on("change:quizType", this.updatePreview, this);
-
     },
 
     componentWillUnmount: function() {
-        this.props.model.off("change:questionDisplay", this.updatePreview);
-        this.props.model.off("change:quizType", this.updatePreview, this);
 
+        this.props.model.off("change:quizType", this.updatePreview, this);
 
     },
 
     render: function() {
-        var html = this.props.model.attributes.questionDisplay || constants.QUESTION_PLACEHOLDER;
         var answerSubmitView;
         if(this.state.quizType === constants.SHORT_ANSWER) {
             answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" />
@@ -165,14 +157,23 @@ var QuizPreview = React.createClass({
         var feedback = this.getResultFeedback();
 
         return (
+
             <div>
-                
-                <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
                 {answerSubmitView}
                 <button className="btn waves-effect waves-light btn-large" onClick={this.checkAnswer}>Submit</button>
                 <span className="quiz-result-feedback"> {feedback} </span>
             </div>
-        );  
+
+        );
+    },
+
+    checkAnswer: function() {
+        var submitModel = this.refs.answerSubmitView.props.model;
+        var result = this.refs.answerSubmitView.checkAnswer(this.props.model);
+
+        this.setState({
+            result: result
+        });
     },
 
     getResultFeedback: function() {
@@ -183,18 +184,46 @@ var QuizPreview = React.createClass({
         }[this.state.result];
     },
 
+
+});
+
+var QuizPreview = React.createClass({
+
+    getInitialState: function() {
+        
+        var attrs = this.props.model.toJSON();
+        return attrs;
+
+    },
+
+    componentDidMount: function() {
+
+        this.props.model.on("change:questionDisplay", this.updatePreview, this);
+
+    },
+
+    componentWillUnmount: function() {
+        this.props.model.off("change:questionDisplay", this.updatePreview);
+    },
+
+    render: function() {
+        var html = this.props.model.attributes.questionDisplay || constants.QUESTION_PLACEHOLDER;
+
+        return (
+            <div>
+                
+                <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
+                <QuizAnswerSubmitView model={this.props.model} />
+
+            </div>
+        );  
+    },
+
     updatePreview: function() {
         console.log("updatePreview called");
         var state = this.props.model.toJSON();
         this.setState(state);
-    },
-
-    checkAnswer: function() {
-        var submitModel = this.refs.answerSubmitView.props.model;
-        var result = this.refs.answerSubmitView.checkAnswer(this.props.model);
-
-        this.setState({
-            result: result
-        });
     }
+
+
 });
