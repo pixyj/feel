@@ -22,6 +22,7 @@ var constants = {
     QUESTION_PLACEHOLDER: "Enter the Question in Markdown"
 };
 
+//#todo -> consider changing answer to short-answer to be more explicit. 
 var QuizModel = Backbone.Model.extend({
     
     defaults: {
@@ -32,7 +33,15 @@ var QuizModel = Backbone.Model.extend({
     },
 
     initialize: function() {
-        this.choices = new ChoiceCollection();
+        var one = {
+            choiceInput: "Choice 1",
+            choiceDisplay: "Choice 1"
+        };
+        var two = {
+            choiceInput: "Choice 2",
+            choiceDisplay: "Choice 2"
+        };
+        this.choices = new ChoiceCollection([one, two]);
     }
 
 });
@@ -52,15 +61,16 @@ var PlanModel = Backbone.Model.extend({
     defaults: {
         planInput: "",
         planDisplay: "",
-        guess: null,
-        result: null,
-        when: null,       
-    }
+    },
+
+    idAttribute: "planInput"
 
 });
 
-var PlanCollection = Backbone.Model.extend({
+var PlanCollection = Backbone.Collection.extend({
+    
     model: PlanModel
+
 });
 
 var ProblemSolvingModel = Backbone.Model.extend({
@@ -73,7 +83,9 @@ var ProblemSolvingModel = Backbone.Model.extend({
 
 
     initialize: function() {
-        this.planCollection = new PlanCollection();
+        this.plans = new PlanCollection();
     }
 
 });
+
+
