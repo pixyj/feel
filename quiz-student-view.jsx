@@ -145,6 +145,12 @@ var QuizAnswerSubmitView = React.createClass({
 
     },
 
+    updatePreview: function() {
+        console.log("updatePreview called");
+        var state = this.props.model.toJSON();
+        this.setState(state);
+    },
+
     render: function() {
         var answerSubmitView;
         if(this.state.quizType === constants.SHORT_ANSWER) {
