@@ -1,3 +1,11 @@
+var constants = {
+    SHORT_ANSWER: 1,
+    MCQ: 2,
+    CORRECT_FEEDBACK: "Correct",
+    WRONG_FEEDBACK: "Nope",
+    QUESTION_PLACEHOLDER: "Enter the Question in Markdown"
+};
+
 var ChoiceModel = Backbone.Model.extend({
 
     idAttribute: "choiceInput",
@@ -14,13 +22,27 @@ var ChoiceCollection = Backbone.Collection.extend({
     model: ChoiceModel
 });
 
-var constants = {
-    SHORT_ANSWER: 1,
-    MCQ: 2,
-    CORRECT_FEEDBACK: "Correct",
-    WRONG_FEEDBACK: "Nope",
-    QUESTION_PLACEHOLDER: "Enter the Question in Markdown"
-};
+//#todo -> Should I just change it the name to `GuessModel` ?
+var ShortAnswerSubmitModel = Backbone.Model.extend({
+
+    idAttribute: "guess",
+    
+    defaults: {
+        guess: null,
+        result: null,
+        timestamp: null,
+        planNumber: null
+    }
+
+});
+
+var MCQAnswerModel = ShortAnswerSubmitModel;
+
+var GuessCollection = Backbone.Collection.extend({
+    
+    model: ShortAnswerSubmitModel 
+
+});
 
 //#todo -> consider changing answer to short-answer to be more explicit. 
 var QuizModel = Backbone.Model.extend({
@@ -46,34 +68,16 @@ var QuizModel = Backbone.Model.extend({
             c.choiceDisplay = mdAndMathToHtml(c.choiceInput);
         });
 
+        //todo -> Change choices to choiceCollection as well. To make things explicit, and consistent. 
         this.choices = new ChoiceCollection(placeholderChoices);
 
+        this.guessCollection = new GuessCollection();
 
     }
 
 });
 
-//#todo -> Should I just change it the name to `GuessModel` ?
-var ShortAnswerSubmitModel = Backbone.Model.extend({
 
-    idAttribute: "guess",
-    
-    defaults: {
-        guess: null,
-        result: null,
-        timestamp: null,
-        planIndex: null
-    }
-
-});
-
-var MCQAnswerModel = ShortAnswerSubmitModel;
-
-var GuessCollection = Backbone.Collection.extend({
-    
-    model: ShortAnswerSubmitModel 
-
-});
 
 
 var PlanModel = Backbone.Model.extend({

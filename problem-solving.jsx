@@ -18,8 +18,7 @@ var app = function() {
         quizModel: quizModel,
         shortAnswerModel: ShortAnswerSubmitModel,
         mcqAnswerModel: mcqAnswerModel,
-        problemSolvingModel: problemSolvingModel,
-        guessCollection: new GuessCollection()
+        problemSolvingModel: problemSolvingModel
     };
 
 }();
@@ -50,26 +49,41 @@ var GuessHistorySingleView = React.createClass({
 
     render: function() {
 
+        var when = prettyDate(new Date(this.props.timestamp));
         return (
             <a href="#!" className="collection-item">
                 <div className="row">
                     <div className="col s4">  
-                        <strong>Guess</strong> 
+                        <strong>{this.props.guess}</strong> 
                     </div>
 
                     <div className="col s4">  
-                        <strong> Result </strong> 
+                        <strong> {this.getResultAndPlanFeedback()} </strong> 
                     </div>
 
 
                     <div className="col s4">  
-                        <strong> When? </strong> 
+                        <strong> {when} </strong> 
                     </div>
 
                 </div> 
             </a>
         );
-    }
+    },
+
+    //todo -> avoid copy paste. 
+    getResultFeedback: function() {
+        return {
+            false: constants.WRONG_FEEDBACK,
+            true: constants.CORRECT_FEEDBACK,
+            null: ""
+        }[this.props.result];
+    },
+
+    getResultAndPlanFeedback: function() {
+        var feedback = "{0} : Based on Plan {1}".format(this.getResultFeedback(), this.props.planNumber);
+        return feedback;
+    },
 });
 
 var GuessHistoryCollectionView = React.createClass({
@@ -99,9 +113,11 @@ var GuessHistoryCollectionView = React.createClass({
                             guess={attrs.guess}
                             result={attrs.result}
                             timestamp={attrs.timestamp}
+                            planNumber={attrs.planNumber}
+                            key={i}
 
                         />
-            rows.append(view);
+            rows.push(view);
 
         }
 
@@ -149,6 +165,21 @@ var GuessHistoryView = React.createClass({
         }
     },
 
+    componentDidMount: function() {
+        this.props.guessCollection.on("add", this.addGuess, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.guessCollection.off("add", this.addGuess);
+    },
+
+    addGuess: function() {
+        var guesses = this.props.guessCollection.toJSON();
+        this.setState({
+            guesses: guesses
+        });
+    },
+
     render: function() {
 
         var guessCollectionView;
@@ -157,7 +188,7 @@ var GuessHistoryView = React.createClass({
             guessCollectionView = <GuessHistoryEmptyView />
         }
         else {
-            guessCollectionView = <GuessHistoryCollectionView />
+            guessCollectionView = <GuessHistoryCollectionView guessCollection={this.props.guessCollection} />
         }
 
         return (
@@ -168,6 +199,15 @@ var GuessHistoryView = React.createClass({
         );
     }
 });
+
+var addGuessToCollection = function(attrs) {
+        
+        attrs.timestamp = getUTCDate().getTime();
+        attrs.planIndex = this.props.planIndex;
+
+        this.props.model.guessCollection.add(attrs);
+};
+
 
 var PlanContentView = React.createClass({
     
@@ -261,7 +301,7 @@ var PlanSingleView = React.createClass({
 
                 <h5> Your Guess? </h5>
 
-                <QuizAnswerSubmitView model={this.props.quizModel} />
+                <QuizAnswerSubmitView model={this.props.quizModel} planNumber={planNumber} />
                 
                 <button className="problem-solving-create-plan-btn btn" 
                         onClick={this.addPlan}>
@@ -382,7 +422,7 @@ var ProblemSolvingBox = React.createClass({
                             <li> Analyze your solution </li> 
                         </ol>
 
-                        <GuessHistoryView />
+                        <GuessHistoryView guessCollection={this.state.quizModel.guessCollection} />
 
                     </div>
 
@@ -397,7 +437,7 @@ var ProblemSolvingBox = React.createClass({
 
                     <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} 
                                         quizModel={this.state.quizModel}
-                                        guessCollection={this.state.guessCollection} 
+                                        guessCollection={this.state.quizModel.guessCollection} 
 
                     />
                     

@@ -31,6 +31,10 @@ var ShortAnswerSubmitView = React.createClass({
 
     checkAnswer: function(quizModel) {
         return quizModel.attributes.answer === this.state.guess;
+    },
+
+    getCurrentGuess: function() {
+        return this.state.guess;
     }
 });
 
@@ -126,6 +130,10 @@ var MCQSubmitView = React.createClass({
         }
 
         return !wrongFound;
+    },
+
+    getCurrentGuess: function() {
+        return ""
     }
 });
 
@@ -174,12 +182,18 @@ var QuizAnswerSubmitView = React.createClass({
         );
     },
 
+    //todo -> rename function. It does more that what its name suggests
     checkAnswer: function() {
         var submitModel = this.refs.answerSubmitView.props.model;
         var result = this.refs.answerSubmitView.checkAnswer(this.props.model);
 
         this.setState({
             result: result
+        });
+
+        this.addGuessToCollection({
+            result: result,
+            guess: this.refs.answerSubmitView.getCurrentGuess()
         });
     },
 
@@ -191,6 +205,11 @@ var QuizAnswerSubmitView = React.createClass({
         }[this.state.result];
     },
 
+    addGuessToCollection: function(attrs) {
+        attrs.timestamp = getUTCDate().getTime();
+        attrs.planNumber = this.props.planNumber || null;
+        this.props.model.guessCollection.add(attrs);
+    }
 
 });
 
