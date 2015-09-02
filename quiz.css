@@ -90,6 +90,23 @@ Eventually, I'll make new css files for each component/page
 #todo for entire CSS -> make it DRY, use SASS
 */ 
 
+.problem-solving-question-and-solve-it-container {
+    height: 200px; 
+}
+
+#problem-solving-steps-list {
+    font-size: 1.3em;
+}
+
+#problem-solving-guess-collection {
+    overflow: scroll;
+    height: 50%;
+}
+
+/*todo -> choose some material design color */ 
+#problem-solving-guess-collection-heading {
+    background-color: aqua;
+}
 
 .problem-solving-create-plan-btn {
     margin-top: 5px;
@@ -97,20 +114,6 @@ Eventually, I'll make new css files for each component/page
     color: #121212 !important;
 }
 
-.problem-solving-guess-div-table {
-    display: table; 
-    width: auto;
-}
-
-.problem-solving-guess-row {
-    display: table-row; 
-    width: auto; 
-    clear: auto;
-}
-
-.problem-solving-guess-col {
-    display: table-column;
-}
 
 .problem-solving-input-and-submit {
     margin-bottom: 20px;

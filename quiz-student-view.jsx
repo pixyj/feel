@@ -182,7 +182,7 @@ var QuizAnswerSubmitView = React.createClass({
         );
     },
 
-    //todo -> rename function. It does more that what its name suggests
+    //todo -> rename function. It does more that what its name suggests (Submits answer to guessCollection)
     checkAnswer: function() {
         var submitModel = this.refs.answerSubmitView.props.model;
         var result = this.refs.answerSubmitView.checkAnswer(this.props.model);

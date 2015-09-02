@@ -53,16 +53,21 @@ var GuessHistorySingleView = React.createClass({
         return (
             <a href="#!" className="collection-item">
                 <div className="row">
-                    <div className="col s4">  
+                    <div className="col s3">  
                         <strong>{this.props.guess}</strong> 
                     </div>
 
-                    <div className="col s4">  
-                        <strong> {this.getResultAndPlanFeedback()} </strong> 
+                    <div className="col s3">  
+                        <strong> {this.getResultFeedback()} </strong> 
                     </div>
 
 
-                    <div className="col s4">  
+                    <div className="col s3">  
+                        <strong> {this.getPlanNumber()} </strong> 
+                    </div>
+
+
+                    <div className="col s3">  
                         <strong> {when} </strong> 
                     </div>
 
@@ -80,9 +85,8 @@ var GuessHistorySingleView = React.createClass({
         }[this.props.result];
     },
 
-    getResultAndPlanFeedback: function() {
-        var feedback = "{0} : Based on Plan {1}".format(this.getResultFeedback(), this.props.planNumber);
-        return feedback;
+    getPlanNumber: function() {
+        return this.props.planNumber || "On a whim";
     },
 });
 
@@ -90,16 +94,24 @@ var GuessHistoryCollectionView = React.createClass({
 
     getInitialState: function() {
         return {
-            guesses: []
+            guesses: [],
+            isTimeElapsedCorrect: true
         }
     },
 
     componentDidMount: function() {
         this.props.guessCollection.on("add", this.updateViews, this);
+
+        var delay = 1000 * 60; //1 minute; 
+        var self = this;
+        this.timer = setInterval(function() {
+            self.updateGuessTimeElapsed();
+        }, delay);
     },
 
     componentWillUnmount: function() {
         this.props.guessCollection.off("add", this.updateViews);
+        clearInterval(this.timer);
     },
 
     render: function() {
@@ -108,7 +120,7 @@ var GuessHistoryCollectionView = React.createClass({
         var i, length = this.props.guessCollection.length;
 
         for(i = 0; i < length; i++) {
-            var attrs = this.props.guessCollection.at(0).attributes;
+            var attrs = this.props.guessCollection.at(i).attributes;
             var view = <GuessHistorySingleView 
                             guess={attrs.guess}
                             result={attrs.result}
@@ -123,20 +135,25 @@ var GuessHistoryCollectionView = React.createClass({
 
         return (
 
-            <div className="collection">
+            <div className="collection" id="problem-solving-guess-collection">
                 
-                <a href="#!" className="collection-item">
+                <a href="#!" className="collection-item" id="problem-solving-guess-collection-heading" ref="heading">
                     <div className="row">
-                        <div className="col s4">  
+                        <div className="col s3">  
                             <strong>Guess</strong> 
                         </div>
 
-                        <div className="col s4">  
+                        <div className="col s3">  
                             <strong> Result </strong> 
                         </div>
 
+                        <div className="col s3">  
+                            <strong> Plan </strong> 
+                        </div>
 
-                        <div className="col s4">  
+
+
+                        <div className="col s3">  
                             <strong> When? </strong> 
                         </div>
 
@@ -154,6 +171,12 @@ var GuessHistoryCollectionView = React.createClass({
         return {
             guesses: this.props.guessCollection.toJSON()
         }
+    },
+
+    updateGuessTimeElapsed: function() {
+        this.setState({
+            isTimeElapsedCorrect: false
+        });
     }
 });
 
@@ -397,25 +420,34 @@ var ProblemSolvingBox = React.createClass({
 
     render: function() {
 
-        var quizHeading = "Here's the problem";
-        var statusHeading = "Let's solve it";
+        var quizHeading = "The problem";
+        var solveItHeading = "Let's solve it";
 
 
         return (
             <div>
 
+                {/* Top Heading */}
                 <div className="row">
                     
                     <div className="col s6">
                         <h4 className="problem-solving-top-header"> {quizHeading} </h4>
+                    </div>
+                    <div className="col s6">
+                        <h4 className="problem-solving-top-header"> {solveItHeading} </h4>
+                    </div>
+                </div>
+
+                {/* Problem Definition | Solve It */}
+                <div className="row problem-solving-question-and-solve-it-container">
+
+                    <div className="col s6">
                         <QuizQuestionView questionDisplay={this.state.quizModel.attributes.questionDisplay} />
                     </div>
 
                     <div className="col s6">
-                        
-                        
-                        <h4 className="problem-solving-top-header"> {statusHeading} </h4>
-                        <ol>
+
+                        <ol id="problem-solving-steps-list">
 
                             <li > <a href="#problem-solving-understand-the-problem"> Understand the Problem </a> </li>
                             <li> Come up with a plan and execute it </li>
@@ -425,9 +457,9 @@ var ProblemSolvingBox = React.createClass({
                         <GuessHistoryView guessCollection={this.state.quizModel.guessCollection} />
 
                     </div>
-
                 </div>
                 
+                {/* Understanding, Plans and Analysis */}
                 <div>
 
                     <div id="problem-solving-understand-the-problem">
