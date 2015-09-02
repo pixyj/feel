@@ -180,7 +180,8 @@ var ChoiceCollectionInputView = React.createClass({
             choices: this.props.model.choices.toJSON()
         })
     }
-})
+});
+
 
 var QuizCreatorView = React.createClass({
 

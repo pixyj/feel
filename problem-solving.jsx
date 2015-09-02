@@ -1,7 +1,7 @@
 var app = function() {
 
     var quizModel = new QuizModel({
-        quizType: constants.SHORT_ANSWER,
+        quizType: constants.MCQ,
         questionInput: "Hi There",
         questionDisplay: "If you are using  a distributed `NoSQL` database, can you provide `ACID` capabilities? ",
         answer: "12"
@@ -323,7 +323,10 @@ var PlanSingleView = React.createClass({
                 
                 <div>
                     <span className="problem-solving-plan-heading"> Plan {planNumber}: </span>
-                    <span> Need any ideas? See <a href="https://en.wikipedia.org/wiki/How_to_Solve_It"> How to solve it</a> </span>
+                    <span> Need any ideas? See <a href="https://en.wikipedia.org/wiki/How_to_Solve_It" target="_blank"> 
+                                                    How to solve it
+                                                </a> 
+                    </span>
                 </div>
 
                 <hr /> 
@@ -341,7 +344,7 @@ var PlanSingleView = React.createClass({
                 <button className="problem-solving-create-plan-btn btn" 
                         onClick={this.addPlan}>
                     
-                        This plan did not work. I need a new plan 
+                        I have a new plan!
 
                 </button> 
 
@@ -389,7 +392,12 @@ var PlanCollectionView = React.createClass({
         var i, length = plans.length;
         for(i = 0; i < length; i++) {
             var model = plans.at(i);    
-            var shouldFocus = ( (length != 1) && (i === length - 1) );
+            
+            //convoluted way of saying you should not focus on page load when there is just one plan,
+            //but if there is more than one plan, then focus on the last one
+            //https://news.ycombinator.com/item?id=4382045 #todo
+            var shouldFocus = ( (length != 1) && (i === length - 1) ); 
+
             var view = <PlanSingleView 
                             model={model} 
                             quizModel={this.props.quizModel}
@@ -416,6 +424,46 @@ var PlanCollectionView = React.createClass({
 
     }
 
+});
+
+var AnalysisView = React.createClass({
+
+    getInitialState: function() {
+
+        return {
+            mdInput: "",
+            display: "",
+            answeredCorrectly: false            
+        };
+    },
+
+    componentDidMount: function() {
+        this.props.guessCollection.on("answeredCorrectly", this.updateAnsweredCorrectly, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.guessCollection.off("answeredCorrectly", this.updateAnsweredCorrectly);
+    },
+
+    render: function() {
+        
+        if(!this.state.answeredCorrectly) {
+            return <div> </div>
+        }
+
+        return (
+            <div>
+                <h5> Your Analysis </h5>
+                <textarea placeholder="This was quite a ride. How could it be better? Can your method be used elsewhere? " />
+            </div>
+        );
+    },
+
+    updateAnsweredCorrectly: function() {
+        this.setState({
+            answeredCorrectly: true
+        });
+    }
 });
 
 
@@ -488,6 +536,8 @@ var ProblemSolvingBox = React.createClass({
                                         guessCollection={this.state.quizModel.guessCollection} 
 
                     />
+
+                    <AnalysisView guessCollection={this.state.quizModel.guessCollection} />
                     
                 </div>
 

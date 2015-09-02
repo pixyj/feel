@@ -117,8 +117,8 @@ var MCQSubmitView = React.createClass({
 
     checkAnswer: function() {
         var wrongFound = false; 
-        var i, length = this.props.choices.length;
 
+        var i, length = this.props.choices.length;
         //#todo -> make the domId thingy DRY. 
         for(i = 0; i < length; i++) {
             var domId = "quiz-preview-checkbox-" + i;
@@ -133,7 +133,22 @@ var MCQSubmitView = React.createClass({
     },
 
     getCurrentGuess: function() {
-        return ""
+
+        var selectedChoices = [];
+
+        var i, length = this.props.choices.length;
+        for(i = 0; i < length; i++) {
+            var domId = "quiz-preview-checkbox-" + i;
+            var view = this.refs[domId];
+            if(view.state.isSelected) {
+                selectedChoices.push(view.props.choice.choiceInput);
+            }
+        }
+        if(selectedChoices.length < 2) {
+            return selectedChoices.join("") || "Trick question! None of the options are correct";
+        }
+
+        return selectedChoices.join(", ");
     }
 });
 

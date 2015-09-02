@@ -40,7 +40,17 @@ var MCQAnswerModel = ShortAnswerSubmitModel;
 
 var GuessCollection = Backbone.Collection.extend({
     
-    model: ShortAnswerSubmitModel 
+    model: ShortAnswerSubmitModel,
+
+    initialize: function() {
+        this.on("add", this.ifCorrectTriggerAnsweredCorrectlyEvent, this);
+    },
+
+    ifCorrectTriggerAnsweredCorrectlyEvent: function(guess) {
+        if(guess.attributes.result) {
+            this.trigger("answeredCorrectly", guess);
+        }
+    }
 
 });
 
