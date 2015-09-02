@@ -27,7 +27,7 @@ var GuessHistoryEmptyView = React.createClass({
 
     render: function() {
         return (
-            <h6> You have not made any guesses, yet.</h6> 
+            <div></div> 
 
         );
         
@@ -53,21 +53,15 @@ var GuessHistorySingleView = React.createClass({
         return (
             <a href="#!" className="collection-item">
                 <div className="row">
-                    <div className="col s3">  
+                    <div className="col s4">  
                         <strong>{this.props.guess}</strong> 
                     </div>
 
-                    <div className="col s3">  
+                    <div className="col s4">  
                         <strong> {this.getResultFeedback()} </strong> 
                     </div>
 
-
-                    <div className="col s3">  
-                        <strong> {this.getPlanNumber()} </strong> 
-                    </div>
-
-
-                    <div className="col s3">  
+                    <div className="col s4">  
                         <strong> {when} </strong> 
                     </div>
 
@@ -117,10 +111,11 @@ var GuessHistoryCollectionView = React.createClass({
     render: function() {
 
         var rows = [];
-        var i, length = this.props.guessCollection.length;
+        var guesses = this.getFilteredGuesses();
+        var i, length = guesses.length;
 
         for(i = 0; i < length; i++) {
-            var attrs = this.props.guessCollection.at(i).attributes;
+            var attrs = guesses[i];
             var view = <GuessHistorySingleView 
                             guess={attrs.guess}
                             result={attrs.result}
@@ -139,21 +134,16 @@ var GuessHistoryCollectionView = React.createClass({
                 
                 <a href="#!" className="collection-item" id="problem-solving-guess-collection-heading" ref="heading">
                     <div className="row">
-                        <div className="col s3">  
+
+                        <div className="col s4">  
                             <strong>Guess</strong> 
                         </div>
 
-                        <div className="col s3">  
+                        <div className="col s4">  
                             <strong> Result </strong> 
                         </div>
 
-                        <div className="col s3">  
-                            <strong> Plan </strong> 
-                        </div>
-
-
-
-                        <div className="col s3">  
+                        <div className="col s4">  
                             <strong> When? </strong> 
                         </div>
 
@@ -167,10 +157,26 @@ var GuessHistoryCollectionView = React.createClass({
         );
     },
 
+    //WTF. #todo There must be a better way to filter models and return their attributes. 
+    getFilteredGuesses: function() {
+
+        var models = this.props.guessCollection.where({
+                                    planNumber: this.props.planNumber
+                                });
+        var jsonModels = _.map(models, function(m) {
+            return m.toJSON();
+        });
+
+        console.debug("guesses for plan ", this.props.planNumber, jsonModels);
+        return jsonModels;
+    },
+
     updateViews: function() {
+        
         return {
-            guesses: this.props.guessCollection.toJSON()
-        }
+            guesses: this.getFilteredGuesses()
+        };
+
     },
 
     updateGuessTimeElapsed: function() {
@@ -211,12 +217,14 @@ var GuessHistoryView = React.createClass({
             guessCollectionView = <GuessHistoryEmptyView />
         }
         else {
-            guessCollectionView = <GuessHistoryCollectionView guessCollection={this.props.guessCollection} />
+            guessCollectionView = <GuessHistoryCollectionView 
+                                        guessCollection={this.props.guessCollection} 
+                                        planNumber={this.props.planNumber}
+                                    />
         }
 
         return (
-            <div>
-                <h5> Your Guesses: </h5>         
+            <div>       
                 {guessCollectionView}
             </div>
         );
@@ -325,6 +333,10 @@ var PlanSingleView = React.createClass({
                 <h5> Your Guess? </h5>
 
                 <QuizAnswerSubmitView model={this.props.quizModel} planNumber={planNumber} />
+
+                <GuessHistoryView guessCollection={this.props.quizModel.guessCollection} 
+                                  planNumber={planNumber}
+                />
                 
                 <button className="problem-solving-create-plan-btn btn" 
                         onClick={this.addPlan}>
@@ -452,9 +464,13 @@ var ProblemSolvingBox = React.createClass({
                             <li > <a href="#problem-solving-understand-the-problem"> Understand the Problem </a> </li>
                             <li> Come up with a plan and execute it </li>
                             <li> Analyze your solution </li> 
+
                         </ol>
 
-                        <GuessHistoryView guessCollection={this.state.quizModel.guessCollection} />
+                    {/* #todo. Come up with a better line about incubation */ }
+                        <h6>Exhausted? Take a break and come back later </h6>
+
+                        
 
                     </div>
                 </div>
