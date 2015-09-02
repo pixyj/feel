@@ -22,7 +22,7 @@ var ShortAnswerSubmitView = React.createClass({
     },
 
     updateGuess: function(evt) {
-        var guess = evt.target.value.trim();
+        var guess = evt.target.value;
         this.setState({
             guess: guess
         });
@@ -30,7 +30,7 @@ var ShortAnswerSubmitView = React.createClass({
     },
 
     checkAnswer: function(quizModel) {
-        return quizModel.attributes.answer === this.state.guess;
+        return quizModel.attributes.answer === this.state.guess.trim();
     },
 
     getCurrentGuess: function() {
