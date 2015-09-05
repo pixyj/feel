@@ -97,7 +97,7 @@ var PlanModel = Backbone.Model.extend({
         planDisplay: "",
     },
 
-    idAttribute: "planInput"
+    //idAttribute: "planInput" -> Well, it's ok to have a plan in mind and not explictly write it, I guess. Especially for new users. 
 
 });
 

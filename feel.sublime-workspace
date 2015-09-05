@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"Anal",
+				"AnalysisContentView"
+			],
+			[
+				"Unders",
+				"UnderstandViewAttrs"
+			],
+			[
+				"M",
+				"MarkdownAndPreviewAttrs"
+			],
+			[
+				"PlanCon",
+				"PlanContentViewAttrs"
+			],
+			[
+				"pla",
+				"planInput"
+			],
+			[
 				"quiz-s",
 				"quiz-student-choice-selected"
 			],
@@ -50,10 +70,6 @@
 			[
 				"shor",
 				"shortAnswerModel"
-			],
-			[
-				"M",
-				"MCQAnswerModel"
 			],
 			[
 				"MC",
@@ -498,32 +514,32 @@
 			[
 				"max",
 				"max_cumulative_sum"
-			],
-			[
-				"dec",
-				"decisions"
-			],
-			[
-				"nod",
-				"node_index"
-			],
-			[
-				"deci",
-				"decision_needed_here"
-			],
-			[
-				"row",
-				"rows"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "react-quiz.jsx",
+			"file": "problem-solving.html",
 			"settings":
 			{
-				"buffer_size": 15581,
+				"buffer_size": 1660,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "markdown-and-preview.jsx",
+			"settings":
+			{
+				"buffer_size": 1859,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "problem-solving.jsx",
+			"settings":
+			{
+				"buffer_size": 14144,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,39 +547,23 @@
 			"file": "quiz.css",
 			"settings":
 			{
-				"buffer_size": 997,
+				"buffer_size": 2542,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "react-quiz.html",
+			"file": "quiz-student-view.jsx",
 			"settings":
 			{
-				"buffer_size": 1227,
+				"buffer_size": 7495,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "quiz.html",
+			"file": "models.js",
 			"settings":
 			{
-				"buffer_size": 2690,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "backbone/backbone.js",
-			"settings":
-			{
-				"buffer_size": 71365,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/pramod/code/web/learn-react/react.js",
-			"settings":
-			{
-				"buffer_size": 600572,
+				"buffer_size": 2554,
 				"line_ending": "Unix"
 			}
 		}
@@ -616,12 +616,16 @@
 	},
 	"file_history":
 	[
+		"/Users/pramod/code/feel/react-quiz.jsx",
+		"/Users/pramod/code/feel/markdown-and-preview.jsx",
+		"/Users/pramod/code/feel/quiz.css",
+		"/Users/pramod/code/feel/react-quiz.html",
+		"/Users/pramod/code/feel/quiz.html",
+		"/Users/pramod/code/feel/backbone/backbone.js",
+		"/Users/pramod/code/web/learn-react/react.js",
+		"/Users/pramod/code/feel/problem-solving.jsx",
 		"/Users/pramod/code/web/learn-react/one.js",
 		"/Users/pramod/code/feel/quiz.js",
-		"/Users/pramod/code/feel/quiz.html",
-		"/Users/pramod/code/feel/react-quiz.html",
-		"/Users/pramod/code/feel/quiz.css",
-		"/Users/pramod/code/feel/backbone/backbone.js",
 		"/Users/pramod/code/web/learn-react/1.html",
 		"/Users/pramod/code/feel/pagedown/admin/css/pagedown.css",
 		"/Users/pramod/code/feel/materialize/css/materialize.css",
@@ -739,11 +743,7 @@
 		"/Users/pramod/code/cs/cs/chirp/templates/notes.html",
 		"/Users/pramod/code/cs/cs/cs/settings.py",
 		"/Users/pramod/code/cs/cs/qna/admin.py",
-		"/Users/pramod/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
-		"/Users/pramod/code/euler/four.py",
-		"/Users/pramod/code/euler/three.py",
-		"/Users/pramod/code/euler/two.py",
-		"/Users/pramod/code/euler/one.scala"
+		"/Users/pramod/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings"
 	],
 	"find":
 	{
@@ -762,6 +762,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"analysisview",
+			"understandproblem",
+			"understandview",
+			"understand",
+			"md-and-html-heading",
 			"togglesel",
 			"dang",
 			"trim",
@@ -861,23 +866,51 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "react-quiz.jsx",
+					"file": "problem-solving.html",
 					"settings":
 					{
-						"buffer_size": 15581,
+						"buffer_size": 1660,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12343,
-								12343
+								1328,
+								1328
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "markdown-and-preview.jsx",
+					"settings":
+					{
+						"buffer_size": 1859,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1781,
+								1781
 							]
 						],
 						"settings":
@@ -887,25 +920,53 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6718.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "quiz.css",
+					"buffer": 2,
+					"file": "problem-solving.jsx",
 					"settings":
 					{
-						"buffer_size": 997,
+						"buffer_size": 14144,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								928,
-								928
+								8095,
+								8126
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3096.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "quiz.css",
+					"settings":
+					{
+						"buffer_size": 2542,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2074,
+								2074
 							]
 						],
 						"settings":
@@ -915,119 +976,63 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 342.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "react-quiz.html",
-					"settings":
-					{
-						"buffer_size": 1227,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1101,
-								1101
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 155.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "quiz.html",
-					"settings":
-					{
-						"buffer_size": 2690,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2182,
-								2260
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 594.0,
+						"translation.y": 1792.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "backbone/backbone.js",
+					"file": "quiz-student-view.jsx",
 					"settings":
 					{
-						"buffer_size": 71365,
+						"buffer_size": 7495,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								28030,
-								28043
+								4926,
+								4922
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 13489.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "/Users/pramod/code/web/learn-react/react.js",
+					"file": "models.js",
 					"settings":
 					{
-						"buffer_size": 600572,
+						"buffer_size": 2554,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								231372,
-								231440
+								2205,
+								2205
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 127325.0,
+						"translation.x": 53.0,
+						"translation.y": 1520.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1077,16 +1082,40 @@
 		"selected_items":
 		[
 			[
+				"mod",
+				"models.js"
+			],
+			[
+				"studen",
+				"quiz-student-view.jsx"
+			],
+			[
+				"qui",
+				"quiz.css"
+			],
+			[
+				"pr",
+				"problem-solving.jsx"
+			],
+			[
+				"ma",
+				"markdown-and-preview.jsx"
+			],
+			[
+				"proble",
+				"problem-solving.html"
+			],
+			[
+				"prob",
+				"feel/problem-solving.jsx"
+			],
+			[
 				"re",
 				"learn-react/react.js"
 			],
 			[
 				"ba",
 				"feel/backbone/backbone.js"
-			],
-			[
-				"qui",
-				"feel/quiz.html"
 			],
 			[
 				"quiz.cs",
@@ -1287,10 +1316,6 @@
 			[
 				"vi",
 				"chirp/views.py"
-			],
-			[
-				"mod",
-				"qna/models.py"
 			],
 			[
 				"chirp.c",

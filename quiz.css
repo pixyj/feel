@@ -58,7 +58,7 @@
 
 .quiz-result-feedback {
     margin-left: 10px;
-    font-size: 3em;
+    
 }
 
 
@@ -109,7 +109,7 @@ Eventually, I'll make new css files for each component/page
 }
 
 .problem-solving-create-plan-btn {
-    margin-top: 5px;
+    margin-top: 10px;
     background-color: inherit !important;
     color: #121212 !important;
 }
@@ -125,11 +125,11 @@ Eventually, I'll make new css files for each component/page
     margin-right: 20px;
 }
 
-.problem-solving-plan-md-and-html-heading {
+.md-and-html-heading {
     text-align: center;
 }
 
-.problem-solving-plan-md-input {
+.md-and-html-input {
     height: 150px;
 }
 

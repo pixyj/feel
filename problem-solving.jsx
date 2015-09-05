@@ -1,7 +1,7 @@
 var app = function() {
 
     var quizModel = new QuizModel({
-        quizType: constants.MCQ,
+        quizType: constants.SHORT_ANSWER,
         questionInput: "Hi There",
         questionDisplay: "If you are using  a distributed `NoSQL` database, can you provide `ACID` capabilities? ",
         answer: "12"
@@ -110,6 +110,10 @@ var GuessHistoryCollectionView = React.createClass({
 
     render: function() {
 
+        //Is it a good practice to set state directly? 
+        this.state.isTimeElapsedCorrect = true;
+
+
         var rows = [];
         var guesses = this.getFilteredGuesses();
         var i, length = guesses.length;
@@ -127,6 +131,8 @@ var GuessHistoryCollectionView = React.createClass({
             rows.push(view);
 
         }
+
+
 
         return (
 
@@ -239,74 +245,31 @@ var addGuessToCollection = function(attrs) {
         this.props.model.guessCollection.add(attrs);
 };
 
+var UnderstandProblemViewAttrs = _.extend(MarkdownAndPreviewAttrs, {
+});
 
-var PlanContentView = React.createClass({
-    
+var UnderstandProblemView = React.createClass(UnderstandProblemViewAttrs);
+
+var PlanContentViewAttrs = _.extend(_.clone(MarkdownAndPreviewAttrs), {
+
     getInitialState: function() {
         return {
-            planInput: this.props.model.planInput,
-            planDisplay: this.props.model.planDisplay
+            input: this.props.model.planInput,
+            display: this.props.model.planDisplay
         }
     },
 
-    componentDidMount: function() {
-        if(this.props.shouldFocus) {
-            this.focus();
-        }
-    },
-
-    render: function() {
-        
-        var planNumber = this.props.index + 1;
-        var domId = "problem-solving-part-{0}".format(planNumber);
-        var planDisplay = this.state.planDisplay
-
-        return (
-            
-                <div className="row">
-                    <div className="col s6">
-                        <h6 className="problem-solving-plan-md-and-html-heading">
-                            Markdown Input
-                        </h6>
-
-                        <textarea className="problem-solving-plan-md-input"
-                                  placeholder="Explain your plan and execute it. If you obtain the solution, enter the answer below" 
-                                  ref="textarea" 
-                                  onKeyUp={this.updateContent} 
-                                  onChange={this.updateContent} 
-                                  value={this.state.planInput} 
-
-                        />
-                    </div>
-                    <div className="col s6">
-                        <h6 className="problem-solving-plan-md-and-html-heading">
-                            HTML Preview
-                        </h6>
-                        <div dangerouslySetInnerHTML={{__html: planDisplay}} />
-                    </div>
-                </div>
-
-        );
-    },
-
-    updateContent: function(evt) {
-        var input = evt.target.value;
-        var display = mdAndMathToHtml(input);
-        
-        var state = {
-            planInput: input,
-            planDisplay: display
-        };
-
-        this.props.model.set(state);
-
-        this.setState(state);
-
-    },
-
-
+    afterUpdateContent: function(state) {
+        this.props.model.set({
+            planInput: state.input,
+            planDisplay: state.display
+        });
+    }
 
 });
+
+
+var PlanContentView = React.createClass(PlanContentViewAttrs);
 
 var PlanSingleView = React.createClass({
 
@@ -352,8 +315,6 @@ var PlanSingleView = React.createClass({
             </div>
         );
     },
-
-
 
     addPlan: function() {
         this.props.model.collection.add(new PlanModel());
@@ -426,6 +387,10 @@ var PlanCollectionView = React.createClass({
 
 });
 
+var AnalysisContentView = React.createClass(_.clone(MarkdownAndPreviewAttrs), {
+
+});
+
 var AnalysisView = React.createClass({
 
     getInitialState: function() {
@@ -454,7 +419,8 @@ var AnalysisView = React.createClass({
         return (
             <div>
                 <h5> Your Analysis </h5>
-                <textarea placeholder="This was quite a ride. How could it be better? Can your method be used elsewhere? " />
+                <AnalysisContentView 
+                    placeholder="This was quite a ride. How could it be better? Can your method be used elsewhere? " />
             </div>
         );
     },
@@ -528,7 +494,7 @@ var ProblemSolvingBox = React.createClass({
 
                     <div id="problem-solving-understand-the-problem">
                         <h5>Understand the problem </h5> 
-                        <textarea placeholder="State the problem in your own words and ensure you have understood the problem correctly" />
+                        <UnderstandProblemView placeholder="State the problem in your own words and ensure you have understood the problem correctly"/>
                     </div>
 
                     <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} 
