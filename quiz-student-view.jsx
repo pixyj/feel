@@ -178,7 +178,7 @@ var QuizAnswerSubmitView = React.createClass({
     render: function() {
         var answerSubmitView;
         if(this.state.quizType === constants.SHORT_ANSWER) {
-            answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" />
+            answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" model={this.props.model}/>
         }
         else {
             answerSubmitView = <MCQSubmitView  ref="answerSubmitView" choices={this.props.model.choices}/>
