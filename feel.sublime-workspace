@@ -4,6 +4,74 @@
 		"selected_items":
 		[
 			[
+				"compo",
+				"componentWillUnmount"
+			],
+			[
+				"comp",
+				"componentDidMount"
+			],
+			[
+				"vec",
+				"vectorModel"
+			],
+			[
+				"hu",
+				"humanPoint"
+			],
+			[
+				"ve",
+				"vectorModel"
+			],
+			[
+				"svg_",
+				"svg_x"
+			],
+			[
+				"cal",
+				"calculateE"
+			],
+			[
+				"calc",
+				"calculateProjection"
+			],
+			[
+				"getK",
+				"getKatexAbsForVector"
+			],
+			[
+				"rend",
+				"renderToString"
+			],
+			[
+				"sv",
+				"svgPoints"
+			],
+			[
+				"hum",
+				"humanToSvgCoordinates"
+			],
+			[
+				"ya",
+				"yAxis"
+			],
+			[
+				"xA",
+				"xAxis"
+			],
+			[
+				"h",
+				"human_x1"
+			],
+			[
+				"PRoj",
+				"ProjectionSVGView"
+			],
+			[
+				"back",
+				"background"
+			],
+			[
 				"Anal",
 				"AnalysisContentView"
 			],
@@ -34,10 +102,6 @@
 			[
 				"sel",
 				"selected"
-			],
-			[
-				"back",
-				"background-color"
 			],
 			[
 				"to",
@@ -82,10 +146,6 @@
 			[
 				"compone",
 				"componentWillUnmount"
-			],
-			[
-				"compo",
-				"componentDidMount"
 			],
 			[
 				"Sh",
@@ -454,84 +514,24 @@
 			[
 				"cu",
 				"current_nodes"
-			],
-			[
-				"cur",
-				"current_nodes"
-			],
-			[
-				"s",
-				"str_nodes"
-			],
-			[
-				"inser",
-				"insert_heap_balance"
-			],
-			[
-				"pri",
-				"priority"
-			],
-			[
-				"tre",
-				"tree_root"
-			],
-			[
-				"tre_",
-				"tree_insert"
-			],
-			[
-				"arg",
-				"argv"
-			],
-			[
-				"prin",
-				"print"
-			],
-			[
-				"ar",
-				"argv"
-			],
-			[
-				"siz",
-				"sizeof"
-			],
-			[
-				"ca",
-				"cache_key"
-			],
-			[
-				"wi",
-				"with_last"
-			],
-			[
-				"coin",
-				"coin_types"
-			],
-			[
-				"d",
-				"diff"
-			],
-			[
-				"max",
-				"max_cumulative_sum"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "problem-solving.html",
+			"file": "projection.jsx",
 			"settings":
 			{
-				"buffer_size": 1660,
+				"buffer_size": 9379,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "markdown-and-preview.jsx",
+			"file": "temp.txt",
 			"settings":
 			{
-				"buffer_size": 1859,
+				"buffer_size": 3728,
 				"line_ending": "Unix"
 			}
 		},
@@ -544,26 +544,25 @@
 			}
 		},
 		{
-			"file": "quiz.css",
 			"settings":
 			{
-				"buffer_size": 2542,
+				"buffer_size": 0,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "quiz-student-view.jsx",
+			"file": "projection.html",
 			"settings":
 			{
-				"buffer_size": 7495,
+				"buffer_size": 1664,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "models.js",
+			"file": "projection.css",
 			"settings":
 			{
-				"buffer_size": 2554,
+				"buffer_size": 311,
 				"line_ending": "Unix"
 			}
 		}
@@ -616,14 +615,24 @@
 	},
 	"file_history":
 	[
-		"/Users/pramod/code/feel/react-quiz.jsx",
+		"/Users/pramod/code/feel/quiz-student-view.jsx",
+		"/Users/pramod/code/feel/projection.css",
+		"/Users/pramod/code/feel/utils.js",
+		"/Users/pramod/code/feel/problem-solving.jsx",
+		"/Users/pramod/code/feel/md-and-math-to-html.js",
 		"/Users/pramod/code/feel/markdown-and-preview.jsx",
+		"/Users/pramod/code/feel/temp.txt",
+		"/Users/pramod/code/feel/problem-solving.html",
+		"/Users/pramod/code/feel/projection.html",
 		"/Users/pramod/code/feel/quiz.css",
+		"/Users/pramod/code/feel/models.js",
+		"/Users/pramod/code/feel/projection.js",
+		"/Users/pramod/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/pramod/code/feel/react-quiz.jsx",
 		"/Users/pramod/code/feel/react-quiz.html",
 		"/Users/pramod/code/feel/quiz.html",
 		"/Users/pramod/code/feel/backbone/backbone.js",
 		"/Users/pramod/code/web/learn-react/react.js",
-		"/Users/pramod/code/feel/problem-solving.jsx",
 		"/Users/pramod/code/web/learn-react/one.js",
 		"/Users/pramod/code/feel/quiz.js",
 		"/Users/pramod/code/web/learn-react/1.html",
@@ -733,17 +742,7 @@
 		"/Users/pramod/code/cs/cs/qna/models.py",
 		"/Users/pramod/code/cs/cs/uber/models.py",
 		"/Users/pramod/code/cs/cs/code/repeat_combo.py",
-		"/Users/pramod/code/cs/cs/code/longest_mono_seq.py",
-		"/Users/pramod/code/cs/cs/code/marbles_together.py",
-		"/Users/pramod/code/cs/cs/chirp/models.py",
-		"/Users/pramod/code/cs/cs/chirp/templates/qna.html",
-		"/Users/pramod/code/cs/cs/uber/utils.py",
-		"/Users/pramod/code/cs/cs/chirp/templates/chirps.html",
-		"/Users/pramod/code/cs/cs/chirp/admin.py",
-		"/Users/pramod/code/cs/cs/chirp/templates/notes.html",
-		"/Users/pramod/code/cs/cs/cs/settings.py",
-		"/Users/pramod/code/cs/cs/qna/admin.py",
-		"/Users/pramod/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings"
+		"/Users/pramod/code/cs/cs/code/longest_mono_seq.py"
 	],
 	"find":
 	{
@@ -762,6 +761,24 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getrequired",
+			"getrequireds",
+			"getwindowsize",
+			"300",
+			"getwindowsize",
+			"getwindow",
+			"getrequiredsvgsi",
+			"getinit",
+			"getwindow",
+			"getiniti",
+			"onclick",
+			"djang",
+			"danger",
+			"yA",
+			"xA",
+			"btn",
+			"bton",
+			"btn",
 			"analysisview",
 			"understandproblem",
 			"understandview",
@@ -847,6 +864,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"ya",
+			"xa",
 			"SHORT_ANSWER",
 			"4",
 			"",
@@ -866,56 +885,56 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "problem-solving.html",
+					"file": "projection.jsx",
 					"settings":
 					{
-						"buffer_size": 1660,
+						"buffer_size": 9379,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1328,
-								1328
+								1731,
+								1731
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 574.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "markdown-and-preview.jsx",
+					"file": "temp.txt",
 					"settings":
 					{
-						"buffer_size": 1859,
+						"buffer_size": 3728,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1781,
-								1781
+								260,
+								279
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -937,8 +956,8 @@
 						"selection":
 						[
 							[
-								8095,
-								8126
+								8159,
+								8164
 							]
 						],
 						"settings":
@@ -948,60 +967,29 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3096.0,
+						"translation.y": 4934.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "quiz.css",
 					"settings":
 					{
-						"buffer_size": 2542,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2074,
-								2074
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1792.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "quiz-student-view.jsx",
-					"settings":
-					{
-						"buffer_size": 7495,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4926,
-								4922
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1010,29 +998,89 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "models.js",
+					"buffer": 4,
+					"file": "projection.html",
 					"settings":
 					{
-						"buffer_size": 2554,
+						"buffer_size": 1664,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2205,
-								2205
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 53.0,
-						"translation.y": 1520.0,
+						"translation.x": 0.0,
+						"translation.y": 72.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "projection.css",
+					"settings":
+					{
+						"buffer_size": 311,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								210,
+								203
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"file": "temp.txt",
+					"settings":
+					{
+						"buffer_size": 3728,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3636,
+								1970
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 26093.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1057,11 +1105,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.954586739328,
 			1.0
 		],
 		"rows":
@@ -1081,6 +1136,66 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"projection.cs",
+				"projection.css"
+			],
+			[
+				"projection.h",
+				"projection.html"
+			],
+			[
+				"temp",
+				"temp.txt"
+			],
+			[
+				"pro",
+				"problem-solving.jsx"
+			],
+			[
+				"u",
+				"utils.js"
+			],
+			[
+				"mark",
+				"markdown-and-preview.jsx"
+			],
+			[
+				"md-",
+				"md-and-math-to-html.js"
+			],
+			[
+				"projection.c",
+				"projection.css"
+			],
+			[
+				"stude",
+				"quiz-student-view.jsx"
+			],
+			[
+				"te",
+				"temp.txt"
+			],
+			[
+				"problem-",
+				"problem-solving.jsx"
+			],
+			[
+				"probl",
+				"problem-solving.html"
+			],
+			[
+				"proje",
+				"projection.css"
+			],
+			[
+				"proj",
+				"projection.js"
+			],
+			[
+				"quiz-stu",
+				"quiz-student-view.jsx"
+			],
 			[
 				"mod",
 				"models.js"

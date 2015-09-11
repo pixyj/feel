@@ -1,0 +1,29 @@
+svg {
+    background: #fef9fe;
+};
+
+#a, #b {
+    z-index: 2;
+}
+
+
+.projection-interactive {
+    height: 600px;
+}
+
+.vector-A {
+    background-color: #6A1B9A !important;
+}
+
+.vector-B {
+    background-color: #C62828 !important;
+}
+
+.vector-A-details {
+    color: #6A1B9A;
+}
+
+
+.vector-B-details {
+    color: #C62828;
+}

@@ -515,7 +515,7 @@ var ProblemSolvingBox = React.createClass({
 
 var init = function() {
 
-    React.render(
+    ok = React.render(
         <ProblemSolvingBox />, 
         document.getElementById("page-container")
     );

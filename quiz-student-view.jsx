@@ -236,6 +236,12 @@ var QuizQuestionView = React.createClass({
         };
     },
 
+    shouldComponentUpdate: function() {
+        console.log("hi");
+        return true;
+    },  
+
+
     render: function() {
         var html = this.props.questionDisplay || this.state.questionDisplay || constants.QUESTION_PLACEHOLDER;
 
