@@ -1,7 +1,7 @@
 var app = function() {
 
     var quizModel = new QuizModel({
-        quizType: constants.SHORT_ANSWER,
+        quizType: constants.MCQ,
         questionInput: "Hi There",
         questionDisplay: "If you are using  a distributed `NoSQL` database, can you provide `ACID` capabilities? ",
         answer: "12"

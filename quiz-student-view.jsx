@@ -103,7 +103,7 @@ var MCQSubmitView = React.createClass({
             rows.push(row);
         }
         return (
-            <div>
+            <div className="quiz-student-choice-container">
                 {rows}
             </div>
         );
