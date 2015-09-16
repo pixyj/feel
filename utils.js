@@ -8,6 +8,30 @@ String.prototype.format = function() {
     return formatted;
 };
 
+var isNewlineTheLastChar = function(s) {
+    if(s.length === 0) {
+        return false;
+    }
+    var newLine = new RegExp("\n");
+    var matched = newLine.exec(s);
+    if(matched === null) {
+        return false;
+    }
+    return matched.index >= s.length - 2;
+};
+
+var isNewlineTheFirstChar = function(s) {
+    if(s.length === 0) {
+        return false;
+    }
+    var newLine = new RegExp("\n");
+    var matched = newLine.exec(s);
+    if(matched === null) {
+        return false;
+    }
+    return matched.index <=1;
+};
+
 //inspired by http://ejohn.org/files/pretty.js
 var prettyDate = function(utcDate) {
     var utcNow = getUTCDate(new Date());
