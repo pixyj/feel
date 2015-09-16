@@ -42,7 +42,9 @@ var SingleChoiceInputView = React.createClass({
     },
 
     componentDidMount: function() {
-        this.focus();
+        if(this.props.shouldFocus) {
+            this.focus();
+        }
     },
 
     render: function() {
@@ -65,7 +67,7 @@ var SingleChoiceInputView = React.createClass({
                 </div>
                 <div className="col s10">
                      <textarea  className="quiz-creator-choice-input" 
-                                ref="textarea" placeholder="Choice"  
+                                ref="textarea" placeholder="New Choice"  
                                 onKeyUp={this.updateChoiceText} 
                                 onChange={this.updateChoiceText} 
                                 value={this.state.choiceInput} 
@@ -79,7 +81,12 @@ var SingleChoiceInputView = React.createClass({
     },
 
     focus: function() {
-        this.refs.input.getDOMNode().focus();
+        console.log("focusing"); 
+        var el = this.refs.textarea.getDOMNode();
+        var length = el.value.length;
+        el.focus();
+        el.setSelectionRange(length, length);
+        
         return this;
     },
 
@@ -133,32 +140,47 @@ var ChoiceCollectionInputView = React.createClass({
 
     componentDidMount: function() {
         this.props.model.choices.on("remove", this.updateChoices, this);
+        this.props.model.choices.on("add", this.updateChoices, this);
+        window.choices = this.props.model.choices;
     },
 
     componentWillUnmount: function() {
         this.props.model.choices.off("remove", this.updateChoices);
+        this.props.model.choices.off("add", this.updateChoices, this);
     },
 
     render: function() {
+
         var choices = this.props.model.choices;
+        var length = choices.length;
+
+        if(choices.length === 0) {
+            return (
+                <div>
+                    <button className="btn waves-effect waves-light quiz-creator-add-choice" onClick={this.addChoice}>
+                        Add Choice
+                    </button>
+                </div>
+            );
+        };
+
         var rows = [];
         var latestElement = null;
-        for(var i = 0; i < choices.length; i++) {
+        for(var i = 0; i < length; i++) {
             var model = choices.at(i);
             var key = model.attributes.choiceInput || model.cid;
-            latestElement = <SingleChoiceInputView key={key} model={model} parent={this}/>
+            latestElement = <SingleChoiceInputView 
+                                key={key} 
+                                model={model} 
+                                parent={this} 
+                                shouldFocus= {model.attributes.choiceInput === choices.currentChoiceInput}/>
             rows.push(latestElement);
         }
         this.latestElement = latestElement;
 
         return (
-            <div>
-                <button className="btn waves-effect waves-light quiz-creator-add-choice" onClick={this.addChoice}>
-                    Add Choice
-                </button>
-
+            <div className="quiz-creator-choice-collection">
                 {rows}
-
             </div>
         );
     },

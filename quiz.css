@@ -47,6 +47,10 @@
     color: #121212 !important;
 }
 
+.quiz-creator-choice-collection {
+    margin-top: 50px;
+}
+
 .quiz-creator-choice-input {
     height: 50px;
 }

@@ -8,17 +8,48 @@ var constants = {
 
 var ChoiceModel = Backbone.Model.extend({
 
+    idAttribute: "choiceInput",
+
     defaults: {
         choiceInput: "",
         choiceDisplay: "",
-        
         isCorrect: false
     }
 
 });
 
+//todo -> figure out where to reset collection and switch off event listeners.
 var ChoiceCollection = Backbone.Collection.extend({
-    model: ChoiceModel
+
+    model: ChoiceModel,
+
+    initialize: function() {
+        this.on("add", this.listenToModelChange, this);
+
+        //http://stackoverflow.com/a/9137772/817277
+        _.defer(_.bind(this.addModelChangeListeners, this)); 
+
+        this.currentChoiceInput = "";
+    },
+
+    addModelChangeListeners: function(model) {
+        _.each(this.models, function(model) {
+            this.listenToModelChange(model);
+        }, this);
+    },
+
+    listenToModelChange: function(model) {
+        model.on("change:choiceInput", this.addNewEmptyChoice, this);
+    },
+
+    addNewEmptyChoice: function(model) {
+        console.log("Choice Input:", model.attributes.choiceInput);
+        if(this.any({choiceInput: ""})) {
+            return;
+        }
+        this.currentChoiceInput = model.attributes.choiceInput;
+        this.add({});
+    }
 });
 
 //#todo -> Should I just change it the name to `GuessModel` ?
@@ -67,9 +98,6 @@ var QuizModel = Backbone.Model.extend({
     initialize: function() {
 
         var placeholderChoices = [
-            {
-                choiceInput: ""
-            },
             {
                 choiceInput: ""
             }

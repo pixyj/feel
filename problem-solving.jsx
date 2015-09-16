@@ -316,7 +316,6 @@ var PlanSingleView = React.createClass({
 
                 </button> 
 
-                <hr />
             </div>
         );
     },
