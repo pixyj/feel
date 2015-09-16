@@ -62,7 +62,7 @@ var MarkdownAndPreviewAttrs = {
 
 
     afterUpdateContent: function() {
-        console.warn("Implement afterUpdateContent in the subclass if you want to save the details" );
+        //console.warn("Implement afterUpdateContent in the subclass if you want to save the details" );
             //optional. Implement in subclass if you want to. 
     }
 
