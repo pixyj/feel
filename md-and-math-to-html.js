@@ -22,14 +22,14 @@ var mdAndMathToHtml = function(s) {
         var mathHtmlExp = katex.renderToString(mathExp);
         var beforeInput = s.slice(nowIndex, startTagPosition.index);
         before = converter.makeHtml(beforeInput);
-        if(nowIndex === 0 && isPlainTextWithNoTags(before)) {
+        if(nowIndex === 0 && isPlainTextWithPTag(before)) {
             console.log("Trimming before", before);
             before = before.slice(3, before.length-4); //remove the p tags
             if(isNewlineTheLastChar(beforeInput)) {
                 before += "<p></p>"
             }
         }
-        else if(!isNewlineTheLastChar(beforeInput) && isPlainTextWithNoTags(before)) {
+        else if(!isNewlineTheLastChar(beforeInput) && isPlainTextWithPTag(before)) {
             console.log("Trimming before", before);
             before = before.slice(3, before.length-4); //remove the p tags
         }
@@ -46,7 +46,7 @@ var mdAndMathToHtml = function(s) {
     var lastInput = s.slice(nowIndex, s.length);
     console.log("lastInput: ", lastInput);
     last = converter.makeHtml(lastInput);
-    if(isPlainTextWithNoTags(last)) {
+    if(isPlainTextWithPTag(last)) {
         last = last.slice(3, last.length-4); //todo. make code DRY
     }
     resultArray.push(last);
@@ -55,7 +55,7 @@ var mdAndMathToHtml = function(s) {
     return resultArray.join("");
 }
 
-var isPlainTextWithNoTags = function(s) {
+var isPlainTextWithPTag = function(s) {
     var tags = ["h1", "img", "h2", "em", "<strong>", "<blockquote>", "<pre>", "<ol>", "<ul>", "<hr>"];
     if(s.indexOf("<p>") !== 0) {
         return false;
@@ -72,6 +72,10 @@ var isPlainTextWithNoTags = function(s) {
     }
     return true;
 }
+
+var isWrappedByPTag = function(s) {
+    return s.indexOf("<p>") === 0;
+};
 
 var isNewlineTheLastChar = function(s) {
     if(s.length === 0) {

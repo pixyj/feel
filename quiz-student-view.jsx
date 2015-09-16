@@ -48,11 +48,11 @@ var ChoiceSingleCheckView = React.createClass({
 
     render: function() {
 
-        var html = this.props.choice.choiceDisplay;
+        var html = this.props.choice.choiceDisplay || "New Choice";
 
-        if(!html) {
-            html = "New Choice"
-        }
+        if(!isWrappedByPTag(html)) {
+            html = "<p>" + html + "</p>";
+        };
 
         var selectedClass = "quiz-student-choice-selected";
         var notSelectedClass = "quiz-student-choice-not-selected"

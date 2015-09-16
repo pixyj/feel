@@ -8,11 +8,10 @@ var constants = {
 
 var ChoiceModel = Backbone.Model.extend({
 
-    idAttribute: "choiceInput",
-
     defaults: {
         choiceInput: "",
         choiceDisplay: "",
+        
         isCorrect: false
     }
 
@@ -68,10 +67,10 @@ var QuizModel = Backbone.Model.extend({
 
         var placeholderChoices = [
             {
-                choiceInput: "Choice 1"
+                choiceInput: ""
             },
             {
-                choiceInput: "Choice 2"
+                choiceInput: ""
             }
         ];
         placeholderChoices.forEach(function(c) {
