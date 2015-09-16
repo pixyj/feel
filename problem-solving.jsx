@@ -1,7 +1,7 @@
 var app = function() {
 
     var quizModel = new QuizModel({
-        quizType: constants.MCQ,
+        quizType: constants.SHORT_ANSWER,
         questionInput: "Hi There",
         questionDisplay: "If you are using  a distributed `NoSQL` database, can you provide `ACID` capabilities? ",
         answer: "12"
@@ -283,18 +283,23 @@ var PlanSingleView = React.createClass({
             
             <div id={domId} className="problem-solving-single-plan-container">
 
-                
+                <hr /> 
+
                 <div>
-                    <span className="problem-solving-plan-heading"> Plan {planNumber}: </span>
-                    <span> Need any ideas? See <a href="https://en.wikipedia.org/wiki/How_to_Solve_It" target="_blank"> 
-                                                    How to solve it
-                                                </a> 
+                    <span className="problem-solving-plan-heading"> 
+                        Plan {planNumber}: 
+                    </span>
+
+                    <span className="problem-solving-plan-heading"> 
+                        Need any ideas? 
+                        See <a href="https://en.wikipedia.org/wiki/How_to_Solve_It" target="_blank"> 
+                                How to solve it
+                            </a> 
                     </span>
                 </div>
 
-                <hr /> 
-
-                <PlanContentView model={this.props.model} />
+                
+                <PlanContentView model={this.props.model} placeholder="So, what's your plan?"/>
 
                 <h5> Your Guess? </h5>
 
@@ -303,7 +308,7 @@ var PlanSingleView = React.createClass({
                 <GuessHistoryView guessCollection={this.props.quizModel.guessCollection} 
                                   planNumber={planNumber}
                 />
-                
+
                 <button className="problem-solving-create-plan-btn btn" 
                         onClick={this.addPlan}>
                     
@@ -311,7 +316,7 @@ var PlanSingleView = React.createClass({
 
                 </button> 
 
-
+                <hr />
             </div>
         );
     },
@@ -477,6 +482,7 @@ var ProblemSolvingBox = React.createClass({
                     </div>
                 </div>
                 
+                <hr />
                 {/* Understanding, Plans and Analysis */}
                 <h5>Understand the problem </h5> 
                 
