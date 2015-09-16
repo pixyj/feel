@@ -453,26 +453,16 @@ var ProblemSolvingBox = React.createClass({
         return (
             <div>
 
-                {/* Top Heading */}
-                <div className="row">
-                    
-                    <div className="col s6">
-                        <h4 className="problem-solving-top-header"> {quizHeading} </h4>
-                    </div>
-                    <div className="col s6">
-                        <h4 className="problem-solving-top-header"> {solveItHeading} </h4>
-                    </div>
-                </div>
-
                 {/* Problem Definition | Solve It */}
                 <div className="row problem-solving-question-and-solve-it-container">
 
-                    <div className="col s6">
+                    <div className="col s12 m6">
+                        <h4 className="problem-solving-top-header"> {quizHeading} </h4>
                         <QuizQuestionView questionDisplay={this.state.quizModel.attributes.questionDisplay} />
                     </div>
 
-                    <div className="col s6">
-
+                    <div className="col s12 m6">
+                        <h4 className="problem-solving-top-header"> {solveItHeading} </h4>
                         <ol id="problem-solving-steps-list">
 
                             <li > <a href="#problem-solving-understand-the-problem"> Understand the Problem </a> </li>
@@ -484,28 +474,22 @@ var ProblemSolvingBox = React.createClass({
                     {/* #todo. Come up with a better line about incubation */ }
                         <h6>Exhausted? Take a break and come back later </h6>
 
-                        
-
                     </div>
                 </div>
                 
                 {/* Understanding, Plans and Analysis */}
-                <div>
+                <h5>Understand the problem </h5> 
+                
+                <UnderstandProblemView placeholder="State the problem in your own words and ensure you have understood the problem correctly"/>
+                
+                <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} 
+                                    quizModel={this.state.quizModel}
+                                    guessCollection={this.state.quizModel.guessCollection} 
 
-                    <div id="problem-solving-understand-the-problem">
-                        <h5>Understand the problem </h5> 
-                        <UnderstandProblemView placeholder="State the problem in your own words and ensure you have understood the problem correctly"/>
-                    </div>
+                />
 
-                    <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} 
-                                        quizModel={this.state.quizModel}
-                                        guessCollection={this.state.quizModel.guessCollection} 
-
-                    />
-
-                    <AnalysisView guessCollection={this.state.quizModel.guessCollection} />
+                <AnalysisView guessCollection={this.state.quizModel.guessCollection} />
                     
-                </div>
 
             </div>
         );

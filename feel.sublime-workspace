@@ -4,6 +4,78 @@
 		"selected_items":
 		[
 			[
+				"mark",
+				"markerEnd"
+			],
+			[
+				"huma",
+				"humanToSvgCoordinates"
+			],
+			[
+				"hum",
+				"humanToSvgCoordinates"
+			],
+			[
+				"vectorM",
+				"vectorModel"
+			],
+			[
+				"e_",
+				"e_x2"
+			],
+			[
+				"p_",
+				"p_x2"
+			],
+			[
+				"x",
+				"x_hat"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"ve",
+				"vectorDotProduct"
+			],
+			[
+				"len",
+				"lengthB"
+			],
+			[
+				"leng",
+				"lengthB"
+			],
+			[
+				"lengh",
+				"lengthB"
+			],
+			[
+				"getS",
+				"getStateAttrs"
+			],
+			[
+				"res",
+				"resizeSvg"
+			],
+			[
+				"human",
+				"human_y"
+			],
+			[
+				"hu",
+				"human_x"
+			],
+			[
+				"li",
+				"line"
+			],
+			[
+				"lin",
+				"lineName"
+			],
+			[
 				"compo",
 				"componentWillUnmount"
 			],
@@ -13,14 +85,6 @@
 			],
 			[
 				"vec",
-				"vectorModel"
-			],
-			[
-				"hu",
-				"humanPoint"
-			],
-			[
-				"ve",
 				"vectorModel"
 			],
 			[
@@ -46,10 +110,6 @@
 			[
 				"sv",
 				"svgPoints"
-			],
-			[
-				"hum",
-				"humanToSvgCoordinates"
 			],
 			[
 				"ya",
@@ -280,10 +340,6 @@
 				"textarea"
 			],
 			[
-				"li",
-				"link	Tag"
-			],
-			[
 				"Ra",
 				"RadioList"
 			],
@@ -436,10 +492,6 @@
 				"line_index"
 			],
 			[
-				"lin",
-				"line_index"
-			],
-			[
 				"p_no",
 				"p_not_b"
 			],
@@ -460,60 +512,8 @@
 				"sub_problems"
 			],
 			[
-				"len",
-				"length"
-			],
-			[
-				"le",
-				"letters"
-			],
-			[
 				"sor",
 				"sorted_seq"
-			],
-			[
-				"L",
-				"L_without_i"
-			],
-			[
-				"L_wi",
-				"L_without_i"
-			],
-			[
-				"L_",
-				"L_without_i"
-			],
-			[
-				"op",
-				"optimal_chaining"
-			],
-			[
-				"ran",
-				"randint"
-			],
-			[
-				"ri",
-				"right_cost"
-			],
-			[
-				"m",
-				"mat"
-			],
-			[
-				"min",
-				"min_cost"
-			],
-			[
-				"lef",
-				"left_size"
-			],
-			[
-				"A",
-				"A1"
-			],
-			[
-				"cu",
-				"current_nodes"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "projection.jsx",
 			"settings":
 			{
-				"buffer_size": 9379,
+				"buffer_size": 12532,
 				"line_ending": "Unix"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "problem-solving.jsx",
 			"settings":
 			{
-				"buffer_size": 14144,
+				"buffer_size": 14149,
 				"line_ending": "Unix"
 			}
 		},
@@ -564,6 +564,26 @@
 			{
 				"buffer_size": 311,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "utils.js",
+			"settings":
+			{
+				"buffer_size": 2874,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "",
+			"file": "temp.js",
+			"file_size": 704,
+			"file_write_time": 1442121037000000,
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix",
+				"name": "//////////////////////////////////////////////////"
 			}
 		}
 	],
@@ -761,6 +781,19 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"drawsq",
+			"getrequire",
+			"move",
+			"debug",
+			"calcp",
+			"calcstate",
+			"getrequire",
+			"this.getrequire",
+			"humantosvgco",
+			"getsvgpoints",
+			"getrequiredsvgsize",
+			"listentoresize",
+			"resize",
 			"getrequired",
 			"getrequireds",
 			"getwindowsize",
@@ -885,7 +918,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -893,15 +926,15 @@
 					"file": "projection.jsx",
 					"settings":
 					{
-						"buffer_size": 9379,
+						"buffer_size": 12532,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1731,
-								1731
+								7999,
+								7999
 							]
 						],
 						"settings":
@@ -911,7 +944,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 574.0,
+						"translation.y": 5007.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -949,15 +982,15 @@
 					"file": "problem-solving.jsx",
 					"settings":
 					{
-						"buffer_size": 14144,
+						"buffer_size": 14149,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8159,
-								8164
+								0,
+								0
 							]
 						],
 						"settings":
@@ -967,7 +1000,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4934.0,
+						"translation.y": 7426.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1020,7 +1053,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 72.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1050,6 +1083,63 @@
 						"zoom_level": 1.0
 					},
 					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "utils.js",
+					"settings":
+					{
+						"buffer_size": 2874,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2232,
+								2246
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 596.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "temp.js",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "//////////////////////////////////////////////////",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
 				}
 			]
 		},
@@ -1069,8 +1159,8 @@
 						"selection":
 						[
 							[
-								3636,
-								1970
+								2103,
+								2105
 							]
 						],
 						"settings":
@@ -1080,7 +1170,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 26093.0,
+						"translation.y": 30536.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1137,6 +1227,10 @@
 		"selected_items":
 		[
 			[
+				"u",
+				"utils.js"
+			],
+			[
 				"projection.cs",
 				"projection.css"
 			],
@@ -1151,10 +1245,6 @@
 			[
 				"pro",
 				"problem-solving.jsx"
-			],
-			[
-				"u",
-				"utils.js"
 			],
 			[
 				"mark",
