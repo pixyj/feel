@@ -7,6 +7,17 @@ var mdAndMathToHtml = function(s) {
     var walker = parsed.walker();
     var event, node;
 
+    var isMathLiteral = function(s) {
+        s = s.trim();
+        //starts with <math> and ends with </math>
+        return s.indexOf("<math>") === 0 && s.indexOf("</math>") === s.length - 7
+    };
+
+    var getContentFromMathLiteral = function(s) {
+        s = s.trim();
+        return s.slice(6, s.length-7);
+    };
+
     var now = false;
     while ((event = walker.next())) {
         node = event.node;
@@ -34,6 +45,11 @@ var mdAndMathToHtml = function(s) {
                     node.literal = "";
                 }
             }
+        }
+
+        else if(node.type === "HtmlBlock" && isMathLiteral(node.literal)) {
+            node._type = "Katex";
+            node.literal = katex.renderToString(getContentFromMathLiteral(node.literal));
         }
     }
 
