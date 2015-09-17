@@ -170,7 +170,6 @@ var QuizAnswerSubmitView = React.createClass({
     },
 
     updatePreview: function() {
-        console.log("updatePreview called");
         var state = this.props.model.toJSON();
         this.setState(state);
     },
@@ -237,7 +236,6 @@ var QuizQuestionView = React.createClass({
     },
 
     shouldComponentUpdate: function() {
-        console.log("hi");
         return true;
     },  
 
@@ -284,7 +282,7 @@ var QuizPreview = React.createClass({
     },
 
     updatePreview: function() {
-        console.log("updatePreview called");
+        //console.log("updatePreview called");
         this.refs.questionView.setState({
             questionDisplay: this.props.model.attributes.questionDisplay
         });

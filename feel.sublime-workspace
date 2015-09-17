@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"models",
+				"modelsToBeRemoved"
+			],
+			[
+				"cho",
+				"choiceInput"
+			],
+			[
+				"choic",
+				"choiceInputHash"
+			],
+			[
+				"choi",
+				"choiceInputHash"
+			],
+			[
+				"ci",
+				"cid"
+			],
+			[
 				"mark",
 				"markerEnd"
 			],
@@ -176,10 +196,6 @@
 				"console"
 			],
 			[
-				"choic",
-				"choices"
-			],
-			[
 				"Co",
 				"Collection"
 			],
@@ -222,10 +238,6 @@
 			[
 				"col",
 				"Collection"
-			],
-			[
-				"choi",
-				"choiceInput"
 			],
 			[
 				"cinpu",
@@ -502,18 +514,6 @@
 			[
 				"di",
 				"diff2"
-			],
-			[
-				"diff",
-				"diff1"
-			],
-			[
-				"su",
-				"sub_problems"
-			],
-			[
-				"sor",
-				"sorted_seq"
 			]
 		]
 	},
@@ -539,7 +539,7 @@
 			"file": "problem-solving.jsx",
 			"settings":
 			{
-				"buffer_size": 14149,
+				"buffer_size": 13860,
 				"line_ending": "Unix"
 			}
 		},
@@ -570,20 +570,56 @@
 			"file": "utils.js",
 			"settings":
 			{
-				"buffer_size": 2874,
+				"buffer_size": 2875,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "",
-			"file": "temp.js",
-			"file_size": 704,
-			"file_write_time": 1442121037000000,
+			"file": "react-quiz.jsx",
 			"settings":
 			{
-				"buffer_size": 0,
-				"line_ending": "Unix",
-				"name": "//////////////////////////////////////////////////"
+				"buffer_size": 9231,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "models.js",
+			"settings":
+			{
+				"buffer_size": 4292,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "quiz-student-view.jsx",
+			"settings":
+			{
+				"buffer_size": 7680,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "md-and-math-to-html.js",
+			"settings":
+			{
+				"buffer_size": 1103,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "react-quiz.html",
+			"settings":
+			{
+				"buffer_size": 1442,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "commonmark/commonmark.js",
+			"settings":
+			{
+				"buffer_size": 166532,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -635,6 +671,7 @@
 	},
 	"file_history":
 	[
+		"/Users/pramod/code/feel/temp.js",
 		"/Users/pramod/code/feel/quiz-student-view.jsx",
 		"/Users/pramod/code/feel/projection.css",
 		"/Users/pramod/code/feel/utils.js",
@@ -761,8 +798,7 @@
 		"/Users/pramod/code/cs/cs/chirp/static/chirp.css",
 		"/Users/pramod/code/cs/cs/qna/models.py",
 		"/Users/pramod/code/cs/cs/uber/models.py",
-		"/Users/pramod/code/cs/cs/code/repeat_combo.py",
-		"/Users/pramod/code/cs/cs/code/longest_mono_seq.py"
+		"/Users/pramod/code/cs/cs/code/repeat_combo.py"
 	],
 	"find":
 	{
@@ -781,6 +817,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"idatt",
+			"idattribute",
+			"idatt",
+			"console.info",
+			"console.log",
 			"drawsq",
 			"getrequire",
 			"move",
@@ -897,6 +938,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"//console.info",
+			"console.info",
 			"ya",
 			"xa",
 			"SHORT_ANSWER",
@@ -918,7 +961,7 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -944,7 +987,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5007.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -982,7 +1025,7 @@
 					"file": "problem-solving.jsx",
 					"settings":
 					{
-						"buffer_size": 14149,
+						"buffer_size": 13860,
 						"regions":
 						{
 						},
@@ -1000,7 +1043,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7426.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1089,35 +1132,7 @@
 					"file": "utils.js",
 					"settings":
 					{
-						"buffer_size": 2874,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2232,
-								2246
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 596.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "temp.js",
-					"settings":
-					{
-						"buffer_size": 0,
+						"buffer_size": 2875,
 						"regions":
 						{
 						},
@@ -1130,9 +1145,8 @@
 						],
 						"settings":
 						{
-							"auto_name": "//////////////////////////////////////////////////",
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
@@ -1140,13 +1154,7 @@
 						"zoom_level": 1.0
 					},
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
 					"buffer": 1,
 					"file": "temp.txt",
@@ -1159,8 +1167,8 @@
 						"selection":
 						[
 							[
-								2103,
-								2105
+								2705,
+								2705
 							]
 						],
 						"settings":
@@ -1170,7 +1178,175 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 30536.0,
+						"translation.y": 1401.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "react-quiz.jsx",
+					"settings":
+					{
+						"buffer_size": 9231,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5406,
+								5406
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2286.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "models.js",
+					"settings":
+					{
+						"buffer_size": 4292,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2176,
+								2176
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 684.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "quiz-student-view.jsx",
+					"settings":
+					{
+						"buffer_size": 7680,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								862,
+								869
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "md-and-math-to-html.js",
+					"settings":
+					{
+						"buffer_size": 1103,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								50,
+								50
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "react-quiz.html",
+					"settings":
+					{
+						"buffer_size": 1442,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								894,
+								894
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "commonmark/commonmark.js",
+					"settings":
+					{
+						"buffer_size": 166532,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1079,
+								1079
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1195,18 +1371,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.954586739328,
 			1.0
 		],
 		"rows":
@@ -1226,6 +1395,42 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"md",
+				"md-and-math-to-html.js"
+			],
+			[
+				"react-qui",
+				"react-quiz.html"
+			],
+			[
+				"rea",
+				"react-quiz.jsx"
+			],
+			[
+				"mod",
+				"models.js"
+			],
+			[
+				"react-",
+				"react-quiz.jsx"
+			],
+			[
+				"mo",
+				"models.js"
+			],
+			[
+				"ma",
+				"md-and-math-to-html.js"
+			],
+			[
+				"quiz-",
+				"quiz-student-view.jsx"
+			],
+			[
+				"reac",
+				"react-quiz.jsx"
+			],
 			[
 				"u",
 				"utils.js"
@@ -1287,10 +1492,6 @@
 				"quiz-student-view.jsx"
 			],
 			[
-				"mod",
-				"models.js"
-			],
-			[
 				"studen",
 				"quiz-student-view.jsx"
 			],
@@ -1301,10 +1502,6 @@
 			[
 				"pr",
 				"problem-solving.jsx"
-			],
-			[
-				"ma",
-				"markdown-and-preview.jsx"
 			],
 			[
 				"proble",
@@ -1453,10 +1650,6 @@
 			[
 				"chi",
 				"chirp/static/chirp.css"
-			],
-			[
-				"mo",
-				"qna/models.py"
 			],
 			[
 				"chir",
