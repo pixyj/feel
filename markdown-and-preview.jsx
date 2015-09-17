@@ -16,6 +16,11 @@ var MarkdownAndPreviewAttrs = {
     render: function() {
         var display = this.state.display;
 
+        var className = "";
+        if(display) {
+            className = "md-preview-with-content";
+        }
+
         return (
             
                 <div className="row">
@@ -38,7 +43,9 @@ var MarkdownAndPreviewAttrs = {
                         <h6 className="md-and-html-heading">
                             HTML Preview
                         </h6>
-                        <div dangerouslySetInnerHTML={{__html: display}} />
+                        <div className={className} 
+                              dangerouslySetInnerHTML={{__html: display}} 
+                        />
 
                     </div>
 

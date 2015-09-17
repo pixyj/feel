@@ -29,8 +29,11 @@
 }
 
 .quiz-question-preview {
-    border: 2px dotted aqua; 
     padding: 5px;
+}
+
+.md-preview-with-content {
+    margin-top: -0.5em; 
 }
 
 .quiz-student-short-answer-input {
