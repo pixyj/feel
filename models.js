@@ -29,7 +29,7 @@ var ChoiceCollection = Backbone.Collection.extend({
         //http://stackoverflow.com/a/9137772/817277
         _.defer(_.bind(this.addModelChangeListeners, this)); 
 
-        this.currentChoiceInput = "";
+        this.currentModelCid = null;
     },
 
     addModelChangeListeners: function(model) {
@@ -47,7 +47,28 @@ var ChoiceCollection = Backbone.Collection.extend({
         if(this.any({choiceInput: ""})) {
             return;
         }
-        this.currentChoiceInput = model.attributes.choiceInput;
+        this.currentModelCid = model.cid;
+        console.log("currentModelCid: ", model.cid);
+
+        //remove duplicates. But if currently being edited model is a duplicate, 
+        //don't remove it since it is changing on every keystroke and it could be a substring of a previous choice. 
+        //We have to do this since Backbone does not enforce uniqueness 
+        //based on `idAttribute` on model.change, but does so only on model.add
+        var choiceInputHash = {};
+        var modelsToBeRemoved = [];
+        _.each(this.models, function(model) {
+            var isDupe = !_.isUndefined(choiceInputHash[model.attributes.choiceInput]);
+            if(isDupe) {
+                if(model.cid !== this.currentModelCid) {
+                    modelsToBeRemoved.push(model);
+                }
+            }
+            else {
+                choiceInputHash[model.attributes.choiceInput] = model.cid;
+            }
+        }, this);
+        
+        this.remove(modelsToBeRemoved);
         this.add({});
     }
 });

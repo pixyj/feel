@@ -164,20 +164,25 @@ var ChoiceCollectionInputView = React.createClass({
             );
         };
 
+        console.log("View currentModelCid: ", choices.currentModelCid);
+
         var rows = [];
         var latestElement = null;
         for(var i = 0; i < length; i++) {
             var model = choices.at(i);
-            var key = model.attributes.choiceInput || model.cid;
+            var key = model.cid;
+            var shouldFocus = model.cid === choices.currentModelCid;
+            if(shouldFocus) {
+                console.log("Focusing on ", model.attributes.choiceInput);
+            }
             latestElement = <SingleChoiceInputView 
                                 key={key} 
                                 model={model} 
                                 parent={this} 
-                                shouldFocus= {model.attributes.choiceInput === choices.currentChoiceInput}/>
+                                shouldFocus= {shouldFocus} />
             rows.push(latestElement);
         }
-        this.latestElement = latestElement;
-
+        
         return (
             <div className="quiz-creator-choice-collection">
                 {rows}
