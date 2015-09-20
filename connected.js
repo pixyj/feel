@@ -1,3 +1,5 @@
+"use strict";
+
 var graph = {
 
     levels: [
@@ -52,9 +54,9 @@ var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, le
     leftMarginWidth = rightMarginWidth = nodePlusMarginWidth*0.2;
     var nodeWidth = nodePlusMarginWidth - leftMarginWidth - rightMarginWidth;
 
-    x = leftMarginWidth + position*nodePlusMarginWidth;
+    var x = leftMarginWidth + position*nodePlusMarginWidth;
 
-    attrs = {
+    var attrs = {
         x: x,
         y: y,
         width: nodeWidth
@@ -78,9 +80,12 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     var attrs = getForeignObjectAttrs(levelIndex, position, levelConceptCount, svgWidth, levelHeight);
     var f = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
 
+
     f = $(f).append(p).attr(attrs);
     svg.append(f);
-    return p.height();
+    var height = p.height();
+    f.attr("height", height); //for safari
+    return height;
 };
 
 var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
@@ -89,12 +94,12 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
     length = level.length;
 
     var maxHeight = 0;
+    var levelNodes = [];
     for(i = 0; i < length; i++) {
         var node = level[i];
         var height = drawNode(node, levelIndex, i, length, svgAttrs, levelHeight);
         maxHeight = _.max([maxHeight, height]);
     }
-
     return maxHeight;
 };
 
@@ -105,7 +110,7 @@ var drawAllNodes = function(levels, svgAttrs) {
     var cumulativeLevelHeight = 30;
     for(i = 0 ; i < length; i++) {
         var level = levels[i];
-        maxLevelHeight = drawLevelNodes(level, i, svgAttrs, cumulativeLevelHeight);
+        var maxLevelHeight = drawLevelNodes(level, i, svgAttrs, cumulativeLevelHeight);
         cumulativeLevelHeight = cumulativeLevelHeight + maxLevelHeight + 30;
     }
 };
