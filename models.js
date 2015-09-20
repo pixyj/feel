@@ -70,6 +70,10 @@ var ChoiceCollection = Backbone.Collection.extend({
         
         this.remove(modelsToBeRemoved);
         this.add({});
+    },
+
+    isSingleAnswerCorrect: function() {
+        return this.where({isCorrect: true}).length === 1;
     }
 });
 
