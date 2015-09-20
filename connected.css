@@ -1,0 +1,47 @@
+#page-container {
+    margin-left: 2%;
+    margin-top: 2%;
+    margin-right: 2%;
+
+
+}
+
+.chapters-and-concepts-heading {
+    text-align: center;
+}
+
+svg {
+    background: #fafafa;
+}
+
+
+.chapter-container h3{
+    text-align: center;
+    padding: 0.4em;
+}
+
+.chapter-yellow, .chapter-box-1 {
+    background-color: #f2d600;
+}
+
+.chapter-blue, .chapter-box-2 {
+    background-color: #c377e0;
+}
+
+.concept-text {
+    font-weight: 500;
+    color: white;
+    font-size: 1.5em;
+}
+
+.concept-name-svg {
+    padding: 10px;
+}
+
+.concept-box {
+}
+
+.concept-box h4 {
+    text-align: center;
+    padding: 10px;
+}
