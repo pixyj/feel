@@ -1,13 +1,31 @@
 "use strict";
 
+var app = {
+    levelGap: 50,
+    ns: 'http://www.w3.org/2000/svg'
+}
+
 var graph = {
 
     levels: [
                 [
                     {
-                        name: "Projection of a vector on a subspace",
+                        name: "Projection of a vector on another",
                         chapterIndex: 1,
                         id: 1
+                    }
+                ],
+
+                [
+                    {
+                        name: "Projection of a vector on a subspace",
+                        chapterIndex: 1,
+                        id: 2
+                    },
+                    {
+                        name: "Least Squares.",
+                        chapterIndex: 1,
+                        id: 3
                     }
                 ],
 
@@ -18,31 +36,48 @@ var graph = {
                         id: 4
                     },
                     {
-                        name: "Projection of a vector on a subspace. In another's arms. In another's arms. In another's arms.",
+                        name: "Least Squares.",
                         chapterIndex: 1,
-                        id: 4
+                        id: 5
                     }
                 ],
 
                 [
                     {
-                        name: "Projection of a vector on a another",
+                        name: "Gram Schmidt",
                         chapterIndex: 1,
-                        id: 4
+                        id: 6
                     }
                 ]
     ],
 
     edges: [
         {
-            from: 1,
+            from: 2,
             to: 4
         },
         {
-            from: 4,
-            to: 8
+            from: 1,
+            to: 6
         }
     ]
+};
+
+var drawArrowEntry = function(nodeAttrs, svg) {
+    var circle = document.createElementNS(app.ns, 'circle');
+    var attrs = {
+        cx: nodeAttrs.arrowEntry_x,
+        cy: nodeAttrs.arrowEntry_y,
+        r: 5,
+        fill: "red"
+    };
+
+    //#todo -> add a python like iteritems function to utils
+    _.each(_.keys(attrs), function(key) {
+        circle.setAttribute(key, attrs[key]);
+    });
+    console.log("Circle", attrs);
+    svg.append(circle);
 };
 
 var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, levelWidth, levelHeight) {
@@ -66,8 +101,7 @@ var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, le
 };
 
 var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs, levelHeight) {
-    console.log("Drawing ", node, " at level ", levelIndex, " in position", position);
-
+    
     var svg = svgAttrs.svg;
     var svgWidth = svgAttrs.width;
 
@@ -79,13 +113,25 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     //And making aligning svg text is a pain
     var attrs = getForeignObjectAttrs(levelIndex, position, levelConceptCount, svgWidth, levelHeight);
     var f = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
+    console.log("Node", attrs, node, " at level ", levelIndex, " in position", position);
 
 
     f = $(f).append(p).attr(attrs);
     svg.append(f);
     var height = p.height();
     f.attr("height", height); //for safari
-    return height;
+
+    return {
+        height: height,
+        arrowEntry_x: Math.floor( (attrs.x*2 + attrs.width)/2 ),
+        arrowEntry_y: Math.floor( (attrs.y - app.levelGap/2) ),
+        x: attrs.x,
+        y: attrs.y,
+        node: f,
+        levelIndex: levelIndex,
+        levelConceptCount: levelConceptCount,
+        levelPosition: position
+    };
 };
 
 var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
@@ -93,36 +139,28 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
     var i, length;
     length = level.length;
 
+
     var maxHeight = 0;
-    var levelNodes = [];
+    var levelNodes = {};
     for(i = 0; i < length; i++) {
         var node = level[i];
-        var height = drawNode(node, levelIndex, i, length, svgAttrs, levelHeight);
+        var nodeAttrs = drawNode(node, levelIndex, i, length, svgAttrs, levelHeight);
+        levelNodes[node.id] = nodeAttrs
+        var height = nodeAttrs.height;
         maxHeight = _.max([maxHeight, height]);
+        drawArrowEntry(nodeAttrs, svgAttrs.svg);
     }
-    return maxHeight;
-};
-
-var drawAllNodes = function(levels, svgAttrs) {
-
-    var i, length;
-    length = levels.length;
-    var cumulativeLevelHeight = 30;
-    for(i = 0 ; i < length; i++) {
-        var level = levels[i];
-        var maxLevelHeight = drawLevelNodes(level, i, svgAttrs, cumulativeLevelHeight);
-        cumulativeLevelHeight = cumulativeLevelHeight + maxLevelHeight + 30;
-    }
-};
-
-var drawAllEdges = function(svg) {
-    
+    console.log("Max height at level ", levelIndex, " is ", maxHeight);
+    console.log("-----------------------   End of level ", levelIndex,  "-------------------------------");
+    return {
+        levelNodes: levelNodes,
+        maxHeight: maxHeight
+    };
 };
 
 var drawLine = function(attrs, svg) {
 
-    var ns = 'http://www.w3.org/2000/svg'
-    var line = document.createElementNS(ns, 'line');
+    var line = document.createElementNS(app.ns, 'line');
 
     //#todo -> add a python like iteritems function to utils
     _.each(_.keys(attrs), function(key) {
@@ -147,6 +185,61 @@ var testDrawLine = function(svg) {
 }   
 
 
+var isTwoDirectlyBelowOne = function(one, two) {
+    return one.levelIndex === two.levelIndex - 1 && 
+           one.levelConceptCount === two.levelConceptCount && 
+           one.levelPosition === two.levelPosition;
+}
+
+var drawAllEdges = function(edges, allNodes, svg) {
+    console.info("Edges: ", edges);
+
+    var i, length;
+    length = edges.length;
+    for(i = 0; i < length; i++) {
+        var edge = edges[i];
+        var one = allNodes[edge.from];
+        var two = allNodes[edge.to];
+
+        if(isTwoDirectlyBelowOne(one, two)) {
+            var lineAttrs = {
+                x1: one.arrowEntry_x,
+                y1: one.y + one.height,
+                x2: two.arrowEntry_x,
+                y2: two.y - 15,
+                stroke: "black",
+                "stroke-width": 3,
+                "marker-end": "url(#Triangle)"
+            };
+            drawLine(lineAttrs, svg);    
+        };
+        
+    }
+};
+
+var drawAllNodes = function(levels, svgAttrs) {
+
+    var i, length;
+    length = levels.length;
+
+    //#todo -> find a way to do dependency injection for levelGap instead of using global variable
+    //As of now I'm trying to minimize usage of global variable by making a local copy 
+    //and using the local variable everywhere else in this function, at least. 
+    var levelGap = app.levelGap;
+    var cumulativeLevelHeight = levelGap;
+
+    var allNodes = {};
+    for(i = 0 ; i < length; i++) {
+        var level = levels[i];
+        var levelNodesAndMaxHeight = drawLevelNodes(level, i, svgAttrs, cumulativeLevelHeight);
+        _.extend(allNodes, levelNodesAndMaxHeight.levelNodes);
+        var maxLevelHeight = levelNodesAndMaxHeight.maxHeight;
+        cumulativeLevelHeight = cumulativeLevelHeight + maxLevelHeight + levelGap;
+    };
+    return allNodes;
+};
+
+
 var init = function() {
     
     //cache the width so that it can used be in calculations without querying the dom each time.
@@ -161,14 +254,14 @@ var init = function() {
         width: svg[0].offsetWidth
     };
 
-    drawAllNodes(graph.levels, svgAttrs);
-    //drawAllEdges(svg);
+    app.allNodes = drawAllNodes(graph.levels, svgAttrs);
+    drawAllEdges(graph.edges, app.allNodes, svg);
 
-    testDrawLine(svg);
+    //testDrawLine(svg);
 };
 
 
 $(document).ready(init);
 
-window.onresize = init;
+//window.onresize = init;
 
