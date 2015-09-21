@@ -115,17 +115,56 @@ var drawAllNodes = function(levels, svgAttrs) {
     }
 };
 
+var drawAllEdges = function(svg) {
+    
+};
+
+var drawLine = function(attrs, svg) {
+
+    var ns = 'http://www.w3.org/2000/svg'
+    var line = document.createElementNS(ns, 'line');
+
+    //#todo -> add a python like iteritems function to utils
+    _.each(_.keys(attrs), function(key) {
+        line.setAttribute(key, attrs[key]);
+    });
+
+    svg.append(line);
+};
+
+var testDrawLine = function(svg) {
+
+    var attrs = {
+        x1: 100,
+        y1: 50,
+        x2: 100,
+        y2: 500,
+        stroke: "black",
+        "stroke-width": 3,
+        "marker-end": "url(#Triangle)"
+    };
+    drawLine(attrs, svg);
+}   
+
 
 var init = function() {
     
     //cache the width so that it can used be in calculations without querying the dom each time.
     var svg = $("svg");
-    svg.empty();
+    
+    svg.find("foreignObject").remove();
+    svg.find("line").remove();
+
+
     var svgAttrs = {
         svg: svg,
         width: svg[0].offsetWidth
-    }
+    };
+
     drawAllNodes(graph.levels, svgAttrs);
+    //drawAllEdges(svg);
+
+    testDrawLine(svg);
 };
 
 
