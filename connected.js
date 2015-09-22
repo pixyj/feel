@@ -1,45 +1,16 @@
 "use strict";
 
 var app = {
-    levelGap: 50,
-    ns: 'http://www.w3.org/2000/svg'
+    levelGap: 80,
+    ns: 'http://www.w3.org/2000/svg',
+    NO_JUMP_STRAIGHT: 1,
+    NO_JUMP_CRISS_CROSS: 2,
+    JUMP: 3
 }
 
 var graph = {
 
     levels: [
-
-    [
-        {
-            name: "Gram Schmidt",
-            chapterIndex: 1,
-            id: 7
-        },
-
-        {
-            name: "Gram Schmidt",
-            chapterIndex: 1,
-            id: 8
-        },
-
-        {
-            name: "Gram Schmidt",
-            chapterIndex: 1,
-            id: 9
-        },
-
-        {
-            name: "Gram Schmidt",
-            chapterIndex: 1,
-            id: 10
-        },
-
-        {
-            name: "Gram Schmidt",
-            chapterIndex: 1,
-            id: 11
-        }
-    ],
 
                 [
                     {
@@ -52,7 +23,7 @@ var graph = {
                 [
                     {
                         name: "Projection of a vector on a subspace",
-                        chapterIndex: 1,
+                        chapterIndex: 2,
                         id: 2
                     },
                     {
@@ -72,13 +43,23 @@ var graph = {
                         name: "Least Squares.",
                         chapterIndex: 1,
                         id: 5
+                    },
+                    {
+                        name: "Projection of a vector on a subspace",
+                        chapterIndex: 1,
+                        id: 100
+                    },
+                    {
+                        name: "Least Squares.",
+                        chapterIndex: 1,
+                        id: 101
                     }
                 ],
 
                 [
                     {
                         name: "Gram Schmidt",
-                        chapterIndex: 1,
+                        chapterIndex: 2,
                         id: 6
                     }
                 ]
@@ -86,12 +67,33 @@ var graph = {
 
     edges: [
         {
-            from: 2,
-            to: 4
+            from: 1,
+            to: 2
         },
+
         {
             from: 1,
-            to: 6
+            to: 3
+        },
+
+        {
+            from: 3,
+            to: 4
+        },
+
+        {
+            from: 2,
+            to: 5
+        },
+
+        {
+            from: 2,
+            to: 100
+        },
+
+        {
+            from: 3,
+            to: 101
         }
     ]
 };
@@ -109,8 +111,8 @@ var drawArrowEntry = function(nodeAttrs, svg) {
     _.each(_.keys(attrs), function(key) {
         circle.setAttribute(key, attrs[key]);
     });
-    console.log("Circle", attrs);
-    svg.append(circle);
+    //console.log("Circle", attrs);
+    //svg.append(circle);
 };
 
 var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, levelWidth, levelHeight) {
@@ -174,16 +176,19 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     f.attr("height", height); //for safari
 
     return {
+        width: attrs.width,
         height: height,
         arrowEntry_x: Math.floor( (attrs.x*2 + attrs.width)/2 ),
         arrowEntry_y: Math.floor( (attrs.y - app.levelGap/2) ),
         x: attrs.x,
         y: attrs.y,
         node: f,
+        f: f,
         p: p,
         levelIndex: levelIndex,
         levelConceptCount: levelConceptCount,
-        levelPosition: position
+        levelPosition: position,
+        drawnEdges: 0
     };
 };
 
@@ -208,6 +213,8 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
 
     _.each(levelNodes, function(n) {
         n.p.css("height", maxHeight);
+        n.f.attr("height", maxHeight); //for safari -> which is taking me on a safari. 
+        n.height = maxHeight;
     });
 
     return {
@@ -249,30 +256,184 @@ var isTwoDirectlyBelowOne = function(one, two) {
            one.levelPosition === two.levelPosition;
 }
 
-var drawAllEdges = function(edges, allNodes, svg) {
-    console.info("Edges: ", edges);
+var isNoJumpRequired = function(one, two) {
+    return one.levelIndex === two.levelIndex - 1;
+};
+
+var drawNoJumpStraightLineBetweenOneAndTwo = function(one, two, svg) {
+    var lineAttrs = {
+        x1: one.arrowEntry_x,
+        y1: one.y + one.height,
+        x2: two.arrowEntry_x,
+        y2: two.y,
+        stroke: "black",
+        "stroke-width": 3,
+        "marker-end": "url(#Triangle)"
+    };
+    drawLine(lineAttrs, svg); 
+}
+
+var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, svg) {
+    /*
+                                                                
+                                |
+         _______________________|
+        |
+        |
+
+    */
+
+    console.info("Out count: ", one.outCount);
+
+
+    var positions = new Array(totalCount);
+    for(var i = 0; i < totalCount; i++) {
+        positions[i] = 0.85 * app.levelGap*(i + 1) / (totalCount + 1)
+    };
+
+    var gap = positions[drawnCount];
+
+    console.info("Gap", gap, one, two);
+
+    //http://stackoverflow.com/a/57805/817277. Thank you.
+    var whiteHex = parseInt("FFFFFF", 16);
+    var max = Math.floor(whiteHex / 3);
+    var decimalStroke = Math.floor(max / (drawnCount + 1));
+    var stroke = "#" + decimalStroke.toString(16);
+
+    console.info("Stroke", stroke);
+
+    var x1;
+    if(one.outCount === 1) {
+        x1 = one.arrowEntry_x;
+    }
+
+    else {
+        var direction = one.drawnEdges % 2 === 0 ? 1 : -1;
+        var directionEdges = Math.floor(one.drawnEdges / 2);
+        var offset = one.width*0.1*direction*directionEdges;
+        x1 = one.arrowEntry_x + offset;
+    }
+
+    one.drawnEdges -= 1;
+
+    var oneToLevelGapLineAttrs = {
+        x1: x1,
+        y1: one.y + one.height,
+        x2: x1,
+        y2: one.y + one.height + gap,
+        stroke: stroke,
+        "stroke-width": 3
+    };
+    drawLine(oneToLevelGapLineAttrs, svg);
+
+    var horizontalLineAttrs = {
+        x1: oneToLevelGapLineAttrs.x2,
+        y1: oneToLevelGapLineAttrs.y2,
+        x2: two.arrowEntry_x,
+        y2: oneToLevelGapLineAttrs.y2,
+        stroke: stroke,
+        "stroke-width": 3
+    };
+    drawLine(horizontalLineAttrs, svg); 
+
+    var verticalLineAttrs = {
+        x1: two.arrowEntry_x,
+        y1: horizontalLineAttrs.y2,
+        x2: two.arrowEntry_x,
+        y2: two.y - 15,
+        stroke: stroke,
+        "stroke-width": 3,
+        "marker-end": "url(#Triangle)"
+    };
+
+    drawLine(verticalLineAttrs, svg);
+};
+
+var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
+
+    var levelConceptCounts = {};
+    var edgesBetweenLevelsCount = {};
+    var nodesByFromCount = {}; //todo -> change from and to -> start and end
 
     var i, length;
+    length = graph.levels.length;
+
+    for(i = 0; i < length; i++) {
+        var level = graph.levels[i];
+        levelConceptCounts[i] = level.length;
+    };
+    console.info("levelConceptCounts", levelConceptCounts);
+
+    _.each(edges, function(e) {
+
+        var outCount = nodesByFromCount[e.from] || 0;
+        nodesByFromCount[e.from] = outCount + 1;
+
+        e.fromLevelIndex = allNodes[e.from].levelIndex;
+        e.toLevelIndex = allNodes[e.to].levelIndex;
+        var key = e.fromLevelIndex + "-" + e.toLevelIndex;
+        var count = edgesBetweenLevelsCount[key] || 0;
+        count += 1;
+        edgesBetweenLevelsCount[key] = count;
+
+        var isEqualPosition = allNodes[e.from].levelPosition === allNodes[e.to].levelPosition;
+        var doLevelsHaveEqualConceptCounts = levelConceptCounts[e.fromLevelIndex] === levelConceptCounts[e.toLevelIndex];
+
+        if( (e.toLevelIndex - e.fromLevelIndex) > 1 ) {
+            e.type = app.JUMP;
+        }
+        else if(isEqualPosition && doLevelsHaveEqualConceptCounts) {
+            e.type = app.NO_JUMP_STRAIGHT;
+        }
+        else {
+            e.type = app.NO_JUMP_CRISS_CROSS;
+        }
+
+    });
+
+    return {
+        edgesBetweenLevelsCount: edgesBetweenLevelsCount,
+        edges: edges,
+        nodesByFromCount: nodesByFromCount
+    };
+
+};
+
+var drawAllEdges = function(graph, inputEdges, allNodes, svg) {
+    console.info("Edges: ", inputEdges);
+
+    var preprocessResult = preprocessEdgesForEaseOfDrawing(graph, allNodes, inputEdges);
+    var edges = preprocessResult.edges;
+    var edgesBetweenLevelsCount = preprocessResult.edgesBetweenLevelsCount;
+    var nodesByFromCount = preprocessResult.nodesByFromCount;
+
+    console.log(edges, edgesBetweenLevelsCount);
+
+    
+    var i, length;
     length = edges.length;
+    var drawnEdgesBetweenLevelsCount = {};
     for(i = 0; i < length; i++) {
         var edge = edges[i];
         var one = allNodes[edge.from];
         var two = allNodes[edge.to];
+        one.outCount = nodesByFromCount[edge.from];
+        if(edge.type === app.NO_JUMP_STRAIGHT) {
+            drawNoJumpStraightLineBetweenOneAndTwo(one, two, svg);
+        }
 
-        if(isTwoDirectlyBelowOne(one, two)) {
-            var lineAttrs = {
-                x1: one.arrowEntry_x,
-                y1: one.y + one.height,
-                x2: two.arrowEntry_x,
-                y2: two.y - 15,
-                stroke: "black",
-                "stroke-width": 3,
-                "marker-end": "url(#Triangle)"
-            };
-            drawLine(lineAttrs, svg);    
-        };
-        
+        else if(edge.type === app.NO_JUMP_CRISS_CROSS) {
+            //#todo -> DRY the key
+            var key = edge.fromLevelIndex + "-" + edge.toLevelIndex;
+            var totalCount = edgesBetweenLevelsCount[key];
+            var drawnCount = drawnEdgesBetweenLevelsCount[key] || 0;
+            drawNoJumpPathBetweenOneAndTwo(one, two, drawnCount, totalCount, svg);
+            drawnCount += 1;
+            drawnEdgesBetweenLevelsCount[key] = drawnCount;
+        }
     }
+    
 };
 
 var drawAllNodes = function(levels, svgAttrs) {
@@ -313,7 +474,7 @@ var init = function() {
     };
 
     app.allNodes = drawAllNodes(graph.levels, svgAttrs);
-    drawAllEdges(graph.edges, app.allNodes, svg);
+    drawAllEdges(graph, graph.edges, app.allNodes, svg);
 
     //testDrawLine(svg);
 };
