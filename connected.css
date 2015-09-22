@@ -45,3 +45,7 @@ svg {
     text-align: center;
     padding: 10px;
 }
+
+body {
+    background: url('/retina_dust.png');
+}
