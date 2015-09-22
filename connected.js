@@ -67,33 +67,12 @@ var graph = {
 
     edges: [
         {
-            from: 1,
-            to: 2
-        },
-
-        {
-            from: 1,
-            to: 3
-        },
-
-        {
             from: 3,
             to: 4
         },
-
         {
             from: 2,
-            to: 5
-        },
-
-        {
-            from: 2,
-            to: 100
-        },
-
-        {
-            from: 3,
-            to: 101
+            to: 4
         }
     ]
 };
@@ -188,7 +167,8 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
         levelIndex: levelIndex,
         levelConceptCount: levelConceptCount,
         levelPosition: position,
-        drawnEdges: 0
+        drawnOutEdges: 0,
+        drawnInEdges: 0
     };
 };
 
@@ -307,15 +287,27 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
     if(one.outCount === 1) {
         x1 = one.arrowEntry_x;
     }
-
     else {
-        var direction = one.drawnEdges % 2 === 0 ? 1 : -1;
-        var directionEdges = Math.floor(one.drawnEdges / 2);
+        var direction = one.drawnOutEdges % 2 === 0 ? 1 : -1;
+        var directionEdges = Math.floor(one.drawnOutEdges / 2);
         var offset = one.width*0.1*direction*directionEdges;
         x1 = one.arrowEntry_x + offset;
     }
 
-    one.drawnEdges -= 1;
+    one.drawnOutEdges -= 1;
+
+    //#todo -> refactor :)
+    var x2;
+    if(two.inCount === 1) {
+        x2 = two.arrowEntry_x;
+    }
+    else {
+        var direction = two.drawnInEdges % 2 === 0 ? 1 : -1;
+        var directionEdges = Math.floor(two.drawnInEdges / 2);
+        var offset = two.width*0.1*direction*directionEdges;
+        x2 = two.arrowEntry_x + offset;
+    }
+    two.drawnInEdges -= 1;
 
     var oneToLevelGapLineAttrs = {
         x1: x1,
@@ -330,7 +322,7 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
     var horizontalLineAttrs = {
         x1: oneToLevelGapLineAttrs.x2,
         y1: oneToLevelGapLineAttrs.y2,
-        x2: two.arrowEntry_x,
+        x2: x2,
         y2: oneToLevelGapLineAttrs.y2,
         stroke: stroke,
         "stroke-width": 3
@@ -338,9 +330,9 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
     drawLine(horizontalLineAttrs, svg); 
 
     var verticalLineAttrs = {
-        x1: two.arrowEntry_x,
+        x1: x2,
         y1: horizontalLineAttrs.y2,
-        x2: two.arrowEntry_x,
+        x2: x2,
         y2: two.y - 15,
         stroke: stroke,
         "stroke-width": 3,
@@ -355,6 +347,7 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
     var levelConceptCounts = {};
     var edgesBetweenLevelsCount = {};
     var nodesByFromCount = {}; //todo -> change from and to -> start and end
+    var nodesByToCount = {};
 
     var i, length;
     length = graph.levels.length;
@@ -369,6 +362,9 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
 
         var outCount = nodesByFromCount[e.from] || 0;
         nodesByFromCount[e.from] = outCount + 1;
+
+        var inCount = nodesByToCount[e.to] || 0;
+        nodesByToCount[e.to] = inCount + 1;
 
         e.fromLevelIndex = allNodes[e.from].levelIndex;
         e.toLevelIndex = allNodes[e.to].levelIndex;
@@ -395,7 +391,8 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
     return {
         edgesBetweenLevelsCount: edgesBetweenLevelsCount,
         edges: edges,
-        nodesByFromCount: nodesByFromCount
+        nodesByFromCount: nodesByFromCount,
+        nodesByToCount: nodesByToCount
     };
 
 };
@@ -407,6 +404,7 @@ var drawAllEdges = function(graph, inputEdges, allNodes, svg) {
     var edges = preprocessResult.edges;
     var edgesBetweenLevelsCount = preprocessResult.edgesBetweenLevelsCount;
     var nodesByFromCount = preprocessResult.nodesByFromCount;
+    var nodesByToCount = preprocessResult.nodesByToCount;
 
     console.log(edges, edgesBetweenLevelsCount);
 
@@ -419,6 +417,7 @@ var drawAllEdges = function(graph, inputEdges, allNodes, svg) {
         var one = allNodes[edge.from];
         var two = allNodes[edge.to];
         one.outCount = nodesByFromCount[edge.from];
+        two.inCount = nodesByToCount[edge.to];
         if(edge.type === app.NO_JUMP_STRAIGHT) {
             drawNoJumpStraightLineBetweenOneAndTwo(one, two, svg);
         }
@@ -482,5 +481,5 @@ var init = function() {
 
 $(document).ready(init);
 
-//window.onresize = init;
+window.onresize = init;
 
