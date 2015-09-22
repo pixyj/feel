@@ -73,6 +73,22 @@ var graph = {
         {
             from: 2,
             to: 4
+        },
+        {
+            from: 2,
+            to: 5
+        },
+        {
+            from: 2,
+            to: 100
+        },
+        {
+            from: 3,
+            to: 5
+        },
+        {
+            from: 3,
+            to: 100
         }
     ]
 };
@@ -139,7 +155,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     var svgWidth = svgAttrs.width;
 
     var chapterClass = "chapter-box-" + node.chapterIndex;
-    var h4 = $("<h4>").html(node.name);
+    var h4 = $("<h4>").html(node.name + " - " + node.id);
     var p = $("<p>").addClass("concept-box").addClass(chapterClass).append(h4);
 
     //foreignObject does not work on IE #todo. But my initial technical audience does not use IE, I guess? 
@@ -279,7 +295,14 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
     var whiteHex = parseInt("FFFFFF", 16);
     var max = Math.floor(whiteHex / 3);
     var decimalStroke = Math.floor(max / (drawnCount + 1));
-    var stroke = "#" + decimalStroke.toString(16);
+
+    var strokeString = decimalStroke.toString(16);
+    if(strokeString.length < 6) {
+        for(var k = 0; k < (6 - strokeString.length); k++) {
+            strokeString += "8"; //some arbitrary number; 
+        }
+    }
+    var stroke = "#" + strokeString;
 
     console.info("Stroke", stroke);
 
