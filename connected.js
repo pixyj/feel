@@ -8,6 +8,39 @@ var app = {
 var graph = {
 
     levels: [
+
+    [
+        {
+            name: "Gram Schmidt",
+            chapterIndex: 1,
+            id: 7
+        },
+
+        {
+            name: "Gram Schmidt",
+            chapterIndex: 1,
+            id: 8
+        },
+
+        {
+            name: "Gram Schmidt",
+            chapterIndex: 1,
+            id: 9
+        },
+
+        {
+            name: "Gram Schmidt",
+            chapterIndex: 1,
+            id: 10
+        },
+
+        {
+            name: "Gram Schmidt",
+            chapterIndex: 1,
+            id: 11
+        }
+    ],
+
                 [
                     {
                         name: "Projection of a vector on another",
@@ -82,18 +115,37 @@ var drawArrowEntry = function(nodeAttrs, svg) {
 
 var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, levelWidth, levelHeight) {
 
-    var y = levelHeight;
+    var leftPadding, rightPadding; 
+    var paddingFraction = 0.05;
+    //5% padding each side
+    leftPadding = rightPadding = Math.floor(levelWidth * paddingFraction / 2); 
+    
+    var payloadWidth = Math.floor(levelWidth * (1 - paddingFraction));
+    var totalGapBetweenNodes, totalNodeWidth;
+    if(levelConceptCount === 1) {
+        totalGapBetweenNodes = 0;
+        totalNodeWidth = payloadWidth * 0.5;
+        leftPadding += payloadWidth * 0.25;
+    }
+    else {
+        totalGapBetweenNodes = Math.floor(payloadWidth * 0.1);
+        totalNodeWidth = Math.floor(payloadWidth * 0.9);
+    }
+    var nodeWidth = totalNodeWidth / levelConceptCount;
 
-    var nodePlusMarginWidth = levelWidth/levelConceptCount;
-    var leftMarginWidth, rightMarginWidth;
-    leftMarginWidth = rightMarginWidth = nodePlusMarginWidth*0.2;
-    var nodeWidth = nodePlusMarginWidth - leftMarginWidth - rightMarginWidth;
+    var leftMarginWidth;
+    if(levelConceptCount === 1) {
+        leftMarginWidth = 0;
+    }
+    else {
+        leftMarginWidth = totalGapBetweenNodes / (levelConceptCount - 1);
+    }
 
-    var x = leftMarginWidth + position*nodePlusMarginWidth;
+    var x = leftPadding + position*nodeWidth + position*leftMarginWidth;
 
     var attrs = {
         x: x,
-        y: y,
+        y: levelHeight,
         width: nodeWidth
     };
 
