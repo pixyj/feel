@@ -128,6 +128,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
         x: attrs.x,
         y: attrs.y,
         node: f,
+        p: p,
         levelIndex: levelIndex,
         levelConceptCount: levelConceptCount,
         levelPosition: position
@@ -152,6 +153,11 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
     }
     console.log("Max height at level ", levelIndex, " is ", maxHeight);
     console.log("-----------------------   End of level ", levelIndex,  "-------------------------------");
+
+    _.each(levelNodes, function(n) {
+        n.p.css("height", maxHeight);
+    });
+
     return {
         levelNodes: levelNodes,
         maxHeight: maxHeight
