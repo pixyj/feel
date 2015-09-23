@@ -1,12 +1,13 @@
 "use strict";
 
 var app = {
-    levelGap: 100,
+    levelGap: 80,
     ns: 'http://www.w3.org/2000/svg',
     NO_JUMP_STRAIGHT: 1,
     NO_JUMP_CRISS_CROSS: 2,
     JUMP: 3,
-    SVG_PADDING_FRACTION: 0.05
+    SVG_PADDING_FRACTION: 0.05,
+    STROKE_WIDTH: 3
 };
 
 var graph = {
@@ -31,7 +32,25 @@ var graph = {
                         name: "Least Squares.",
                         chapterIndex: 1,
                         id: 3
+                    },
+                    {
+                        name: "What the ",
+                        chapterIndex: 2,
+                        id: 1000
+                    },
+
+                    {
+                        name: "F",
+                        chapterIndex: 2,
+                        id: 1001
+                    },
+
+                    {
+                        name: "Awesome",
+                        chapterIndex: 2,
+                        id: 1002
                     }
+
                 ],
 
                 [
@@ -54,6 +73,11 @@ var graph = {
                         name: "Least Squares.",
                         chapterIndex: 1,
                         id: 101
+                    },
+                    {
+                        name: "Yeah.",
+                        chapterIndex: 1,
+                        id: 102
                     }
                 ],
 
@@ -88,39 +112,35 @@ var graph = {
 
     edges: [
         {
-            from: 3,
-            to: 4
-        },
-        {
             from: 2,
             to: 4
         },
         {
-            from: 2,
-            to: 5
-        },
-        {
-            from: 2,
-            to: 100
-        },
-        {
             from: 3,
-            to: 5
+            to: 4
         },
         {
-            from: 3,
-            to: 100
+            from: 1000,
+            to: 4
+        },
+        {
+            from: 1001,
+            to: 4
+        },
+        {
+            from: 2,
+            to: 102
         },
 
-        {
-            from: 1,
-            to: 6
-        },
+        // {
+        //     from: 1,
+        //     to: 6
+        // },
 
-        {
-            from: 1,
-            to: 11
-        }
+        // {
+        //     from: 1,
+        //     to: 11
+        // }
     ]
 };
 
@@ -334,11 +354,11 @@ var testDrawLine = function(svg) {
         x2: 100,
         y2: 500,
         stroke: "black",
-        "stroke-width": 3,
+        "stroke-width": app.STROKE_WIDTH,
         "marker-end": "url(#Triangle)"
     };
     drawLine(attrs, svg);
-}   
+};   
 
 
 var isTwoDirectlyBelowOne = function(one, two) {
@@ -351,14 +371,30 @@ var isNoJumpRequired = function(one, two) {
     return one.levelIndex === two.levelIndex - 1;
 };
 
+
+var calculateLineTouchPoint = function(start_x, end_x, width, drawnCount, totalCount) {
+    
+    if(totalCount === 1) {
+        return (start_x + end_x) / 2;
+    }
+    
+    else {
+        var direction = drawnCount % 2 === 0 ? -1 : 1;
+        var divisionUnit = width/(totalCount + 1);
+        var directionCount = Math.floor(drawnCount / 2);
+        var offset = direction * divisionUnit * (directionCount+1);
+        return (start_x + end_x)/2 + offset*0.9;
+    }
+};
+
 var drawNoJumpStraightLineBetweenOneAndTwo = function(one, two, svg) {
     var lineAttrs = {
         x1: one.arrowEntry_x,
         y1: one.y + one.height,
         x2: two.arrowEntry_x,
-        y2: two.y,
+        y2: two.y - 15,
         stroke: "black",
-        "stroke-width": 3,
+        "stroke-width": app.STROKE_WIDTH,
         "marker-end": "url(#Triangle)"
     };
     drawLine(lineAttrs, svg); 
@@ -401,31 +437,10 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
 
     console.info("Stroke", stroke);
 
-    var x1;
-    if(one.outCount === 1) {
-        x1 = one.arrowEntry_x;
-    }
-    else {
-        var direction = one.drawnOutEdges % 2 === 0 ? 1 : -1;
-        var directionEdges = Math.floor(one.drawnOutEdges / 2);
-        var offset = one.width*0.1*direction*directionEdges;
-        x1 = one.arrowEntry_x + offset;
-    }
-
-    one.drawnOutEdges -= 1;
-
-    //#todo -> refactor :)
-    var x2;
-    if(two.inCount === 1) {
-        x2 = two.arrowEntry_x;
-    }
-    else {
-        var direction = two.drawnInEdges % 2 === 0 ? 1 : -1;
-        var directionEdges = Math.floor(two.drawnInEdges / 2);
-        var offset = two.width*0.1*direction*directionEdges;
-        x2 = two.arrowEntry_x + offset;
-    }
-    two.drawnInEdges -= 1;
+    var x1 = calculateLineTouchPoint(one.x, one.x + one.width, two.width, one.drawnOutEdges, one.outCount);
+    one.drawnOutEdges += 1;
+    var x2 = calculateLineTouchPoint(two.x, two.x + two.width, two.width, two.drawnInEdges, two.inCount);
+    two.drawnInEdges += 1;
 
     var oneToLevelGapLineAttrs = {
         x1: x1,
@@ -433,7 +448,7 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
         x2: x1,
         y2: one.y + one.height + gap,
         stroke: stroke,
-        "stroke-width": 3
+        "stroke-width": app.STROKE_WIDTH
     };
     drawLine(oneToLevelGapLineAttrs, svg);
 
@@ -443,7 +458,7 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
         x2: x2,
         y2: oneToLevelGapLineAttrs.y2,
         stroke: stroke,
-        "stroke-width": 3
+        "stroke-width": app.STROKE_WIDTH
     };
     drawLine(horizontalLineAttrs, svg); 
 
@@ -453,7 +468,7 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
         x2: x2,
         y2: two.y - 15,
         stroke: stroke,
-        "stroke-width": 3,
+        "stroke-width": app.STROKE_WIDTH,
         "marker-end": "url(#Triangle)"
     };
 
@@ -514,7 +529,7 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
             e.type = app.JUMP;
         }
         else if(isEqualPosition && doLevelsHaveEqualConceptCounts) {
-            e.type = app.NO_JUMP_STRAIGHT;
+            e.type = app.NO_JUMP_CRISS_CROSS;
         }
         else {
             e.type = app.NO_JUMP_CRISS_CROSS;
