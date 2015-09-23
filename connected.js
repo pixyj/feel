@@ -1,7 +1,7 @@
 "use strict";
 
 var app = {
-    levelGap: 80,
+    levelGap: 100,
     ns: 'http://www.w3.org/2000/svg',
     NO_JUMP_STRAIGHT: 1,
     NO_JUMP_CRISS_CROSS: 2,
@@ -58,6 +58,26 @@ var graph = {
 
                 [
                     {
+                        name: "Left",
+                        chapterIndex: 2,
+                        id: 11
+                    },
+
+                    {
+                        name: "And Center",
+                        chapterIndex: 2,
+                        id: 14
+                    },
+
+                    {
+                        name: "Right",
+                        chapterIndex: 2,
+                        id: 12
+                    }
+                ],
+
+                [
+                    {
                         name: "Gram Schmidt",
                         chapterIndex: 2,
                         id: 6
@@ -89,6 +109,16 @@ var graph = {
         {
             from: 3,
             to: 100
+        },
+
+        {
+            from: 1,
+            to: 6
+        },
+
+        {
+            from: 1,
+            to: 11
         }
     ]
 };
@@ -372,6 +402,9 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
     var nodesByFromCount = {}; //todo -> change from and to -> start and end
     var nodesByToCount = {};
 
+    var levelGapTraffic = {};
+    var levelAlleyTraffic = {};
+
     var i, length;
     length = graph.levels.length;
 
@@ -391,10 +424,23 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
 
         e.fromLevelIndex = allNodes[e.from].levelIndex;
         e.toLevelIndex = allNodes[e.to].levelIndex;
+
         var key = e.fromLevelIndex + "-" + e.toLevelIndex;
         var count = edgesBetweenLevelsCount[key] || 0;
         count += 1;
         edgesBetweenLevelsCount[key] = count;
+
+        var levelsCrossed = [];
+        for(var k = e.fromLevelIndex; k <= e.toLevelIndex; k++) {
+            levelsCrossed.push(k);
+        };
+        var crossLength = levelsCrossed.length;
+        for(var j = 0; j < crossLength - 1; j++) {
+            var trafficKey = levelsCrossed[j] + "-" + levelsCrossed[j+1];
+            var levelTrafficCount = levelGapTraffic[trafficKey] || 0;
+            levelTrafficCount += 1;
+            levelGapTraffic[trafficKey] = levelTrafficCount;
+        }
 
         var isEqualPosition = allNodes[e.from].levelPosition === allNodes[e.to].levelPosition;
         var doLevelsHaveEqualConceptCounts = levelConceptCounts[e.fromLevelIndex] === levelConceptCounts[e.toLevelIndex];
@@ -409,13 +455,18 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
             e.type = app.NO_JUMP_CRISS_CROSS;
         }
 
+        if(e.type === app.JUMP) {
+            
+        }
+
     });
 
     return {
         edgesBetweenLevelsCount: edgesBetweenLevelsCount,
         edges: edges,
         nodesByFromCount: nodesByFromCount,
-        nodesByToCount: nodesByToCount
+        nodesByToCount: nodesByToCount,
+        levelGapTraffic: levelGapTraffic    
     };
 
 };
@@ -429,9 +480,16 @@ var drawAllEdges = function(graph, inputEdges, allNodes, svg) {
     var nodesByFromCount = preprocessResult.nodesByFromCount;
     var nodesByToCount = preprocessResult.nodesByToCount;
 
+    var totalLevelGapTraffic = preprocessResult.levelGapTraffic;
+    var drawnLevelGapTraffic = {};
+    _.each(_.keys(totalLevelGapTraffic), function(key) {
+        drawnLevelGapTraffic[key] = 0;
+    });
+
     console.log(edges, edgesBetweenLevelsCount);
 
-    
+    console.info("Traffic levels. Where is Silk Board? ", totalLevelGapTraffic);
+        
     var i, length;
     length = edges.length;
     var drawnEdgesBetweenLevelsCount = {};
@@ -448,11 +506,11 @@ var drawAllEdges = function(graph, inputEdges, allNodes, svg) {
         else if(edge.type === app.NO_JUMP_CRISS_CROSS) {
             //#todo -> DRY the key
             var key = edge.fromLevelIndex + "-" + edge.toLevelIndex;
-            var totalCount = edgesBetweenLevelsCount[key];
-            var drawnCount = drawnEdgesBetweenLevelsCount[key] || 0;
+            var totalCount = totalLevelGapTraffic[key];
+            var drawnCount = drawnLevelGapTraffic[key];
             drawNoJumpPathBetweenOneAndTwo(one, two, drawnCount, totalCount, svg);
             drawnCount += 1;
-            drawnEdgesBetweenLevelsCount[key] = drawnCount;
+            drawnLevelGapTraffic[key] = drawnCount;
         }
     }
     
@@ -504,5 +562,5 @@ var init = function() {
 
 $(document).ready(init);
 
-window.onresize = init;
+//window.onresize = init;
 
