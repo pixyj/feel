@@ -5,8 +5,9 @@ var app = {
     ns: 'http://www.w3.org/2000/svg',
     NO_JUMP_STRAIGHT: 1,
     NO_JUMP_CRISS_CROSS: 2,
-    JUMP: 3
-}
+    JUMP: 3,
+    SVG_PADDING_FRACTION: 0.05
+};
 
 var graph = {
 
@@ -140,14 +141,23 @@ var drawArrowEntry = function(nodeAttrs, svg) {
     //svg.append(circle);
 };
 
+var drawCircle = function(attrs, svg) {
+    var circle = document.createElementNS(app.ns, 'circle');
+
+    _.each(_.keys(attrs), function(key) {
+        circle.setAttribute(key, attrs[key]);
+    });
+    svg.append(circle);
+}
+
 var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, levelWidth, levelHeight) {
 
     var leftPadding, rightPadding; 
-    var paddingFraction = 0.05;
+    var paddingFraction = app.SVG_PADDING_FRACTION;
     //5% padding each side
-    leftPadding = rightPadding = Math.floor(levelWidth * paddingFraction / 2); 
+    leftPadding = rightPadding = levelWidth * paddingFraction / 2; 
     
-    var payloadWidth = Math.floor(levelWidth * (1 - paddingFraction));
+    var payloadWidth = levelWidth * (1 - paddingFraction);
     var totalGapBetweenNodes, totalNodeWidth;
     if(levelConceptCount === 1) {
         totalGapBetweenNodes = 0;
@@ -226,10 +236,12 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
 
     var maxHeight = 0;
     var levelNodes = {};
+    var levelNodesArray = [];
     for(i = 0; i < length; i++) {
         var node = level[i];
         var nodeAttrs = drawNode(node, levelIndex, i, length, svgAttrs, levelHeight);
-        levelNodes[node.id] = nodeAttrs
+        levelNodes[node.id] = nodeAttrs;
+        levelNodesArray.push(nodeAttrs);
         var height = nodeAttrs.height;
         maxHeight = _.max([maxHeight, height]);
         drawArrowEntry(nodeAttrs, svgAttrs.svg);
@@ -240,12 +252,65 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
     _.each(levelNodes, function(n) {
         n.p.css("height", maxHeight);
         n.f.attr("height", maxHeight); //for safari -> which is taking me on a safari. 
-        n.height = maxHeight;
+        n.height = maxHeight;        
+    });
+
+    //callejon -> Yeah, I know one Spanish word from the song `La Diosa del carnaval`
+    var alleys = [];
+    var length = levelNodesArray.length;
+
+    for(var j = 1; j < length; j++) {
+        var one = levelNodesArray[j-1];
+        var two = levelNodesArray[j];
+        var alleyAttrs = {
+            x_start: one.x + one.width,
+            x_end: two.x,
+            y_start: one.y,
+            y_end: one.y + one.height,
+            id: levelIndex + "-" + one.levelPosition + "-" + two.levelPosition
+        }
+        alleys.push(alleyAttrs);
+        
+    }
+
+    if(length === 1) {
+        var onlyNode = levelNodesArray[0];
+        var levelWidth = svgAttrs.width;
+        var paddingWidth = app.SVG_PADDING_FRACTION * levelWidth;
+        var payloadWidth = (1 - app.SVG_PADDING_FRACTION) * levelWidth;
+
+
+        var leftAlleyAttrs = {
+            x_start: paddingWidth/2,
+            x_end: onlyNode.x,
+            y_start: onlyNode.y,
+            y_end: onlyNode.y + onlyNode.height
+        };
+        alleys.push(leftAlleyAttrs);
+        var rightAlleyAttrs = {
+            x_start: onlyNode.x + onlyNode.width,
+            x_end: levelWidth - paddingWidth/2,
+            y_start: onlyNode.y,
+            y_end: onlyNode.y + onlyNode.height
+
+        }
+        alleys.push(rightAlleyAttrs);
+    }
+
+    _.each(alleys, function(a) {
+        var circleAttrs = {
+            cx: (a.x_start + a.x_end) / 2,
+            cy: (a.y_start + a.y_end) / 2,
+            r: 5,
+            fill: "red"
+        };
+        drawCircle(circleAttrs, svgAttrs.svg);
     });
 
     return {
         levelNodes: levelNodes,
-        maxHeight: maxHeight
+        maxHeight: maxHeight,
+        alleys: alleys
     };
 };
 
@@ -456,7 +521,7 @@ var preprocessEdgesForEaseOfDrawing = function(graph, allNodes, edges) {
         }
 
         if(e.type === app.JUMP) {
-            
+            console.debug(e.from, " at Level ", e.fromLevelIndex , " ----> ", e.to, " at Level ", e.toLevelIndex);
         }
 
     });
