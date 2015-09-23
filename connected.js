@@ -143,6 +143,11 @@ var graph = {
         {
             from: 1,
             to: 6
+        },
+
+        {
+            from: 14,
+            to: 6
         }
     ]
 };
@@ -646,6 +651,9 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
                                             startAlley.drawnCount, startAlley.totalCount);
 
 
+    var startTouch = calculateLineTouchPoint(one.x, one.x + one.width, one.width, one.drawnOutEdges, one.outCount);
+    one.drawnOutEdges += 1;
+
     drawPathInLevelGap((one.arrowEntry_x), one.y+one.height, endTouch, startAlley.start_y, one.levelIndex, startAlley.levelIndex, 
                                       totalLevelGapTraffic, drawnLevelGapTraffic, false, svg);
 
@@ -656,11 +664,9 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
         var e = alleys[i+1]
 
         var startTouch = calculateLineTouchPoint(s.start_x, s.end_x, s.end_x - s.start_x, s.drawnCount, s.totalCount);
-        s.drawnCount += 1;
-
+        
         var endTouch = calculateLineTouchPoint(e.start_x, e.end_x, e.end_x - e.start_x, e.drawnCount, e.totalCount);
-        e.drawnCount += 1;
-
+        
         var firstInsideAlleyLine = {
             x1: startTouch,
             y1: s.start_y,
@@ -684,13 +690,21 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
         drawPathInLevelGap(startTouch, s.end_y, endTouch, e.start_y, s.levelIndex, e.levelIndex, 
                                           totalLevelGapTraffic, drawnLevelGapTraffic, false, svg);
     }
+
     var lastAlley = alleys[length-1];
-    var endTouch = calculateLineTouchPoint(lastAlley.start_x, lastAlley.end_x, 
+    var startTouch = calculateLineTouchPoint(lastAlley.start_x, lastAlley.end_x, 
                                             lastAlley.end_x - lastAlley.start_x, 
                                             lastAlley.drawnCount, lastAlley.totalCount);
     
-    drawPathInLevelGap(endTouch, lastAlley.end_y, (two.x + two.y)/2, two.y, lastAlley.levelIndex, two.levelIndex, 
+
+    var endTouch = calculateLineTouchPoint(two.x, two.x + two.width, two.width, two.drawnInEdges, two.inCount);
+    drawPathInLevelGap(startTouch, lastAlley.end_y, endTouch, two.y, lastAlley.levelIndex, two.levelIndex, 
                                       totalLevelGapTraffic, drawnLevelGapTraffic, true, svg);
+    two.drawnInEdges += 1;
+
+    _.each(alleys, function(a) {
+        a.drawnCount += 1;
+    });
     
     console.table(edge.viaAlleys);
 }
