@@ -111,22 +111,22 @@ var graph = {
     ],
 
     edges: [
-        {
-            from: 2,
-            to: 4
-        },
-        {
-            from: 3,
-            to: 4
-        },
-        {
-            from: 5,
-            to: 11
-        },
-        {
-            from: 4,
-            to: 14
-        },
+        // {
+        //     from: 2,
+        //     to: 4
+        // },
+        // {
+        //     from: 3,
+        //     to: 4
+        // },
+        // {
+        //     from: 5,
+        //     to: 11
+        // },
+        // {
+        //     from: 4,
+        //     to: 14
+        // },
         // {
         //     from: 1000,
         //     to: 4
@@ -145,9 +145,21 @@ var graph = {
             to: 6
         },
 
+
         {
-            from: 14,
+            from: 3,
             to: 6
+        },
+
+
+        {
+            from: 1,
+            to: 100
+        },
+
+        {
+            from: 1,
+            to: 101
         }
     ]
 };
@@ -520,18 +532,7 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
 
     console.info("Gap", gap, one, two);
 
-    //http://stackoverflow.com/a/57805/817277. Thank you.
-    var whiteHex = parseInt("FFFFFF", 16);
-    var max = Math.floor(whiteHex / 3);
-    var decimalStroke = Math.floor(max / (drawnCount + 1));
-
-    var strokeString = decimalStroke.toString(16);
-    if(strokeString.length < 6) {
-        for(var k = 0; k < (6 - strokeString.length); k++) {
-            strokeString += "8"; //some arbitrary number; 
-        }
-    }
-    var stroke = "#" + strokeString;
+    var stroke = getLineColor(drawnCount);
 
     console.info("Stroke", stroke);
 
@@ -574,9 +575,9 @@ var drawNoJumpPathBetweenOneAndTwo = function(one, two, drawnCount, totalCount, 
 };
 
 var drawPathInLevelGap = function(x1, y1, x2, y2, startLevelIndex, endLevelIndex, 
-                                  totalLevelGapTraffic, drawnLevelGapTraffic, marker, svg) {
+                                  totalLevelGapTraffic, drawnLevelGapTraffic, color, marker, svg) {
 
-    var stroke = "black";
+    var stroke = color;
 
     var key = startLevelIndex + "-" + endLevelIndex;
     var drawnCount = drawnLevelGapTraffic[key] || 0;
@@ -629,7 +630,24 @@ var drawPathInLevelGap = function(x1, y1, x2, y2, startLevelIndex, endLevelIndex
 
 }
 
-var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic, drawnLevelGapTraffic, svg) {
+var getLineColor = function(drawnCount) {
+    //http://stackoverflow.com/a/57805/817277. Thank you.
+    var whiteHex = parseInt("FFFFFF", 16);
+    var max = Math.floor(whiteHex / 3);
+    var decimalStroke = Math.floor(max / (drawnCount + 1));
+
+    var strokeString = decimalStroke.toString(16);
+    if(strokeString.length < 6) {
+        for(var k = 0; k < (6 - strokeString.length); k++) {
+            var c = Math.random().toString().charAt(3)
+            strokeString += c; //some arbitrary blue component; 
+        }
+    }
+    var stroke = "#" + strokeString;
+    return stroke;
+};
+
+var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic, drawnLevelGapTraffic, edgeIndex, svg) {
     /*
                                 |
          _______________________|
@@ -645,6 +663,10 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
 
     var alleys = edge.viaAlleys;
 
+    var color = getLineColor(edgeIndex);
+
+
+    // -------- Path from one to first alley ----------------- //
     var startAlley = alleys[0];
     var endTouch = calculateLineTouchPoint(startAlley.start_x, startAlley.end_x, 
                                             startAlley.end_x - startAlley.start_x, 
@@ -654,9 +676,25 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
     var startTouch = calculateLineTouchPoint(one.x, one.x + one.width, one.width, one.drawnOutEdges, one.outCount);
     one.drawnOutEdges += 1;
 
-    drawPathInLevelGap((one.arrowEntry_x), one.y+one.height, endTouch, startAlley.start_y, one.levelIndex, startAlley.levelIndex, 
-                                      totalLevelGapTraffic, drawnLevelGapTraffic, false, svg);
+    drawPathInLevelGap(startTouch, one.y+one.height, endTouch, startAlley.start_y, one.levelIndex, startAlley.levelIndex, 
+                                      totalLevelGapTraffic, drawnLevelGapTraffic, color, false, svg);
 
+
+    // -------- Lines inside each alley ----------------- //
+    _.each(alleys, function(a) {
+        var touch = calculateLineTouchPoint(a.start_x, a.end_x, a.end_x - a.start_x, a.drawnCount, a.totalCount);
+        var insideAlleyLine = {
+            x1: touch,
+            y1: a.start_y,
+            x2: touch,
+            y2: a.end_y,
+            stroke: color,
+            "stroke-width": app.STROKE_WIDTH
+        };
+        drawLine(insideAlleyLine, svg);
+    });
+
+    // -------- Paths between intermediate levels ----------------- //
     var i, length = alleys.length;
     for(i = 0; i < length-1; i++) {
 
@@ -666,31 +704,13 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
         var startTouch = calculateLineTouchPoint(s.start_x, s.end_x, s.end_x - s.start_x, s.drawnCount, s.totalCount);
         
         var endTouch = calculateLineTouchPoint(e.start_x, e.end_x, e.end_x - e.start_x, e.drawnCount, e.totalCount);
-        
-        var firstInsideAlleyLine = {
-            x1: startTouch,
-            y1: s.start_y,
-            x2: startTouch,
-            y2: s.end_y,
-            stroke: "black",
-            "stroke-width": app.STROKE_WIDTH
-        };
-        drawLine(firstInsideAlleyLine, svg);
-
-        var secondInsideAlleyLine = {
-            x1: endTouch,
-            y1: e.start_y,
-            x2: endTouch,
-            y2: e.end_y,
-            stroke: "black",
-            "stroke-width": app.STROKE_WIDTH
-        };
-        drawLine(secondInsideAlleyLine, svg);
 
         drawPathInLevelGap(startTouch, s.end_y, endTouch, e.start_y, s.levelIndex, e.levelIndex, 
-                                          totalLevelGapTraffic, drawnLevelGapTraffic, false, svg);
+                                          totalLevelGapTraffic, drawnLevelGapTraffic, color, false, svg);
     }
 
+
+    // -------- Final Path from last alley to two ----------------- //
     var lastAlley = alleys[length-1];
     var startTouch = calculateLineTouchPoint(lastAlley.start_x, lastAlley.end_x, 
                                             lastAlley.end_x - lastAlley.start_x, 
@@ -699,9 +719,10 @@ var drawJumpPathBetweenOneAndTwo = function(one, two, edge, totalLevelGapTraffic
 
     var endTouch = calculateLineTouchPoint(two.x, two.x + two.width, two.width, two.drawnInEdges, two.inCount);
     drawPathInLevelGap(startTouch, lastAlley.end_y, endTouch, two.y, lastAlley.levelIndex, two.levelIndex, 
-                                      totalLevelGapTraffic, drawnLevelGapTraffic, true, svg);
+                                      totalLevelGapTraffic, drawnLevelGapTraffic, color, true, svg);
     two.drawnInEdges += 1;
 
+    // ---------- Bookkeeping //
     _.each(alleys, function(a) {
         a.drawnCount += 1;
     });
@@ -750,7 +771,7 @@ var drawAllEdges = function(graph, inputEdges, allNodes, allAlleys, svg) {
         }
 
         else if(edge.type === app.JUMP) {
-            drawJumpPathBetweenOneAndTwo(one, two, edge, totalLevelGapTraffic, drawnLevelGapTraffic, svg)      
+            drawJumpPathBetweenOneAndTwo(one, two, edge, totalLevelGapTraffic, drawnLevelGapTraffic, i, svg)      
         }
     }
 };
