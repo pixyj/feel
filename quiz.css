@@ -1,3 +1,7 @@
+body {
+    background: url("/retina_dust.png")
+}
+
 #page-container {
     margin-left: 3%;
     margin-top: 1%;
@@ -141,7 +145,16 @@ Eventually, I'll make new css files for each component/page
 }
 
 .md-and-html-input {
-    height: 150px;
+    height: 200px;
+    background: white;
+    overflow: scroll;
+}
+
+.md-preview-with-content {
+    height: 208px;
+    overflow-y: scroll;
+    border: 1px dashed black;
+    padding: 0 0.5em 0.5em 0.5em;
 }
 
 .problem-solving-plan-collection {
