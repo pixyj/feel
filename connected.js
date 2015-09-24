@@ -160,6 +160,29 @@ var graph = {
         {
             from: 1,
             to: 101
+        },
+
+        {
+            from: 100,
+            to: 6
+        },
+
+        {
+            from: 101,
+            to: 6
+        },
+
+        {
+            from: 5,
+            to: 6
+        },
+        {
+            from: 102,
+            to: 6
+        },
+        {
+            from: 4,
+            to: 6
         }
     ]
 };
@@ -414,7 +437,7 @@ var calculateLineTouchPoint = function(start_x, end_x, width, drawnCount, totalC
         var divisionUnit = width/(totalCount + 1);
         var directionCount = Math.floor(drawnCount / 2);
         var offset = direction * divisionUnit * (directionCount+1);
-        return (start_x + end_x)/2 + offset*0.9;
+        return (start_x + end_x)/2 + offset*0.85;
     }
 };
 
