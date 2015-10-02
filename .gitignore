@@ -3,3 +3,4 @@
 *.swp
 temp.*
 play.*
+.sass-cache
