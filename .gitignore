@@ -4,3 +4,6 @@
 temp.*
 play.*
 .sass-cache
+*.log
+*.zip
+
