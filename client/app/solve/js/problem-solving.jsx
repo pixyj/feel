@@ -53,15 +53,15 @@ var GuessHistorySingleView = React.createClass({
         return (
             <a href="#!" className="collection-item">
                 <div className="row">
-                    <div className="col s4">  
+                    <div className="col-md-4">  
                         <strong>{this.props.guess}</strong> 
                     </div>
 
-                    <div className="col s4">  
+                    <div className="col-md-4">  
                         <strong> {this.getResultFeedback()} </strong> 
                     </div>
 
-                    <div className="col s4">  
+                    <div className="col-md-4">  
                         <strong> {when} </strong> 
                     </div>
 
@@ -141,15 +141,15 @@ var GuessHistoryCollectionView = React.createClass({
                 <a href="#!" className="collection-item" id="problem-solving-guess-collection-heading" ref="heading">
                     <div className="row">
 
-                        <div className="col s4">  
+                        <div className="col-md-4">  
                             <strong>Guess</strong> 
                         </div>
 
-                        <div className="col s4">  
+                        <div className="col-md-4">  
                             <strong> Result </strong> 
                         </div>
 
-                        <div className="col s4">  
+                        <div className="col-md-4">  
                             <strong> When? </strong> 
                         </div>
 
@@ -455,17 +455,17 @@ var ProblemSolvingBox = React.createClass({
 
 
         return (
-            <div>
+            <div className="container">
 
                 {/* Problem Definition | Solve It */}
                 <div className="row problem-solving-question-and-solve-it-container">
 
-                    <div className="col s12 m6">
+                    <div className="col-md-6">
                         <h4 className="problem-solving-top-header"> {quizHeading} </h4>
                         <QuizQuestionView questionDisplay={this.state.quizModel.attributes.questionDisplay} />
                     </div>
 
-                    <div className="col s12 m6">
+                    <div className="col-md-6">
                         <h4 className="problem-solving-top-header"> {solveItHeading} </h4>
                         <ol id="problem-solving-steps-list">
 

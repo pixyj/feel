@@ -24,7 +24,7 @@ var MarkdownAndPreviewAttrs = {
         return (
             
                 <div className="row">
-                    <div className="col s12 m6">
+                    <div className="col-md-6">
                         <h6 className="md-and-html-heading">
                             Markdown Input
                         </h6>
@@ -39,7 +39,7 @@ var MarkdownAndPreviewAttrs = {
                         />
                     </div>
 
-                    <div className="col s12 m6">
+                    <div className="col-md-6">
                         <h6 className="md-and-html-heading">
                             HTML Preview
                         </h6>

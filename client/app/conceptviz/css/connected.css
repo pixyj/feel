@@ -11,6 +11,7 @@ svg {
 .chapter-container h3{
     text-align: center;
     padding: 0.4em;
+    font-size: 1.6em;
 }
 
 .chapter-yellow, .chapter-box-1 {
@@ -28,7 +29,7 @@ svg {
 }
 
 .concept-name-svg {
-    padding: 10px;
+    padding: 0.3em;
 }
 
 .concept-box {
@@ -37,6 +38,7 @@ svg {
 .concept-box h4 {
     text-align: center;
     padding: 10px;
+    font-size: 1.5em;
 }
 
 body {

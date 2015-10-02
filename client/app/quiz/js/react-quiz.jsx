@@ -54,7 +54,7 @@ var SingleChoiceInputView = React.createClass({
 
         return (
             <div className="row">
-                <div className="col s1">
+                <div className="col-md-1">
                     <form>
                         <input type="checkbox" 
                                className="filled-in" 
@@ -65,7 +65,7 @@ var SingleChoiceInputView = React.createClass({
                         <label htmlFor={domId}></label>
                     </form>
                 </div>
-                <div className="col s10">
+                <div className="col-md-10">
                      <textarea  className="quiz-creator-choice-input" 
                                 ref="textarea" placeholder="New Choice"  
                                 onKeyUp={this.updateChoiceText} 
@@ -73,7 +73,7 @@ var SingleChoiceInputView = React.createClass({
                                 value={this.state.choiceInput} 
                                 onKeyDown={this.checkIfCtrlEnterPressedAndAddChoice} />   
                 </div>
-                <div className="col s1">
+                <div className="col-md-1">
                     <span className="quiz-creator-remove-choice" onClick={this.removeChoice}>X</span>
                 </div>
             </div>
@@ -304,13 +304,15 @@ var QuizBox = React.createClass({
 
     render: function() {
         return (
-            <div className="row">
-                <div className="col s6 quiz-page-split-column quiz-creator-container">
-                    <QuizCreatorView model={this.state.quizModel}/>
-                </div>
-                <div className="col s6 quiz-page-split-column quiz-student-container">
-                    <h4 className="quiz-creator-preview-heading">Preview</h4>
-                    <QuizPreview model={this.state.quizModel} shortAnswerModel={this.state.shortAnswerModel} mcqAnswerModel={this.state.mcqAnswerModel} />
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-6 quiz-page-split-column quiz-creator-container">
+                        <QuizCreatorView model={this.state.quizModel}/>
+                    </div>
+                    <div className="col-md-6 quiz-page-split-column quiz-student-container">
+                        <h4 className="quiz-creator-preview-heading">Preview</h4>
+                        <QuizPreview model={this.state.quizModel} shortAnswerModel={this.state.shortAnswerModel} mcqAnswerModel={this.state.mcqAnswerModel} />
+                    </div>
                 </div>
             </div>
         );
