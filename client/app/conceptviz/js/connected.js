@@ -319,7 +319,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     var svgWidth = svgAttrs.width;
 
     var chapterClass = "chapter-box-" + node.chapterIndex;
-    var h4 = $("<h4>").html(node.name + " - " + node.id);
+    var h4 = $("<h4>").html(node.name);
     var p = $("<p>").addClass("concept-box").addClass(chapterClass).append(h4);
 
     //foreignObject does not work on IE #todo. But my initial technical audience does not use IE, I guess? 
