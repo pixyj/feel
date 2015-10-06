@@ -231,7 +231,7 @@ var QuizQuestionView = React.createClass({
 
     getInitialState: function() {
         return {
-            questionDisplay: null
+            questionDisplay: this.props.questionDisplay
         };
     },
 
@@ -241,7 +241,7 @@ var QuizQuestionView = React.createClass({
 
 
     render: function() {
-        var html = this.props.questionDisplay || this.state.questionDisplay || constants.QUESTION_PLACEHOLDER;
+        var html = this.state.questionDisplay || constants.QUESTION_PLACEHOLDER;
 
         return (
             <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
@@ -259,7 +259,6 @@ var QuizPreview = React.createClass({
     },
 
     componentDidMount: function() {
-
         this.props.model.on("change:questionDisplay", this.updatePreview, this);
 
     },
@@ -273,7 +272,7 @@ var QuizPreview = React.createClass({
         return (
             <div>
                 
-                <QuizQuestionView questionDisplay={this.props.model.questionDisplay} ref="questionView" />
+                <QuizQuestionView questionDisplay={this.state.questionDisplay} ref="questionView" />
                 
                 <QuizAnswerSubmitView model={this.props.model} />
 
@@ -282,7 +281,7 @@ var QuizPreview = React.createClass({
     },
 
     updatePreview: function() {
-        //console.log("updatePreview called");
+        console.log("updatePreview called");
         this.refs.questionView.setState({
             questionDisplay: this.props.model.attributes.questionDisplay
         });

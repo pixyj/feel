@@ -1,5 +1,9 @@
 var app = {
-    quizModel: new QuizModel(),
+    quizModel: new QuizModel({
+        questionInput: "<math>sin^2(x) + cos^2(x) = </math> ___________ ?",
+        answer: "1",
+        quizType: constants.SHORT_ANSWER
+    }),
     eventBus: _.extend({}, Backbone.Events),
 };
 
@@ -232,7 +236,11 @@ var QuizCreatorView = React.createClass({
         return (
             <div>
                 <h4 className="quiz-creator-input-heading">Quiz</h4>
-                <textarea className="quiz-creator-question-input" placeholder={constants.QUESTION_PLACEHOLDER} onChange={this.updateQuestionText} onKeyUp={this.updateQuestionText} />                
+                <textarea className="quiz-creator-question-input" 
+                          placeholder={constants.QUESTION_PLACEHOLDER} 
+                          onKeyUp={this.updateQuestionText} 
+                          onChange={this.updateQuestionText} 
+                          value = {this.state.questionInput} />                
                 
                 {answerInputView}
 
@@ -250,6 +258,10 @@ var QuizCreatorView = React.createClass({
         this.props.model.set({
             questionInput: input,
             questionDisplay: html
+        });
+
+        this.setState({
+            questionInput: input
         });
     },
 

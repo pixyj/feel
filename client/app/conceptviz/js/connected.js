@@ -16,7 +16,7 @@ var graph = {
 
                 [
                     {
-                        name: "Projection of a vector on another",
+                        name: "Comments",
                         chapterIndex: 1,
                         id: 1
                     }
@@ -24,165 +24,226 @@ var graph = {
 
                 [
                     {
-                        name: "Projection of a vector on a subspace",
-                        chapterIndex: 2,
-                        id: 2
-                    },
-                    {
-                        name: "Least Squares.",
+                        name: "Basic Expressions",
                         chapterIndex: 1,
-                        id: 3
-                    },
-                    {
-                        name: "What the ",
-                        chapterIndex: 2,
-                        id: 1000
-                    },
-
-                    {
-                        name: "F",
-                        chapterIndex: 2,
-                        id: 1001
-                    },
-
-                    {
-                        name: "Awesome",
-                        chapterIndex: 2,
-                        id: 1002
+                        id: 2
                     }
-
                 ],
 
                 [
                     {
-                        name: "Projection of a vector on a subspace",
+                        name: "Variables",
+                        chapterIndex: 1,
+                        id: 3
+                    },
+                    
+                ],
+                [
+                    
+                    {
+                        name: "Numbers",
                         chapterIndex: 1,
                         id: 4
                     },
                     {
-                        name: "Least Squares.",
+                        name: "Strings",
                         chapterIndex: 1,
                         id: 5
-                    },
-                    {
-                        name: "Projection of a vector on a subspace",
-                        chapterIndex: 1,
-                        id: 100
-                    },
-                    {
-                        name: "Least Squares.",
-                        chapterIndex: 1,
-                        id: 101
-                    },
-                    {
-                        name: "Yeah.",
-                        chapterIndex: 1,
-                        id: 102
                     }
+                    
                 ],
 
                 [
                     {
-                        name: "Left",
+                        name: "Lists",
+                        chapterIndex: 3,
+                        id: 6
+                    },
+                ],
+                [
+                    {
+                        name: "Programming Introduction",
+                        chapterIndex: 1,
+                        id: 7
+                    },
+                    {
+                        name: "Lists 2",
+                        chapterIndex: 1,
+                        id: 8
+                    }
+                ],
+                [
+                    {
+                        name: "Control Flow Tools",
                         chapterIndex: 2,
-                        id: 11
+                        id: 9
                     },
 
                     {
-                        name: "And Center",
+                        name: "Sets",
+                        chapterIndex: 3,
+                        id: 11
+                    },
+                ],
+                
+                [
+                    {
+                        name: "Defining Functions",
+                        chapterIndex: 2,
+                        id: 10
+                    },
+
+
+                    {
+                        name: "Dictionaries",
+                        chapterIndex: 3,
+                        id: 12
+                    },
+                ],
+                [
+
+                    {
+                        name: "Defining Functions 2",
                         chapterIndex: 2,
                         id: 14
                     },
 
                     {
-                        name: "Right",
+                        name: "I/O",
+                        chapterIndex: 5,
+                        id: 13
+                    },
+
+                    {
+                        name: "Sequences",
+                        chapterIndex: 3,
+                        id: 15
+                    },
+
+                    {
+                        name: "Errors and Exceptions",
+                        chapterIndex: 6,
+                        id: 19
+                    },
+                ],
+                [
+
+                    {
+                        name: "The del Statement",
+                        chapterIndex: 3,
+                        id: 16
+                    },
+                    {
+                        name: "Modules",
+                        chapterIndex: 4,
+                        id: 17
+                    },
+
+                    {
+                        name: "Functional Programming Tools",
                         chapterIndex: 2,
-                        id: 12
-                    }
+                        id: 18
+                    },
                 ],
 
                 [
                     {
-                        name: "Gram Schmidt",
-                        chapterIndex: 2,
-                        id: 6
+                        name: "Scopes and Namespaces",
+                        chapterIndex: 4,
+                        id: 20
+                    },
+                    {
+                        name: "Classes",
+                        chapterIndex: 7,
+                        id: 21
                     }
                 ]
     ],
 
     edges: [
-        // {
-        //     from: 2,
-        //     to: 4
-        // },
-        // {
-        //     from: 3,
-        //     to: 4
-        // },
-        // {
-        //     from: 5,
-        //     to: 11
-        // },
-        // {
-        //     from: 4,
-        //     to: 14
-        // },
-        // {
-        //     from: 1000,
-        //     to: 4
-        // },
-        // {
-        //     from: 1001,
-        //     to: 4
-        // },
-        // {
-        //     from: 2,
-        //     to: 102
-        // },
-
         {
             from: 1,
-            to: 6
+            to: 2
         },
-
-
+        {
+            from: 2,
+            to: 3
+        },
         {
             from: 3,
+            to: 4
+        },
+        {
+            from: 3,
+            to: 5
+        },
+        {
+            from: 4,
             to: 6
         },
-
-
-        {
-            from: 1,
-            to: 100
-        },
-
-        {
-            from: 1,
-            to: 101
-        },
-
-        {
-            from: 100,
-            to: 6
-        },
-
-        {
-            from: 101,
-            to: 6
-        },
-
         {
             from: 5,
             to: 6
         },
         {
-            from: 102,
-            to: 6
+            from: 6,
+            to: 7
         },
         {
-            from: 4,
-            to: 6
+            from: 6,
+            to: 8
+        },
+        {
+            from: 7,
+            to: 9
+        },
+        {
+            from: 8,
+            to: 11
+        },
+        {
+            from: 9,
+            to: 10
+        },
+        {
+            from: 10,
+            to: 14
+        },
+        {
+            from: 10,
+            to: 13
+        },
+        {
+            from: 12,
+            to: 15
+        },
+        {
+            from: 9,
+            to: 12
+        },
+        {
+            from: 14,
+            to: 18
+        },
+        {
+            from: 14,
+            to: 17
+        },
+        {
+            from: 12,
+            to: 16
+        },
+        {
+            from: 17,
+            to: 20
+        },
+        {
+            from: 17,
+            to: 21
+        },
+        {
+            from: 12,
+            to: 19
         }
     ]
 };

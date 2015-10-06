@@ -122,6 +122,10 @@ var QuizModel = Backbone.Model.extend({
 
     initialize: function() {
 
+        if(this.attributes.questionInput.length > 0) {
+            this.attributes.questionDisplay = mdAndMathToHtml(this.attributes.questionInput);
+        }
+
         var placeholderChoices = [
             {
                 choiceInput: ""

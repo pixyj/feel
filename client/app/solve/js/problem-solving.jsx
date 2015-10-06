@@ -2,9 +2,9 @@ var app = function() {
 
     var quizModel = new QuizModel({
         quizType: constants.SHORT_ANSWER,
-        questionInput: "Hi There",
-        questionDisplay: "If you are using  a distributed `NoSQL` database, can you provide `ACID` capabilities? ",
-        answer: "12"
+        questionInput: "There is a pond with fish. The fish double their population every 24 hours. It takes 20 days for the fish to fill the pond, how many days does it take to fill one-fourth of the pond?",
+        questionDisplay: "There is a pond with fish. The fish double their population every 24 hours. It takes 20 days for the fish to fill the pond, how many days does it take to fill one-fourth of the pond?",
+        answer: "18"
     });
 
     var shortAnswerModel = new ShortAnswerSubmitModel();
