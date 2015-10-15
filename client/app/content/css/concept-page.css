@@ -1,0 +1,18 @@
+#notes-right {
+    float: right;
+    margin-right: 2%;
+    font-size: 2em;
+}
+
+#navigate-left {
+    float: left;
+    margin-left: 2%;
+    font-size: 2em;
+}
+
+#concept-name-heading {
+    padding-left: 40%;
+    padding-right: 40%;
+    width: 100%;
+    font-size: 2em;
+}

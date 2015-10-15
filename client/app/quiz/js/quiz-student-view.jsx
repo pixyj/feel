@@ -34,7 +34,7 @@ var ShortAnswerSubmitView = React.createClass({
     },
 
     checkAnswer: function(quizModel) {
-        return quizModel.attributes.answer === this.state.guess.trim();
+        return quizModel.attributes.answer === (this.state.guess || "").trim();
     },
 
     getCurrentGuess: function() {
