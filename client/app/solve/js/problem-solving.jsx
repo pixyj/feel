@@ -301,13 +301,11 @@ var PlanSingleView = React.createClass({
                 
                 <PlanContentView model={this.props.model} placeholder="So, what's your plan?"/>
 
-                <h5> Your Guess? </h5>
 
                 <QuizAnswerSubmitView model={this.props.quizModel} planNumber={planNumber} />
 
                 <GuessHistoryView guessCollection={this.props.quizModel.guessCollection} 
-                                  planNumber={planNumber}
-                />
+                                  planNumber={planNumber} />
 
                 <button className="problem-solving-create-plan-btn btn" 
                         onClick={this.addPlan}>
@@ -369,8 +367,7 @@ var PlanCollectionView = React.createClass({
                             key={i} 
                             index={i} 
                             ref={i} 
-                            shouldFocus={shouldFocus}
-                            />
+                            shouldFocus={shouldFocus} />
             rows.push(view);
         }
 
@@ -489,9 +486,7 @@ var ProblemSolvingBox = React.createClass({
                 
                 <PlanCollectionView problemSolvingModel={this.state.problemSolvingModel} 
                                     quizModel={this.state.quizModel}
-                                    guessCollection={this.state.quizModel.guessCollection} 
-
-                />
+                                    guessCollection={this.state.quizModel.guessCollection} />
 
                 <AnalysisView guessCollection={this.state.quizModel.guessCollection} />
                     
@@ -511,4 +506,4 @@ var init = function() {
 
 };
 
-init();
+//init();

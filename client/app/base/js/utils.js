@@ -58,6 +58,15 @@ var getHumanizedTimeDiff = function(localDate) {
     return prettyDate(utcDate);
 };
 
+var getUniqueId = function() {
+
+    var id = 0;
+    var getId = function() {
+        id += 1;
+        return id;
+    }
+    return getId;
+}();
 
 var vectorReverse = function(v) {
     var r = _.map(v, function(i) {
@@ -108,4 +117,4 @@ var vectorMultiplyByScalar = function(v, scale) {
         result[i] = v[i] * scale;
     }
     return result;
-}
+};

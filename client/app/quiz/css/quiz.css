@@ -2,6 +2,10 @@ body {
     background: url("/retina_dust.png")
 }
 
+textarea {
+    resize: none
+}
+
 #page-container {
     margin-left: 3%;
     margin-top: 1%;

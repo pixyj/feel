@@ -11,18 +11,22 @@ var ShortAnswerSubmitView = React.createClass({
     },
 
     render: function() {
+        var id = "input-" + getUniqueId();
         return (
-            <input type="text" 
-                   placeholder="Enter your answer here" 
-                   onKeyUp={this.updateGuess} 
-                   onChange={this.updateGuess} 
-                   className="quiz-student-short-answer-input"
-                   value={this.state.guess}/>
+            <div className="input-field">
+                <input type="text" 
+                       onKeyUp={this.updateGuess} 
+                       onChange={this.updateGuess} 
+                       className="quiz-student-short-answer-input"
+                       value={this.state.guess} 
+                       id={id} />
+                <label htmlFor={id}>Your answer</label>
+            </div>
         );
     },
 
     updateGuess: function(evt) {
-        var guess = evt.target.value;
+        var guess = evt.target.value || "";
         this.setState({
             guess: guess
         });
