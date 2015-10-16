@@ -39,3 +39,5 @@ class QuizDetail(APIView):
 
         serializer = serializers.QuizSerializer(quiz)
         return Response(serializer.data)
+
+    

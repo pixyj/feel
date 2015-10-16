@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from quiz.models import Quiz, ShortAnswer, Choice
+from core.serializers import TagSerializer
 
 class ShortAnswerSerializer(serializers.ModelSerializer):
 
@@ -19,7 +20,8 @@ class QuizSerializer(serializers.ModelSerializer):
 
     answers = ShortAnswerSerializer(source="shortanswer_set", many=True)
     choices = ChoiceSerializer(source="choice_set", many=True)
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = Quiz
-        fields = ('id', 'question_input', 'question_display', 'quiz_type', 'version', 'created_at', 'answers', 'choices')
+        fields = ('id', 'question_input', 'question_display', 'quiz_type', 'version', 'tags', 'created_at', 'answers', 'choices')
