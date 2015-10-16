@@ -6,4 +6,5 @@ play.*
 .sass-cache
 *.log
 *.zip
-
+*.sublime-project
+*.sublime-workspace
