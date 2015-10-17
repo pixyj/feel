@@ -240,7 +240,13 @@ var QuizCreatorView = React.createClass({
                           placeholder={constants.QUESTION_PLACEHOLDER} 
                           onKeyUp={this.updateQuestionText} 
                           onChange={this.updateQuestionText} 
-                          value = {this.state.questionInput} />                
+                          value = {this.state.questionInput} /> 
+
+                <div className="chip">
+                  Tag
+                  <i className="material-icons">close</i>
+                </div>
+               
                 
                 {answerInputView}
 

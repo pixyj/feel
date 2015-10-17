@@ -106,3 +106,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+#DJANGO-REST-FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+    ),
+
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser', 
+    ),
+}
+
+

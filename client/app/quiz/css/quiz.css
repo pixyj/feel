@@ -168,3 +168,7 @@ Eventually, I'll make new css files for each component/page
 .problem-solving-single-plan-container {
     margin-top: 20px;
 }
+
+.quiz-filter-question {
+    cursor: pointer;
+}

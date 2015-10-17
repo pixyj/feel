@@ -506,4 +506,4 @@ var init = function() {
 
 };
 
-//init();
+init();

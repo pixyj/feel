@@ -145,6 +145,28 @@ var QuizModel = Backbone.Model.extend({
 });
 
 
+var QuizBankCollection = Backbone.Collection.extend({
+
+    model: QuizModel,
+
+    url: "/api/v1/quizzes",
+
+    //I can use the parse method providied by Backbone. But I want to explicit now. 
+    //Todo -> remove <math> and ---- and other markdown stuff. Or filter it in input.
+    cacheQuizInputs: function() {
+        this._cachedQuizzes = [];
+        _.each(this.toJSON(), function(attrs) {
+            attrs.questionInputLowerCase = attrs.questionInput.toLowerCase();
+            this._cachedQuizzes.push(attrs);
+        }, this);
+    },
+
+    getCachedQuizzes: function() {
+        return this._cachedQuizzes;
+    }
+
+});
+
 
 
 var PlanModel = Backbone.Model.extend({

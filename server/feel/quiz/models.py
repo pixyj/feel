@@ -55,8 +55,6 @@ class Choice(TimestampedModel):
 
 
 
-
-
 #To get all sql queries sent by Django from py shell
 import logging
 l = logging.getLogger('django.db.backends')
