@@ -6,7 +6,7 @@ var QuizSnippetView = React.createClass({
 
     render: function() {
         return (
-            <div className="quiz-filter-question"
+            <div className="collection-item quiz-filter-question"
                 dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} 
                 onClick={this.selectQuiz} />
         )
@@ -41,9 +41,8 @@ var QuizListBox = React.createClass({
         var inputId = "input-" + getUniqueId();
 
         return (
-            <div>
+            <div className="card">
                 
-                <h3> Hi There </h3>
                 <div className="input-field">
                     <input  type="text" 
                             id={inputId}
@@ -52,7 +51,9 @@ var QuizListBox = React.createClass({
                             onChange={this.filterQuizzes} />
                     <label htmlFor={inputId}>Filter Questions</label>
                 </div>
-                {rows}
+                <div className="collection">
+                    {rows}
+                </div>
             </div>
         );  
     },

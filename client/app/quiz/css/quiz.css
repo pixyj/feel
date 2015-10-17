@@ -172,3 +172,8 @@ Eventually, I'll make new css files for each component/page
 .quiz-filter-question {
     cursor: pointer;
 }
+
+/* todo make the color DRY. Use Sass */
+.quiz-filter-question:hover {
+    background-color: #ddd;
+}
