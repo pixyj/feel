@@ -67,8 +67,10 @@ var QuizListBox = React.createClass({
         }
         else {
 
+            var notValidChars = /[^a-zA-Z0-9 ]/g; //Internationalization out of the window
+            var sanitizedInput = value.replace(notValidChars, "").toLowerCase();
             var quizzes = _.filter(app.collection.getCachedQuizzes(), function(q) {
-                return q.questionInputLowerCase.indexOf(value.toLowerCase()) !== -1;
+                return q.questionInputLowerCase.indexOf(sanitizedInput) !== -1;
             });
             this.setState({
                 quizzes: quizzes,
