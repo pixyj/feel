@@ -92,3 +92,9 @@ var TagListViewMixin = {
 };
 
 var TagListBaseView = React.createClass(TagListViewMixin);
+
+module.exports = {
+    TagSingleViewMixin: TagSingleViewMixin,
+    TagListViewMixin: TagListViewMixin,
+    TagListBaseView: TagListBaseView
+};
