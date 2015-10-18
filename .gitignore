@@ -10,3 +10,4 @@ play.*
 *.sublime-workspace
 db.sqlite3
 __pycache__
+node_modules
