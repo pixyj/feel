@@ -5,10 +5,14 @@ var app = {
 var QuizSnippetView = React.createClass({
 
     render: function() {
+        var createdAtDisplay = prettyDate(getUTCDate(new Date(this.props.createdAt)));
         return (
-            <div className="collection-item quiz-filter-question"
-                dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} 
-                onClick={this.selectQuiz} />
+            <div className="collection-item quiz-filter-question"> 
+                <div
+                    dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} 
+                    onClick={this.selectQuiz} />
+                <p className="created-at">Created {createdAtDisplay} </p>
+            </div>
         )
     },
 
@@ -34,7 +38,9 @@ var QuizListBox = React.createClass({
         var length = this.state.quizzes.length;
         for(var i = 0; i < length; i++) {
             var attrs = this.state.quizzes[i];
-            var view = <QuizSnippetView questionDisplay={attrs.questionDisplay} key={i}/>
+            var view = <QuizSnippetView questionDisplay={attrs.questionDisplay} 
+                                        key={i}
+                                        createdAt={attrs.createdAt} />
             rows.push(view); 
         };
 
@@ -43,7 +49,7 @@ var QuizListBox = React.createClass({
         return (
             <div className="card">
                 
-                <div className="input-field">
+                <div className="input-field quiz-filter-input-field">
                     <input  type="text" 
                             id={inputId}
                             value={this.state.filterInput}

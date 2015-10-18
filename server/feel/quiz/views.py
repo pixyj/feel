@@ -21,7 +21,7 @@ class QuizList(APIView):
 
 
     def get(self, request, format=None):
-        quizzes = Quiz.objects.prefetch_related('shortanswer_set').prefetch_related('choice_set').filter(created_by=request.user)
+        quizzes = Quiz.objects.prefetch_related('shortanswer_set').prefetch_related('choice_set').filter(created_by=request.user).order_by("-created_at")
         serializer = serializers.QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
 
