@@ -1,5 +1,57 @@
+var katex = require("../../../katex/katex.min");
+window.katex = katex;
+
+var commonmark = window.commonmark;
+
+
 var reader = new commonmark.Parser();
 var writer = new commonmark.HtmlRenderer();
+
+var isPlainTextWithPTag = function(s) {
+    var tags = ["h1", "img", "h2", "em", "<strong>", "<blockquote>", "<pre>", "<ol>", "<ul>", "<hr>"];
+    if(s.indexOf("<p>") !== 0) {
+        return false;
+    }
+    if(s.indexOf("</p>") !== s.length - 4) {
+        return false;
+    }
+    var i; 
+    var length = tags.length;
+    for(i = 0; i < length; i++) {
+        if(s.indexOf(tags[i]) !== -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+var isWrappedByPTag = function(s) {
+    return s.indexOf("<p>") === 0;
+};
+
+var isNewlineTheLastChar = function(s) {
+    if(s.length === 0) {
+        return false;
+    }
+    var newLine = new RegExp("\n");
+    var matched = newLine.exec(s);
+    if(matched === null) {
+        return false;
+    }
+    return matched.index >= s.length - 2;
+};
+
+var isNewlineTheFirstChar = function(s) {
+    if(s.length === 0) {
+        return false;
+    }
+    var newLine = new RegExp("\n");
+    var matched = newLine.exec(s);
+    if(matched === null) {
+        return false;
+    }
+    return matched.index <=1;
+};
 
 var mdAndMathToHtml = function(s) {
     var parsed = reader.parse(s);
@@ -58,48 +110,7 @@ var mdAndMathToHtml = function(s) {
     return result;
 }
 
-var isPlainTextWithPTag = function(s) {
-    var tags = ["h1", "img", "h2", "em", "<strong>", "<blockquote>", "<pre>", "<ol>", "<ul>", "<hr>"];
-    if(s.indexOf("<p>") !== 0) {
-        return false;
-    }
-    if(s.indexOf("</p>") !== s.length - 4) {
-        return false;
-    }
-    var i; 
-    var length = tags.length;
-    for(i = 0; i < length; i++) {
-        if(s.indexOf(tags[i]) !== -1) {
-            return false;
-        }
-    }
-    return true;
+//ES6 will make this DRY.
+module.exports = {
+    mdAndMathToHtml: mdAndMathToHtml
 }
-
-var isWrappedByPTag = function(s) {
-    return s.indexOf("<p>") === 0;
-};
-
-var isNewlineTheLastChar = function(s) {
-    if(s.length === 0) {
-        return false;
-    }
-    var newLine = new RegExp("\n");
-    var matched = newLine.exec(s);
-    if(matched === null) {
-        return false;
-    }
-    return matched.index >= s.length - 2;
-};
-
-var isNewlineTheFirstChar = function(s) {
-    if(s.length === 0) {
-        return false;
-    }
-    var newLine = new RegExp("\n");
-    var matched = newLine.exec(s);
-    if(matched === null) {
-        return false;
-    }
-    return matched.index <=1;
-};
