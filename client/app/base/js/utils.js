@@ -8,8 +8,13 @@ String.prototype.format = function() {
     return formatted;
 };
 
+//http://stackoverflow.com/a/6777470/817277
+var getUTCDate = function(now) {
+    now = now || new Date();
+    var now_utc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+    return now_utc;
+};
 
-//inspired by http://ejohn.org/files/pretty.js
 var prettyDate = function(utcDate) {
     var utcNow = getUTCDate(new Date());
     var diff = ((utcNow.getTime() - utcDate.getTime()) / 1000);
@@ -43,15 +48,6 @@ var prettyDate = function(utcDate) {
     }
 };
 
-
-//http://stackoverflow.com/a/6777470/817277
-var getUTCDate = function(now) {
-    now = now || new Date();
-    var now_utc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
-    return now_utc;
-};
-
-
 var getHumanizedTimeDiff = function(localDate) {
     localDate = localDate || new Date();
     var utcDate = getUTCDate(localDate);
@@ -68,6 +64,14 @@ var getUniqueId = function() {
     return getId;
 }();
 
+module.exports = {
+    getUTCDate: getUTCDate,
+    prettyDate: prettyDate,
+    getHumanizedTimeDiff: getHumanizedTimeDiff,
+    getUniqueId: getUniqueId
+};
+
+/*
 var vectorReverse = function(v) {
     var r = _.map(v, function(i) {
         return -i;
@@ -118,3 +122,4 @@ var vectorMultiplyByScalar = function(v, scale) {
     }
     return result;
 };
+*/
