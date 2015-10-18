@@ -75,3 +75,7 @@ var MarkdownAndPreviewAttrs = {
 
 }
 
+module.exports = {
+    MarkdownAndPreviewAttrs: MarkdownAndPreviewAttrs
+};
+
