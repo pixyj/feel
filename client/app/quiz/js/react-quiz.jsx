@@ -1,9 +1,5 @@
 var app = {
-    quizModel: new QuizModel({
-        questionInput: "<math>sin^2(x) + cos^2(x) = </math> ___________ ?",
-        answer: "1",
-        quizType: constants.SHORT_ANSWER
-    }),
+    quizModel: new QuizModel(),
     eventBus: _.extend({}, Backbone.Events),
 };
 
@@ -242,13 +238,11 @@ var QuizCreatorView = React.createClass({
                           onChange={this.updateQuestionText} 
                           value = {this.state.questionInput} /> 
 
-                <div className="chip">
-                  Tag
-                  <i className="material-icons">close</i>
-                </div>
-               
                 
                 {answerInputView}
+
+                <TagListBaseView tags={[]} />
+               
 
                 <button className="quiz-creator-mcq-toggle-button btn" onClick={this.toggleQuizType}>{toggleMessage}</button>
                 
