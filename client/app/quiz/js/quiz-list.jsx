@@ -34,7 +34,7 @@ var QuizListBox = React.createClass({
         var length = this.state.quizzes.length;
         for(var i = 0; i < length; i++) {
             var attrs = this.state.quizzes[i];
-            var view = <QuizSnippetView questionDisplay={attrs.questionDisplay} />
+            var view = <QuizSnippetView questionDisplay={attrs.questionDisplay} key={i}/>
             rows.push(view); 
         };
 
