@@ -1,5 +1,20 @@
+var React = require("react");
+var ReactDOM = require("react-dom");
+
+var _ = require("underscore");
+var Backbone = require("backbone");
+
+var models = require("./models");
+var constants = models.constants;
+var QuizPreview = require("./quiz-student-view.jsx").QuizPreview;
+
+var tags = require("tags.jsx");
+var md = require("md");
+
+var TagListBaseView = tags.TagListBaseView;
+
 var app = {
-    quizModel: new QuizModel(),
+    quizModel: new models.QuizModel(),
     eventBus: _.extend({}, Backbone.Events),
 };
 
@@ -93,7 +108,7 @@ var SingleChoiceInputView = React.createClass({
     updateChoiceText: function(evt) {
 
         var choiceInput = evt.target.value;
-        var choiceDisplay = mdAndMathToHtml(choiceInput);
+        var choiceDisplay = md.mdAndMathToHtml(choiceInput);
         //console.log("updating text", choiceInput);
         
         this.props.model.set({
@@ -252,7 +267,7 @@ var QuizCreatorView = React.createClass({
 
     updateQuestionText: function(evt) {
         var input = evt.target.value;
-        var html = mdAndMathToHtml(input);
+        var html = md.mdAndMathToHtml(input);
 
         //console.log(html);
         this.props.model.set({
@@ -307,8 +322,8 @@ var QuizBox = React.createClass({
     getInitialState: function() {
         return {
             quizModel: app.quizModel,
-            shortAnswerModel: new ShortAnswerSubmitModel(),
-            mcqAnswerModel: new MCQAnswerModel()
+            shortAnswerModel: new models.ShortAnswerSubmitModel(),
+            mcqAnswerModel: new models.MCQAnswerModel()
         }
     },
 
@@ -332,13 +347,17 @@ var QuizBox = React.createClass({
 });
 
 
-var init = function() {
+var render = function(element) {
 
-    React.render(
+    ReactDOM.render(
         <QuizBox />, 
-        document.getElementById("page-container")
+        element
     );
 
 };
 
-init();
+module.exports = {
+    render: render
+}
+
+

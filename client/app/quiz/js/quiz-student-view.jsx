@@ -1,3 +1,10 @@
+var React = require("react");
+
+var models = require("./models");
+var constants = models.constants;
+var md = require("md");
+var utils = require("utils");
+
 var ShortAnswerSubmitView = React.createClass({
 
     getInitialState: function() {
@@ -11,7 +18,7 @@ var ShortAnswerSubmitView = React.createClass({
     },
 
     render: function() {
-        var id = "input-" + getUniqueId();
+        var id = "input-" + utils.getUniqueId();
         return (
             <div className="input-field">
                 <input type="text" 
@@ -54,7 +61,7 @@ var ChoiceSingleCheckView = React.createClass({
 
         var html = this.props.choice.choiceDisplay || "New Choice";
 
-        if(!isWrappedByPTag(html)) {
+        if(!md.isWrappedByPTag(html)) {
             html = "<p>" + html + "</p>";
         };
 
@@ -224,7 +231,7 @@ var QuizAnswerSubmitView = React.createClass({
     },
 
     addGuessToCollection: function(attrs) {
-        attrs.timestamp = getUTCDate().getTime();
+        attrs.timestamp = utils.getUTCDate().getTime();
         attrs.planNumber = this.props.planNumber || null;
         this.props.model.guessCollection.add(attrs);
     }
@@ -293,3 +300,7 @@ var QuizPreview = React.createClass({
 
 
 });
+
+module.exports = {
+    QuizPreview: QuizPreview
+}

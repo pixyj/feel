@@ -112,5 +112,6 @@ var mdAndMathToHtml = function(s) {
 
 //ES6 will make this DRY.
 module.exports = {
-    mdAndMathToHtml: mdAndMathToHtml
+    mdAndMathToHtml: mdAndMathToHtml,
+    isWrappedByPTag: isWrappedByPTag
 }

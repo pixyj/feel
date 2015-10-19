@@ -1,3 +1,7 @@
+var _ = require("underscore");
+var Backbone = require("backbone");
+var md = require("md");
+
 var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
@@ -123,7 +127,7 @@ var QuizModel = Backbone.Model.extend({
     initialize: function() {
 
         if(this.attributes.questionInput.length > 0) {
-            this.attributes.questionDisplay = mdAndMathToHtml(this.attributes.questionInput);
+            this.attributes.questionDisplay = md.mdAndMathToHtml(this.attributes.questionInput);
         }
 
         var placeholderChoices = [
@@ -132,7 +136,7 @@ var QuizModel = Backbone.Model.extend({
             }
         ];
         placeholderChoices.forEach(function(c) {
-            c.choiceDisplay = mdAndMathToHtml(c.choiceInput);
+            c.choiceDisplay = md.mdAndMathToHtml(c.choiceInput);
         });
 
         //todo -> Change choices to choiceCollection as well. To make things explicit, and consistent. 

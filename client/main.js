@@ -1,4 +1,6 @@
 var $ = require("jquery");
+window.jQuery = $;
+window.$ = $;
 var Backbone = require("backbone");
 
 var Quiz = require("./app/quiz/js/api");
@@ -35,7 +37,8 @@ var Router = Backbone.Router.extend({
 var init = function() {
     var router = new Router();
     Backbone.history.start({pushState: false});
-}
+};
 
-init();
-window.Backbone = Backbone;
+$(document).ready(init);
+
+
