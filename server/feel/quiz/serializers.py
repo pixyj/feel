@@ -7,14 +7,14 @@ class ShortAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShortAnswer
-        fields = ('id', 'answer', 'created_at')
+        fields = ('id', 'answer')
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Choice
-        fields = ('id', 'choice_input', 'choice_display', 'is_correct', 'created_at')
+        fields = ('id', 'choice_input', 'choice_display', 'is_correct')
 
 class QuizSerializer(serializers.ModelSerializer):
 
