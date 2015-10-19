@@ -13,6 +13,10 @@ console.log(ok);
 
 
 var Router = Backbone.Router.extend({
+
+    initialize: function() {
+        this.pageElement = document.getElementById("page");
+    },
     
     routes: {
         "creator/quiz": "createQuiz",
@@ -20,15 +24,17 @@ var Router = Backbone.Router.extend({
     },
 
     createQuiz: function() {
-        Quiz.render(document.getElementById("page"));
+        Quiz.render(this.pageElement);
     },
 
     home: function() {
         console.log("I'm going home");
         var self = this;
+        var message = "Home page not designed. Navigating to quiz in 2 seconds";
+        this.pageElement.innerHTML = message;
         window.setTimeout(function() {
             self.navigate("creator/quiz", {trigger: true});
-        }, 500);
+        }, 2000);
     }
 
 
