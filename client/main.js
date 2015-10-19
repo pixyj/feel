@@ -4,24 +4,32 @@ window.$ = $;
 var Backbone = require("backbone");
 window.Backbone = Backbone;
 
+var _ = require("underscore");
+
 var Quiz = require("./app/quiz/js/api");
 
 var Utils = require("./app/base/js/utils");
 var md = require("./app/base/js/md");
-
-ok = md.mdAndMathToHtml("yes<math>sin(x) + cos(x)</math>");
-console.log(ok);
-
+var models = require("models");
+var UserModel = models.UserModel;
 
 var Router = Backbone.Router.extend({
 
-    initialize: function() {
+    initialize: function(options) {
         this.currentComponent = null;
+        this.userModel = options.userModel;
     },
     
     routes: {
         "creator/quiz": "createQuiz",
-        "": "home"
+        "": "home",
+        "login": "gotoLogin"
+    },
+
+    authRequiredRoutes: ['creator'],
+
+    gotoLogin: function() {
+        window.location.href = "/admin";
     },
 
     createQuiz: function() {
@@ -44,7 +52,7 @@ var Router = Backbone.Router.extend({
     home: function() {
 
         this.resetPage();
-        var message = "Home page not designed. Navigating to quiz in 2 seconds";
+        var message = "Home page not designed";
         this.pageElement.innerHTML = message;
 
         this.currentComponent = this;
@@ -57,14 +65,41 @@ var Router = Backbone.Router.extend({
 
     unmount: function() {
         this.pageElement.remove();
+    },
+
+    execute: function(callback, args, name) {
+        if(this.isAuthRequired() && !this.userModel.isAuthenticated()) {
+            this.gotoLogin();
+            //Backbone.history.navigate("login", {trigger: true});
+            //return false;    
+        }
+
+        if(callback) {
+            callback.apply(this, args);
+        }
+    },
+
+    isAuthRequired: function() {
+        var frag = Backbone.history.getFragment();
+        var matched = _.filter(this.authRequiredRoutes, function(r) {
+            return frag.indexOf(r) !== -1;
+        });
+
+        return matched.length > 0;
     }
 
 
 });
 
 var init = function() {
-    var router = new Router();
-    Backbone.history.start({pushState: false});
+
+    var userModel = new UserModel();
+    userModel.fetch().then(function() {
+        console.log(userModel.toJSON());
+        var router = new Router({userModel: userModel});
+        Backbone.history.start({pushState: false});
+    });
+
 };
 
 $(document).ready(init);
