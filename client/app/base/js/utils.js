@@ -64,12 +64,17 @@ var getUniqueId = function() {
     return getId;
 }();
 
+var uuid = require("./uuid");
+
 module.exports = {
     getUTCDate: getUTCDate,
     prettyDate: prettyDate,
     getHumanizedTimeDiff: getHumanizedTimeDiff,
-    getUniqueId: getUniqueId
+    getUniqueId: getUniqueId,
+    uuid: uuid
 };
+
+window.utils = module.exports;
 
 /*
 var vectorReverse = function(v) {
