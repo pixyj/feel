@@ -13,6 +13,8 @@ var md = require("./app/base/js/md");
 var models = require("models");
 var UserModel = models.UserModel;
 
+require("csrf");
+
 var Router = Backbone.Router.extend({
 
     initialize: function(options) {
