@@ -20,7 +20,7 @@ class Quiz(TimestampedModel):
     
     quiz_type = models.IntegerField(choices=QUIZ_TYPES)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return "{} - v{} Created by {}".format(self.question_input, self.version, self.created_by)
