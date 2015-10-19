@@ -351,6 +351,7 @@ var render = function(element) {
 
 
     app.quizModel = new models.QuizModel();
+    window.quizModel = app.quizModel;
     ReactDOM.render(
         <QuizBox />, 
         element
