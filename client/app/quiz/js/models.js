@@ -121,13 +121,29 @@ var QuizModel = Backbone.Model.extend({
         quizType: constants.MCQ,
         questionInput: "",
         questionDisplay: "",
-        answer: ""
+        answer: "",
+        choices: [],
+        answers: [],
+        tags: [],
+        version: 1,
+        quizId: null
     },
+
+    idAttribute: "quizId",
 
     initialize: function() {
 
         if(this.attributes.questionInput.length > 0) {
             this.attributes.questionDisplay = md.mdAndMathToHtml(this.attributes.questionInput);
+        }
+
+        if(this.attributes.quizId === null) {
+            this._isNew = true;
+            this.attributes.quizId = utils.uuid();
+            this.once("sync", this.unsetIsNew, this);
+        }
+        else {
+            this._isNew = false;
         }
 
         var placeholderChoices = [
@@ -144,7 +160,20 @@ var QuizModel = Backbone.Model.extend({
 
         this.guessCollection = new GuessCollection();
 
+    },
+
+    isNew: function() {
+        return this._isNew;
+    },
+
+    unsetIsNew: function() {
+        this._isNew = false;
+    },
+
+    url: function() {
+        return "/api/v1/quiz/{0}/".format(this.attributes.quizId);
     }
+
 
 });
 
@@ -183,3 +212,4 @@ module.exports = {
     QuizBankCollection: QuizBankCollection
 };
 
+window.QuizModel = QuizModel;
