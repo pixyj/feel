@@ -21,21 +21,42 @@ class QuizList(APIView):
 
 
     def get(self, request, format=None):
-        quizzes = Quiz.objects.prefetch_related('shortanswer_set').prefetch_related('choice_set').filter(created_by=request.user).order_by("-created_at")
+        quizzes = Quiz.objects.prefetch_related('shortanswer_set').\
+                               prefetch_related('choice_set').\
+                               filter(created_by=request.user).\
+                               order_by("-created_at")
+
+        highest_versions = {}
+        for quiz in quizzes:
+            if quiz.quiz_id in highest_versions:
+                existing_quiz = highest_versions[quiz.quiz_id]
+                if existing_quiz.version > quiz.version:
+                    continue
+                
+            highest_versions[quiz.quiz_id] = quiz
+
+        quizzes = highest_versions.values()
+            
         serializer = serializers.QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
 
 
+
+    
+
 class QuizDetail(APIView):
 
-    def get_object(self, pk):
+
+    def get(self, request, quiz_id, format=None):
         try:
-            return Quiz.objects.get(pk=pk)
-        except Quiz.DoesNotExist:
+            quiz = Quiz.objects.filter(quiz_id=quiz_id).\
+                                order_by("-version").\
+                                prefetch_related('shortanswer_set').\
+                                prefetch_related('choice_set')[0]
+        except (IndexError, ValueError):
             raise Http404
 
-    def get(self, request, pk, format=None):
-        quiz = self.get_object(pk)
+
 
         serializer = serializers.QuizSerializer(quiz)
         return Response(serializer.data)

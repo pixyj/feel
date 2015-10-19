@@ -3,6 +3,8 @@ from taggit.managers import TaggableManager
 
 from core.models import TimestampedModel
 
+import uuid;
+
 QUIZ_TYPES = (
     (1, 'SHORT_ANSWER'),
     (2, 'MCQ'),
@@ -10,10 +12,12 @@ QUIZ_TYPES = (
 
 class Quiz(TimestampedModel):
 
-    question_input = models.TextField()
-    question_display = models.TextField()
+    quiz_id = models.UUIDField(default=uuid.uuid4, db_index=True)
     version = models.IntegerField()
 
+    question_input = models.TextField()
+    question_display = models.TextField()
+    
     quiz_type = models.IntegerField(choices=QUIZ_TYPES)
 
     tags = TaggableManager()
@@ -27,6 +31,7 @@ class Quiz(TimestampedModel):
 
 
 class ShortAnswer(TimestampedModel):
+
     quiz = models.ForeignKey(Quiz)
     answer = models.TextField()
 
@@ -41,6 +46,7 @@ class ShortAnswer(TimestampedModel):
 
 
 class Choice(TimestampedModel):
+    
     quiz = models.ForeignKey(Quiz)
     choice_input = models.TextField()
     choice_display = models.TextField()
