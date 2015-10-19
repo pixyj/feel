@@ -349,6 +349,8 @@ var QuizBox = React.createClass({
 
 var render = function(element) {
 
+
+    app.quizModel = new models.QuizModel();
     ReactDOM.render(
         <QuizBox />, 
         element
@@ -356,8 +358,13 @@ var render = function(element) {
 
 };
 
+var unmount = function(element) {
+    ReactDOM.unmountComponentAtNode(element);
+}
+
 module.exports = {
-    render: render
+    render: render,
+    unmount: unmount
 }
 
 
