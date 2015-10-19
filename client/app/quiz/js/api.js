@@ -1,3 +1,7 @@
+var page = require("./page.jsx")
+
+
 module.exports = {
-    yep: "I create quizzes"
+    yep: "I create quizzes",
+    render: page.render
 };

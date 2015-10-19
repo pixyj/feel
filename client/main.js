@@ -3,6 +3,13 @@ var Backbone = require("backbone");
 
 var Quiz = require("./app/quiz/js/api");
 
+var Utils = require("./app/base/js/utils");
+var md = require("./app/base/js/md");
+
+ok = md.mdAndMathToHtml("yes<math>sin(x) + cos(x)</math>");
+console.log(ok);
+
+
 var Router = Backbone.Router.extend({
     
     routes: {
@@ -11,7 +18,7 @@ var Router = Backbone.Router.extend({
     },
 
     createQuiz: function() {
-        console.log(Quiz.yep);
+        Quiz.render(document.getElementById("page"));
     },
 
     home: function() {
