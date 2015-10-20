@@ -26,6 +26,10 @@ class Quiz(TimestampedModel):
         return "{} - v{} Created by {}".format(self.question_input, self.version, self.created_by)
 
 
+    class Meta:
+        unique_together = ('quiz_id', 'version')
+
+
 class ShortAnswer(TimestampedModel):
 
     quiz = models.ForeignKey(Quiz)
