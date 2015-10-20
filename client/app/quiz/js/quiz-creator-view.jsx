@@ -4,6 +4,8 @@ var ReactDOM = require("react-dom");
 var _ = require("underscore");
 var Backbone = require("backbone");
 
+var utils = require("utils");
+
 var models = require("./models");
 var constants = models.constants;
 var QuizPreview = require("./quiz-student-view.jsx").QuizPreview;
@@ -13,32 +15,19 @@ var md = require("md");
 
 var TagListBaseView = tags.TagListBaseView;
 
-var app = {
-    quizModel: new models.QuizModel(),
-    eventBus: _.extend({}, Backbone.Events),
-};
 
 var ShortAnswerInputView = React.createClass({
 
-    getInitialState: function() {
-        var answer = this.props.model.attributes.answer || "";
-        return {
-            answer: answer
-        };
-    },
     
     render: function() {
         return(
-            <input type="text" placeholder="Expected Answer" onChange={this.updateAnswer} value={this.state.answer} />
+            <input type="text" placeholder="Expected Answer" onChange={this.updateAnswer} value={this.props.store.answer} />
         );
     },
 
     updateAnswer: function(evt) {
         var answer = evt.target.value;
-        this.props.model.set({
-            answer: answer
-        });
-        this.setState({
+        this.props.store.setState({
             answer: answer
         });
         console.log("Current State", this.state)
@@ -48,14 +37,6 @@ var ShortAnswerInputView = React.createClass({
 
 var SingleChoiceInputView = React.createClass({
 
-    getInitialState: function() {
-        var attrs = this.props.model.attributes;
-        return {
-            choiceInput: attrs.choiceInput,
-            isCorrect: attrs.isCorrect
-        }
-    },
-
     componentDidMount: function() {
         if(this.props.shouldFocus) {
             this.focus();
@@ -63,9 +44,9 @@ var SingleChoiceInputView = React.createClass({
     },
 
     render: function() {
-        var domId = this.props.model.cid;
+        var domId = "input-" + utils.getUniqueId();
         //console.log("Choice State", this.state);
-        
+        var choice = this.props.store.choices[this.props.index];
 
         return (
             <div className="row">
@@ -74,7 +55,7 @@ var SingleChoiceInputView = React.createClass({
                         <input type="checkbox" 
                                className="filled-in" 
                                id={domId} onChange={this.updateIsCorrect} 
-                               checked={this.state.isCorrect}
+                               checked={choice.isCorrect}
                                ref="input" />
 
                         <label htmlFor={domId}></label>
@@ -85,7 +66,7 @@ var SingleChoiceInputView = React.createClass({
                                 ref="textarea" placeholder="New Choice"  
                                 onKeyUp={this.updateChoiceText} 
                                 onChange={this.updateChoiceText} 
-                                value={this.state.choiceInput} 
+                                value={choice.choiceInput} 
                                 onKeyDown={this.checkIfCtrlEnterPressedAndAddChoice} />   
                 </div>
                 <div className="col-md-1">
@@ -109,15 +90,21 @@ var SingleChoiceInputView = React.createClass({
 
         var choiceInput = evt.target.value;
         var choiceDisplay = md.mdAndMathToHtml(choiceInput);
-        //console.log("updating text", choiceInput);
         
-        this.props.model.set({
-            choiceInput: choiceInput,
-            choiceDisplay: choiceDisplay
-        });
+        var choicesNew = _.clone(this.props.store.choices);
+        choicesNew[this.props.index].choiceInput = choiceInput;
+        choicesNew[this.props.index].choiceDisplay = choiceDisplay;
 
-        this.setState({
-            choiceInput: choiceInput
+        if(choicesNew[choicesNew.length - 1].choiceInput !== "") {
+            choicesNew.push({
+                choiceInput: "",
+                choiceDisplay: "",
+                isCorrect: false
+            });
+        }
+        
+        this.props.store.setState({
+            choices: choicesNew
         });
 
     },
@@ -130,43 +117,35 @@ var SingleChoiceInputView = React.createClass({
     },
 
     updateIsCorrect: function(evt) {
-        var isCorrect = !this.state.isCorrect;
-        this.props.model.set({
-            isCorrect: isCorrect
-        });
+        var isCorrect = !this.props.store.choices[this.props.index].isCorrect;
+        
+        var choicesNew = _.clone(this.props.store.choices);
+        choicesNew[this.props.index].isCorrect = isCorrect;
 
-        this.setState({
-            isCorrect: isCorrect
+        this.props.store.setState({
+            choices: choicesNew
         });
     },
 
     removeChoice: function() {
-        this.props.model.collection.remove(this.props.model);
+        var choicesNew = [];
+        var length = this.props.store.choices.length;
+        for(var i = 0; i < length; i++) {
+            if(i !== this.props.index) {
+                choicesNew.push(this.props.store.choices[i])
+            }
+        }
+        this.props.store.setState({
+            choices: choicesNew
+        })
     }
 });
 
 var ChoiceCollectionInputView = React.createClass({
 
-    getInitialState: function() {
-        return {
-            choices: this.props.model.choices.toJSON()
-        };
-    },
-
-    componentDidMount: function() {
-        this.props.model.choices.on("remove", this.updateChoices, this);
-        this.props.model.choices.on("add", this.updateChoices, this);
-        window.choices = this.props.model.choices;
-    },
-
-    componentWillUnmount: function() {
-        this.props.model.choices.off("remove", this.updateChoices);
-        this.props.model.choices.off("add", this.updateChoices, this);
-    },
-
     render: function() {
 
-        var choices = this.props.model.choices;
+        var choices = this.props.store.choices;
         var length = choices.length;
 
         if(choices.length === 0) {
@@ -183,18 +162,16 @@ var ChoiceCollectionInputView = React.createClass({
 
         var rows = [];
         var latestElement = null;
+        var shouldFocus = false;
         for(var i = 0; i < length; i++) {
-            var model = choices.at(i);
-            var key = model.cid;
-            var shouldFocus = model.cid === choices.currentModelCid;
-            if(shouldFocus) {
-                console.log("Focusing on ", model.attributes.choiceInput);
-            }
+            var key = i;
             latestElement = <SingleChoiceInputView 
+                                index={i}
                                 key={key} 
-                                model={model} 
-                                parent={this} 
-                                shouldFocus= {shouldFocus} />
+                                store={this.props.store} 
+                                shouldFocus={shouldFocus} 
+                                parent={this} />
+
             rows.push(latestElement);
         }
         
@@ -206,11 +183,16 @@ var ChoiceCollectionInputView = React.createClass({
     },
 
     addChoice: function() {
-        var model = new ChoiceModel();
-        this.props.model.choices.add(model);
-        this.setState({
-            choices: this.props.model.choices.toJSON()
-        })
+        var choiceNew = {
+            isCorrect: false,
+            choiceInput: "",
+            choiceDisplay: ""
+        }
+        var choices = _.clone(this.props.store.choices);
+        choices.push(choiceNew);
+        this.props.store.setState({
+            choices: choices
+        });
     },
 
     checkIfCtrlEnterPressedAndAddChoice: function(evt) {
@@ -218,30 +200,23 @@ var ChoiceCollectionInputView = React.createClass({
     },
 
     updateChoices: function() {
-        this.setState({
-            choices: this.props.model.choices.toJSON()
-        })
+
     }
 });
 
 
 var QuizCreatorView = React.createClass({
 
-    getInitialState: function() {
-        var attrs = this.props.model.toJSON(); 
-        return attrs;
-    },
-
     render: function() {
 
         var toggleMessage = this.getToggleMessage();
 
         var answerInputView;
-        if(this.props.model.attributes.quizType === constants.SHORT_ANSWER) {
-            answerInputView = <ShortAnswerInputView model={this.props.model} />
+        if(this.props.store.quizType === constants.SHORT_ANSWER) {
+            answerInputView = <ShortAnswerInputView store={this.props.store} />
         }
         else {
-            answerInputView = <ChoiceCollectionInputView model={this.props.model} />
+            answerInputView = <ChoiceCollectionInputView store={this.props.store} />
         }
 
         return (
@@ -251,12 +226,12 @@ var QuizCreatorView = React.createClass({
                           placeholder={constants.QUESTION_PLACEHOLDER} 
                           onKeyUp={this.updateQuestionText} 
                           onChange={this.updateQuestionText} 
-                          value = {this.state.questionInput} /> 
+                          value = {this.props.store.questionInput} /> 
 
                 
                 {answerInputView}
 
-                <TagListBaseView tags={[]} />
+                <TagListBaseView store={this.props.store} />
                
 
                 <button className="quiz-creator-mcq-toggle-button btn" onClick={this.toggleQuizType}>{toggleMessage}</button>
@@ -270,20 +245,17 @@ var QuizCreatorView = React.createClass({
         var html = md.mdAndMathToHtml(input);
 
         //console.log(html);
-        this.props.model.set({
+        this.props.store.setState({
             questionInput: input,
             questionDisplay: html
         });
 
-        this.setState({
-            questionInput: input
-        });
     },
 
 
     getToggleMessage: function() {
         var toggleMessage;
-        if(this.props.model.attributes.quizType === constants.SHORT_ANSWER) {
+        if(this.props.store.quizType === constants.SHORT_ANSWER) {
             toggleMessage = "I need an MCQ";
         }
         else {
@@ -293,26 +265,22 @@ var QuizCreatorView = React.createClass({
     },
 
     toggleQuizType: function() {
-        if(this.props.model.attributes.quizType === constants.SHORT_ANSWER) {
-            this.props.model.set({
+        if(this.props.store.quizType === constants.SHORT_ANSWER) {
+            this.props.store.setState({
                 quizType: constants.MCQ,
-                answer: null
+                answer: null,
+                choices: []
             });
 
         }
         
         else {
-            this.props.model.set({
+            this.props.store.setState({
                 quizType: constants.SHORT_ANSWER,
-                answer: ""
+                answer: "",
+                choices: []
             });
         }
-
-        this.props.model.choices.reset();
-
-        this.setState({
-            quizType: this.props.model.quizType
-        });
     }
 });
 
@@ -320,25 +288,30 @@ var QuizCreatorView = React.createClass({
 var QuizBox = React.createClass({
 
     getInitialState: function() {
-        return {
-            quizModel: app.quizModel,
-            shortAnswerModel: new models.ShortAnswerSubmitModel(),
-            mcqAnswerModel: new models.MCQAnswerModel()
-        }
+        return this.props.store.getState()
     },
 
+    componentWillMount: function() {
+        this.props.store.on("change", this.updateState, this);
+    },
 
+    componentWillUnmount: function() {
+        this.props.store.off("change", this.updateState);
+    },
+
+    updateState: function(state) {
+        this.setState(state)
+    },
 
     render: function() {
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-md-6 quiz-page-split-column quiz-creator-container">
-                        <QuizCreatorView model={this.state.quizModel}/>
+                        <QuizCreatorView store={this.props.store}/>
                     </div>
                     <div className="col-md-6 quiz-page-split-column quiz-student-container">
                         <h4 className="quiz-creator-preview-heading">Preview</h4>
-                        <QuizPreview model={this.state.quizModel} shortAnswerModel={this.state.shortAnswerModel} mcqAnswerModel={this.state.mcqAnswerModel} />
                     </div>
                 </div>
             </div>
@@ -346,16 +319,82 @@ var QuizBox = React.createClass({
     }
 });
 
+var QuizStore = function(options) {
+    this._model = new models.QuizModel(options);
+    this._options = options;
 
-var render = function(element) {
+    if(options.quizId === null) {
+        var attrs = this._model.toJSON();
+        this._setAttrs(attrs);
+        //this._dispatcher = options.dispatcher;
+        this._model.once("firstVersionSaved", this.setRoute, this);
+    }
+};
 
+QuizStore.prototype = {
 
-    app.quizModel = new models.QuizModel();
-    window.quizModel = app.quizModel;
-    ReactDOM.render(
-        <QuizBox />, 
-        element
-    );
+    setState: function(state) {
+        this._setAttrs(state);
+        this._model.set(state);
+
+        this.trigger("change", this._model.toJSON());
+        this._model.save();
+    },
+
+    getState: function() {
+        return this._model.toJSON();
+    },
+
+    _setAttrs: function(attrs) {
+        _.each(_.keys(attrs), function(key) {
+            this[key] = attrs[key];
+        }, this);
+    },
+
+    setRoute: function() {
+        var quizId = this._model.attributes.quizId;
+        var fragment = Backbone.history.getFragment();
+        var fragmentNew = "{0}/{1}".format(fragment, quizId);
+        Backbone.history.navigate(fragmentNew, {trigger: false});
+    },
+
+    isReady: function() {
+        return this._options.quizId === null;
+    },
+
+    fetch: function() {
+        this._model.once("sync", this.onFetched, this);
+        return this._model.fetch();
+    },
+
+    onFetched: function() {
+        this._setAttrs(this._model.toJSON());
+    }
+};
+
+_.extend(QuizStore.prototype, Backbone.Events);
+
+QuizStore.prototype.constructor = QuizStore;
+
+//var dispatcher = _.exte
+
+var render = function(element, options) {
+
+    var store = new QuizStore(options);
+
+    var renderQuizBox = function() {
+        ReactDOM.render(
+            <QuizBox store={store} />, 
+            element
+        );
+    }
+
+    if(store.isReady()) {
+        renderQuizBox();
+    }
+    else {
+        store.fetch().then(renderQuizBox)
+    }
 
 };
 

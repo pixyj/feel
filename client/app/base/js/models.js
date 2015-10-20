@@ -45,6 +45,7 @@ var VersionedModel = Backbone.Model.extend({
             model.save();
         }, this);
         this.unsavedVersions = [];
+        this.trigger("firstVersionSaved");
     }
 });
 

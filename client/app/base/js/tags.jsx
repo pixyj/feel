@@ -22,7 +22,6 @@ var TagListViewMixin = {
 
     getInitialState: function() {
         return {
-            tags: this.props.tags,
             inputValue: ""
         }
     },
@@ -35,10 +34,10 @@ var TagListViewMixin = {
         var SingleView = React.createClass(this.SINGLE_VIEW_MIXIN);
 
         var i;
-        var length = this.state.tags.length;
+        var length = this.props.store.tags.length;
         var rows = [];
         for(i = 0; i < length; i++) {
-            var tag = this.state.tags[i];
+            var tag = this.props.store.tags[i];
             var name = tag[this.PROP_NAME];
             var view = <SingleView name={name} parent={this} key={name} />
             rows.push(view);
@@ -74,21 +73,26 @@ var TagListViewMixin = {
         var value = evt.target.value.trim();
         var tag = {};
         tag[this.PROP_NAME] = value;
-        var tags = _.clone(this.state.tags);
+        var tags = _.clone(this.props.store.tags);
         tags.push(tag);
+
         this.setState({
-            tags: tags,
             inputValue: ""
+        });
+
+        this.props.store.setState({
+            tags: tags
         });
     },
 
     removeTag: function(name) {
-        var tags = _.filter(this.state.tags, function(tag) {
+
+        var tags = _.filter(this.props.store.tags, function(tag) {
             return tag[this.PROP_NAME] !== name
         }, this);
-        this.setState({
-            tags: tags,
-            inputValue: ""
+
+        this.props.store.setState({
+            tags: _.clone(tags)
         });
     }
 

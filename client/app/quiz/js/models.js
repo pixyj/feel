@@ -176,6 +176,16 @@ var QuizModel = VersionedModel.extend({
 
     url: function() {
         return "/api/v1/quiz/{0}/".format(this.attributes.quizId);
+    },
+
+    toJSON: function() {
+        var attrs = Backbone.Model.prototype.toJSON.call(this);
+        if(attrs.choices.length) {
+            if(attrs.choices[attrs.choices.length-1].choiceInput === "") {
+                attrs.choices = attrs.choices.slice(0, attrs.choices.length-1);
+            }
+        }
+        return attrs;
     }
 
 
