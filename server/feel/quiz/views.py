@@ -88,6 +88,7 @@ class QuizDetail(APIView):
                 7. Save Tags
                 8. Save Choices
                 9. Save Answers
+        10. Return Response
         """
         found = True
         try:
@@ -98,10 +99,46 @@ class QuizDetail(APIView):
         if found:
             return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
 
+        return self._save_quiz_and_return_response(request, request.user)
+
+
+    def put(self, request, quiz_id, format=None):
+        """
+        Create new versions of existing quiz. We store the version in the database so that the client
+        can make concurrent http requests without worrying whether the request to save version `n` is processed
+        by the server after the request to save version `n+1`. So irrespective of the order in which the different
+        versions are processed, by the server, the highest version will be used in the GET APIs. 
+        We may have to run a periodic job to compact this table, if the table grows too large. 
+
+        Algo:
+        1. If quiz does not exist raise 400
+        2. Validate data
+        3. If data is invalid raise 400
+        4. Preprocess data
+        5. Transaction
+                6. Save Quiz
+                7. Save Tags
+                8. Save Choices
+                9. Save Answers
+        10. Return Response
+        """
+        found = True
+        try:
+            quiz_v1 = Quiz.objects.get(quiz_id=quiz_id, version=1)
+        except Quiz.DoesNotExist:
+            found = False
+
+        if not found:
+            return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        return self._save_quiz_and_return_response(request, quiz_v1.created_by)
+
+
+    def _save_quiz_and_return_response(self, request, created_by):
         data=request.data
         data["created_at"] = datetime.datetime.utcnow()
         serializer = serializers.QuizSerializer(data=request.data)
-        import ipdb;ipdb.set_trace()
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -114,7 +151,7 @@ class QuizDetail(APIView):
         audit_attrs = {
             'created_at': data['created_at'],
             'last_modified_at': data['created_at'],
-            'created_by': request.user,
+            'created_by': created_by,
             'last_modified_by': request.user
         }
         quiz_attrs.update(audit_attrs)
@@ -122,6 +159,7 @@ class QuizDetail(APIView):
         
         with transaction.atomic():
             quiz = Quiz.objects.create(**quiz_attrs)
+            
             quiz.tags.add(*tags)
             for answer in data['answers']:
                 answer_attrs = {"quiz": quiz, "answer": answer['answer']}
@@ -134,8 +172,5 @@ class QuizDetail(APIView):
                 choice_attrs.update(audit_attrs)
                 Choice.objects.create(**choice_attrs)
 
-
         return Response(data)
-
-
     
