@@ -114,13 +114,14 @@ class QuizDetail(APIView):
         1. If quiz does not exist raise 400
         2. Validate data
         3. If data is invalid raise 400
-        4. Preprocess data
-        5. Transaction
-                6. Save Quiz
-                7. Save Tags
-                8. Save Choices
-                9. Save Answers
-        10. Return Response
+        4. Authorize request -> Ensure first version of quiz is created by same user
+        5. Preprocess data
+        6. Transaction
+                7. Save Quiz
+                8. Save Tags
+                9. Save Choices
+                10. Save Answers
+        11. Return Response
         """
         found = True
         try:
@@ -130,6 +131,9 @@ class QuizDetail(APIView):
 
         if not found:
             return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
+
+        elif quiz_v1.created_by.id != request.user.id:
+            return Response({"nice_try": True}, status=status.HTTP_403_FORBIDDEN)
 
 
         return self._save_quiz_and_return_response(request, quiz_v1.created_by)
