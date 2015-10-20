@@ -71,7 +71,7 @@ class QuizDetail(APIView):
 
         serializer = serializers.QuizSerializer(quiz)
         data = serializer.data
-        data['tags'] = [tag.name for tag in quiz.tags.all()]
+        data['tags'] = [{"name": tag.name} for tag in quiz.tags.all()]
         return Response(data)
 
 
