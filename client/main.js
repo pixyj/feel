@@ -79,6 +79,7 @@ var Router = Backbone.Router.extend({
     execute: function(callback, args, name) {
         if(this.isAuthRequired() && !this.userModel.isAuthenticated()) {
             this.gotoLogin();
+            return false;
             //Backbone.history.navigate("login", {trigger: true});
             //return false;    
         }
