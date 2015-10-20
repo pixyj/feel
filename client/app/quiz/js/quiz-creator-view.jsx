@@ -20,19 +20,85 @@ var ShortAnswerInputView = React.createClass({
 
     
     render: function() {
+        var answer = this.props.store.answers[this.props.index];
+        var placeholder;
+        if(this.props.index === 0) {
+            placeholder = "Expected answer";
+        }
+        else {
+            placeholder = "Add another valid answer"
+        }
         return(
-            <input type="text" placeholder="Expected Answer" onChange={this.updateAnswer} value={this.props.store.answer} />
+            <input type="text" placeholder={placeholder} onChange={this.updateAnswer} value={answer.answer} />
         );
     },
 
     updateAnswer: function(evt) {
-        var answer = evt.target.value;
+        var answerValue = evt.target.value;
+
+        var answersNew = _.clone(this.props.store.answers);
+        var answer = answersNew[this.props.index];
+        answer.answer = answerValue;
+
+        if(answerValue && answerValue.length) {
+            if(answersNew[answersNew.length-1].answer !== "") {
+                answersNew.push({answer: ""})    
+            }
+            
+        }
         this.props.store.setState({
-            answer: answer
+            answers: answersNew
         });
-        console.log("Current State", this.state)
     }
 
+});
+
+var ShortAnswerListView = React.createClass({
+
+    render: function() {
+
+        var answers = this.props.store.answers;
+        var length = answers.length;
+
+        if(answers.length === 0) {
+            return (
+                <div>
+                    <button className="btn waves-effect waves-light quiz-creator-add-choice" onClick={this.addAnswer}>
+                        Add Answer
+                    </button>
+                </div>
+            );
+        };
+
+        var rows = [];
+        for(var i = 0; i < length; i++) {
+            var key = i;
+            var view = <ShortAnswerInputView 
+                                index={i}
+                                key={key} 
+                                store={this.props.store} 
+                                parent={this} />
+
+            rows.push(view);
+        }
+        
+        return (
+            <div className="quiz-creator-choice-collection">
+                {rows}
+            </div>
+        );
+    },
+
+    addAnswer: function() {
+        var answerNew = {
+            answer: ""
+        };
+        var answers = _.clone(this.props.store.answers);
+        answers.push(answerNew);
+        this.props.store.setState({
+            answers: answers
+        });
+    }
 });
 
 var SingleChoiceInputView = React.createClass({
@@ -158,8 +224,6 @@ var ChoiceCollectionInputView = React.createClass({
             );
         };
 
-        console.log("View currentModelCid: ", choices.currentModelCid);
-
         var rows = [];
         var latestElement = null;
         var shouldFocus = false;
@@ -213,7 +277,7 @@ var QuizCreatorView = React.createClass({
 
         var answerInputView;
         if(this.props.store.quizType === constants.SHORT_ANSWER) {
-            answerInputView = <ShortAnswerInputView store={this.props.store} />
+            answerInputView = <ShortAnswerListView store={this.props.store} />
         }
         else {
             answerInputView = <ChoiceCollectionInputView store={this.props.store} />
@@ -224,14 +288,13 @@ var QuizCreatorView = React.createClass({
                 <h4 className="quiz-creator-input-heading">Quiz</h4>
                 <textarea className="quiz-creator-question-input" 
                           placeholder={constants.QUESTION_PLACEHOLDER} 
-                          onKeyUp={this.updateQuestionText} 
                           onChange={this.updateQuestionText} 
                           value = {this.props.store.questionInput} /> 
 
-                
+                <TagListBaseView store={this.props.store} />
                 {answerInputView}
 
-                <TagListBaseView store={this.props.store} />
+
                
 
                 <button className="quiz-creator-mcq-toggle-button btn" onClick={this.toggleQuizType}>{toggleMessage}</button>
@@ -245,6 +308,7 @@ var QuizCreatorView = React.createClass({
         var html = md.mdAndMathToHtml(input);
 
         //console.log(html);
+        console.log("updating questionText");
         this.props.store.setState({
             questionInput: input,
             questionDisplay: html
@@ -265,22 +329,24 @@ var QuizCreatorView = React.createClass({
     },
 
     toggleQuizType: function() {
+        var quizType;
         if(this.props.store.quizType === constants.SHORT_ANSWER) {
-            this.props.store.setState({
-                quizType: constants.MCQ,
-                answer: null,
-                choices: []
-            });
-
+            quizType = constants.MCQ;
         }
-        
+        else if(this.props.store.quizType === constants.MCQ){
+            quizType = constants.SHORT_ANSWER;
+        }
         else {
-            this.props.store.setState({
-                quizType: constants.SHORT_ANSWER,
-                answer: "",
-                choices: []
-            });
+            //assert(false);
+            console.error("Invalid quizType"); //todo -> throw an exception. Catch in monitoring. 
         }
+
+        this.props.store.setState({
+            quizType: quizType,
+            answers: [{answer: ""}],
+            choices: [{choiceInput: "", choiceDisplay: "", isCorrect: false}]
+        });
+
     }
 });
 
@@ -327,7 +393,7 @@ var QuizStore = function(options) {
         var attrs = this._model.toJSON();
         this._setAttrs(attrs);
         //this._dispatcher = options.dispatcher;
-        this._model.once("firstVersionSaved", this.setRoute, this);
+        this._model.once("sync", this.setRoute, this);
     }
 };
 
@@ -338,17 +404,39 @@ QuizStore.prototype = {
         this._model.set(state);
 
         this.trigger("change", this._model.toJSON());
+        console.log("Setting state");
         this._model.save();
     },
 
     getState: function() {
-        return this._model.toJSON();
+        var attrs = this._model.toJSON();
+        this.addExtraAnswerAndChoice(attrs);
+        return attrs;
     },
 
     _setAttrs: function(attrs) {
         _.each(_.keys(attrs), function(key) {
             this[key] = attrs[key];
         }, this);
+        this.addExtraAnswerAndChoice({
+            choices: this.choices,
+            answers: this.answers
+        });
+    },
+
+    addExtraAnswerAndChoice: function(attrs) {
+        if(!attrs.choices.length || (attrs.choices[attrs.choices.length-1].choiceInput !== "")) {
+            attrs.choices.push({
+                choiceInput: "",
+                choiceDisplay: "",
+                isCorrect: false
+            });
+        }
+        if(!attrs.answers.length || (attrs.answers[attrs.answers.length-1].answer !== "")) {
+            attrs.answers.push({
+                answer: ""
+            });
+        }
     },
 
     setRoute: function() {
@@ -381,6 +469,7 @@ QuizStore.prototype.constructor = QuizStore;
 var render = function(element, options) {
 
     var store = new QuizStore(options);
+    window.store = store;
 
     var renderQuizBox = function() {
         ReactDOM.render(

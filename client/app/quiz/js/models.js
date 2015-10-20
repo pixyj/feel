@@ -123,9 +123,8 @@ var QuizModel = VersionedModel.extend({
         quizType: constants.MCQ,
         questionInput: "",
         questionDisplay: "",
-        answer: "",
         choices: [],
-        answers: [],
+        answers: [{answer: ""}],
         tags: [],
         version: 1,
         quizId: null
@@ -183,6 +182,11 @@ var QuizModel = VersionedModel.extend({
         if(attrs.choices.length) {
             if(attrs.choices[attrs.choices.length-1].choiceInput === "") {
                 attrs.choices = attrs.choices.slice(0, attrs.choices.length-1);
+            }
+        }
+        if(attrs.answers.length) {
+            if(attrs.answers[attrs.answers.length-1].answer === "") {
+                attrs.answers = attrs.answers.slice(0, attrs.answers.length-1);
             }
         }
         return attrs;
