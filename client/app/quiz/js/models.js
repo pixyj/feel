@@ -2,6 +2,8 @@ var _ = require("underscore");
 var Backbone = require("backbone");
 var md = require("md");
 
+var VersionedModel = require("models").VersionedModel;
+
 var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
@@ -115,7 +117,7 @@ var GuessCollection = Backbone.Collection.extend({
 });
 
 //#todo -> consider changing answer to short-answer to be more explicit. 
-var QuizModel = Backbone.Model.extend({
+var QuizModel = VersionedModel.extend({
     
     defaults: {
         quizType: constants.MCQ,
@@ -159,6 +161,8 @@ var QuizModel = Backbone.Model.extend({
         this.choices = new ChoiceCollection(placeholderChoices);
 
         this.guessCollection = new GuessCollection();
+
+        return VersionedModel.prototype.initialize.apply(this, arguments);
 
     },
 
