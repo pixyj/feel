@@ -70,7 +70,9 @@ class QuizDetail(APIView):
 
 
         serializer = serializers.QuizSerializer(quiz)
-        return Response(serializer.data)
+        data = serializer.data
+        data['tags'] = [tag.name for tag in quiz.tags.all()]
+        return Response(data)
 
 
     def post(self, request, quiz_id, format=None):
@@ -120,7 +122,7 @@ class QuizDetail(APIView):
         
         with transaction.atomic():
             quiz = Quiz.objects.create(**quiz_attrs)
-            #quiz.tags.add(*tags)
+            quiz.tags.add(*tags)
             for answer in data['answers']:
                 answer_attrs = {"quiz": quiz, "answer": answer['answer']}
                 answer_attrs.update(audit_attrs)

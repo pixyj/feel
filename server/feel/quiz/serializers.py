@@ -20,8 +20,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
     answers = ShortAnswerSerializer(source="shortanswer_set", many=True)
     choices = ChoiceSerializer(source="choice_set", many=True)
-    tags = TagSerializer(many=True)
 
     class Meta:
         model = Quiz
-        fields = ('id', 'quiz_id', 'version', 'question_input', 'question_display', 'quiz_type', 'tags', 'created_at', 'answers', 'choices')
+        fields = ('id', 'quiz_id', 'version', 'question_input', 'question_display', 'quiz_type', 'created_at', 'answers', 'choices')
