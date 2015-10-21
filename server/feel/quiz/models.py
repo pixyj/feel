@@ -58,11 +58,3 @@ class Choice(TimestampedModel):
     def __str__(self):
         status = "correct" if self.is_correct else "wrong"
         return "{} is a {} choice to {} Created by {}".format(self.choice_input, status, self.quiz, self.created_by)
-
-
-
-#To get all sql queries sent by Django from py shell
-import logging
-l = logging.getLogger('django.db.backends')
-l.setLevel(logging.DEBUG)
-l.addHandler(logging.StreamHandler())

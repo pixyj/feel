@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+#To get all sql queries sent by Django from py shell
+import logging
+l = logging.getLogger('django.db.backends')
+l.setLevel(logging.DEBUG)
+l.addHandler(logging.StreamHandler())
+
 class TimestampedModel(models.Model):
     
     created_at = models.DateTimeField()
