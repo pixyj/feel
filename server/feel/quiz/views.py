@@ -61,10 +61,7 @@ class QuizDetail(APIView):
         Get Latest Version of individual quiz by quiz_id
         """
         try:
-            quiz = Quiz.objects.filter(quiz_id=quiz_id).\
-                                order_by("-version").\
-                                prefetch_related('shortanswer_set').\
-                                prefetch_related('choice_set')[0]
+            quiz = Quiz.objects.get_latest_quiz_version(quiz_id=quiz_id)
         except (IndexError, ValueError):
             raise Http404
 
@@ -178,3 +175,15 @@ class QuizDetail(APIView):
 
         return Response(data)
     
+
+
+class QuizAttemptView(APIView):
+
+    def post(self, request, quiz_id, format=None):
+        import ipdb;ipdb.set_trace()
+        return Response({"ok": "one"})
+
+
+    def get(self, request, quiz_id, format=None):
+        #import ipdb;ipdb.set_trace()
+        return Response({"ok": "one"})

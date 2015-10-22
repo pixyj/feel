@@ -13,6 +13,13 @@ QUIZ_TYPES = (
     (2, 'MCQ'),
 )
 
+class QuizManager(models.Manager):
+    def get_latest_quiz_version(self, quiz_id):
+        return self.filter(quiz_id=quiz_id).\
+                            order_by("-version").\
+                            prefetch_related('shortanswer_set').\
+                            prefetch_related('choice_set')[0]
+
 class Quiz(TimestampedModel):
 
     quiz_id = models.UUIDField(default=uuid.uuid4, db_index=True)
@@ -24,6 +31,8 @@ class Quiz(TimestampedModel):
     quiz_type = models.IntegerField(choices=QUIZ_TYPES)
 
     tags = TaggableManager(blank=True)
+
+    objects = QuizManager()
 
     def __str__(self):
         return "{} - v{} Created by {}".format(self.question_input, self.version, self.created_by)
