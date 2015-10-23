@@ -190,6 +190,15 @@ var QuizModel = VersionedModel.extend({
             }
         }
         return attrs;
+    },
+
+    parse: function(attrs) {
+        if(!this._isParsedOnce) {
+            this._isParsedOnce = true
+            return attrs    
+        }
+        delete attrs.version;
+        return attrs;
     }
 
 

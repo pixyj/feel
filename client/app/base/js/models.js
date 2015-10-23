@@ -64,14 +64,6 @@ var VersionedModel = Backbone.Model.extend({
             model.save(null, {parse: false});
             this.unsavedVersions = [];
         }
-    },
-
-    parse: function(attrs) {
-        console.log("Parse called");
-        this.parse = function(attrs) {
-            return {};
-        }
-        return attrs;
     }
 });
 
