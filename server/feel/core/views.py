@@ -19,3 +19,14 @@ class UserDetail(APIView):
 
 
     
+def get_user_and_user_key(request):
+    if request.user.is_authenticated():
+        return (request.user, str(request.user.id))
+    
+    session = request.session
+    if session.session_key is None:
+        session.create()
+
+    return (None, session.session_key, )
+
+

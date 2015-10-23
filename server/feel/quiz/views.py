@@ -3,16 +3,19 @@ import datetime
 from django.shortcuts import render
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 
 from rest_framework.views  import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from quiz.models import Quiz, ShortAnswer, Choice
+from core.views import get_user_and_user_key
+
+from quiz.models import Quiz, ShortAnswer, Choice, QuizAttempt
 from quiz import serializers
 
-from django.db import transaction
+
 
 
 
@@ -168,22 +171,55 @@ class QuizDetail(APIView):
                 ShortAnswer.objects.create(**answer_attrs)
 
             for choice in data['choices']:
+                if choice.get('id'):
+                    del choice['id']
+
                 choice_attrs = {"quiz": quiz}
                 choice_attrs.update(choice)
                 choice_attrs.update(audit_attrs)
-                Choice.objects.create(**choice_attrs)
+                choice_instance = Choice.objects.create(**choice_attrs)
+                choice['id'] = choice_instance.id
 
-        return Response(data)
+        return Response(data, status.HTTP_201_CREATED)
     
 
 
 class QuizAttemptView(APIView):
 
-    def post(self, request, quiz_id, format=None):
-        import ipdb;ipdb.set_trace()
-        return Response({"ok": "one"})
+    def post(self, request, quiz_id, version, format=None):
+        user, user_key = get_user_and_user_key(request)
+        data = request.data
 
+        try:
+            quiz = Quiz.objects.get(quiz_id=quiz_id, version=version)
+        except Quiz.DoesNotExist:
+            return({"quiz_does_not_exist": True}, status.HTTP_400_BAD_REQUEST)
+
+        #Not using a serializer because POST and GET return different attributes
+        #and using a serializer does not reduce the amount of code
+        #And the only validation I need is checking if the quiz exists. 
+        #Other fields can be blank. 
+        attrs = {
+            "quiz_id": quiz.id,
+            "result": data['result'],
+            "answer": data['answer'],
+            "choices": ','.join((str(choice_id) for choice_id in data['choices'])),
+            "attempt_number": data['attempt_number'],
+
+            "user": user,
+            "user_key": user_key,
+
+            "created_at": datetime.datetime.utcnow()
+        }
+        QuizAttempt.objects.create(**attrs)
+        return Response(request.data, status.HTTP_201_CREATED)
 
     def get(self, request, quiz_id, format=None):
-        #import ipdb;ipdb.set_trace()
-        return Response({"ok": "one"})
+        user, user_key = get_user_and_user_key(request)
+        attempts = QuizAttempt.objects.get_user_attempts_by_quiz_id(user_key=user_key, quiz_id=quiz_id)
+        serialized_attempts = []
+        for a in attempts:
+            serializer = serializers.QuizAttemptSerializer(a)
+            serialized_attempts.append(serializer.data)
+
+        return Response(serialized_attempts)

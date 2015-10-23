@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from quiz.models import Quiz, ShortAnswer, Choice
+from quiz.models import Quiz, ShortAnswer, Choice, QuizAttempt
 from core.serializers import TagSerializer
 
 class ShortAnswerSerializer(serializers.ModelSerializer):
@@ -24,3 +24,11 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = ('quiz_id', 'version', 'question_input', 'question_display', 'quiz_type', 'created_at', 'answers', 'choices')
+
+
+class QuizAttemptSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QuizAttempt
+        fields = ('user_key', 'attempt_number', 'result', 'answer', 'choices', )
+
