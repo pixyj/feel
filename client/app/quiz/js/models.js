@@ -2,8 +2,6 @@ var _ = require("underscore");
 var Backbone = require("backbone");
 var md = require("md");
 
-var VersionedModel = require("models").VersionedModel;
-
 var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
@@ -11,77 +9,6 @@ var constants = {
     WRONG_FEEDBACK: "Nope",
     QUESTION_PLACEHOLDER: "Enter the Question in Markdown"
 };
-
-var ChoiceModel = Backbone.Model.extend({
-
-    idAttribute: "choiceInput",
-
-    defaults: {
-        choiceInput: "",
-        choiceDisplay: "",
-        isCorrect: false
-    }
-
-});
-
-//todo -> figure out where to reset collection and switch off event listeners.
-var ChoiceCollection = Backbone.Collection.extend({
-
-    model: ChoiceModel,
-
-    initialize: function() {
-        this.on("add", this.listenToModelChange, this);
-
-        //http://stackoverflow.com/a/9137772/817277
-        _.defer(_.bind(this.addModelChangeListeners, this)); 
-
-        this.currentModelCid = null;
-    },
-
-    addModelChangeListeners: function(model) {
-        _.each(this.models, function(model) {
-            this.listenToModelChange(model);
-        }, this);
-    },
-
-    listenToModelChange: function(model) {
-        model.on("change:choiceInput", this.addNewEmptyChoice, this);
-    },
-
-    addNewEmptyChoice: function(model) {
-        console.log("Choice Input:", model.attributes.choiceInput);
-        if(this.any({choiceInput: ""})) {
-            return;
-        }
-        this.currentModelCid = model.cid;
-        console.log("currentModelCid: ", model.cid);
-
-        //remove duplicates. But if currently being edited model is a duplicate, 
-        //don't remove it since it is changing on every keystroke and it could be a substring of a previous choice. 
-        //We have to do this since Backbone does not enforce uniqueness 
-        //based on `idAttribute` on model.change, but does so only on model.add
-        var choiceInputHash = {};
-        var modelsToBeRemoved = [];
-        _.each(this.models, function(model) {
-            var isDupe = !_.isUndefined(choiceInputHash[model.attributes.choiceInput]);
-            if(isDupe) {
-                if(model.cid !== this.currentModelCid) {
-                    modelsToBeRemoved.push(model);
-                }
-            }
-            else {
-                choiceInputHash[model.attributes.choiceInput] = model.cid;
-            }
-        }, this);
-        
-        this.remove(modelsToBeRemoved);
-        this.add({});
-    },
-
-    isSingleAnswerCorrect: function() {
-        return this.where({isCorrect: true}).length === 1;
-    }
-});
 
 //#todo -> Should I just change it the name to `GuessModel` ?
 var ShortAnswerSubmitModel = Backbone.Model.extend({
@@ -117,64 +44,42 @@ var GuessCollection = Backbone.Collection.extend({
 });
 
 //#todo -> consider changing answer to short-answer to be more explicit. 
-var QuizModel = VersionedModel.extend({
+var QuizModel = Backbone.Model.extend({
     
     defaults: {
         quizType: constants.MCQ,
         questionInput: "",
         questionDisplay: "",
         choices: [],
-        answers: [{answer: ""}],
-        tags: [],
-        version: 1,
-        quizId: null
+        answers: [],
+        tags: []
     },
-
-    idAttribute: "quizId",
 
     initialize: function() {
-
-        if(this.attributes.questionInput.length > 0) {
-            this.attributes.questionDisplay = md.mdAndMathToHtml(this.attributes.questionInput);
-        }
-
-        if(this.attributes.quizId === null) {
-            this._isNew = true;
-            this.attributes.quizId = utils.uuid();
-            this.once("sync", this.unsetIsNew, this);
-        }
-        else {
-            this._isNew = false;
-        }
-
-        var placeholderChoices = [
-            {
-                choiceInput: ""
-            }
-        ];
-        placeholderChoices.forEach(function(c) {
-            c.choiceDisplay = md.mdAndMathToHtml(c.choiceInput);
-        });
-
-        //todo -> Change choices to choiceCollection as well. To make things explicit, and consistent. 
-        this.choices = new ChoiceCollection(placeholderChoices);
-
-        this.guessCollection = new GuessCollection();
-
-        return VersionedModel.prototype.initialize.apply(this, arguments);
-
+        this.setupWSConnection();
     },
 
-    isNew: function() {
-        return this._isNew;
-    },
+    //todo -> handle error cases, retries
+    setupWSConnection: function() {
+        this.connection = new WebSocket('ws://localhost:7777/websocket');
+        var self = this;
 
-    unsetIsNew: function() {
-        this._isNew = false;
+        this.connection.onmessage = function(message) {
+            var attrs = JSON.parse(message.data);
+            self.attributes.id = attrs.id;
+            self.trigger("sync", self);
+            console.log("Saved quiz", message);
+        }
     },
 
     url: function() {
-        return "/api/v1/quiz/{0}/".format(this.attributes.quizId);
+        var baseURL = "/api/v1/quiz/";
+        if(this.attributes.id) {
+            return baseURL + this.attributes.id + "/";
+        }
+        else {
+            return baseURL;
+        }
     },
 
     toJSON: function() {
@@ -192,13 +97,15 @@ var QuizModel = VersionedModel.extend({
         return attrs;
     },
 
-    parse: function(attrs) {
-        if(!this._isParsedOnce) {
-            this._isParsedOnce = true
-            return attrs    
-        }
-        delete attrs.version;
-        return attrs;
+    save: function() {
+        var message = {
+            payload: this.toJSON(),
+            url: this.url(),
+            httpMethod: this.isNew() ? "POST" : "PUT"
+        };
+
+        console.log("Saving quiz", message);
+        this.connection.send(JSON.stringify(message));
     }
 
 
@@ -230,8 +137,6 @@ var QuizBankCollection = Backbone.Collection.extend({
 
 module.exports = {
     constants: constants,
-    ChoiceModel: ChoiceModel,
-    ChoiceCollection: ChoiceCollection,
     ShortAnswerSubmitModel: ShortAnswerSubmitModel,
     MCQAnswerModel: ShortAnswerSubmitModel,
     GuessCollection: GuessCollection,

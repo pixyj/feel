@@ -24,7 +24,7 @@ var Router = Backbone.Router.extend({
     
     routes: {
         "creator/quiz": "createQuiz",
-        "creator/quiz/:quizId": "editQuiz",
+        "creator/quiz/:id": "editQuiz",
         "": "home",
         "login": "gotoLogin"
     },
@@ -41,9 +41,9 @@ var Router = Backbone.Router.extend({
         this.currentComponent = Quiz;
     },
 
-    editQuiz: function(quizId) {
+    editQuiz: function(id) {
         this.resetPage();
-        Quiz.render(this.pageElement, {quizId: quizId});
+        Quiz.render(this.pageElement, {id: id});
         this.currentComponent = Quiz;
     },
 

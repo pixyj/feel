@@ -378,12 +378,14 @@ var QuizBox = React.createClass({
                     </div>
                     <div className="col-md-6 quiz-page-split-column quiz-student-container">
                         <h4 className="quiz-creator-preview-heading">Preview</h4>
+                        <QuizPreview store={this.props.store} submitStore={this.props.submitStore} />
                     </div>
                 </div>
             </div>
         );
     }
 });
+
 
 var QuizStore = function(options) {
     this._model = new models.QuizModel(options);
@@ -440,7 +442,7 @@ QuizStore.prototype = {
     },
 
     setRoute: function() {
-        var quizId = this._model.attributes.quizId;
+        var quizId = this._model.attributes.id;
         var fragment = Backbone.history.getFragment();
         var fragmentNew = "{0}/{1}".format(fragment, quizId);
         Backbone.history.navigate(fragmentNew, {trigger: false});
@@ -464,16 +466,30 @@ _.extend(QuizStore.prototype, Backbone.Events);
 
 QuizStore.prototype.constructor = QuizStore;
 
-//var dispatcher = _.exte
+var QuizSubmitStore = function(options) {
+    this._quizStore = options.quizStore;
+    this.guesses = [];
+};
+
+QuizSubmitStore.prototype = {
+        
+};
+
+QuizSubmitStore.prototype.constructor = QuizSubmitStore;
+
 
 var render = function(element, options) {
 
     var store = new QuizStore(options);
     window.store = store;
 
+    var submitStore = new QuizSubmitStore({
+        quizStore: store
+    });
+
     var renderQuizBox = function() {
         ReactDOM.render(
-            <QuizBox store={store} />, 
+            <QuizBox store={store} submitStore={submitStore} />, 
             element
         );
     }
@@ -490,6 +506,7 @@ var render = function(element, options) {
 var unmount = function(element) {
     ReactDOM.unmountComponentAtNode(element);
 }
+
 
 module.exports = {
     render: render,

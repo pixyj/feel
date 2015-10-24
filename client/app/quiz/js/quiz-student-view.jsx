@@ -8,13 +8,9 @@ var utils = require("utils");
 var ShortAnswerSubmitView = React.createClass({
 
     getInitialState: function() {
-        console.log("Short Answer props", this.props);
         return {
             guess: null
         }
-    },
-
-    componentDidMount: function() {
     },
 
     render: function() {
@@ -22,10 +18,9 @@ var ShortAnswerSubmitView = React.createClass({
         return (
             <div className="input-field">
                 <input type="text" 
-                       onKeyUp={this.updateGuess} 
                        onChange={this.updateGuess} 
                        className="quiz-student-short-answer-input"
-                       value={this.state.guess} 
+                       value={this.state.guess || ""} 
                        id={id} />
                 <label htmlFor={id}>Your answer</label>
             </div>
@@ -40,8 +35,21 @@ var ShortAnswerSubmitView = React.createClass({
 
     },
 
-    checkAnswer: function(quizModel) {
-        return quizModel.attributes.answer === (this.state.guess || "").trim();
+    checkAnswer: function() {
+        var guess = (this.state.guess || "").trim();
+        var answeredCorrectly = false;
+
+        var i;
+        var answers = this.props.store.answers;
+        var length = answers.length;
+        for(i = 0; i < length; i++) {
+            var a = answers[i].answer.trim();
+            if(a == guess) {
+                answeredCorrectly = true;
+                break;
+            }
+        }
+        return answeredCorrectly;
     },
 
     getCurrentGuess: function() {
@@ -80,35 +88,23 @@ var ChoiceSingleCheckView = React.createClass({
     toggleSelection: function() {
         this.setState({
             isSelected: !this.state.isSelected
-        })
+        });
     },
 
     checkAnswer: function(isCorrect) {
-        return this.state.isSelected === isCorrect;
+        return this.props.choice.isCorrect === this.state.isSelected;
     }
 
 });
 
 var MCQSubmitView = React.createClass({
     
-    getInitialState: function() {
-        return {
-            choices: this.props.choices.toJSON()
-        }
-    },
-
-    componentDidMount: function() {
-        this.props.choices.on("change", this.updateChoices, this);
-        this.props.choices.on("add", this.updateChoices, this);
-        this.props.choices.on("remove", this.updateChoices, this);
-    },
-
     render: function() {
 
         var rows = [];
-        var length = this.state.choices.length;
+        var length = this.props.store.choices.length;
         for(var i = 0; i < length; i++) {
-            var choice = this.state.choices[i];
+            var choice = this.props.store.choices[i];
             var domId = "quiz-preview-checkbox-" + i;
             var row = <ChoiceSingleCheckView choice={choice} key={domId} ref={domId}/>
             rows.push(row);
@@ -120,21 +116,16 @@ var MCQSubmitView = React.createClass({
         );
     },
 
-    updateChoices: function() {
-        this.setState({
-            choices: this.props.choices.toJSON()
-        })
-    },
-
+    //Seeing the code after a few days -> WTF What's up with the wrong found?
     checkAnswer: function() {
         var wrongFound = false; 
 
-        var i, length = this.props.choices.length;
+        var i, length = this.props.store.choices.length;
         //#todo -> make the domId thingy DRY. 
         for(i = 0; i < length; i++) {
             var domId = "quiz-preview-checkbox-" + i;
             var view = this.refs[domId];
-            wrongFound = !view.checkAnswer(this.state.choices[i].isCorrect);
+            wrongFound = !view.checkAnswer();
             if(wrongFound) {
                 break;
             }
@@ -147,13 +138,14 @@ var MCQSubmitView = React.createClass({
 
         var selectedChoices = [];
 
-        var i, length = this.props.choices.length;
+        var i, length = this.props.store.choices.length;
         for(i = 0; i < length; i++) {
             var domId = "quiz-preview-checkbox-" + i;
             var view = this.refs[domId];
             if(view.state.isSelected) {
-                selectedChoices.push(view.props.choice.choiceInput);
+                selectedChoices.push(view.props.choice.choiceInput); //todo -> change to choice display?
             }
+
         }
         if(selectedChoices.length < 2) {
             return selectedChoices.join("") || "Trick question! None of the options are correct";
@@ -165,33 +157,13 @@ var MCQSubmitView = React.createClass({
 
 var QuizAnswerSubmitView = React.createClass({
 
-    getInitialState: function() {
-        return this.props.model.toJSON();
-    },
-
-    componentDidMount: function() {
-
-        this.props.model.on("change:quizType", this.updatePreview, this);
-    },
-
-    componentWillUnmount: function() {
-
-        this.props.model.off("change:quizType", this.updatePreview, this);
-
-    },
-
-    updatePreview: function() {
-        var state = this.props.model.toJSON();
-        this.setState(state);
-    },
-
     render: function() {
         var answerSubmitView;
-        if(this.state.quizType === constants.SHORT_ANSWER) {
-            answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" model={this.props.model}/>
+        if(this.props.store.quizType === constants.SHORT_ANSWER) {
+            answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" store={this.props.store}/>
         }
         else {
-            answerSubmitView = <MCQSubmitView  ref="answerSubmitView" choices={this.props.model.choices}/>
+            answerSubmitView = <MCQSubmitView  ref="answerSubmitView" store={this.props.store}/>
         }
 
         var feedback = this.getResultFeedback();
@@ -223,36 +195,26 @@ var QuizAnswerSubmitView = React.createClass({
     },
 
     getResultFeedback: function() {
-        return {
-            false: constants.WRONG_FEEDBACK,
-            true: constants.CORRECT_FEEDBACK,
-            null: ""
-        }[this.state.result];
+        // return {
+        //     false: constants.WRONG_FEEDBACK,
+        //     true: constants.CORRECT_FEEDBACK,
+        //     null: ""
+        // }[this.state.result];
     },
 
     addGuessToCollection: function(attrs) {
-        attrs.timestamp = utils.getUTCDate().getTime();
-        attrs.planNumber = this.props.planNumber || null;
-        this.props.model.guessCollection.add(attrs);
+        // attrs.timestamp = utils.getUTCDate().getTime();
+        // attrs.planNumber = this.props.planNumber || null;
+        // this.props.model.guessCollection.add(attrs);
     }
 
 });
 
 var QuizQuestionView = React.createClass({
 
-    getInitialState: function() {
-        return {
-            questionDisplay: this.props.questionDisplay
-        };
-    },
-
-    shouldComponentUpdate: function() {
-        return true;
-    },  
-
 
     render: function() {
-        var html = this.state.questionDisplay || constants.QUESTION_PLACEHOLDER;
+        var html = this.props.questionDisplay || constants.QUESTION_PLACEHOLDER;
 
         return (
             <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
@@ -263,39 +225,23 @@ var QuizQuestionView = React.createClass({
 var QuizPreview = React.createClass({
 
     getInitialState: function() {
+        return {
+            questionDisplay: this.props.store.questionDisplay,
 
-        var attrs = this.props.model.toJSON();
-        return attrs;
-
-    },
-
-    componentDidMount: function() {
-        this.props.model.on("change:questionDisplay", this.updatePreview, this);
-
-    },
-
-    componentWillUnmount: function() {
-        this.props.model.off("change:questionDisplay", this.updatePreview);
-    },
+        }
+    },  
 
     render: function() {
 
         return (
             <div>
                 
-                <QuizQuestionView questionDisplay={this.state.questionDisplay} ref="questionView" />
+                <QuizQuestionView questionDisplay={this.props.store.questionDisplay} ref="questionView" />
+                <QuizAnswerSubmitView store={this.props.store} submitStore={this.props.submitStore} />
                 
-                <QuizAnswerSubmitView model={this.props.model} />
 
             </div>
         );  
-    },
-
-    updatePreview: function() {
-        console.log("updatePreview called");
-        this.refs.questionView.setState({
-            questionDisplay: this.props.model.attributes.questionDisplay
-        });
     }
 
 
