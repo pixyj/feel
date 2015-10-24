@@ -35,109 +35,11 @@ class QuizList(APIView):
                                prefetch_related('choice_set').\
                                filter(created_by=request.user).\
                                order_by("-created_at")
-
-        highest_versions = {}
-        for quiz in quizzes:
-            if quiz.quiz_id in highest_versions:
-                existing_quiz = highest_versions[quiz.quiz_id]
-                if existing_quiz.version > quiz.version:
-                    continue
-                
-            highest_versions[quiz.quiz_id] = quiz
-
-        quizzes = highest_versions.values()
             
         serializer = serializers.QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
 
-
-
-    
-
-class QuizDetail(APIView):
-    """
-    Detail API. 
-    """
-
-    def get(self, request, quiz_id, format=None):
-        """
-        Get Latest Version of individual quiz by quiz_id
-        """
-        try:
-            quiz = Quiz.objects.get_latest_quiz_version(quiz_id=quiz_id)
-        except (IndexError, ValueError):
-            raise Http404
-
-
-        serializer = serializers.QuizSerializer(quiz)
-        data = serializer.data
-        data['tags'] = [{"name": tag.name} for tag in quiz.tags.all()]
-        return Response(data)
-
-
-    def post(self, request, quiz_id, format=None):
-        """
-        Create *first* version of new quiz
-        Algo:
-        1. If quiz exists raise 400
-        2. Validate data
-        3. If data is invalid raise 400
-        4. Preprocess data
-        5. Transaction
-                6. Save Quiz
-                7. Save Tags
-                8. Save Choices
-                9. Save Answers
-        10. Return Response
-        """
-        found = True
-        try:
-            quiz = Quiz.objects.get(quiz_id=quiz_id)
-        except Quiz.DoesNotExist:
-            found = False
-
-        if found:
-            return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
-
-        return self._save_quiz_and_return_response(request, request.user)
-
-
-    def put(self, request, quiz_id, format=None):
-        """
-        Create new versions of existing quiz. We store the version in the database so that the client
-        can make concurrent http requests without worrying whether the request to save version `n` is processed
-        by the server after the request to save version `n+1`. So irrespective of the order in which the different
-        versions are processed, by the server, the highest version will be used in the GET APIs. 
-        We may have to run a periodic job to compact this table, if the table grows too large. 
-
-        Algo:
-        1. If quiz does not exist raise 400
-        2. Validate data
-        3. If data is invalid raise 400
-        4. Authorize request -> Ensure first version of quiz is created by same user
-        5. Preprocess data
-        6. Transaction
-                7. Save Quiz
-                8. Save Tags
-                9. Save Choices
-                10. Save Answers
-        11. Return Response
-        """
-        found = True
-        try:
-            quiz_v1 = Quiz.objects.get(quiz_id=quiz_id, version=1)
-        except Quiz.DoesNotExist:
-            found = False
-
-        if not found:
-            return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
-
-        elif quiz_v1.created_by.id != request.user.id:
-            return Response({"nice_try": True}, status=status.HTTP_403_FORBIDDEN)
-
-
-        return self._save_quiz_and_return_response(request, quiz_v1.created_by)
-
+class QuizDetailView(APIView):
 
     def _save_quiz_and_return_response(self, request, created_by):
         data=request.data
@@ -147,7 +49,7 @@ class QuizDetail(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-        quiz_fields = ['quiz_id', 'version', 'question_input', 'question_display', 'quiz_type', 'created_at']
+        quiz_fields = ['question_input', 'question_display', 'quiz_type', 'created_at']
         quiz_attrs = {}
         for field in quiz_fields:
             quiz_attrs[field] = data[field]
@@ -161,9 +63,14 @@ class QuizDetail(APIView):
         quiz_attrs.update(audit_attrs)
         tags = [tag['name'] for tag in data['tags']]
         
+        #todo - Maybe create separate APIs for answers,choices and tags too?
+        #import ipdb;ipdb.set_trace()
         with transaction.atomic():
-            quiz = Quiz.objects.create(**quiz_attrs)
-            
+            quiz = self._get_quiz_instance(quiz_attrs, data)
+            quiz.shortanswer_set.all().delete()
+            quiz.choice_set.all().delete()
+            quiz.tags.all().delete()
+
             quiz.tags.add(*tags)
             for answer in data['answers']:
                 answer_attrs = {"quiz": quiz, "answer": answer['answer']}
@@ -180,8 +87,92 @@ class QuizDetail(APIView):
                 choice_instance = Choice.objects.create(**choice_attrs)
                 choice['id'] = choice_instance.id
 
-        return Response(data, status.HTTP_201_CREATED)
-    
+        data['id'] = quiz.id
+        return Response(data)
+
+
+
+
+class QuizPostView(QuizDetailView):
+
+    def post(self, request, format=None):
+        """
+        Create new quiz
+        Algo:
+        1. If quiz exists raise 400
+        2. Validate data
+        3. If data is invalid raise 400
+        4. Preprocess data
+        5. Transaction
+                6. Save Quiz
+                7. Save Tags
+                8. Save Choices
+                9. Save Answers
+        10. Return Response
+        """
+        return self._save_quiz_and_return_response(request, request.user)
+
+    def _get_quiz_instance(self, quiz_attrs, data):
+        return Quiz.objects.create(**quiz_attrs)
+
+
+class QuizGetAndPutView(QuizDetailView):
+    """
+    Detail API. 
+    """
+
+    def get(self, request, quiz_id, format=None):
+        """
+        Get quiz by quiz_id
+        """
+        try:
+            quiz = Quiz.objects.get(pk=quiz_id)
+        except (IndexError, ValueError):
+            raise Http404
+
+
+        serializer = serializers.QuizSerializer(quiz)
+        data = serializer.data
+        data['tags'] = [{"name": tag.name} for tag in quiz.tags.all()]
+        return Response(data)
+
+
+
+    def put(self, request, quiz_id, format=None):
+        """
+        Algo:
+        1. If quiz does not exist raise 400
+        2. Validate data
+        3. If data is invalid raise 400
+        4. Authorize request -> Ensure first version of quiz is created by same user
+        5. Preprocess data
+        6. Transaction
+                7. Save Quiz
+                8. Save Tags
+                9. Save Choices
+                10. Save Answers
+        11. Return Response
+        """
+        found = True
+        try:
+            quiz_v1 = Quiz.objects.get(pk=quiz_id)
+        except Quiz.DoesNotExist:
+            found = False
+
+        if not found:
+            return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
+
+        elif quiz_v1.created_by.id != request.user.id:
+            return Response({"nice_try": True}, status=status.HTTP_403_FORBIDDEN)
+
+
+        return self._save_quiz_and_return_response(request, quiz_v1.created_by)
+
+    def _get_quiz_instance(self, quiz_attrs, data):
+        quiz = Quiz(**quiz_attrs)
+        quiz.id = data['id']
+        quiz.save()
+        return quiz
 
 
 class QuizAttemptView(APIView):
@@ -223,3 +214,6 @@ class QuizAttemptView(APIView):
             serialized_attempts.append(serializer.data)
 
         return Response(serialized_attempts)
+
+
+

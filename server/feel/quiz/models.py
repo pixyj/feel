@@ -1,5 +1,3 @@
-import uuid;
-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -13,21 +11,7 @@ QUIZ_TYPES = (
     (2, 'MCQ'),
 )
 
-class QuizManager(models.Manager):
-    def get_latest_quiz_version(self, quiz_id):
-        return self.filter(quiz_id=quiz_id).\
-                            order_by("-version").\
-                            prefetch_related('shortanswer_set').\
-                            prefetch_related('choice_set')[0]
-
-
-    def get_all_quiz_pks_by_quiz_id(self, quiz_id):
-        return [quiz.id for quiz in self.filter(quiz_id=quiz_id).only("id")]
-
 class Quiz(TimestampedModel):
-
-    quiz_id = models.UUIDField(default=uuid.uuid4, db_index=True)
-    version = models.IntegerField()
 
     question_input = models.TextField()
     question_display = models.TextField()
@@ -36,14 +20,11 @@ class Quiz(TimestampedModel):
 
     tags = TaggableManager(blank=True)
 
-    objects = QuizManager()
 
     def __str__(self):
-        return "{} - v{} Created by {}".format(self.question_input, self.version, self.created_by)
+        return "{} - Created by {}".format(self.question_input, self.created_by)
 
 
-    class Meta:
-        unique_together = ('quiz_id', 'version')
 
 
 class ShortAnswer(TimestampedModel):
@@ -92,8 +73,7 @@ class QuizAttempManager(models.Manager):
 
 
     def get_user_attempts_by_quiz_id(self, user_key, quiz_id):
-        quiz_pks = Quiz.objects.get_all_quiz_pks_by_quiz_id(quiz_id)
-        attempts = QuizAttempt.objects.filter(user_key=user_key, quiz__in=quiz_pks)
+        attempts = QuizAttempt.objects.filter(user_key=user_key, quiz_id=quiz_id)
 
         choice_string_list = ','.join((attempt.choices for attempt in attempts))
         choices_by_id = self._get_choices(choice_string_list)
