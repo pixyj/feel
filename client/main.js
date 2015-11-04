@@ -13,6 +13,8 @@ var md = require("./app/base/js/md");
 var models = require("models");
 var UserModel = models.UserModel;
 
+var M = require("./app/matrixviz/js/visualize");
+
 require("csrf");
 
 var Router = Backbone.Router.extend({
@@ -26,7 +28,12 @@ var Router = Backbone.Router.extend({
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
         "": "home",
-        "login": "gotoLogin"
+        "login": "gotoLogin",
+        "matrixviz": "matrixviz"
+    },
+    
+    matrixviz: function() {
+        M.render();
     },
 
     authRequiredRoutes: ['creator'],
@@ -66,10 +73,6 @@ var Router = Backbone.Router.extend({
 
         this.currentComponent = this;
         
-        var self = this;
-        // window.setTimeout(function() {
-        //     self.navigate("creator/quiz", {trigger: true});
-        // }, 2000);
     },
 
     unmount: function() {
