@@ -71,8 +71,8 @@ var concentricCircles = function(r, step, angle) {
             //console.log(j, theta);
             x = round(i, Math.cos(theta));
             y = round(i, Math.sin(theta));
-            var dist = x*x + y*y;
-            console.info(i, j, x, y, dist);
+            //var dist = x*x + y*y;
+            //console.info(i, j, x, y, dist);
             a.push([x, y]);
         }
     }
@@ -84,8 +84,9 @@ var SvgView = function(options) {
 
     this.options = options;
 
-    if(this.renderOnResize) {
+    if(this.options.renderOnResize) {
         this.listenToResizeEvent();
+        this._pointsCopy = options.points.slice();
     }
     var svg = document.createElementNS(app.ns, "svg");
 
@@ -109,6 +110,13 @@ SvgView.prototype = {
         return this;
     },
 
+    reset: function() {
+        this.svg.empty();
+        this.svg.$width = 0;
+        this.svg.$height = 0;
+        this.options.points = this._pointsCopy.slice();
+    },
+
     renderPoints: function(points) {
 
         var svg = this.svg;
@@ -122,11 +130,14 @@ SvgView.prototype = {
 
         this.center = center;
 
+        this.normalizePoints(points);
+
         var shiftPoint = function(point) {
             var x =  parseFloat( (point[0] + center[0]).toFixed(2) );
-            var y =  parseFloat( (point[1] + center[1]).toFixed(2) );
+            var y =  parseFloat( (-point[1] + center[1]).toFixed(2) );
             return [x, y];
         };
+        mapPointsInPlace(points, [shiftPoint]);
 
         var self = this;
         var renderCircle = function(point) {
@@ -140,7 +151,22 @@ SvgView.prototype = {
             return point;
         };
 
-        mapPointsInPlace(points, [shiftPoint, renderCircle]);
+        if(this.options.timeout) {
+            var length = points.length;
+            for(var i = 0; i < length; i++) {
+                var gap = this.options.timeout;
+                var x = function(j) {
+                    setTimeout(function() {
+                        renderCircle(points[j]);
+                    }, j*gap);
+                }(i);
+            }
+        }
+        else {
+            mapPointsInPlace(points, [renderCircle]);
+        }
+
+
 
 
     },
@@ -170,19 +196,9 @@ SvgView.prototype = {
         _.each(_.keys(attrs), function(key) {
             circle.setAttribute(key, attrs[key]);
         });
+        this.svg.append(circle);
+
         
-        var self = this;
-        var draw = function() {
-            self.svg.append(circle); 
-        }
-        if(this.options.timeout) {
-            setTimeout(draw, this.options.timeout);
-            //console.log("timeout");
-        }
-        else {
-            draw();
-        }
-   
     },
 
     drawLine: function(attrs) {
@@ -194,8 +210,29 @@ SvgView.prototype = {
         this.svg.append(line);
     },
 
-    normalizePoints: function() {
+    absMax: function(point) {
+        return _.max([Math.abs(point[0]), Math.abs(point[1])])
+    },
 
+    normalizePoints: function(points) {
+        var max = this.absMax(points[0]);
+
+        var length = points.length;
+        for(var i = 1; i < length; i++) {
+            max = this.absMax([max, this.absMax(points[i])]);
+        };
+
+        // if(max < (this.svg.$width/2) ){
+        //     return;
+        // }
+
+        var scaleComponent = function(value, maxValue, svgWidth) {
+            return 0.95 * (svgWidth/2) * (value / maxValue)
+        }
+        for(var j = 0; j < length; j++) {
+            points[j][0] = scaleComponent(points[j][0], max, this.svg.$width);
+            points[j][1] = scaleComponent(points[j][1], max, this.svg.$width);
+        }
     },
 
     renderAxes: function() {
@@ -228,10 +265,9 @@ SvgView.prototype = {
     },
 
     onResize: function() {
-        this.allPoints.forEach(function(p) {
-            this.svg.empty();
-            this.render();
-        }, this);
+        console.log("onResize");
+        this.reset();
+        this.render();
     },
 
     listenToResizeEvent: function() {
@@ -302,12 +338,12 @@ var render = function() {
     
     var input    
 
-    var a = range(0, 5, 0.2);
-    //var axb = cartesianProduct(a, a);
-    var axb = concentricCircles(200, 20, 10);
+    var a = range(-5, 5, 0.2);
+    var axb = cartesianProduct(a, a);
+    //var axb = concentricCircles(200, 5, 5);
 
     //console.table(axb);
-    var m = [[0.5, 0.1], [0.2, 0.8]]
+    var m = [[0.7071, 0.7071], [-0.7071, 0.7071]]
     var two = $M(axb);
     var one = $M(m);
     var one_inverse = one.inverse();
@@ -318,9 +354,10 @@ var render = function() {
         parent: $("#svg-container"),
         height: 600,
         renderAxes: true,
-        plots: [two.elements, result, three],
+        plots: [two.elements, result, three, [[10, 10]]],
         maxPlotsPerRow: 2,
-        timeout: 0
+        timeout: 0,
+        renderOnResize: false
     }).render();
 
 
