@@ -57,13 +57,22 @@ var concentricCircles = function(r, step, angle) {
     step = step || 1;
     var i, j, x, y, theta;
 
+
+
+    var round = function(i, c) {
+        return parseFloat((i*c).toFixed(2))
+        
+    };
     var a = new Array();
+
     for(i = step; i <= r; i+=step) {
         for(j = 0; j <= 360; j += angle) {
             theta = j * Math.PI / 180;
             //console.log(j, theta);
-            x = i * Math.cos(theta);
-            y = i * Math.sin(theta);
+            x = round(i, Math.cos(theta));
+            y = round(i, Math.sin(theta));
+            var dist = x*x + y*y;
+            console.info(i, j, x, y, dist);
             a.push([x, y]);
         }
     }
@@ -75,9 +84,14 @@ var SvgView = function(options) {
 
     this.options = options;
 
+    if(this.renderOnResize) {
+        this.listenToResizeEvent();
+    }
     var svg = document.createElementNS(app.ns, "svg");
+
+
     this.svg = $(svg).attr({
-        height: options.height,
+        height: options.width,
         width: options.width,
         xmlns: "http://www.w3.org/2000/svg",
         version: "1.1"
@@ -85,15 +99,13 @@ var SvgView = function(options) {
     
     options.parent.append(this.svg);
 
-    if(this.renderOnResize) {
-        this.listenToResizeEvent();
-    }
 };
 
 SvgView.prototype = {
 
     render: function() {
         this.renderPoints(this.options.points);
+        this.renderAxes();
         return this;
     },
 
@@ -108,10 +120,7 @@ SvgView.prototype = {
             1: svg.$height / 2
         };
 
-        center = {
-            0: 200,
-            1: 200
-        };
+        this.center = center;
 
         var shiftPoint = function(point) {
             var x =  parseFloat( (point[0] + center[0]).toFixed(2) );
@@ -141,7 +150,7 @@ SvgView.prototype = {
         var x = point[0];
         var y = point[1];
         var mag = Math.sqrt(x*x + y*y);
-        console.log(mag, point);
+        //console.log(mag, point);
 
         var stringColor = Math.floor((mag*lastColor / 20)).toString(16);
         var length = stringColor.length;
@@ -162,7 +171,27 @@ SvgView.prototype = {
             circle.setAttribute(key, attrs[key]);
         });
         
-        this.svg.append(circle);    
+        var self = this;
+        var draw = function() {
+            self.svg.append(circle); 
+        }
+        if(this.options.timeout) {
+            setTimeout(draw, this.options.timeout);
+            //console.log("timeout");
+        }
+        else {
+            draw();
+        }
+   
+    },
+
+    drawLine: function(attrs) {
+        var line = document.createElementNS(app.ns, 'line');
+        _.each(_.keys(attrs), function(key) {
+            line.setAttribute(key, attrs[key]);
+        });
+
+        this.svg.append(line);
     },
 
     normalizePoints: function() {
@@ -173,15 +202,35 @@ SvgView.prototype = {
         if(!this.options.renderAxes) {
             return;
         }
+
+        this.cx = this.center[0];
+        this.cy = this.center[1];
+
+
+        var commonAttrs = {
+            stroke: "red"
+        };
+        var xAxisAttrs = _.extend({
+            x1: 0,
+            y1: this.cy,
+            x2: this.options.width,
+            y2: this.cy,
+        }, commonAttrs);
+        var yAxisAttrs = _.extend({
+            x1: this.cx,
+            y1: 0,
+            x2: this.cx,
+            y2: this.options.height
+        }, commonAttrs);
+        this.drawLine(xAxisAttrs);
+        this.drawLine(yAxisAttrs);
+
     },
-
-
 
     onResize: function() {
         this.allPoints.forEach(function(p) {
             this.svg.empty();
-            this.renderAxes();
-            this.renderPoints(p);
+            this.render();
         }, this);
     },
 
@@ -207,6 +256,7 @@ var SvgGridView = function(options) {
 };
 
 SvgGridView.prototype = {
+
     render: function() {
 
         var container = $("<div>").addClass("container");
@@ -224,7 +274,7 @@ SvgGridView.prototype = {
                 container.append(row);
             }
 
-            var column = $("<div>").addClass("col-md-6");
+            var column = $("<div>").addClass("col-xs-12 col-md-6");
             row.append(column);
 
 
@@ -254,9 +304,9 @@ var render = function() {
 
     var a = range(0, 5, 0.2);
     //var axb = cartesianProduct(a, a);
-    var axb = concentricCircles(200, 15, 10);
+    var axb = concentricCircles(200, 20, 10);
 
-    console.table(axb);
+    //console.table(axb);
     var m = [[0.5, 0.1], [0.2, 0.8]]
     var two = $M(axb);
     var one = $M(m);
@@ -268,25 +318,17 @@ var render = function() {
         parent: $("#svg-container"),
         height: 600,
         renderAxes: true,
-        plots: [result, two.elements, three, result],
-        maxPlotsPerRow: 2
+        plots: [two.elements, result, three],
+        maxPlotsPerRow: 2,
+        timeout: 0
     }).render();
 
 
     window.S = S;
     window.axb = axb;
-    console.table(result);
+    //console.table(result);
 }
 
-var draw = function(points, svg, i) {
-
-    setTimeout(function() {
-        for(var j = 0; j < points.length; j++) {
-            drawCircle(points[j], svg);
-        }
-    }, i*20);
-
-}
 
 module.exports = {
     render: render
