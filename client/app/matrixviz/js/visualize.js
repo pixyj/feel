@@ -3,6 +3,8 @@ var S = require("sylvester");
 var $ = require("jquery");
 var _ = require("underscore");
 
+var Backbone = require("backbone");
+
 var mapPointsInPlace = function(points, fnArray) {
     var length = points.length;
 
@@ -79,30 +81,28 @@ var concentricCircles = function(r, step, angle) {
     return a;
 }
 
+var SvgView = Backbone.View.extend({
 
-var SvgView = function(options) {
-
-    this.options = options;
-
-    if(this.options.renderOnResize) {
-        this.listenToResizeEvent();
-        this._pointsCopy = options.points.slice();
-    }
-    var svg = document.createElementNS(app.ns, "svg");
-
-
-    this.svg = $(svg).attr({
-        height: options.width,
-        width: options.width,
-        xmlns: "http://www.w3.org/2000/svg",
-        version: "1.1"
-    });
     
-    options.parent.append(this.svg);
+    initialize: function(options) {
 
-};
+        this.options = options;
 
-SvgView.prototype = {
+        if(this.options.renderOnResize) {
+            this.listenToResizeEvent();
+            this._pointsCopy = options.points.slice();
+        }
+        var svg = document.createElementNS(app.ns, "svg");
+
+
+        this.svg = $(svg).attr({
+            height: options.width,
+            width: options.width,
+            xmlns: "http://www.w3.org/2000/svg",
+            version: "1.1"
+        });
+        this.$el.append(this.svg);
+    },
 
     render: function() {
         this.renderPoints(this.options.points);
@@ -120,8 +120,8 @@ SvgView.prototype = {
     renderPoints: function(points) {
 
         var svg = this.svg;
-        svg.$width = svg.$width || svg.width();
-        svg.$height = svg.$height || svg.height();
+        svg.$width = svg.$width || this.options.parent.width();
+        svg.$height = svg.$width; //height same as width for now.
 
         var center = {
             0: svg.$width / 2,
@@ -165,9 +165,6 @@ SvgView.prototype = {
         else {
             mapPointsInPlace(points, [renderCircle]);
         }
-
-
-
 
     },
 
@@ -280,23 +277,23 @@ SvgView.prototype = {
     stopListeningToResizeEvent: function() {
         $(window).off("resize", this.listenToResizeEvent);
     }
-};
 
-SvgView.prototype.constructor = SvgView;
+});
 
-var SvgGridView = function(options) {
+var SvgGridView = Backbone.View.extend({
+    
+    initialize: function(options) {
 
-    this.options = options;
-    this.length = options.plots.length;
+        this.options = options;
+        this.length = options.plots.length;
 
-};
+        
 
-SvgGridView.prototype = {
+    },
 
     render: function() {
 
-        var container = $("<div>").addClass("container");
-        this.options.parent.append(container);
+        var container = this.$el.addClass("container");
         var row;
 
         var self = this;
@@ -322,13 +319,16 @@ SvgGridView.prototype = {
 
 
             var svgView = new SvgView(svgOptions).render();
-
+            column.append(svgView.$el);
         }
+
         return this;
     }
-};
 
-SvgGridView.prototype.constructor = SvgGridView;
+});
+
+
+
 
 
 var render = function() {
@@ -343,7 +343,7 @@ var render = function() {
     //var axb = concentricCircles(200, 5, 5);
 
     //console.table(axb);
-    var m = [[0.7071, 0.7071], [-0.7071, 0.7071]]
+    var m = [[0.7071, 0.7071], [0.2, 0.7071]]
     var two = $M(axb);
     var one = $M(m);
     var one_inverse = one.inverse();
@@ -351,15 +351,17 @@ var render = function() {
     var three = two.multiply(one_inverse).elements;
     
     var gridView = new SvgGridView({
-        parent: $("#svg-container"),
         height: 600,
         renderAxes: true,
         plots: [two.elements, result, three, [[10, 10]]],
         maxPlotsPerRow: 2,
         timeout: 0,
         renderOnResize: false
-    }).render();
+    });
 
+    $("#svg-container").append(gridView.$el);
+
+    gridView.render();
 
     window.S = S;
     window.axb = axb;
