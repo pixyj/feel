@@ -6,60 +6,23 @@ var _ = require("underscore");
 var mapPointsInPlace = function(points, fnArray) {
     var length = points.length;
 
-    var fnArrayLength = fnArrayLength.length;
+    var fnArrayLength = fnArray.length;
     for(var i = 0; i < length; i++) {
         var x = points[i][0];
         var y = points[i][1];
-        var p = [x, y];
         for(var j = 0; j < fnArrayLength; j++) {
-            p[0] = fnArray[j][0](p, 0);
-            p[1] = fnArray[j][1](p, 1);
+            points[i] = fnArray[j](points[i]);
         }
-        points[i][0] = x;
-        points[i][1] = y;
+
     }
     return points;
 };
-
-var toSvgCoordinates = function(width, height, max_x, max_y, digits) {
-
-    digits = digits || 2;
-
-    var transformRatios = {
-        0: width / max_x,
-        1: width / max_y
-    };
-
-    var transformPoint = function(point, index) {
-        return (transformRatios[index] * point[index]).toFixed(digits);
-    };
-
-    var toSvg = function(points) {
-        return mapPointsInPlace(points, [transformPoint, transformPoint]);
-    }
-
-    return toSvg;
-};
-
-var renderPoints = function(svg, points, svgPoints) {
-    
-}
-
-
 
 var app = {
     ns: 'http://www.w3.org/2000/svg'
 };
 
-var drawCircle = function(attrs, svg) {
-    var circle = document.createElementNS(app.ns, 'circle');
 
-    _.each(_.keys(attrs), function(key) {
-        circle.setAttribute(key, attrs[key]);
-    });
-    
-    svg.append(circle);    
-};
 
 var range = function(start, end, step) {
 
@@ -89,7 +52,7 @@ var cartesianProduct = function(a, b) {
 };
 
 
-var concentricCircles = function(cx, cy, r, step, angle) {
+var concentricCircles = function(r, step, angle) {
 
     step = step || 1;
     var i, j, x, y, theta;
@@ -101,11 +64,186 @@ var concentricCircles = function(cx, cy, r, step, angle) {
             //console.log(j, theta);
             x = i * Math.cos(theta);
             y = i * Math.sin(theta);
-            a.push([x + cx, y + cy]);
+            a.push([x, y]);
         }
     }
     return a;
 }
+
+
+var SvgView = function(options) {
+
+    this.options = options;
+
+    var svg = document.createElementNS(app.ns, "svg");
+    this.svg = $(svg).attr({
+        height: options.height,
+        width: options.width,
+        xmlns: "http://www.w3.org/2000/svg",
+        version: "1.1"
+    });
+    
+    options.parent.append(this.svg);
+
+    if(this.renderOnResize) {
+        this.listenToResizeEvent();
+    }
+};
+
+SvgView.prototype = {
+
+    render: function() {
+        this.renderPoints(this.options.points);
+        return this;
+    },
+
+    renderPoints: function(points) {
+
+        var svg = this.svg;
+        svg.$width = svg.$width || svg.width();
+        svg.$height = svg.$height || svg.height();
+
+        var center = {
+            0: svg.$width / 2,
+            1: svg.$height / 2
+        };
+
+        center = {
+            0: 200,
+            1: 200
+        };
+
+        var shiftPoint = function(point) {
+            var x =  parseFloat( (point[0] + center[0]).toFixed(2) );
+            var y =  parseFloat( (point[1] + center[1]).toFixed(2) );
+            return [x, y];
+        };
+
+        var self = this;
+        var renderCircle = function(point) {
+            var attrs = {
+                cx: point[0],
+                cy: point[1],
+                r: 3,
+                fill: self.getColor(point)
+            };
+            self.drawCircle(attrs);
+            return point;
+        };
+
+        mapPointsInPlace(points, [shiftPoint, renderCircle]);
+
+
+    },
+
+    getColor: function(point) {
+        var lastColor = 0xAfAfAf;
+        var x = point[0];
+        var y = point[1];
+        var mag = Math.sqrt(x*x + y*y);
+        console.log(mag, point);
+
+        var stringColor = Math.floor((mag*lastColor / 20)).toString(16);
+        var length = stringColor.length;
+        for(j = 6; j > length; j--) {
+            stringColor = j + stringColor;
+        };
+        if(length > 6) {
+            stringColor = stringColor.slice(0, 6);
+        }
+        stringColor = "#" + stringColor;
+        return stringColor;
+    },
+
+    drawCircle: function(attrs) {
+        var circle = document.createElementNS(app.ns, 'circle');
+
+        _.each(_.keys(attrs), function(key) {
+            circle.setAttribute(key, attrs[key]);
+        });
+        
+        this.svg.append(circle);    
+    },
+
+    normalizePoints: function() {
+
+    },
+
+    renderAxes: function() {
+        if(!this.options.renderAxes) {
+            return;
+        }
+    },
+
+
+
+    onResize: function() {
+        this.allPoints.forEach(function(p) {
+            this.svg.empty();
+            this.renderAxes();
+            this.renderPoints(p);
+        }, this);
+    },
+
+    listenToResizeEvent: function() {
+        var self = this;
+        $(window).on("resize", function() {
+            self.onResize();
+        });
+    },
+
+    stopListeningToResizeEvent: function() {
+        $(window).off("resize", this.listenToResizeEvent);
+    }
+};
+
+SvgView.prototype.constructor = SvgView;
+
+var SvgGridView = function(options) {
+
+    this.options = options;
+    this.length = options.plots.length;
+
+};
+
+SvgGridView.prototype = {
+    render: function() {
+
+        var container = $("<div>").addClass("container");
+        this.options.parent.append(container);
+        var row;
+
+        var self = this;
+        var isNewRowNeeded = function(i) {
+            return (i % self.options.maxPlotsPerRow == 0);
+        }
+
+        for(var i = 0; i < this.length; i++) {
+            if(isNewRowNeeded(i)) {
+                row = $("<div>").addClass("row");
+                container.append(row);
+            }
+
+            var column = $("<div>").addClass("col-md-6");
+            row.append(column);
+
+
+            var svgOptions = _.extend(this.options, {
+                points: this.options.plots[i],
+                parent: column,
+                width: column.width()
+            });
+
+
+            var svgView = new SvgView(svgOptions).render();
+
+        }
+        return this;
+    }
+};
+
+SvgGridView.prototype.constructor = SvgGridView;
+
 
 var render = function() {
     console.log("hi there sylvester");
@@ -114,15 +252,9 @@ var render = function() {
     
     var input    
 
-    var attrs = {
-        r: 2,
-        "stroke-width": 3,
-        stroke: 3
-    };
-    
     var a = range(0, 5, 0.2);
     //var axb = cartesianProduct(a, a);
-    var axb = concentricCircles(200, 200, 200, 20, 10);
+    var axb = concentricCircles(200, 15, 10);
 
     console.table(axb);
     var m = [[0.5, 0.1], [0.2, 0.8]]
@@ -130,46 +262,15 @@ var render = function() {
     var one = $M(m);
     var one_inverse = one.inverse();
     var result = two.multiply(one).elements;
-    var secondResult = two.multiply(one_inverse).elements;
-    var length = axb.length;
-
-    var lastColor = 0x7f7f7f;
-
-
-    for(var i = 0; i < length; i++) {
-        var colorIndex = Math.floor(i * lastColor / length);
-        var stringColorIndex = colorIndex.toString(16);
-        var s = stringColorIndex.length;
-        var c = String(stringColorIndex);
-        for(var j = 6; j > s; j--) {
-            stringColorIndex = stringColorIndex + "0";
-        }
-        //console.log(i, c, stringColorIndex);
-        var color = "#" + stringColorIndex;
-        var center = {
-            cx: axb[i][0] + 30,
-            cy: axb[i][1] + 30,
-            fill: color
-        };
-        var circleAttrs = _.extend(center, attrs);
-        
-        var c = {
-            cx: result[i][0] + 500,
-            cy: result[i][1] + 30,
-            fill: color
-        };
-        c = _.extend(c, attrs);
-
-        var d = {
-            cx: secondResult[i][0] + 1000,
-            cy: secondResult[i][1] + 30,
-            fill: color
-        };
-        d = _.extend(d, attrs);
-
-        draw([circleAttrs, c], svg, i);
-
-    }
+    var three = two.multiply(one_inverse).elements;
+    
+    var gridView = new SvgGridView({
+        parent: $("#svg-container"),
+        height: 600,
+        renderAxes: true,
+        plots: [result, two.elements, three, result],
+        maxPlotsPerRow: 2
+    }).render();
 
 
     window.S = S;

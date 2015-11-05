@@ -188,3 +188,8 @@ Eventually, I'll make new css files for each component/page
     font-size: 0.75em;
     color: #337ab7;
 }
+
+svg {
+    background: white;
+    border: 2px solid black;
+}
