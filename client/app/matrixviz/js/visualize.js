@@ -13,7 +13,7 @@ var mapPointsInPlace = function(points, fnArray) {
         var x = points[i][0];
         var y = points[i][1];
         for(var j = 0; j < fnArrayLength; j++) {
-            points[i] = fnArray[j](points[i]);
+            points[i] = fnArray[j](points[i], i);
         }
 
     }
@@ -24,6 +24,22 @@ var app = {
     ns: 'http://www.w3.org/2000/svg'
 };
 
+var getColorsArray = function(length) {
+
+    var colors = new Array(length);
+    
+    var lastColor = 0xCCCCCC;
+    var firstColor = 0x666666;
+    var diff = (lastColor - firstColor);
+
+    for(var i = 0; i < length; i++) {
+        var color = firstColor + diff * (i / length);
+        color = "#" + Math.floor(color).toString(16) 
+        //var color = "#" + Math.floor(lastColor * Math.random()).toString(16);
+        colors[i] = color;
+    }
+    return colors;
+};
 
 
 var range = function(start, end, step) {
@@ -83,6 +99,7 @@ var concentricCircles = function(r, step, angle) {
 
 var SvgView = Backbone.View.extend({
 
+    el: "<div class='card'> </div>",
     
     initialize: function(options) {
 
@@ -92,6 +109,7 @@ var SvgView = Backbone.View.extend({
             this.listenToResizeEvent();
             this._pointsCopy = options.points.slice();
         }
+        this._pointsLength = this.options.points.length * this.options.points[0].length;
         var svg = document.createElementNS(app.ns, "svg");
 
 
@@ -140,12 +158,12 @@ var SvgView = Backbone.View.extend({
         mapPointsInPlace(points, [shiftPoint]);
 
         var self = this;
-        var renderCircle = function(point) {
+        var renderCircle = function(point, i) {
             var attrs = {
                 cx: point[0],
                 cy: point[1],
                 r: 3,
-                fill: self.getColor(point)
+                fill: self.getColor(point, i)
             };
             self.drawCircle(attrs);
             return point;
@@ -157,7 +175,7 @@ var SvgView = Backbone.View.extend({
                 var gap = this.options.timeout;
                 var x = function(j) {
                     setTimeout(function() {
-                        renderCircle(points[j]);
+                        renderCircle(points[j], j);
                     }, j*gap);
                 }(i);
             }
@@ -168,7 +186,16 @@ var SvgView = Backbone.View.extend({
 
     },
 
-    getColor: function(point) {
+    getPixelColor: function(point, position) {
+        this._p = this.p || 0;
+        return app.colors[this._p++];
+    },
+
+    getColor: function(point, position) {
+        return this.options.colors[position];
+    },
+
+    getWtfColor: function(point, position) {
         var lastColor = 0xAfAfAf;
         var x = point[0];
         var y = point[1];
@@ -286,14 +313,11 @@ var SvgGridView = Backbone.View.extend({
 
         this.options = options;
         this.length = options.plots.length;
-
-        
-
     },
 
     render: function() {
 
-        var container = this.$el.addClass("container");
+        var container = this.$el;
         var row;
 
         var self = this;
@@ -327,11 +351,130 @@ var SvgGridView = Backbone.View.extend({
 
 });
 
+// <p class="range-field">
+//   <input type="range" id="test5" min="0" max="100" />
+// </p>
+var RangeView = Backbone.View.extend({
+
+    el: "<p>",
+
+    MIN: 0,
+    MAX: 100,
+
+    initialize: function(options) {
+        this.options = options;
+    },
+
+    render: function() {
+        
+        var input = $("<input />").attr({
+            type: "range",
+            min: this.options.min || this.MIN,
+            max: this.options.max || this.MAX 
+        });
 
 
+        var thumb = $('<span class="thumb"><span class="value"></span></span>')
+        this.$el.addClass("range-field").append(input).append(thumb);
+        this.$el.css({
+            "margin-top": "30px"
+        });
+        
+        return this;
+    }
 
+});
+
+var MatrixInputView = Backbone.View.extend({
+
+    ROWS: 2,
+    COLUMNS: 2,
+
+    initialize: function(options) {
+
+        this.options = options;
+        if(!this.options.matrix) {
+            this.ROWS = options.rows || this.ROWS;
+            this.COLUMNS = options.columns || this.COLUMNS;
+            this._matrix = new Array(this.ROWS);
+            for(var i = 0; i < this.ROWS; i++) {
+                this._matrix[i] = Array.apply(null, Array(this.COLUMNS)).map(Number.prototype.valueOf,0);
+            }
+        }
+        else {
+            this._matrix = options.matrix;
+            this.ROWS = this._matrix.length;
+            this.COLUMNS = this._matrix[0].length;
+        }
+
+    },
+
+    render: function() {
+        this.views = [];
+
+        var table = $("<table>").addClass("matrix-input-table");
+        for(var i = 0; i < this.ROWS; i++) {
+
+            var rowViews = [];
+            var row = $("<tr>");
+            for(var j = 0; j < this.COLUMNS; j++) {
+
+                var input = $("<input>").attr({
+                    "type": "number",
+                    "value": this._matrix[i][j]
+                });
+                rowViews.push(input);
+
+                var td = $("<td>").append(input);
+                row.append(td);
+
+            }
+            table.append(row);
+            this.views.push(rowViews);
+        }
+        this.$el.append(table);
+        return this;
+    },
+
+    getInputMatrix: function() {
+
+    },
+
+    remove: function() {
+        _.each(this.views, function(row) {
+            _.each(row, function(v) {
+                v.remove();
+            });
+        });
+        this.remove();
+    }
+});
+
+// var initColors = function() {
+//     var elem = document.getElementById("one");
+//     context = elem.getContext("2d");
+//     context.drawImage(document.getElementById("img"), 0, 0, 10, 10);
+
+//     var imageData = context.getImageData(0, 0, 10, 10);
+//     pix = imageData.data;
+
+//     var colors = [];
+//     var i, n;
+//     for(var i = 0, n = pix.length; i < n; i += 4) {
+//         var c = "#";
+//         c += pix[i].toString(16);
+//         c += pix[i+1].toString(16);
+//         c += pix[i+2].toString(16);
+//         colors.push(c.toUpperCase());
+//     };
+
+//     app.colors = colors;
+//     window.colors = colors;
+// };
 
 var render = function() {
+    //initColors();
+
     console.log("hi there sylvester");
 
     var svg = $("svg");
@@ -339,8 +482,9 @@ var render = function() {
     var input    
 
     var a = range(-5, 5, 0.2);
-    var axb = cartesianProduct(a, a);
-    //var axb = concentricCircles(200, 5, 5);
+    //var axb = cartesianProduct(a, a);
+
+    var axb = concentricCircles(200, 5, 5);
 
     //console.table(axb);
     var m = [[0.7071, 0.7071], [0.2, 0.7071]]
@@ -354,12 +498,15 @@ var render = function() {
         height: 600,
         renderAxes: true,
         plots: [two.elements, result, three, [[10, 10]]],
+        colors: getColorsArray(axb.length * axb[0].length),
         maxPlotsPerRow: 2,
         timeout: 0,
         renderOnResize: false
     });
 
-    $("#svg-container").append(gridView.$el);
+    var inputView = new MatrixInputView({}).render();
+    var rangeView = new RangeView({}).render();
+    $("#svg-container").append(rangeView.$el).append(inputView.$el).append(gridView.$el);
 
     gridView.render();
 

@@ -189,7 +189,15 @@ Eventually, I'll make new css files for each component/page
     color: #337ab7;
 }
 
-svg {
-    background: white;
+/* MATRIX VIZ PAGE */
+
+
+.matrix-input-table {
+    width: 40%;
+}
+.matrix-input-table input{
     border: 2px solid black;
+}
+.matrix-input-table input{
+    width: 25%;
 }
