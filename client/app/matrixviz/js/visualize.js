@@ -520,7 +520,7 @@ var MatrixInputView = Backbone.View.extend({
             elements[i] = new Array(this.COLUMNS);
             for(var j = 0; j < this.COLUMNS; j++) {
                 var val = this.inputs[i][j].val() || 0;
-                elements[i][j] = parseInt(val);
+                elements[i][j] = parseFloat(val);
             }
         }
 
