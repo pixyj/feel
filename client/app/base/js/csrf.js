@@ -26,13 +26,11 @@ function getCsrfToken() {
             return cookies[i].split('=')[1];
         }
     }
-    return null;
+    console.error("csrftoken cookie not found");
+
 }
 
 var csrftoken = getCsrfToken();
-if(csrftoken === null) {
-    window.location.href="/admin/login/?next=/";
-}
 
 
 $.ajaxSetup({

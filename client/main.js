@@ -106,11 +106,13 @@ var Router = Backbone.Router.extend({
 
 var init = function() {
 
+    var router = new Router({userModel: userModel});
+    Backbone.history.start({pushState: false});
+    return;
     var userModel = new UserModel();
     userModel.fetch().then(function() {
         console.log(userModel.toJSON());
-        var router = new Router({userModel: userModel});
-        Backbone.history.start({pushState: false});
+
     });
 
 };
