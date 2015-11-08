@@ -27,7 +27,7 @@ var Router = Backbone.Router.extend({
     routes: {
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
-        "": "home",
+        "": "matrixviz",
         "login": "gotoLogin",
         "matrixviz": "matrixviz"
     },
