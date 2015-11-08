@@ -84,7 +84,8 @@ var concentricCircles = function(r, step, angle) {
     var a = new Array();
 
     for(i = step; i <= r; i+=step) {
-        for(j = 0; j <= 360; j += angle) {
+        var radiusAngle = 50 * angle / (i + 1);
+        for(j = 0; j <= 360; j += radiusAngle) {
             theta = j * Math.PI / 180;
             //console.log(j, theta);
             x = round(i, Math.cos(theta));
@@ -550,52 +551,30 @@ var MatrixShapeOptionsView = Backbone.View.extend({
 
         var h4 = $("<h4>").addClass("matrix-options-heading").html("Input Matrix Shape");
         this.$el.append(h4);
-        var svg = document.createElementNS(app.ns, "svg");
-        svg = $(svg);
-        this.$el.append(svg);
 
         var height = this.options.height - h4.height();
-        svg.attr({
-            "width": this.options.width,
-            "height": height
+        var width = this.options.width;
+
+        var size = _.min([width, height]);
+
+        var shapeSize = size*0.45 - 6; //-6px to accomodate 3px border //0.45 to leave some gap
+        var circle = $("<div class='matrix-shape-input matrix-shape-input-circle'>").css({
+            "width": shapeSize,
+            "height": shapeSize
         });
-        
-        var size = _.min([this.options.width, height]);
-
-        var circle = document.createElementNS(app.ns, "circle");
-        circle = $(circle);
-        var r = size * 0.25;
-
-        circle.attr({
-            "cx": r + 4,
-            "cy": r + 4,
-            "r": r,
-            "stroke": "black",
-            "stroke-width": "3",
-            "fill": "none",
-            "class": "matrix-input-shape"
+        var rect = $("<div class='matrix-shape-input matrix-shape-input-rect'>").css({
+            "width": shapeSize,
+            "height": shapeSize
         });
 
 
-        var rect = document.createElementNS(app.ns, "rect");
-        rect = $(rect);
-        rect.attr({
-            "x": this.options.width - 2*r - 4,
-            "y": 4,
-            "height": r*2,
-            "width": r*2,
-            "stroke": "black",
-            "stroke-width": "3",
-            "fill": "none",
-            "class": "matrix-input-shape"
-        });
-
-        svg.append(circle).append(rect);
+        var container = $("<div class='matrix-shape-input-container'>").append(circle).append(rect);
+        this.$el.append(container);
 
         this.circle = circle;
         this.rect = rect;
-        
         this.setShape("rect", "circle");
+
         //todo -> add stopListening
         this.listenToClick("circle", "rect");
         this.listenToClick("rect", "circle");
@@ -611,14 +590,8 @@ var MatrixShapeOptionsView = Backbone.View.extend({
     },
 
     setShape: function(set, unset) {
-        this[unset].attr({
-            "fill-opacity": "0.01",
-            "fill": "none"
-        });
-        this[set].attr({
-            "fill-opacity": "1",
-            "fill": "orange"
-        });
+        this[set].addClass("matrix-shape-input-selected");
+        this[unset].removeClass("matrix-shape-input-selected");
         this.shape = set;
     },
 
@@ -732,7 +705,7 @@ var visualize = function(inputState) {
         axb = cartesianProduct(a, a);
     }
     else {
-        axb = concentricCircles(200, 5, 20);
+        axb = concentricCircles(200, 20, 20);
     }
 
     //First character of matrices are in uppercase
