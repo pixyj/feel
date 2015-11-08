@@ -331,7 +331,7 @@ var SvgGridView = Backbone.View.extend({
                 container.append(row);
             }
 
-            var column = $("<div>").addClass("col-xs-12 col-md-6");
+            var column = $("<div>").addClass("col-xs-6");
             row.append(column);
 
 
