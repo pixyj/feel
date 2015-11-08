@@ -58,6 +58,26 @@ textarea {
     color: #121212 !important;
 }
 
+/*input[type=range] {
+    -webkit-appearance: none;
+    height:20px;
+    background: #8e21f1;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -4px;
+}*/
+
+.active {
+    font-size: 20px;
+}
+
 .quiz-creator-choice-collection {
     margin-top: 50px;
 }
@@ -191,13 +211,75 @@ Eventually, I'll make new css files for each component/page
 
 /* MATRIX VIZ PAGE */
 
+#svg-container {
+    margin-top: 15px;
+}
 
-.matrix-input-table {
-    width: 40%;
+
+
+#matrix-input-table input {
+    width: 50%;
 }
-.matrix-input-table input{
-    border: 2px solid black;
+
+#matrix-input-table tbody {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
-.matrix-input-table input{
-    width: 25%;
+
+#matrix-input-table input:hover {
+    color: orange;
+}
+
+#matrix-input-table input {
+    font-size: 2em;
+}
+
+.matrix-input-table-border-div {
+    position: absolute;
+    width: 20%;
+    border-top: 1px solid black;
+}
+
+.matrix-speed-label {
+    width: 100%;
+}
+
+
+.matrix-speed-label:hover {
+    color: orange;
+}
+
+.matrix-input-shape {
+    cursor: pointer;
+}
+.matrix-input-shape:hover {
+    stroke: orange;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+@media(max-width: 992px) {
+    [type="radio"]:not(:checked) + label, [type="radio"]:checked + label {
+        height: 50px;
+        line-height: 50px;
+        font-size: 2rem;
+        padding-left: 60px;
+    }
+
+    [type="radio"] + label:before, [type="radio"] + label:after {
+        height: 40px;
+        width: 40px;
+    }
+
+    #matrix-visualize-btn {
+        height: 80px;
+    }
 }
