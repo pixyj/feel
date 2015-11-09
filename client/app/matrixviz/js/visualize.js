@@ -105,6 +105,7 @@ var SvgView = Backbone.View.extend({
     initialize: function(options) {
 
         this.options = options;
+        this.timers = [];
 
         if(this.options.renderOnResize) {
             this.listenToResizeEvent();
@@ -175,9 +176,11 @@ var SvgView = Backbone.View.extend({
             for(var i = 0; i < length; i++) {
                 var gap = this.options.timeout;
                 var x = function(j) {
-                    setTimeout(function() {
-                        renderCircle(points[j], j);
-                    }, j*gap);
+                    var timer = setTimeout(function() {
+                                    renderCircle(points[j], j);
+
+                                }, j*gap);
+                    self.timers.push(timer);
                 }(i);
             }
         }
@@ -304,6 +307,14 @@ var SvgView = Backbone.View.extend({
 
     stopListeningToResizeEvent: function() {
         $(window).off("resize", this.listenToResizeEvent);
+    },
+
+    remove: function() {
+        this.stopListeningToResizeEvent();
+        _.each(this.timers, function(timer) {
+            clearTimeout(timer);
+        });
+        Backbone.View.prototype.remove.call(this);
     }
 
 });
@@ -314,6 +325,7 @@ var SvgGridView = Backbone.View.extend({
 
         this.options = options;
         this.length = options.plots.length;
+        this.views = [];
     },
 
     render: function() {
@@ -345,9 +357,16 @@ var SvgGridView = Backbone.View.extend({
 
             var svgView = new SvgView(svgOptions).render();
             column.append(svgView.$el);
+            this.views.push(svgView);
         }
 
         return this;
+    },
+
+    remove: function() {
+        _.each(this.views, function(view) {
+            view.remove();
+        });
     }
 
 });
