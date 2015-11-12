@@ -13,7 +13,7 @@ var md = require("./app/base/js/md");
 var models = require("models");
 var UserModel = models.UserModel;
 
-var M = require("./app/matrixviz/js/visualize");
+var MatrixViz = require("./app/matrixviz/js/visualize");
 
 require("csrf");
 
@@ -33,7 +33,7 @@ var Router = Backbone.Router.extend({
     },
     
     matrixviz: function() {
-        M.render();
+        MatrixViz.render();
     },
 
     authRequiredRoutes: ['creator'],
