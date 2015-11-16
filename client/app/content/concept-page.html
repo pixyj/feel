@@ -21,53 +21,54 @@
         <link rel="stylesheet" type="text/css" href="/materialize/css/materialize.css">
 
         <script type="text/javascript" src="/jq/jquery.min.js"></script>
-
-
         <script type="text/javascript" src="/materialize/js/bin/materialize.js"></script>
-
-
-        <script type="text/javascript" src="/app/base/js/utils.js"></script>
-
-
         <script type="text/javascript" src="/underscore/underscore.js"></script>
-        <script type="text/javascript" src="/backbone/backbone.js"></script>
 
+        <script type="text/javascript">
+            var init = function() {
 
+                $("#navigate-left").sideNav({
+                    menuWidth: "400px"
+                });
+            }
+            $(document).ready(init);
+        </script>
 
-        <script type="text/javascript" src="/react/JSXTransformer.js"></script>
-        <script type="text/javascript" src="/react/react.js"></script>
-
-
-    
-        
-        <script type="text/javascript" src="/katex/katex.min.js"></script>
-        <script type="text/javascript" src="/commonmark/commonmark.js"></script>
-
-        
-        <script type="text/javascript" src="/app/base/js/md-and-math-to-html.js"></script>
-
-        <script type="text/jsx" src="/app/base/js/markdown-and-preview.jsx"></script>
-
-
-        <script type="text/javascript" src="/app/base/js/models.js"></script>
-
-        <script type="text/jsx" src="/app/quiz/js/quiz-student-view.jsx"></script>
-
-
-        <script type="text/jsx" src="/app/content/js/concept-page.jsx"></script>
 
     </head>
 
     <body>
         <nav class="top-nav">
-            <a href="#" data-activates="nav-mobile" id="navigate-left">
-                <i class="mdi-navigation-menu"></i>
-            </a>
-            <a href="#" data-activates="nav-mobile" id="notes-right">
-                <i class="mdi-navigation-menu"></i>
-            </a>
-            <div id="concept-name-heading"> Projections </div>
+            <div id="top-nav-content-container">
+                
+                <div id="navigate-left" data-activates="nav-mobile">
+                <a href="#" >
+                    <i class="mdi-navigation-menu"></i>
+                </a>
+                </div>
+
+                <div id="topic-and-name-heading-container">
+                    <a id="topic-name-heading" href="/linear-algebra"> Linear Algebra </a>
+                    <a id="concept-name-heading" href="/linear-algebra/projections"> Projections </a>
+                </div>
+
+            </div>
         </nav>
+
+<!--             <ul id="nav-mobile" class="side-nav fixed">
+                <li class="bold">
+                    <a class="waves-effect waves-teal" href="#"> Contents </a> 
+                </li>
+                <li class="bold">
+                    <a class="waves-effect waves-teal" href="/asdf"> Notes </a> 
+                </li>
+                <li class="bold">
+                    <a class="waves-effect waves-teal" href="/asdf"> Questions </a> 
+                </li>
+                <li class="bold">
+                    <a class="waves-effect waves-teal" href="/asdf"> Problems </a> 
+                </li>
+            </ul> -->
 
         <div class="container">
             <div id="prereq-test-wrapper">
@@ -78,29 +79,13 @@
                 <h3>Awesome! You're ready to understand all about Projections</h3>
             </div>
 
+            <iframe src="/#matrixviz" width="100%" height="1200">
+             <p>Your browser does not support iframes.</p>
+            </iframe>
+
+
 
             <div class="md-and-latex-content">
-                <div>
-                    In linear algebra and functional analysis, a projection is a linear transformation P from a vector space to itself such that P2 = P. That is, whenever P is applied twice to any value, it gives the same result as if it were applied once (idempotent). It leaves its image unchanged 
-                </div>
-
-
-                <div>
-                    In linear algebra and functional analysis, a projection is a linear transformation P from a vector space to itself such that P2 = P. That is, whenever P is applied twice to any value, it gives the same result as if it were applied once (idempotent). It leaves its image unchanged 
-                </div>
-
-
-                <div>
-                    In linear algebra and functional analysis, a projection is a linear transformation P from a vector space to itself such that P2 = P. That is, whenever P is applied twice to any value, it gives the same result as if it were applied once (idempotent). It leaves its image unchanged 
-                </div>
-
-
-                <div>
-                    In linear algebra and functional analysis, a projection is a linear transformation P from a vector space to itself such that P2 = P. That is, whenever P is applied twice to any value, it gives the same result as if it were applied once (idempotent). It leaves its image unchanged 
-                </div>
-
-
-
                 <div>
                     In linear algebra and functional analysis, a projection is a linear transformation P from a vector space to itself such that P2 = P. That is, whenever P is applied twice to any value, it gives the same result as if it were applied once (idempotent). It leaves its image unchanged 
                 </div>
