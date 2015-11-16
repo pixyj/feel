@@ -1,7 +1,9 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
+var _ = require("underscore");
 
 var md = require("md");
+
 
 var MarkdownAndPreviewAttrs = {
     
@@ -74,13 +76,11 @@ var MarkdownAndPreviewAttrs = {
         };
 
         this.setState(state);
-        this.onContentUpdated(state);
-    },
 
+        if(this.onContentUpdated && _.isFunction(this.onContentUpdated)) {
+            this.onContentUpdated(state);
+        }
 
-    onContentUpdated: function() {
-        //console.warn("Implement afterUpdateContent in the subclass if you want to save the details" );
-            //optional. Implement in subclass if you want to. 
     }
 
 }
