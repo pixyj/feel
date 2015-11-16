@@ -1,3 +1,8 @@
+var React = require("react");
+var ReactDOM = require("react-dom");
+
+var md = require("md");
+
 var MarkdownAndPreviewAttrs = {
     
     getInitialState: function() {
@@ -16,15 +21,20 @@ var MarkdownAndPreviewAttrs = {
     render: function() {
         var display = this.state.display;
 
-        var className = "";
+        var displayClassName = "";
         if(display) {
-            className = "md-preview-with-content";
+            displayClassName = "md-preview-with-content";
+        }
+
+        var className = "row";
+        if(this.props.htmlClass) {
+            className += " " + this.props.htmlClass
         }
 
         return (
             
-                <div className="row">
-                    <div className="col-md-6">
+                <div className={className}>
+                    <div className="col xs-12 col-md-6">
                         <h6 className="md-and-html-heading">
                             Markdown Input
                         </h6>
@@ -39,11 +49,11 @@ var MarkdownAndPreviewAttrs = {
                         />
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-xs-12 col-md-6">
                         <h6 className="md-and-html-heading">
                             HTML Preview
                         </h6>
-                        <div className={className} 
+                        <div className={displayClassName} 
                               dangerouslySetInnerHTML={{__html: display}} 
                         />
 
@@ -56,7 +66,7 @@ var MarkdownAndPreviewAttrs = {
 
     updateContent: function(evt) {
         var input = evt.target.value;
-        var display = mdAndMathToHtml(input);
+        var display = md.mdAndMathToHtml(input);
         
         var state = {
             input: input,
@@ -64,11 +74,11 @@ var MarkdownAndPreviewAttrs = {
         };
 
         this.setState(state);
-        this.afterUpdateContent(state);
+        this.onContentUpdated(state);
     },
 
 
-    afterUpdateContent: function() {
+    onContentUpdated: function() {
         //console.warn("Implement afterUpdateContent in the subclass if you want to save the details" );
             //optional. Implement in subclass if you want to. 
     }

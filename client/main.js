@@ -15,6 +15,8 @@ var UserModel = models.UserModel;
 
 var MatrixViz = require("./app/matrixviz/js/visualize");
 
+var Concept = require("./app/concept/js/api");
+
 require("csrf");
 
 var Router = Backbone.Router.extend({
@@ -25,11 +27,18 @@ var Router = Backbone.Router.extend({
     },
     
     routes: {
+        "creator/concept": "createConcept",
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
         "": "matrixviz",
         "login": "gotoLogin",
-        "matrixviz": "matrixviz"
+        "matrixviz": "matrixviz",
+    },
+
+    createConcept: function() {
+        this.resetPage();
+        Concept.render(this.pageElement);
+        this.currentComponent = Concept;
     },
     
     matrixviz: function() {
@@ -60,8 +69,11 @@ var Router = Backbone.Router.extend({
             this.pageElement.remove();
         }
         var page = document.createElement("div");
-        page.setAttribute("id", "page");
-        document.body.appendChild(page);
+        page.setAttribute("id", "page-content");
+        page.setAttribute("class", "container");
+
+        var pageFull = document.getElementById("page-full");
+        pageFull.appendChild(page);
         this.pageElement = page;
     },
 
@@ -106,11 +118,11 @@ var Router = Backbone.Router.extend({
 
 var init = function() {
 
-    var router = new Router({userModel: userModel});
-    Backbone.history.start({pushState: false});
-    return;
+
     var userModel = new UserModel();
     userModel.fetch().then(function() {
+        var router = new Router({userModel: userModel});
+        Backbone.history.start({pushState: false});
         console.log(userModel.toJSON());
 
     });
