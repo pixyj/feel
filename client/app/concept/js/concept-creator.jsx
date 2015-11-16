@@ -103,6 +103,14 @@ var VideoSectionComponent = React.createClass({
 
     render: function() {
 
+        var videoFrame;
+        if(this.state.url) {
+            videoFrame = <iframe width="560" height="315" src={this.state.url} frameborder="0" allowfullscreen></iframe>
+        }
+        else {
+            videoFrame = <h5>Enter URL to see your video</h5>
+        }
+
         return (
             <div className="row concept-creator-section">
                 
@@ -114,8 +122,8 @@ var VideoSectionComponent = React.createClass({
                         onKeyUp={this.updateURL}
                         onChange={this.updateURL} /> 
 
-                <iframe width="560" height="315" src={this.state.url} frameborder="0" allowfullscreen></iframe>
-
+                {videoFrame}
+                
             </div>
         );
         
@@ -135,7 +143,11 @@ var SECTION_TYPES_AND_COMPONENTS = {
     MARKDOWN: {
         type: 1,
         component: MarkdownSectionComponent,
-        name: "Markdown Section"
+        name: "Markdown Section",
+        blankState: {
+            input: "",
+            display: ""
+        }
     },
 
     QUIZ: {
@@ -147,7 +159,10 @@ var SECTION_TYPES_AND_COMPONENTS = {
     VIDEO: {
         type: 3,
         component: VideoSectionComponent,
-        name: "Video"
+        name: "Video",
+        blankState: {
+            url: ""
+        }
     },
     
     VISUALIZATION: {
@@ -191,12 +206,12 @@ app.state = {
                 display: "<p>hi</p>"
             }
         },
-        {
-            type: SECTION_TYPES_AND_COMPONENTS.VIDEO.type,
-            state: {
-                url: "https://www.youtube.com/embed/MCs5OvhV9S4"
-            }
-        }
+        // {
+        //     type: SECTION_TYPES_AND_COMPONENTS.VIDEO.type,
+        //     state: {
+        //         url: "https://www.youtube.com/embed/MCs5OvhV9S4"
+        //     }
+        // }
     ],
 
 };
@@ -212,8 +227,12 @@ var AddSectionComponent = React.createClass({
         var length = SECTIONS_SORTED_BY_TYPE.length;
         for(var i = 0; i < length; i++) {
             var text = "Add " + sections[i].name;
-            var button = <div className="col-md-3" key={i}> 
-                            <button className="btn waves-effect">{text}</button> 
+            var button = <div className="col-md-3" key={i} > 
+                            <button 
+                                className="btn waves-effect"
+                                data-section-type={sections[i].type}
+                                onClick={this.addSection}>{text}
+                            </button> 
                          </div>
             buttons.push(button);
         }
@@ -224,6 +243,13 @@ var AddSectionComponent = React.createClass({
                 {buttons}
             </div>
         );
+    },
+
+    addSection: function(evt) {
+        console.log(evt);
+        var sectionType = parseInt(evt.target.getAttribute("data-section-type"));
+        var section = SECTIONS_SORTED_BY_TYPE[sectionType-1];
+        this.props.parent.addSection(section);
     }
 
 });
@@ -236,15 +262,13 @@ var PageComponent = React.createClass({
 
     render: function() {
 
-        var x = 1;
-
         var sections = this.state.sections;
         var length = this.state.sections.length;
         var components = [];
         for(var i = 0; i < length; i++) {
             var section = sections[i];
             var ComponentClass = SECTION_COMPONENTS_BY_TYPE[section.type];
-            var component = <ComponentClass data={section} key={i} />
+            var component = <ComponentClass data={section} key={i} parent={this} />
             components.push(component);
         }
 
@@ -254,11 +278,18 @@ var PageComponent = React.createClass({
 
                 <ConceptNameSectionComponent />
                 {components}
-                <AddSectionComponent />
+                <AddSectionComponent parent={this} />
             </div>
         );
-    }
+    },
 
+    addSection: function(section) {
+        app.state.sections.push({
+            type: section.type,
+            state: _.clone(section.blankState)
+        });
+        this.setState(app.state);
+    },
 
 });
 
