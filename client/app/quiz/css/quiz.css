@@ -129,7 +129,6 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 #quiz-filter-modal, #quiz-creator-modal {
-    top: 5%;
     width: 92%;
     max-height: 92%;
 }

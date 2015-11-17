@@ -66,11 +66,12 @@ var QuizFilterComponent = React.createClass({
     componentDidMount: function() {
         this.init();
 
-        this.$modal = $("#quiz-filter-modal");
         //we'll manage dismissing manually since materialize leaks events
-        this.$modal.openModal({
-            dismissible: false 
+        this.$modal = $("#quiz-filter-modal").openModal({
+            top: "5%",
+            dismissible: false
         });
+
         
         var self = this;
         $(".lean-overlay").click(function() {

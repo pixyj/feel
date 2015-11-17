@@ -496,7 +496,8 @@ var QuizCreatorModalComponent = React.createClass({
         this.$modal = $("#quiz-creator-modal");
         //we'll manage dismissing manually since materialize leaks events
         this.$modal.openModal({
-            dismissible: false 
+            dismissible: false,
+            top: "5%"
         });
         
         var self = this;
