@@ -13,7 +13,7 @@ var visualize = require("./../../matrixviz/js/api");
 var matrixMultiply = visualize.matrixMultiply;
 
 var QuizList = require("./../../quiz/js/quiz-list.jsx");
-var QuizListComponent = QuizList.QuizListComponent;
+var QuizFilterComponent = QuizList.QuizFilterComponent;
 
 
 
@@ -183,14 +183,14 @@ var VisualizationSectionComponent = React.createClass({
 var QuizSectionComponent = React.createClass({
 
     componentDidMount: function() {
-        this.refs.quizList.init();
+        this.refs.quizFilter.init();
     },
 
     render: function() {
         return (
             <div className="row concept-creator-section concept-creator-quiz-section">
                 <SectionHeadingComponent sectionName="Quiz Section" />
-                <QuizListComponent ref="quizList" />
+                <QuizFilterComponent ref="quizFilter" />
             </div>
         );
     }

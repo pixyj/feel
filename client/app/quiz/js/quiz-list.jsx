@@ -31,7 +31,7 @@ var QuizSnippetView = React.createClass({
     }
 });
 
-var QuizListComponent = React.createClass({
+var QuizFilterComponent = React.createClass({
 
     getInitialState: function() {
 
@@ -111,7 +111,7 @@ var QuizListComponent = React.createClass({
 });
 
 module.exports = {
-    QuizListComponent: QuizListComponent
+    QuizFilterComponent: QuizFilterComponent
 };
 
 

@@ -123,6 +123,11 @@ input[type=range]::-webkit-slider-thumb {
     margin-left: 10px;
 }
 
+.quiz-filter-items {
+    height: 30em;
+    overflow: scroll;
+}
+
 /* Problem solving page css 
 
 Eventually, I'll make new css files for each component/page
