@@ -225,8 +225,9 @@ var QuizSectionComponent = React.createClass({
             <div className="row concept-creator-section concept-creator-quiz-section">
 
                 <SectionHeadingComponent sectionName="Quiz Section" />
-                
-                {components}
+                <div className="collection">
+                    {components}
+                </div>
 
                 {quizFilterComponent}
 
