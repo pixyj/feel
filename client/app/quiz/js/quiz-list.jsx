@@ -35,13 +35,15 @@ var QuizSelectComponent = React.createClass({
     render: function() {
         var createdAtDisplay = utils.prettyDate(utils.getUTCDate(new Date(this.props.createdAt)));
         return (
-            <div className="collection-item quiz-filter-question"> 
-                <div
-                    dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} 
-                    onClick={this.selectQuiz} />
-                <p className="created-at">Created {createdAtDisplay} </p>
+            <div className="collection-item quiz-filter-question"
+                 onClick={this.selectQuiz}> 
+
+                    <div
+                        dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} />
+                    <p className="created-at">Created {createdAtDisplay} </p>
+
             </div>
-        )
+        );
     },
 
     selectQuiz: function() {
