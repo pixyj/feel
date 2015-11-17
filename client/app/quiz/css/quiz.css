@@ -128,7 +128,7 @@ input[type=range]::-webkit-slider-thumb {
     overflow: scroll;
 }
 
-#quiz-filter-modal {
+#quiz-filter-modal, #quiz-creator-modal {
     top: 5%;
     width: 92%;
     max-height: 92%;

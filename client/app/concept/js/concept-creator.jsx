@@ -16,6 +16,9 @@ var QuizList = require("./../../quiz/js/quiz-list.jsx");
 var QuizFilterComponent = QuizList.QuizFilterComponent;
 var QuizSnippetComponent = QuizList.QuizSnippetComponent;
 
+var QuizCreator = require("./../../quiz/js/quiz-creator-view.jsx");
+var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
+
 
 var PreviewComponent = React.createClass({
 
@@ -184,7 +187,8 @@ var QuizSectionComponent = React.createClass({
     getInitialState: function() {
         var attrs = _.clone(this.props.data.state);
         return _.extend(attrs, {
-            showQuizFilter: false    
+            showQuizFilter: false,
+            showQuizCreator: false
         });
     },
 
@@ -221,6 +225,14 @@ var QuizSectionComponent = React.createClass({
             quizFilterComponent = <div></div>
         }
 
+        var quizCreatorComponent; 
+        if(this.state.showQuizCreator) {
+            quizCreatorComponent = <QuizCreatorModalComponent ref="quizCreator" parent={this} />
+        }
+        else {
+            quizCreatorComponent = <div></div>
+        }
+
         return (
             <div className="row concept-creator-section concept-creator-quiz-section">
 
@@ -230,11 +242,23 @@ var QuizSectionComponent = React.createClass({
                 </div>
 
                 {quizFilterComponent}
+                {quizCreatorComponent}
 
-                <button className="btn btn-large waves-effect" 
-                        onClick={this.showQuizFilter}>
-                        Add Quiz
-                </button>
+                <div className="row">
+                    <div className="col-md-4">
+                        <button className="btn btn-large waves-effect" 
+                                onClick={this.showQuizFilter}>
+                                Add Existing Quiz
+                        </button>
+                    </div>
+                    <div className="col-md-4">
+                        <button className="btn btn-large waves-effect" 
+                                onClick={this.showQuizCreator}>
+                                Create Quiz
+                        </button>
+                    </div>
+
+                </div>
 
             </div>
         );
@@ -249,6 +273,18 @@ var QuizSectionComponent = React.createClass({
     removeQuizFilter: function() {
         this.setState({
             showQuizFilter: false
+        });
+    },
+
+    showQuizCreator: function() {
+        this.setState({
+            showQuizCreator: true
+        });
+    },
+
+    removeQuizCreator: function() {
+        this.setState({
+            showQuizCreator: false
         });
     },
 

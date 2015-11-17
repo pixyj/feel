@@ -442,6 +442,7 @@ QuizStore.prototype = {
     },
 
     setRoute: function() {
+        return;
         var quizId = this._model.attributes.id;
         var fragment = Backbone.history.getFragment();
         var fragmentNew = "{0}/{1}".format(fragment, quizId);
@@ -477,6 +478,58 @@ QuizSubmitStore.prototype = {
 
 QuizSubmitStore.prototype.constructor = QuizSubmitStore;
 
+var QuizCreatorModalComponent = React.createClass({
+
+    componentWillMount: function() {
+        
+        this.store = new QuizStore({
+            quizId: null
+        });
+
+        this.submitStore = new QuizSubmitStore({
+            quizStore: this.store
+        });
+    },
+
+    componentDidMount: function() {
+
+        this.$modal = $("#quiz-creator-modal");
+        //we'll manage dismissing manually since materialize leaks events
+        this.$modal.openModal({
+            dismissible: false 
+        });
+        
+        var self = this;
+        $(".lean-overlay").click(function() {
+            self.props.parent.removeQuizCreator();
+            $(this).off();
+            $(this).remove();
+        });
+
+        var handleEspaceKeyPress = function(evt) {
+            console.info("keyup leanModal", utils.getUniqueId());
+            if(evt.keyCode === 27) {
+                self.props.parent.removeQuizCreator();
+                $(".lean-overlay").remove();
+                $(document).off("keyup.leanModal");
+            }
+
+        };
+        $(document).on('keyup.leanModal', handleEspaceKeyPress);
+
+    },
+
+    render: function() {
+
+        return (
+            <div className="modal" id="quiz-creator-modal">
+                <div className="modal-content">
+                    <QuizBox store={this.store} submitStore={this.submitStore} />
+                </div>
+            </div>
+        );
+    }
+});
 
 var render = function(element, options) {
 
@@ -510,7 +563,8 @@ var unmount = function(element) {
 
 module.exports = {
     render: render,
-    unmount: unmount
+    unmount: unmount,
+    QuizCreatorModalComponent: QuizCreatorModalComponent
 }
 
 
