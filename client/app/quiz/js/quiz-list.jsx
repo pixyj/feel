@@ -12,7 +12,7 @@ var app = {
     collection: new QuizBankCollection()
 };
 
-var QuizSnippetView = React.createClass({
+var QuizSnippetComponent = React.createClass({
 
     render: function() {
         var createdAtDisplay = utils.prettyDate(utils.getUTCDate(new Date(this.props.createdAt)));
@@ -48,7 +48,7 @@ var QuizFilterComponent = React.createClass({
         var length = this.state.quizzes.length;
         for(var i = 0; i < length; i++) {
             var attrs = this.state.quizzes[i];
-            var view = <QuizSnippetView questionDisplay={attrs.questionDisplay} 
+            var view = <QuizSnippetComponent questionDisplay={attrs.questionDisplay} 
                                         key={i}
                                         createdAt={attrs.createdAt} />
             rows.push(view); 
@@ -111,22 +111,8 @@ var QuizFilterComponent = React.createClass({
 });
 
 module.exports = {
-    QuizFilterComponent: QuizFilterComponent
+    QuizFilterComponent: QuizFilterComponent,
+    QuizSnippetComponent: QuizSnippetComponent
 };
 
-
-var cacheQuizInputsAndRenderPage = function() {
-    app.collection.cacheQuizInputs();
-    ReactDOM.render(
-        <QuizListBox />, 
-        document.getElementById("quiz-list-container")
-    );
-};
-
-
-var init = function() {
-
-    fetchQuizzes();
-
-};
 
