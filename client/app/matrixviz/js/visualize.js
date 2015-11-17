@@ -706,19 +706,46 @@ var InputOptionsView = Backbone.View.extend({
     },
 
     onVisualizeClicked: function(evt) {
-        this.options.visualize(this.getState());
+        var callback = this.options.visualize.callback;
+        var context = this.options.visualize.context;
+        callback.call(context, this.getState());
     },
 });
 
-app.gridView = null;
+var VisualizeView = Backbone.View.extend({
 
-var visualize = function(inputState) {
-    
-    console.log(inputState);
-    if(app.gridView !== null) {
-        app.gridView.remove();
+});
+
+var ContainerView = Backbone.View.extend({
+
+    initialize: function() {
+
+    },
+
+    render: function() {
+
+        this.inputOptionsView = new InputOptionsView({
+            visualize: {
+                callback: this.renderVisualization,
+                context: this
+            }
+        });
+        this.inputOptionsView.render();
+
+        this.visualizationEl = $("<div>");
+        this.$el.append(this.inputOptionsView.$el).append(this.visualizationEl);
+        return this;
+    },
+
+    renderVisualization: function(inputState) {
+        this.visualizationEl.empty();
+        visualize(inputState, this.visualizationEl);
+
     }
+});
 
+var visualize = function(inputState, parent) {
+    
     var a = range(-1, 1, 0.2);
     if(inputState.shape === "rect") {
         axb = cartesianProduct(a, a);
@@ -739,73 +766,23 @@ var visualize = function(inputState) {
         maxPlotsPerRow: 2,
         plots: [Input.elements, Result.elements],
         colors: getColorsArray(axb.length * axb[0].length)
-    };
-    app.gridView = new SvgGridView(options);
+    };   
 
-    var y = app.gridContainer.offset().top;
+
+    var y = parent.offset().top;
     console.log("scrollTo: ", y);
-    app.gridContainer.append(app.gridView.$el);
-    app.gridView.render();
     window.scrollTo(0, Math.floor(y));
-    
+
+    var gridView = new SvgGridView(options);
+    parent.append(gridView.$el);
+    gridView.render();
+
 };
 
 var render = function() {
-
-    var inputOptionsView = new InputOptionsView({
-        visualize: visualize
-    });
-
-    app.gridContainer = $("<div>");
-    $("#svg-container").append(inputOptionsView.$el).append(app.gridContainer);
-    inputOptionsView.render();
-
-    window.app = app;
+    var containerView = new ContainerView();
+    return containerView;
 };
-
-
-var ok = function() {
-    //initColors();
-
-    console.log("hi there sylvester");
-   
-
-    var a = range(-1, 1, 0.2);
-    var axb = cartesianProduct(a, a);
-
-    //var axb = concentricCircles(200, 5, 5);
-
-    //console.table(axb);
-    var m = [[0.7071, 0.7071], [0.2, 0.7071]]
-    var two = $M(axb);
-    var one = $M(m);
-    var one_inverse = one.inverse();
-    var result = two.multiply(one).elements;
-    var three = two.multiply(one_inverse).elements;
-    
-    var gridView = new SvgGridView({
-        height: 600,
-        renderAxes: false,
-        plots: [two.elements, result],
-        colors: getColorsArray(axb.length * axb[0].length),
-        maxPlotsPerRow: 2,
-        timeout: 0,
-        renderOnResize: false
-    });
-
-    var optionsView = new InputOptionsView({});
-    $("#svg-container").append(optionsView.$el);
-    optionsView.render();
-
-    $("#svg-container").append(gridView.$el);
-    gridView.render();
-
-    window.S = S;
-    window.axb = axb;
-    window.ov = optionsView;
-    //console.table(result);
-}
-
 
 module.exports = {
     render: render

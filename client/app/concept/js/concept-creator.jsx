@@ -1,6 +1,7 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
 
+
 var _ = require("underscore");
 var Backbone = require("backbone");
 
@@ -8,7 +9,11 @@ var utils = require("utils");
 var tags = require("tags.jsx");
 var md = require("md");
 
+
 var MarkdownAndPreviewMixin = require("markdown-and-preview.jsx").MarkdownAndPreviewAttrs;
+
+var visualize = require("./../../matrixviz/js/api");
+var matrixMultiply = visualize.matrixMultiply
 
 var PreviewComponent = React.createClass({
 
@@ -108,7 +113,7 @@ var VideoSectionComponent = React.createClass({
             videoFrame = <iframe width="560" height="315" src={this.state.url} frameborder="0" allowfullscreen></iframe>
         }
         else {
-            videoFrame = <h5>Enter URL to see your video</h5>
+            videoFrame = <h5>Enter the embed URL to see your video</h5>
         }
 
         return (
@@ -136,6 +141,32 @@ var VideoSectionComponent = React.createClass({
             url: value
         });
     },
+});
+
+var VisualizationSectionComponent = React.createClass({
+
+    componentDidMount: function() {
+        var view = matrixMultiply.render();
+        this.refs.content.appendChild(view.$el[0]);
+        view.render();
+    },
+
+    componentWillUnmount: function() {
+
+    },
+
+    render: function() {
+
+        return (
+            <div className="row concept-creator-section">
+                
+                <SectionHeadingComponent sectionName="Visualization" />
+                <div ref="content"> </div>
+                
+            </div>
+        );
+
+    }
 });
 
 var SECTION_TYPES_AND_COMPONENTS = {
@@ -167,8 +198,11 @@ var SECTION_TYPES_AND_COMPONENTS = {
     
     VISUALIZATION: {
         type: 4,
-        component: null,
-        name: "Visualization"
+        component: VisualizationSectionComponent,
+        name: "Visualization",
+        blankState: {
+
+        }
     }
 };
 
