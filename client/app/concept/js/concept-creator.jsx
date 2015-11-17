@@ -14,7 +14,7 @@ var matrixMultiply = visualize.matrixMultiply;
 
 var QuizList = require("./../../quiz/js/quiz-list.jsx");
 var QuizFilterComponent = QuizList.QuizFilterComponent;
-
+var QuizSnippetComponent = QuizList.QuizSnippetComponent;
 
 
 var PreviewComponent = React.createClass({
@@ -100,7 +100,6 @@ var MarkdownComponent = React.createClass(MarkdownComponentMixin);
 
 var MarkdownSectionComponent = React.createClass({
 
-
     render: function() {
         return (
             <div className="row concept-creator-section">
@@ -151,7 +150,7 @@ var VideoSectionComponent = React.createClass({
         this.setState({
             url: value
         });
-    },
+    }
 });
 
 var VisualizationSectionComponent = React.createClass({
@@ -182,17 +181,86 @@ var VisualizationSectionComponent = React.createClass({
 
 var QuizSectionComponent = React.createClass({
 
+    getInitialState: function() {
+        var attrs = _.clone(this.props.data.state);
+        return _.extend(attrs, {
+            showQuizFilter: false    
+        });
+    },
+
     componentDidMount: function() {
-        this.refs.quizFilter.init();
+        
     },
 
     render: function() {
+        var quizzes = this.state.quizzes;
+        var length = quizzes.length;
+
+        var components = []; 
+        if(length) {
+            for(var i = 0; i < length; i++) {
+                var quiz = quizzes[i];
+
+                var view =  <QuizSnippetComponent 
+                                key={i}
+                                quiz={quiz} /> 
+
+                components.push(view);
+            }
+
+        }
+        else {
+            components = <h5>You have not added any quizzes yet</h5>            
+        }
+
+        var quizFilterComponent; 
+        if(this.state.showQuizFilter) {
+            quizFilterComponent = <QuizFilterComponent ref="quizFilter" parent={this} />
+        }
+        else {
+            quizFilterComponent = <div></div>
+        }
+
         return (
             <div className="row concept-creator-section concept-creator-quiz-section">
+
                 <SectionHeadingComponent sectionName="Quiz Section" />
-                <QuizFilterComponent ref="quizFilter" />
+                
+                {components}
+
+                {quizFilterComponent}
+
+                <button className="btn btn-large waves-effect" 
+                        onClick={this.showQuizFilter}>
+                        Add Quiz
+                </button>
+
             </div>
         );
+    },
+
+    showQuizFilter: function() {
+        this.setState({
+            showQuizFilter: true
+        });
+    },
+
+    removeQuizFilter: function() {
+        this.setState({
+            showQuizFilter: false
+        });
+    },
+
+    selectQuiz: function(quiz) {
+        
+        var quizzes = _.clone(this.state.quizzes);
+        quizzes.push(quiz);
+        var uniqueQuizzes = _.uniq(quizzes);
+
+        this.setState({
+            quizzes: uniqueQuizzes,
+            showQuizFilter: false
+        });
     }
 
 });
@@ -212,7 +280,10 @@ var SECTION_TYPES_AND_COMPONENTS = {
     QUIZ: {
         type: 2,
         component: QuizSectionComponent,
-        name: "Quiz Section"
+        name: "Quiz Section",
+        blankState: {
+            quizzes: []
+        }
     },
     
     VIDEO: {
@@ -256,28 +327,29 @@ var SECTIONS_SORTED_BY_TYPE = function() {
 
 var app = {};
 
-
-
 app.state = {
 
     conceptName: "Matrix Multiplication",
 
     sections: [
+
+        {
+            type: SECTION_TYPES_AND_COMPONENTS.QUIZ.type,
+            state: {
+                quizzes: [
+
+                ]
+            }
+        },
+
         {
             type: SECTION_TYPES_AND_COMPONENTS.MARKDOWN.type,
             state: {
                 input: "hi",
                 display: "<p>hi</p>"
             }
-        },
-        // {
-        //     type: SECTION_TYPES_AND_COMPONENTS.VIDEO.type,
-        //     state: {
-        //         url: "https://www.youtube.com/embed/MCs5OvhV9S4"
-        //     }
-        // }
-    ],
-
+        }
+    ]
 };
 
 window.app = app;
@@ -356,7 +428,6 @@ var PageComponent = React.createClass({
     },
 
 });
-
 
 
 var render = function(element) {

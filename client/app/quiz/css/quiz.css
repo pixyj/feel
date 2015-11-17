@@ -128,6 +128,12 @@ input[type=range]::-webkit-slider-thumb {
     overflow: scroll;
 }
 
+#quiz-filter-modal {
+    top: 5%;
+    width: 92%;
+    max-height: 92%;
+}
+
 /* Problem solving page css 
 
 Eventually, I'll make new css files for each component/page
