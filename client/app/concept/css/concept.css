@@ -7,11 +7,14 @@
 
 .concept-creator-add-section {
     margin-top: 2rem;
-    margin-bottom: 5rem;
 }
 
 .concept-creator-add-section button {
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
+    width: 100%;
 }
+
+#concept-creator-preview-section {
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+}
+    

@@ -22,8 +22,17 @@ var PreviewComponent = React.createClass({
     render: function() {
         
         return (
-            <div className="row">
-                <button className="btn btn-large waves-effect">Preview: See how the page appears to students </button>
+            <div className="row" id="concept-creator-preview-section">
+
+                <div className="col-md-3">
+                </div>
+
+                <div className="col-md-6">
+                    <button className="btn btn-large waves-effect">Preview: See how the page appears to students </button>
+                </div>
+
+                <div className="col-md-3">
+                </div>
             </div>
         );
     }   
@@ -329,11 +338,11 @@ var PageComponent = React.createClass({
 
         return (
             <div>
-                <PreviewComponent />
-
                 <ConceptNameSectionComponent />
                 {components}
                 <AddSectionComponent parent={this} />
+
+                <PreviewComponent />
             </div>
         );
     },
