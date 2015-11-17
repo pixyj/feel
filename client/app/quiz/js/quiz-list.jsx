@@ -20,7 +20,7 @@ var QuizSnippetComponent = React.createClass({
     render: function() {
         var quiz = this.props.quiz;
         return (
-            <div className="quiz-snippet"> 
+            <div className="quiz-snippet collection-item"> 
                 <div
                     dangerouslySetInnerHTML={{__html: quiz.questionDisplay}} 
                     onClick={this.selectQuiz} />
@@ -67,12 +67,29 @@ var QuizFilterComponent = React.createClass({
         this.init();
 
         this.$modal = $("#quiz-filter-modal");
-        this.$modal.openModal();
-
+        //we'll manage dismissing manually since materialize leaks events
+        this.$modal.openModal({
+            dismissible: false 
+        });
+        
         var self = this;
         $(".lean-overlay").click(function() {
             self.props.parent.removeQuizFilter();
+            $(this).off();
+            $(this).remove();
         });
+
+        var handleEspaceKeyPress = function(evt) {
+            console.info("keyup leanModal", utils.getUniqueId());
+            if(evt.keyCode === 27) {
+                self.props.parent.removeQuizFilter();
+                $(".lean-overlay").remove();
+                $(document).off("keyup.leanModal");
+            }
+
+        };
+        $(document).on('keyup.leanModal', handleEspaceKeyPress);
+
     },
 
     init: function() {
