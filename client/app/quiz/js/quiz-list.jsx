@@ -1,3 +1,13 @@
+var React = require("react");
+var ReactDOM = require("react-dom");
+
+var _ = require("underscore");
+
+var utils = require("utils");
+
+var models = require("./models");
+var QuizBankCollection = models.QuizBankCollection;
+
 var app = {
     collection: new QuizBankCollection()
 };
@@ -5,7 +15,7 @@ var app = {
 var QuizSnippetView = React.createClass({
 
     render: function() {
-        var createdAtDisplay = prettyDate(getUTCDate(new Date(this.props.createdAt)));
+        var createdAtDisplay = utils.prettyDate(utils.getUTCDate(new Date(this.props.createdAt)));
         return (
             <div className="collection-item quiz-filter-question"> 
                 <div
@@ -21,12 +31,12 @@ var QuizSnippetView = React.createClass({
     }
 });
 
-var QuizListBox = React.createClass({
+var QuizListComponent = React.createClass({
 
     getInitialState: function() {
 
         return {
-            quizzes: app.collection.getCachedQuizzes(),
+            quizzes: [],
             filterInput: ""
         };
 
@@ -44,7 +54,7 @@ var QuizListBox = React.createClass({
             rows.push(view); 
         };
 
-        var inputId = "input-" + getUniqueId();
+        var inputId = "input-" + utils.getUniqueId();
 
         return (
             <div className="card">
@@ -57,7 +67,7 @@ var QuizListBox = React.createClass({
                             onChange={this.filterQuizzes} />
                     <label htmlFor={inputId}>Filter Questions</label>
                 </div>
-                <div className="collection">
+                <div className="collection quiz-filter-items">
                     {rows}
                 </div>
             </div>
@@ -84,22 +94,35 @@ var QuizListBox = React.createClass({
                 filterInput: value
             });    
         }
-    }
+    },
 
+    init: function() {
+        app.collection.once("sync", this._cacheQuizInputsAndRender);
+        app.collection.fetch();
+    },
+
+    _cacheQuizInputsAndRender: function() {
+        app.collection.cacheQuizInputs();
+        this.setState({
+            quizzes: app.collection.getCachedQuizzes(),
+            filterInput: ""
+        });
+    }
 });
+
+module.exports = {
+    QuizListComponent: QuizListComponent
+};
+
 
 var cacheQuizInputsAndRenderPage = function() {
     app.collection.cacheQuizInputs();
-    React.render(
+    ReactDOM.render(
         <QuizListBox />, 
         document.getElementById("quiz-list-container")
     );
 };
 
-var fetchQuizzes = function() {
-    app.collection.once("sync", this.cacheQuizInputsAndRenderPage);
-    app.collection.fetch();
-};
 
 var init = function() {
 
@@ -107,4 +130,3 @@ var init = function() {
 
 };
 
-init();

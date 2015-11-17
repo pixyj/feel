@@ -129,7 +129,7 @@ var QuizBankCollection = Backbone.Collection.extend({
     },
 
     getCachedQuizzes: function() {
-        return this._cachedQuizzes;
+        return this._cachedQuizzes || [];
     }
 
 });

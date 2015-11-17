@@ -1,19 +1,21 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
 
-
 var _ = require("underscore");
 var Backbone = require("backbone");
 
 var utils = require("utils");
 var tags = require("tags.jsx");
 var md = require("md");
-
-
 var MarkdownAndPreviewMixin = require("markdown-and-preview.jsx").MarkdownAndPreviewAttrs;
 
 var visualize = require("./../../matrixviz/js/api");
-var matrixMultiply = visualize.matrixMultiply
+var matrixMultiply = visualize.matrixMultiply;
+
+var QuizList = require("./../../quiz/js/quiz-list.jsx");
+var QuizListComponent = QuizList.QuizListComponent;
+
+
 
 var PreviewComponent = React.createClass({
 
@@ -169,6 +171,23 @@ var VisualizationSectionComponent = React.createClass({
     }
 });
 
+var QuizSectionComponent = React.createClass({
+
+    componentDidMount: function() {
+        this.refs.quizList.init();
+    },
+
+    render: function() {
+        return (
+            <div className="row concept-creator-section concept-creator-quiz-section">
+                <SectionHeadingComponent sectionName="Quiz Section" />
+                <QuizListComponent ref="quizList" />
+            </div>
+        );
+    }
+
+});
+
 var SECTION_TYPES_AND_COMPONENTS = {
     
     MARKDOWN: {
@@ -183,7 +202,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
 
     QUIZ: {
         type: 2,
-        component: null,
+        component: QuizSectionComponent,
         name: "Quiz Section"
     },
     
@@ -227,6 +246,8 @@ var SECTIONS_SORTED_BY_TYPE = function() {
 
 
 var app = {};
+
+
 
 app.state = {
 
