@@ -56,12 +56,13 @@ var QuizModel = Backbone.Model.extend({
     },
 
     initialize: function() {
-        this.setupWSConnection();
+        this.isWSConnectionSetup = false;
     },
 
     //todo -> handle error cases, retries
     setupWSConnection: function() {
         this.connection = new WebSocket('ws://localhost:7777/websocket');
+        this.isWSConnectionSetup = true;
         var self = this;
 
         this.connection.onmessage = function(message) {
@@ -98,6 +99,11 @@ var QuizModel = Backbone.Model.extend({
     },
 
     save: function() {
+
+        if(!this.isWSConnectionSetup) {
+            this.setupWSConnection();
+        }
+
         var message = {
             payload: this.toJSON(),
             url: this.url(),
