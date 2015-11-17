@@ -38,13 +38,8 @@ var prettyDate = function(utcDate) {
         return "Yesterday"
     }
 
-    else if(dayDiff < 7) {
-        return dayDiff + " days ago";
-    }
     else {
-        var weeksDiff = Math.floor(dayDiff);
-        return weeksDiff + " week{0} ago".format(weeksDiff > 1 ? "s": "");
-        return Math.floor(dayDiff / 7) + " weeks ago"
+        return dayDiff + " days ago";
     }
 };
 
