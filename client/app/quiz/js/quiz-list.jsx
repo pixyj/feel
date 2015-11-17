@@ -67,10 +67,11 @@ var QuizFilterComponent = React.createClass({
         this.init();
 
         //we'll manage dismissing manually since materialize leaks events
-        this.$modal = $("#quiz-filter-modal").openModal({
-            top: "5%",
-            dismissible: false
-        });
+        this.$modal = $("#quiz-filter-modal");
+        this.$modal.openModal({
+                        top: "5%",
+                        dismissible: false
+                    });
 
         
         var self = this;
