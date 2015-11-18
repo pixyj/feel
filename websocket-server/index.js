@@ -1,14 +1,22 @@
 var ws = require("ws");
 var request = require("request");
 
+// var scribe = require('scribe-js')();
+// var express = require("express");
+
+// var app = express();
+// app.use('\logs', scribe.webPanel());
+// app.listen(8080);
+// var console = process.console;
+
+
 var WebSocketServer = ws.Server;
 
 var wss = new WebSocketServer({port: 5000});
 
-
 var latestClientMessages = {};
 
-var clientTimers = {}
+var clientTimers = {};
 
 wss.on("connection", function(client) {
 
@@ -66,9 +74,21 @@ var saveMessage = function(client, stringMessage) {
         body: JSON.stringify(message.payload)
     }
 
+    //to minimize memory occupied by closure
+    _saveMessageImpl(client, options, requestMethod, message.url);
+};
+
+var _saveMessageImpl = function(client, options, requestMethod, url) {
+
     var callback = function(error, response, body) {
-        client.send(response.body);
+        var message = {
+            payload: response.body,
+            url: url
+        };
+        client.send(JSON.stringify(message));
     }
 
     requestMethod(options, callback);
-};
+}
+
+

@@ -18,6 +18,7 @@ var MatrixViz = require("./app/matrixviz/js/visualize");
 var Concept = require("./app/concept/js/api");
 
 require("csrf");
+require("app-websocket");
 
 var Router = Backbone.Router.extend({
 

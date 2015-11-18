@@ -1,6 +1,11 @@
 var _ = require("underscore");
 var Backbone = require("backbone");
+
 var md = require("md");
+var utils = require("utils");
+
+var appWebSocket = require("app-websocket");
+appWebSocket = appWebSocket.appWebSocket;
 
 var constants = {
     SHORT_ANSWER: 1,
@@ -55,28 +60,24 @@ var QuizModel = Backbone.Model.extend({
         tags: []
     },
 
+    idAttribute: "uuid",
+
     initialize: function() {
-        this.isWSConnectionSetup = false;
+        this._isNew = !this.attributes.uuid;
+        if(this._isNew) {
+            this.attributes.uuid = utils.uuid();
+        }
+        this._saved = true;
     },
 
-    //todo -> handle error cases, retries
-    setupWSConnection: function() {
-        this.connection = new WebSocket('ws://localhost:7777/websocket');
-        this.isWSConnectionSetup = true;
-        var self = this;
-
-        this.connection.onmessage = function(message) {
-            var attrs = JSON.parse(message.data);
-            self.attributes.id = attrs.id;
-            self.trigger("sync", self);
-            console.log("Saved quiz", message);
-        }
+    isNew: function() {
+        return this._isNew;
     },
 
     url: function() {
-        var baseURL = "/api/v1/quiz/";
-        if(this.attributes.id) {
-            return baseURL + this.attributes.id + "/";
+        var baseURL = "/api/v1/quizzes/";
+        if(this.attributes.uuid) {
+            return baseURL + this.attributes.uuid + "/";
         }
         else {
             return baseURL;
@@ -99,19 +100,19 @@ var QuizModel = Backbone.Model.extend({
     },
 
     save: function() {
-
-        if(!this.isWSConnectionSetup) {
-            this.setupWSConnection();
-        }
-
-        var message = {
+        this._saved = false;
+        appWebSocket.save({
             payload: this.toJSON(),
             url: this.url(),
-            httpMethod: this.isNew() ? "POST" : "PUT"
-        };
+            httpMethod: this.isNew() ? "POST": "PUT",
+            onSaved: this.onSaved,
+            context: this 
+        });
+        this._isNew = false;
+    },
 
-        console.log("Saving quiz", message);
-        this.connection.send(JSON.stringify(message));
+    onSaved: function() {
+        this._saved = true;
     }
 
 
