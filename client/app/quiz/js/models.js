@@ -67,7 +67,7 @@ var QuizModel = Backbone.Model.extend({
         if(this._isNew) {
             this.attributes.uuid = utils.uuid();
         }
-        this._saved = true;
+        this._isSaved = true;
     },
 
     isNew: function() {
@@ -100,7 +100,7 @@ var QuizModel = Backbone.Model.extend({
     },
 
     save: function() {
-        this._saved = false;
+        this._setIsSaved(false);
         appWebSocket.save({
             payload: this.toJSON(),
             url: this.url(),
@@ -112,7 +112,16 @@ var QuizModel = Backbone.Model.extend({
     },
 
     onSaved: function() {
-        this._saved = true;
+        console.log("Saved quiz");
+        this._setIsSaved(true);
+    },
+
+    _setIsSaved: function(status) {
+        if(this._isSaved !== status) {
+            this.trigger("change:isSaved", status);    
+        }
+        this._isSaved = status;
+
     }
 
 
@@ -123,7 +132,7 @@ var QuizBankCollection = Backbone.Collection.extend({
 
     model: QuizModel,
 
-    url: "/api/v1/quizzes",
+    url: "/api/v1/quizzes/",
 
     //I can use the parse method providied by Backbone. But I want to explicit now. 
     //Todo -> remove <math> and ---- and other markdown stuff. Or filter it in input.

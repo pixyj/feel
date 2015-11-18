@@ -268,6 +268,33 @@ var ChoiceCollectionInputView = React.createClass({
     }
 });
 
+var QuizSaveStatusComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            isSaved: true
+        }
+    },
+
+    componentDidMount: function() {
+        this.props.store.on("change:isSaved", this.updateIsSaved, this);
+    },
+
+
+
+    render: function() {
+        var message = this.state.isSaved ? "Saved" : "Saving..."
+        return (
+            <span className="save-status badge">{message}</span>
+        )
+    },
+
+    updateIsSaved: function(status) {
+        this.setState({
+            isSaved: status
+        });
+    }
+});
 
 var QuizCreatorView = React.createClass({
 
@@ -286,6 +313,7 @@ var QuizCreatorView = React.createClass({
         return (
             <div>
                 <h4 className="quiz-creator-input-heading">Quiz</h4>
+                <QuizSaveStatusComponent store={this.props.store} />
                 <textarea className="quiz-creator-question-input" 
                           placeholder={constants.QUESTION_PLACEHOLDER} 
                           onChange={this.updateQuestionText} 
@@ -293,9 +321,6 @@ var QuizCreatorView = React.createClass({
 
                 <TagListBaseView store={this.props.store} />
                 {answerInputView}
-
-
-               
 
                 <button className="quiz-creator-mcq-toggle-button btn" onClick={this.toggleQuizType}>{toggleMessage}</button>
                 
@@ -308,7 +333,7 @@ var QuizCreatorView = React.createClass({
         var html = md.mdAndMathToHtml(input);
 
         //console.log(html);
-        console.log("updating questionText");
+        //console.log("updating questionText");
         this.props.store.setState({
             questionInput: input,
             questionDisplay: html
@@ -397,6 +422,8 @@ var QuizStore = function(options) {
         //this._dispatcher = options.dispatcher;
         this._model.once("sync", this.setRoute, this);
     }
+
+    this._model.on("change:isSaved", this.onModelSaveStatusChanged, this);
 };
 
 QuizStore.prototype = {
@@ -406,7 +433,7 @@ QuizStore.prototype = {
         this._model.set(state);
 
         this.trigger("change", this._model.toJSON());
-        console.log("Setting state");
+        //console.log("Setting state");
         this._model.save();
     },
 
@@ -460,6 +487,10 @@ QuizStore.prototype = {
 
     onFetched: function() {
         this._setAttrs(this._model.toJSON());
+    },
+
+    onModelSaveStatusChanged: function(status) {
+        this.trigger("change:isSaved", status);
     }
 };
 
@@ -508,7 +539,7 @@ var QuizCreatorModalComponent = React.createClass({
         });
 
         var handleEspaceKeyPress = function(evt) {
-            console.info("keyup leanModal", utils.getUniqueId());
+            //console.info("keyup leanModal", utils.getUniqueId());
             if(evt.keyCode === 27) {
                 self.props.parent.removeQuizCreator();
                 $(".lean-overlay").remove();

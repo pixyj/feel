@@ -1,6 +1,9 @@
 var utils = require("utils");
 var _ = require("underscore");
 
+
+var csrfToken = require("csrf").csrfToken;
+
 var CONNECTING = 0;
 var OPEN = 1;
 var CLOSING = 2;
@@ -28,16 +31,11 @@ AppWebSocket.prototype = {
         var url = attrs.url;
         var httpMethod = attrs.httpMethod;
 
-        if(!this._isConnectionActive()) {
-            //todo -> handle this case. Maybe by opening a new connection?
-            console.error("Connection not opened");
-            return;
-        }
-
         var data = {
             payload: payload,
             url: url,
-            httpMethod: httpMethod
+            httpMethod: httpMethod,
+            csrfToken: csrfToken
         };
 
         var callbackAttrs = {
@@ -45,13 +43,26 @@ AppWebSocket.prototype = {
             context:  context
         };
 
-        if(this.connection.readyState === CONNECTING) {
+        if(!this._isConnectionActive()) {
+            var messageAttrs = _.extend(data, callbackAttrs);
+            this.unsentMessages.push(messageAttrs);
+            this._open();
+            
+        }
+
+        else if(this.connection.readyState === CONNECTING) {
             var messageAttrs = _.extend(data, callbackAttrs);
             this.unsentMessages.push(messageAttrs);
         }
+        
         else {
             var message = JSON.stringify(data);
-            this.unacknowledgedMessagesByURL[data.url] = callbackAttrs;
+            var arr = this.unacknowledgedMessagesByURL[data.url];
+            if(!arr) {
+                arr = [];
+                this.unacknowledgedMessagesByURL[data.url] = arr;
+            }
+            arr.push(callbackAttrs);
             this.connection.send(message);
         }
 
@@ -96,14 +107,18 @@ AppWebSocket.prototype = {
             var data = JSON.parse(message.data);
             var payload = data.payload;
             
-            var callbackAttrs = self.unacknowledgedMessagesByURL[data.url];
+            var callbackAttrs = self.unacknowledgedMessagesByURL[data.url][0];
             var method = callbackAttrs.callback;
 
             if(method) {
                 var context = callbackAttrs.context;
                 method.call(context, payload);
             }
-            delete self.unacknowledgedMessagesByURL[data.url];
+            var arr = self.unacknowledgedMessagesByURL[data.url];
+            arr.pop();
+            if(!arr.length) {
+                delete self.unacknowledgedMessagesByURL[data.url];
+            }
         };
     },
 

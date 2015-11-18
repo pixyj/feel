@@ -1,11 +1,11 @@
-(function() {
+var $ = require("jquery");
 
-function csrfSafeMethod(method) {
+var csrfSafeMethod = function(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
-function sameOrigin(url) {
+var sameOrigin = function(url) {
     // test that a given url is a same-origin URL
     // url could be relative or scheme relative or absolute
     var host = document.location.host; // host + port
@@ -19,7 +19,7 @@ function sameOrigin(url) {
         !(/^(\/\/|http:|https:).*/.test(url));
 }
 
-function getCsrfToken() {
+var getCsrfToken = function() {
     var cookies = document.cookie.split(';');
     for(i =0;i<cookies.length; i++) {
         if(cookies[i].indexOf("csrftoken") !== -1) {
@@ -30,7 +30,7 @@ function getCsrfToken() {
 
 }
 
-var csrftoken = getCsrfToken();
+var csrfToken = getCsrfToken();
 
 
 $.ajaxSetup({
@@ -39,9 +39,11 @@ $.ajaxSetup({
             // Send the token to same-origin, relative URLs only.
             // Send the token only if the method warrants CSRF protection
             // Using the CSRFToken value acquired earlier
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            xhr.setRequestHeader("X-CSRFToken", csrfToken);
         }
     }
 });
 
-})(this);
+module.exports = {
+    csrfToken: csrfToken
+}
