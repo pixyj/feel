@@ -37,11 +37,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #'raven.contrib.django.raven_compat',
+
     'rest_framework',
     'taggit',
 
+
     'core',
     'quiz',
+    'concept',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -117,5 +122,36 @@ REST_FRAMEWORK = {
         'djangorestframework_camel_case.parser.CamelCaseJSONParser', 
     ),
 }
+
+import raven
+
+RAVEN_CONFIG = {
+    #'dsn': os.environ['SENTRY_DSN'],
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    #'release': raven.fetch_git_sha(os.path.dirname(__file__)),
+}
+
+
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'redis_cache.RedisCache',
+#         'LOCATION': [
+#             'localhost:6379'
+#         ],
+
+#         'OPTIONS': {
+#             'PARSER_CLASS': 'redis.connection.HiredisParser',
+#             'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
+#             'CONNECTION_POOL_CLASS_KWARGS': {
+#                 'max_connections': 50,
+#                 'timeout': 20,
+#             },
+#             'MAX_CONNECTIONS': 1000,
+#             'PICKLE_VERSION': -1,
+#         },
+#     },
+# }
 
 
