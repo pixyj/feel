@@ -1,10 +1,10 @@
-import datetime
 import uuid
 
 from django.shortcuts import render
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.utils import timezone
 
 from rest_framework.views  import APIView
 from rest_framework.response import Response
@@ -132,7 +132,7 @@ class QuizDetailView(APIView):
         appopriate HttpResponse
         """
         data=request.data
-        data["created_at"] = datetime.datetime.utcnow()
+        data["created_at"] = timezone.now()
         serializer = serializers.QuizSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -209,7 +209,7 @@ class QuizAttemptView(APIView):
             "user": user,
             "user_key": user_key,
 
-            "created_at": datetime.datetime.utcnow()
+            "created_at": timezone.now()
         }
         QuizAttempt.objects.create(**attrs)
         return Response(request.data, status.HTTP_201_CREATED)
