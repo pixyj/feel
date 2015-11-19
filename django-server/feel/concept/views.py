@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 from core.views import get_user_and_user_key
 
 from concept.models import Concept, ConceptSection
-from concept import serializers
+from concept.serializers import ConceptSerializer, ConceptSectionSerializer
 
 
 
@@ -32,7 +32,7 @@ class ConceptDetailView(APIView):
         except (IndexError, ValueError):
             raise Http404
 
-        serializer = serializers.ConceptSerializer(concept)
+        serializer = ConceptSerializer(concept)
         data = serializer.data
         return Response(data)
 
@@ -108,9 +108,18 @@ class ConceptDetailView(APIView):
         """
         data=request.data
         data["created_at"] = timezone.now()
-        serializer = serializers.ConceptSerializer(data=request.data)
+        serializer = ConceptSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        section_serializers = []
+        for section in data['sections']:
+            serializer = ConceptSectionSerializer(data=section)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            section_serializers.append(serializer)
+
 
         concept_fields = ['name', 'created_at']
         concept_attrs = {}
@@ -130,15 +139,16 @@ class ConceptDetailView(APIView):
             concept = get_concept_instance(concept_attrs, data)
             
             concept.conceptsection_set.all().delete()
-            for position, section in enumerate(data['sections']):
+            for position, serializer in enumerate(section_serializers):
                 section_attrs = {
                     'concept_id': concept.uuid,
                     'position': position,
-                    'section_type': section['section_type'],
-                    'data': section['data']
                 }
+                section_attrs.update(serializer.data)
                 section_attrs.update(audit_attrs)
-                ConceptSection.objects.create(**section_attrs)
+                
+                serializer.create(section_attrs)
+                
 
         return Response(data)
 

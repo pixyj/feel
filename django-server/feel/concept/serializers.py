@@ -1,14 +1,23 @@
 from rest_framework import serializers
 
-from concept.models import Concept, ConceptSection
-
 from core.serializers import TagSerializer
 
+from concept.models import Concept, ConceptSection
+
+
+
 class ConceptSectionSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        return ConceptSection.objects.create(**validated_data)
+
 
     class Meta:
         model = ConceptSection
         fields = ('id', 'position', 'section_type', 'data', )
+
+
+
 
 class ConceptSerializer(serializers.ModelSerializer):
 
