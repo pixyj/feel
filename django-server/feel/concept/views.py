@@ -60,45 +60,44 @@ class ConceptDetailView(APIView):
         return Concept.objects.create(**concept_attrs)
 
 
-    # def put(self, request, quiz_id, format=None):
-    #     """
-    #     ## Algo:
+    def put(self, request, concept_id, format=None):
+        """
+        ## Algo:
 
-    #     1. If quiz does not exist raise `400`
-    #     2. Validate data
-    #     3. If data is invalid raise `400`
-    #     4. Authorize request -> Ensure first version of quiz is created by same user
-    #     5. Preprocess data
-    #     6. Transaction:
-    #         1. Save Quiz
-    #         2. Save Tags
-    #         3. Save Choices
-    #         4. Save Answers
-    #     7. Return Response
-    #     """
-    #     found = True
-    #     try:
-    #         quiz_v1 = Quiz.objects.get(pk=quiz_id)
-    #     except Quiz.DoesNotExist:
-    #         found = False
+        1. If concept does not exist raise `400`
+        2. Validate data
+        3. If data is invalid raise `400`
+        4. Authorize request -> Ensure first version of quiz is created by same user
+        5. Preprocess data
+        6. Transaction:
+            1. Save Concept
+            2. Delete previous sections
+            3. Add new sections
+        7. Return Response
+        """
+        found = True
+        try:
+            concept_v1 = Concept.objects.get(pk=concept_id)
+        except Concept.DoesNotExist:
+            found = False
 
-    #     if not found:
-    #         return Response({"quiz_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
+        if not found:
+            return Response({"concept_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
 
-    #     #Authorization
-    #     elif quiz_v1.created_by.id != request.user.id:
-    #         return Response({"nice_try": True}, status=status.HTTP_403_FORBIDDEN)
+        #Authorization
+        elif concept_v1.created_by.id != request.user.id:
+            return Response({"nice_try": True}, status=status.HTTP_403_FORBIDDEN)
 
-    #     return self._save_quiz_and_return_response(request, quiz_v1.created_by, self._get_existing_quiz_object)
+        return self._save_concept_and_return_response(request, concept_v1.created_by, self._get_existing_concept_object)
 
 
-    # def _get_existing_quiz_object(self, quiz_attrs, data):
-    #     """
-    #     Used in _save_quiz_and_return_response during `PUT` to get a `Quiz` object.
-    #     """
-    #     quiz = Quiz(**quiz_attrs)
-    #     quiz.save()
-    #     return quiz
+    def _get_existing_concept_object(self, concept_attrs, data):
+        """
+        Used in _save_concept_and_return_response during `PUT` to get a `Concept` object.
+        """
+        concept = Concept(**concept_attrs)
+        concept.save()
+        return concept
         
 
     def _save_concept_and_return_response(self, request, created_by, get_concept_instance):
