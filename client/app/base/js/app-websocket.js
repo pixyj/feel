@@ -12,7 +12,7 @@ var CLOSED = 3;
 var AppWebSocket = function() {
     
     this.unsentMessages = [];
-    this.unacknowledgedMessagesByURL = {};
+    this.callbacksByURL = {};
 
     this.retries = 0;
     self._retryTimer = null;
@@ -58,13 +58,8 @@ AppWebSocket.prototype = {
         }
         
         else {
+            this.callbacksByURL[url] = callbackAttrs;
             var message = JSON.stringify(data);
-            var arr = this.unacknowledgedMessagesByURL[data.url];
-            if(!arr) {
-                arr = [];
-                this.unacknowledgedMessagesByURL[data.url] = arr;
-            }
-            arr.push(callbackAttrs);
             this.connection.send(message);
         }
 
@@ -110,22 +105,19 @@ AppWebSocket.prototype = {
         this.connection.onmessage = function(message) {
             var data = JSON.parse(message.data);
             var payload = data.payload;
-            
-            var callbackAttrs = self.unacknowledgedMessagesByURL[data.url][0];
-            var method = callbackAttrs.callback;
 
+
+            var callbackAttrs = self.callbacksByURL[data.url];            
+
+            var method = callbackAttrs.callback;
             if(method) {
                 var context = callbackAttrs.context;
-                method.call(context, payload);
+                method.call(context, payload, data.statusCode); //upto client to handle errors.
             }
             else {
                 console.error("WebSocket callback method not specified", callbackAttrs);
             }
-            var arr = self.unacknowledgedMessagesByURL[data.url];
-            arr.pop();
-            if(!arr.length) {
-                delete self.unacknowledgedMessagesByURL[data.url];
-            }
+
         };
     },
 
