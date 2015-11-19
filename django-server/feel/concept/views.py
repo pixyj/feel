@@ -37,29 +37,27 @@ class ConceptDetailView(APIView):
         return Response(data)
 
 
-    # def post(self, request, quiz_id, format=None):
-    #     """
-    #     Create new quiz
-    #     Algo:
-    #     1. If quiz exists raise 400
-    #     2. Validate data
-    #     3. If data is invalid raise 400
-    #     4. Preprocess data
-    #     5. Transaction
-    #         1. Save Quiz
-    #         2. Save Tags
-    #         3. Save Choices
-    #         4. Save Answers
-    #     6. Return Response
-    #     """
-    #     return self._save_quiz_and_return_response(request, request.user, self._create_quiz_object)
+    def post(self, request, concept_id, format=None):
+        """
+        Create new concept
+        Algo:
+        1. If concept exists raise 400
+        2. Validate data
+        3. If data is invalid raise 400
+        4. Preprocess data
+        5. Transaction
+            1. Save Concept
+            2. Save Sections
+        6. Return Response
+        """
+        return self._save_concept_and_return_response(request, request.user, self._create_concept_object)
 
 
-    # def _create_quiz_object(self, quiz_attrs, data):
-    #     """
-    #     Used in _save_quiz_and_return_response during `POST` to create a `Quiz` instance. 
-    #     """
-    #     return Quiz.objects.create(**quiz_attrs)
+    def _create_concept_object(self, concept_attrs, data):
+        """
+        Used in _save_quiz_and_return_response during `POST` to create a `Quiz` instance. 
+        """
+        return Concept.objects.create(**concept_attrs)
 
 
     # def put(self, request, quiz_id, format=None):
@@ -103,59 +101,44 @@ class ConceptDetailView(APIView):
     #     return quiz
         
 
-    # def _save_quiz_and_return_response(self, request, created_by, get_quiz_instance):
-    #     """
-    #     Workhorse private method that saves data from request (either `POST` or `PUT`) into the database and returns
-    #     appopriate HttpResponse
-    #     """
-    #     data=request.data
-    #     data["created_at"] = timezone.now()
-    #     serializer = serializers.QuizSerializer(data=request.data)
-    #     if not serializer.is_valid():
-    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def _save_concept_and_return_response(self, request, created_by, get_concept_instance):
+        """
+        Workhorse private method that saves data from request (either `POST` or `PUT`) into the database and returns
+        appopriate HttpResponse
+        """
+        data=request.data
+        data["created_at"] = timezone.now()
+        serializer = serializers.ConceptSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    #     quiz_fields = ['question_input', 'question_display', 'quiz_type', 'created_at']
-    #     quiz_attrs = {}
-    #     for field in quiz_fields:
-    #         quiz_attrs[field] = data[field]
-    #     quiz_attrs['uuid'] = uuid.UUID(data['uuid'])
+        concept_fields = ['name', 'created_at']
+        concept_attrs = {}
+        for field in concept_fields:
+            concept_attrs[field] = data[field]
+        concept_attrs['uuid'] = uuid.UUID(data['uuid'])
 
-    #     audit_attrs = {
-    #         'created_at': data['created_at'],
-    #         'last_modified_at': data['created_at'],
-    #         'created_by': created_by,
-    #         'last_modified_by': request.user
-    #     }
-    #     quiz_attrs.update(audit_attrs)
-    #     tags = [tag['name'] for tag in data['tags']]
+        audit_attrs = {
+            'created_at': data['created_at'],
+            'last_modified_at': data['created_at'],
+            'created_by': created_by,
+            'last_modified_by': request.user
+        }
+        concept_attrs.update(audit_attrs)
         
-    #     #todo - Maybe create separate APIs for answers,choices and tags too?
-    #     #import ipdb;ipdb.set_trace()
-    #     with transaction.atomic():
-    #         quiz = get_quiz_instance(quiz_attrs, data)
+        with transaction.atomic():
+            concept = get_concept_instance(concept_attrs, data)
             
-    #         quiz.shortanswer_set.all().delete()
-    #         quiz.choice_set.all().delete()
+            concept.conceptsection_set.all().delete()
+            for position, section in enumerate(data['sections']):
+                section_attrs = {
+                    'concept_id': concept.uuid,
+                    'position': position,
+                    'section_type': section['section_type'],
+                    'data': section['data']
+                }
+                section_attrs.update(audit_attrs)
+                ConceptSection.objects.create(**section_attrs)
 
-    #         #import ipdb;ipdb.set_trace()
-    #         quiz.tags.all().delete()
-
-    #         quiz.tags.add(*tags)
-            
-    #         for answer in data['answers']:
-    #             answer_attrs = {"quiz": quiz, "answer": answer['answer']}
-    #             answer_attrs.update(audit_attrs)
-    #             ShortAnswer.objects.create(**answer_attrs)
-
-    #         for choice in data['choices']:
-    #             if choice.get('id'):
-    #                 del choice['id']
-
-    #             choice_attrs = {"quiz": quiz}
-    #             choice_attrs.update(choice)
-    #             choice_attrs.update(audit_attrs)
-    #             choice_instance = Choice.objects.create(**choice_attrs)
-    #             choice['id'] = choice_instance.id
-
-    #     return Response(data)
+        return Response(data)
 
