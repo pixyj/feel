@@ -7,6 +7,8 @@ var utils = require("utils");
 var appWebSocket = require("app-websocket");
 appWebSocket = appWebSocket.appWebSocket;
 
+var WebSocketModel = require("models").WebSocketModel;
+
 var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
@@ -48,8 +50,8 @@ var GuessCollection = Backbone.Collection.extend({
 
 });
 
-//#todo -> consider changing answer to short-answer to be more explicit. 
-var QuizModel = Backbone.Model.extend({
+//#todo -> consider changing answers to short-answers to be explicit. 
+var QuizModel = WebSocketModel.extend({
     
     defaults: {
         quizType: constants.MCQ,
@@ -60,28 +62,10 @@ var QuizModel = Backbone.Model.extend({
         tags: []
     },
 
-    idAttribute: "uuid",
-
-    initialize: function() {
-        this._isNew = !this.attributes.uuid;
-        if(this._isNew) {
-            this.attributes.uuid = utils.uuid();
-        }
-        this._isSaved = true;
-    },
+    BASE_URL: "/api/v1/quizzes/",
 
     isNew: function() {
         return this._isNew;
-    },
-
-    url: function() {
-        var baseURL = "/api/v1/quizzes/";
-        if(this.attributes.uuid) {
-            return baseURL + this.attributes.uuid + "/";
-        }
-        else {
-            return baseURL;
-        }
     },
 
     toJSON: function() {
@@ -97,38 +81,7 @@ var QuizModel = Backbone.Model.extend({
             }
         }
         return attrs;
-    },
-
-    save: function() {
-        this._setIsSaved(false);
-        appWebSocket.save({
-            payload: this.toJSON(),
-            url: this.url(),
-            httpMethod: this.isNew() ? "POST": "PUT",
-            onSaved: this.onSaved,
-            context: this 
-        });
-        this._isNew = false;
-    },
-
-    onSaved: function(payload, statusCode) {
-        if(statusCode === 200 || statusCode === 201) {
-            console.log("Saved quiz");
-            this._setIsSaved(true);  
-        }
-        else {
-            console.error("Websocket message not saved", statusCode, this.attributes);
-        }
-    },
-
-    _setIsSaved: function(status) {
-        if(this._isSaved !== status) {
-            this.trigger("change:isSaved", status);    
-        }
-        this._isSaved = status;
-
     }
-
 
 });
 
