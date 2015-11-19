@@ -15,7 +15,7 @@ var AppWebSocket = function() {
     this.unacknowledgedMessagesByURL = {};
 
     this.retries = 0;
-
+    self._retryTimer = null;
     this._open();
 
 };
@@ -46,7 +46,9 @@ AppWebSocket.prototype = {
         if(!this._isConnectionActive()) {
             var messageAttrs = _.extend(data, callbackAttrs);
             this.unsentMessages.push(messageAttrs);
-            this._open();
+            if(this._retryTimer === null) {
+                this._open();
+            }
             
         }
 
@@ -82,6 +84,8 @@ AppWebSocket.prototype = {
 
             console.log("Opened websocket connection");
 
+            self._cleanupRetryTimer();
+
             self._listenToServerMessages();
             //Existing unsent messages are sent and `unsentMessages` is reset. 
             //If we fail, `unsavedMessages` will build up again. 
@@ -114,6 +118,9 @@ AppWebSocket.prototype = {
                 var context = callbackAttrs.context;
                 method.call(context, payload);
             }
+            else {
+                console.warn("WebSocket callback method not specified", callbackAttrs);
+            }
             var arr = self.unacknowledgedMessagesByURL[data.url];
             arr.pop();
             if(!arr.length) {
@@ -126,13 +133,25 @@ AppWebSocket.prototype = {
 
         var self = this;
         this.connection.onerror = function() {
+            if(self._retryTimer) {
+                return;
+            }
             self.retries += 1;
             var secondsToWait = Math.pow(2, self.retries) * 1000;
             console.log("Will retry opening connection in ", secondsToWait / 1000, "seconds");
-            setTimeout(function() {
+            var timer = setTimeout(function() {
                 self._open();
             }, secondsToWait);
+            self._retryTimer = timer;
         }
+    },
+
+    _cleanupRetryTimer: function() {
+        if(this._retryTimer) {
+            clearTimeout(this._retryTimer);    
+        }
+        this._retryTimer = null;
+        self.retries = 0;
     }
 
 };
