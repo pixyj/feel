@@ -119,7 +119,7 @@ AppWebSocket.prototype = {
                 method.call(context, payload);
             }
             else {
-                console.warn("WebSocket callback method not specified", callbackAttrs);
+                console.error("WebSocket callback method not specified", callbackAttrs);
             }
             var arr = self.unacknowledgedMessagesByURL[data.url];
             arr.pop();
@@ -159,6 +159,9 @@ AppWebSocket.prototype = {
 AppWebSocket.prototype.constructor = AppWebSocket;
 
 var appWebSocket = new AppWebSocket();
+
+//for debugging;
+window.appWebSocket = appWebSocket; 
 
 module.exports = {
     appWebSocket: appWebSocket

@@ -98,7 +98,8 @@ var saveMessageWithTimeout = function(client, message, waitFor) {
             scheduleSaveMessage(client, message);
         }
         else {
-            saveMessage(client, message);    
+            //save latest message stored on buffer
+            saveMessage(client, unsentClientMessages[client][message.url]);    
         }
         
     }, waitFor);
@@ -136,13 +137,19 @@ var saveMessage = function(client, message) {
 var _saveMessageImpl = function(client, options, requestMethod, url) {
 
     var callback = function(error, response, body) {
-        console.log("Saved message: ", url);
+        if(response.statusCode === 200 || response.statusCode === 201) {
+            console.log("Saved message: ", url);
+        }
+        else {
+            console.warn("Unable to save message: ", response.statusCode, response.body);
+        }
         if(newMessageURLs[url]) {
             delete newMessageURLs[url];
             console.log("POST response received for", url, "Ready to send PUT requests");
         }
         var message = {
             payload: response.body,
+            statusCode: response.statusCode,
             url: url
         };
 
