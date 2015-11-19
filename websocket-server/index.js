@@ -20,7 +20,7 @@ wss.on("connection", function(client) {
         return client.upgradeReq.headers.cookie;
     };
 
-    console.log("Client Connected");
+    console.log("Client Connected", client.toString());
     unsentClientMessages[client] = {};
 
     client.on("message", function(stringMessage) {
@@ -49,9 +49,11 @@ wss.on("connection", function(client) {
     });
 
     client.on("close", function() {
-        console.log("Client closed");
+        cleanupClientMessages(client);
+        console.log("Client closed", client.toString());
     });
 });
+
 
 var lastScheduledSaveTime = null;
 var MAX_PUT_REQUESTS_PER_SECOND = 10;
@@ -132,10 +134,33 @@ var _saveMessageImpl = function(client, options, requestMethod, url) {
             payload: response.body,
             url: url
         };
-        client.send(JSON.stringify(message));
+
+        try {
+            client.send(JSON.stringify(message));
+        } catch(e) {
+            console.log("Unable to send response. Client ", client.toString(), "has closed the connection", e.toString())
+        }
     }
 
     requestMethod(options, callback);
 }
 
 
+var CLIENT_CLEANUP_WAITING_TIME = 30*1000; //30 seconds
+var cleanupClientMessages = function(client) {
+    var length = Object.keys(unsentClientMessages[client]).length;
+    if(!length) {
+        delete unsentClientMessages[client];
+        console.log("Cleaned up client", client.toString());
+    }
+    else {
+        console.log("Client ", client.toString(), " has unsent messages. Scheduling clean up after ", CLIENT_CLEANUP_WAITING_TIME / 1000 , "seconds");
+        scheduleCleanupClientMessages(client);
+    }
+}
+
+var scheduleCleanupClientMessages = function(client) {
+    setTimeout(function(client) {
+        cleanupClientMessages(client);
+    }, CLIENT_CLEANUP_WAITING_TIME);
+}
