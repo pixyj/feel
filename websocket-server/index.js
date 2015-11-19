@@ -4,9 +4,17 @@ var request = require("request");
 var WebSocketServer = ws.Server;
 var wss = new WebSocketServer({port: 5000});
 
-//handle cleanup. 
 var unsentClientMessages = {};
-var newMessageURLs = {}; //POST requests not acknowledged by server 
+var newMessageURLs = {}; //POST requests not acknowledged by server
+
+var getUniqueId = function() {
+    var i = 0;
+    var plusOne = function() {
+        i += 1;
+        return i;
+    };
+    return plusOne;
+}();
 
 wss.on("connection", function(client) {
 
@@ -17,7 +25,10 @@ wss.on("connection", function(client) {
         client.upgradeReq.headers.cookie
         "sessionid=lfmfdl637gdrawvhdyhxk9suydcjte7d; csrftoken=oTjey7CFyePhdcpu05CESu7eGznlTNCl"
         */
-        return client.upgradeReq.headers.cookie;
+        if(!client._uniqueId) {
+            client._uniqueId = getUniqueId();
+        }
+        return client.upgradeReq.headers.cookie + "-" + client._uniqueId;
     };
 
     console.log("Client Connected", client.toString());
@@ -147,6 +158,7 @@ var _saveMessageImpl = function(client, options, requestMethod, url) {
 
 
 var CLIENT_CLEANUP_WAITING_TIME = 30*1000; //30 seconds
+
 var cleanupClientMessages = function(client) {
     var length = Object.keys(unsentClientMessages[client]).length;
     if(!length) {
