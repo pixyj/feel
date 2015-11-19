@@ -111,9 +111,14 @@ var QuizModel = Backbone.Model.extend({
         this._isNew = false;
     },
 
-    onSaved: function() {
-        console.log("Saved quiz");
-        this._setIsSaved(true);
+    onSaved: function(payload, statusCode) {
+        if(statusCode === 200 || statusCode === 201) {
+            console.log("Saved quiz");
+            this._setIsSaved(true);  
+        }
+        else {
+            console.error("Websocket message not saved", statusCode, this.attributes);
+        }
     },
 
     _setIsSaved: function(status) {
