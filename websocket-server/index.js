@@ -10,6 +10,16 @@ var newMessageURLs = {}; //POST requests not acknowledged by server
 
 wss.on("connection", function(client) {
 
+    client.toString = function() {
+
+        //returns cookie for the hashing objects in unsentClientMessages. 
+        /*
+        client.upgradeReq.headers.cookie
+        "sessionid=lfmfdl637gdrawvhdyhxk9suydcjte7d; csrftoken=oTjey7CFyePhdcpu05CESu7eGznlTNCl"
+        */
+        return client.upgradeReq.headers.cookie;
+    };
+
     console.log("Client Connected");
     unsentClientMessages[client] = {};
 
@@ -36,6 +46,10 @@ wss.on("connection", function(client) {
             console.log("Message scheduled already. NOT scheduling save message.");
         }
 
+    });
+
+    client.on("close", function() {
+        console.log("Client closed");
     });
 });
 
