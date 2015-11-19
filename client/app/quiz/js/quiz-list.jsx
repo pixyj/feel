@@ -79,6 +79,9 @@ var QuizFilterComponent = React.createClass({
             self.props.parent.removeQuizFilter();
             $(this).off();
             $(this).remove();
+            $(document.body).css({
+                "overflow": "visible"
+            });
         });
 
         var handleEspaceKeyPress = function(evt) {
@@ -87,6 +90,9 @@ var QuizFilterComponent = React.createClass({
                 self.props.parent.removeQuizFilter();
                 $(".lean-overlay").remove();
                 $(document).off("keyup.leanModal");
+                $(document.body).css({
+                    "overflow": "visible"
+                });
             }
 
         };

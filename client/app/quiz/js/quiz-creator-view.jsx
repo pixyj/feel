@@ -536,6 +536,9 @@ var QuizCreatorModalComponent = React.createClass({
             self.props.parent.removeQuizCreator();
             $(this).off();
             $(this).remove();
+            $(document.body).css({
+                "overflow": "visible"
+            });
         });
 
         var handleEspaceKeyPress = function(evt) {
@@ -544,6 +547,9 @@ var QuizCreatorModalComponent = React.createClass({
                 self.props.parent.removeQuizCreator();
                 $(".lean-overlay").remove();
                 $(document).off("keyup.leanModal");
+                $(document.body).css({
+                    "overflow": "visible"
+                });
             }
 
         };
