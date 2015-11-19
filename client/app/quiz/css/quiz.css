@@ -36,6 +36,13 @@ textarea {
     overflow: scroll;
 }
 
+.save-status {
+    position: absolute;
+    right: 5%;
+    top: 1%;
+}
+
+
 .quiz-question-preview {
     padding: 5px;
 }

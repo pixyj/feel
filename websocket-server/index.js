@@ -1,62 +1,87 @@
 var ws = require("ws");
 var request = require("request");
 
-// var scribe = require('scribe-js')();
-// var express = require("express");
-
-// var app = express();
-// app.use('\logs', scribe.webPanel());
-// app.listen(8080);
-// var console = process.console;
-
-
 var WebSocketServer = ws.Server;
-
 var wss = new WebSocketServer({port: 5000});
 
-var latestClientMessages = {};
-
-var clientTimers = {};
+//handle cleanup. 
+var unsentClientMessages = {};
+var newMessageURLs = {}; //POST requests not acknowledged by server 
 
 wss.on("connection", function(client) {
 
-    latestClientMessages[client] = null;
-    clientTimers[client] = null;
+    console.log("Client Connected");
+    unsentClientMessages[client] = {};
 
-    client.on("message", function(message) {
-        console.log("Received: ", message);
-        latestClientMessages[client] = message;
-        if(clientTimers[client] === null) {
-            var timer = setTimeout(function() {
-                var message = latestClientMessages[client];
-                console.log("Saving ", message);
-                saveMessage(client, message);
+    client.on("message", function(stringMessage) {
+        
+        console.log("Received message");
+        var message = JSON.parse(stringMessage);
 
-                clientTimers[client] = null;
-            }, 1000);
-            clientTimers[client] = timer;
+        if(message.httpMethod === 'POST') {
+            newMessageURLs[message.url] = true;
+            saveMessage(client, message);
+            return;
         }
+
+
+        var isSaveMessageScheduled = !(!unsentClientMessages[client][message.url]);
+        unsentClientMessages[client][message.url] = message;   
+        
+        if(!isSaveMessageScheduled) {
+            console.log("Scheduling save message");
+            scheduleSaveMessage(client, message);    
+        } 
+        else {
+            console.log("Message scheduled already. NOT scheduling save message.");
+        }
+
     });
 });
 
-var getCSRFToken = function(cookies) {
-    var keyValuePairs = cookies.split(";");
-    var length = keyValuePairs.length;
-    for(var i = 0; i < length; i++) {
-        var keyAndValue = keyValuePairs[i].trim().split("=");
-        var key = keyAndValue[0];
-        if(key === "csrftoken") {
-            return keyAndValue[1];
-        }
+var lastScheduledSaveTime = null;
+var MAX_PUT_REQUESTS_PER_SECOND = 10;
+var MINIMUM_REQUEST_GAP =  1000 / MAX_PUT_REQUESTS_PER_SECOND;
+
+scheduleSaveMessage = function(client, message) {
+
+    var waitFor;
+    var now = new Date();
+    if(lastScheduledSaveTime === null || (now - lastScheduledSaveTime) > MINIMUM_REQUEST_GAP) {
+        waitFor = 0;
+        lastScheduledSaveTime = now;
     }
-    return "";
+    else {
+        var scheduledSaveTime = new Date(lastScheduledSaveTime + MINIMUM_REQUEST_GAP); 
+        waitFor = (now - scheduledSaveTime);
+        lastScheduledSaveTime = scheduledSaveTime;
+
+    }
+    console.log("Next PUT request after ", waitFor, "ms");
+    saveMessageWithTimeout(client, message, waitFor);
 }
+
+
+var saveMessageWithTimeout = function(client, message, waitFor) {
+    
+    setTimeout(function() {
+        if(newMessageURLs[message.url]) {
+            //Response not received for POST yet. 
+            console.log("POST response NOT received for ", message.url, "Rescheduling request");
+            scheduleSaveMessage(client, message);
+        }
+        else {
+            saveMessage(client, message);    
+        }
+        
+    }, waitFor);
+};
 
 var BASE_URL = "http://localhost:7777";
 
-var saveMessage = function(client, stringMessage) {
+var saveMessage = function(client, message) {
     var method;
-    var message = JSON.parse(stringMessage);
+    //console.log("message ", message);
 
     var url = BASE_URL + message.url;
     var httpMethod = message.httpMethod.toLowerCase();
@@ -66,7 +91,7 @@ var saveMessage = function(client, stringMessage) {
 
     headers['Accept'] = 'application/json';
     headers['Content-Type'] = 'application/json';
-    headers['X-CSRFToken'] = getCSRFToken(client.upgradeReq.headers.cookie);
+    headers['X-CSRFToken'] = message.csrfToken;
 
     var options = {
         url: url,
@@ -76,11 +101,19 @@ var saveMessage = function(client, stringMessage) {
 
     //to minimize memory occupied by closure
     _saveMessageImpl(client, options, requestMethod, message.url);
+
+    console.log("Saving message and deleting it from buffer", message.url);
+    delete unsentClientMessages[client][message.url];
 };
 
 var _saveMessageImpl = function(client, options, requestMethod, url) {
 
     var callback = function(error, response, body) {
+        console.log("Saved message: ", url);
+        if(newMessageURLs[url]) {
+            delete newMessageURLs[url];
+            console.log("POST response received for", url, "Ready to send PUT requests");
+        }
         var message = {
             payload: response.body,
             url: url

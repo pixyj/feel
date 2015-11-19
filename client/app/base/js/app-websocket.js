@@ -90,7 +90,7 @@ AppWebSocket.prototype = {
             var messages = self.unsentMessages;
             self.unsentMessages = [];
             _.each(messages, function(message) {
-                self.send(message);
+                self.save(message);
             });
         }
     },
