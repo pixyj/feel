@@ -13,7 +13,6 @@ class Concept(TimestampedModel):
         return "{} created by {} ".format(self.name, self.created_by)
 
 
-
 class ConceptSection(TimestampedModel):
 
     MARKDOWN = 1
@@ -31,6 +30,9 @@ class ConceptSection(TimestampedModel):
     concept = models.ForeignKey(Concept)
     position = models.IntegerField()
     section_type = models.IntegerField(choices=SECTION_TYPES)
+
+    #Denormalized Field. I did not want to create a new table for each section-type
+    #Also, makes the API design match the application state on the client closely.  
     data = JSONField()
 
     def __str__(self):
