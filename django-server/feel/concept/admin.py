@@ -5,7 +5,7 @@ from .models import Concept, ConceptSection
 
 class ConceptSectionInline(admin.StackedInline):
     model = ConceptSection
-    extra = 2
+    extra = 0
 
 
 class ConceptAdmin(admin.ModelAdmin):

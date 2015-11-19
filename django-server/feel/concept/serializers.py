@@ -14,7 +14,7 @@ class ConceptSectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConceptSection
-        fields = ('id', 'position', 'section_type', 'data', )
+        fields = ('id', 'section_type', 'data', )
 
 
 

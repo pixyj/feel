@@ -13,6 +13,13 @@ class Concept(TimestampedModel):
         return "{} created by {} ".format(self.name, self.created_by)
 
 
+class ConceptSectionManager(models.Manager):
+
+    def get_queryset(self):
+        return super(ConceptSectionManager, self).get_queryset().order_by("position")
+
+
+
 class ConceptSection(TimestampedModel):
 
     MARKDOWN = 1
@@ -34,6 +41,8 @@ class ConceptSection(TimestampedModel):
     #Denormalized Field. I did not want to create a new table for each section-type
     #Also, makes the API design match the application state on the client closely.  
     data = JSONField()
+
+    objects = ConceptSectionManager()
 
     def __str__(self):
         return "{} - Section {} at position {}".format(self.concept, self.section_type, self.position)
