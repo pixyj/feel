@@ -309,6 +309,10 @@ var QuizSectionComponent = React.createClass({
             quizzes: uniqueQuizzes,
             showQuizFilter: false
         });
+
+        app.store.saveSectionDataAt({
+            quizzes: quizzes
+        }, this.props.position);
     }
 
 });
