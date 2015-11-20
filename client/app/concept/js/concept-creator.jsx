@@ -93,11 +93,18 @@ var MarkdownComponentMixin = _.extend(MarkdownAndPreviewMixin, {
 
     getInitialState: function() {
         var section = app.store.getSectionAt(this.props.position);
-        return section.data;
+        var input = section.data.input;
+        return {
+            input: input,
+            display: md.mdAndMathToHtml(input)
+        }
     },
 
     onContentUpdated: function(state) {
-        app.store.saveSectionDataAt(state, this.props.position);
+        var data = {
+            input: state.input
+        };
+        app.store.saveSectionDataAt(data, this.props.position);
     }
 
 });
