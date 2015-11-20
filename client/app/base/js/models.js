@@ -37,10 +37,6 @@ var WebSocketModel = Backbone.Model.extend({
         return this.BASE_URL + this.attributes.uuid + "/";
     },
 
-    save: function() {
-
-    },
-
     isNew: function() {
         return this._isNew;
     },
@@ -60,7 +56,8 @@ var WebSocketModel = Backbone.Model.extend({
     onResponseReceived: function(payload, statusCode) {
         if(statusCode === 200 || statusCode === 201) {
             console.log("Saved WebSocketModel");
-            this._setIsSaved(true);  
+            this._setIsSaved(true);
+            this.trigger("sync", this);  
         }
         else {
             throw new Error("Websocket message not saved", statusCode, this.attributes);
@@ -77,5 +74,6 @@ var WebSocketModel = Backbone.Model.extend({
 });
 
 module.exports = {
-    UserModel: UserModel
+    UserModel: UserModel,
+    WebSocketModel: WebSocketModel
 };

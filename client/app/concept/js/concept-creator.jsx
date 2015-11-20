@@ -19,6 +19,8 @@ var QuizSnippetComponent = QuizList.QuizSnippetComponent;
 var QuizCreator = require("./../../quiz/js/quiz-creator-view.jsx");
 var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
 
+var ConceptModel = require("./models").ConceptModel;
+
 
 var PreviewComponent = React.createClass({
 
@@ -55,7 +57,7 @@ var ConceptNameSectionComponent = React.createClass({
 
     getInitialState: function() {
         return {
-            conceptName: app.state.conceptName
+            conceptName: app.store.getConceptName()
         }
     },
 
@@ -77,10 +79,10 @@ var ConceptNameSectionComponent = React.createClass({
 
     updateConceptName: function(evt) {
         var value = evt.target.value;
-        app.state.conceptName = value;
         this.setState({
             conceptName: value
         });
+        app.store.saveConceptName(value);
     }
 
 });
@@ -90,11 +92,12 @@ var ConceptNameSectionComponent = React.createClass({
 var MarkdownComponentMixin = _.extend(MarkdownAndPreviewMixin, {
 
     getInitialState: function() {
-        return this.props.data.state;
+        var section = app.store.getSectionAt(this.props.position);
+        return section.data;
     },
 
     onContentUpdated: function(state) {
-        this.props.data.state = state;
+        app.store.saveSectionDataAt(state, this.props.position);
     }
 
 });
@@ -107,7 +110,7 @@ var MarkdownSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section">
                 <SectionHeadingComponent sectionName="Markdown Section" />
-                <MarkdownComponent data={this.props.data} />
+                <MarkdownComponent position={this.props.position} />
             </div>
         );
     }
@@ -116,7 +119,7 @@ var MarkdownSectionComponent = React.createClass({
 var VideoSectionComponent = React.createClass({
 
     getInitialState: function() {
-        return this.props.data.state;
+        return app.store.getSectionAt(this.props.position).data;
     },
 
     render: function() {
@@ -149,10 +152,11 @@ var VideoSectionComponent = React.createClass({
 
     updateURL: function(evt) {
         var value = evt.target.value;
-        this.props.data.state.url = value;
-        this.setState({
-            url: value
-        });
+        var newState = _.clone(this.state);
+        newState.url = value;
+        this.setState(newState);
+        app.store.saveSectionDataAt(newState, this.props.position);
+
     }
 });
 
@@ -185,7 +189,7 @@ var VisualizationSectionComponent = React.createClass({
 var QuizSectionComponent = React.createClass({
 
     getInitialState: function() {
-        var attrs = _.clone(this.props.data.state);
+        var attrs = app.store.getSectionAt(this.props.position).data;
         return _.extend(attrs, {
             showQuizFilter: false,
             showQuizCreator: false
@@ -362,34 +366,92 @@ var SECTIONS_SORTED_BY_TYPE = function() {
 }();
 
 
-var app = {};
 
-app.state = {
-
-    conceptName: "Matrix Multiplication",
-
-    sections: [
-
-        {
-            type: SECTION_TYPES_AND_COMPONENTS.QUIZ.type,
-            state: {
-                quizzes: [
-
-                ]
-            }
-        },
-
-        {
-            type: SECTION_TYPES_AND_COMPONENTS.MARKDOWN.type,
-            state: {
-                input: "hi",
-                display: "<p>hi</p>"
-            }
-        }
-    ]
+var Store = function(options) {
+    this.options = options;
+    this.model = new ConceptModel(options);
+    if(!options.uuid) {
+        this._listenToSaveEvent();
+    }
+    else {
+        this.isRouteSet = true;
+        this.fetch();
+    }
 };
 
-window.app = app;
+Store.prototype = {
+
+    getConceptName: function() {
+        return this.model.get("name");
+    },
+
+    saveConceptName: function(name) {
+        this.model.attributes.name = name;
+        this.model.save();
+    },
+
+    getSections: function() {
+        return this.model.get("sections");
+    },
+
+    getSectionAt: function(position) {
+        return this.getSections()[position];
+    },
+
+    saveSectionDataAt: function(data, position) {
+        this.model.attributes.sections[position].data = data;
+        this.model.save();
+    },
+
+    addSection: function(section) {
+        this.model.attributes.sections.push(section);
+        this.model.save();
+    },
+
+    fetch: function() {
+        this.model.once("sync", this._afterFirstSync, this);
+        this.model.fetch();
+    },
+
+    toJSON: function() {
+        return this.model.toJSON();
+    },
+
+    cleanup: function() {
+        this.model.off("sync");
+    },
+
+    _listenToSaveEvent: function() {
+        this.model.on("sync", this._onSaved, this);
+    },
+
+    _afterFirstSync: function() {
+        this._listenToSaveEvent();
+        this.trigger("ready");
+        this._onSaved();
+        this.options.onReady();
+    },
+
+    _onSaved: function() {
+        this.setRoute()
+    },
+
+    setRoute: function() {
+        if(this.isRouteSet) {
+            return;
+        }
+        var uuid = this.model.attributes.uuid;
+        var fragment = Backbone.history.getFragment();
+        var fragmentNew = "{0}/{1}/".format(fragment, uuid);
+        Backbone.history.navigate(fragmentNew, {trigger: false});
+        this.isRouteSet = true;
+    }
+
+};
+
+_.extend(Store.prototype, Backbone.Events);
+Store.prototype.constructor = Store;
+
 
 var AddSectionComponent = React.createClass({
 
@@ -422,7 +484,12 @@ var AddSectionComponent = React.createClass({
         console.log(evt);
         var sectionType = parseInt(evt.target.getAttribute("data-section-type"));
         var section = SECTIONS_SORTED_BY_TYPE[sectionType-1];
-        this.props.parent.addSection(section);
+        var blankState = _.clone(section.blankState);
+        var sectionAttrs = {
+            type: sectionType,
+            data: blankState
+        };
+        this.props.parent.addSection(sectionAttrs);
     }
 
 });
@@ -430,18 +497,19 @@ var AddSectionComponent = React.createClass({
 var PageComponent = React.createClass({
 
     getInitialState: function() {
-        return app.state;
+        return app.store.toJSON();
     },
 
     render: function() {
 
-        var sections = this.state.sections;
-        var length = this.state.sections.length;
         var components = [];
+        var sections = app.store.getSections();
+        var length = sections.length;
+
         for(var i = 0; i < length; i++) {
             var section = sections[i];
             var ComponentClass = SECTION_COMPONENTS_BY_TYPE[section.type];
-            var component = <ComponentClass data={section} key={i} parent={this} />
+            var component = <ComponentClass key={i} position={i} parent={this} />
             components.push(component);
         }
 
@@ -457,21 +525,37 @@ var PageComponent = React.createClass({
     },
 
     addSection: function(section) {
-        app.state.sections.push({
-            type: section.type,
-            state: _.clone(section.blankState)
-        });
-        this.setState(app.state);
-    },
+        app.store.addSection(section);
+        this.setState(app.store.toJSON());
+    }
 
 });
 
+var app = {
 
-var render = function(element) {
-    ReactDOM.render(<PageComponent />, element);
+};
+
+var render = function(options, element) {
+    options = options || {};
+
+    var onReady = function() {
+        ReactDOM.render(<PageComponent />, element);        
+    };
+    options.onReady = onReady;
+
+    app.store = new Store(options, element);
+
+    if(!options.uuid) {
+        onReady();
+    }
+
+
+
+
 };
 
 var unmount = function(element) {
+    app.store.cleanup();
     ReactDOM.unmountComponentAtNode(element);
 }
 
