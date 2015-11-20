@@ -64,10 +64,6 @@ var QuizModel = WebSocketModel.extend({
 
     BASE_URL: "/api/v1/quizzes/",
 
-    isNew: function() {
-        return this._isNew;
-    },
-
     toJSON: function() {
         var attrs = Backbone.Model.prototype.toJSON.call(this);
         if(attrs.choices.length) {
