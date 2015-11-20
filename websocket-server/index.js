@@ -138,7 +138,7 @@ var _saveMessageImpl = function(client, options, requestMethod, url) {
 
     var callback = function(error, response, body) {
         if(response.statusCode === 200 || response.statusCode === 201) {
-            console.log("Saved message: ", url);
+            console.log("Saved message: ", options.url);
         }
         else {
             console.warn("Unable to save message: ", response.statusCode, response.body);
