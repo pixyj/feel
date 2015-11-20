@@ -1,7 +1,7 @@
-var page = require("./concept-creator.jsx")
-
+var Creator = require("./concept-creator.jsx");
+var Student = require("./concept-student.jsx");
 
 module.exports = {
-    render: page.render,
-    unmount: page.unmount
+    Creator: Creator,
+    Student: Student
 };

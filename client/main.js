@@ -30,6 +30,7 @@ var Router = Backbone.Router.extend({
     routes: {
         "creator/concept": "createConcept",
         "creator/concept/:uuid/": "editConcept",
+        "concept/:uuid/": "learnConcept",
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
         "": "matrixviz",
@@ -37,16 +38,22 @@ var Router = Backbone.Router.extend({
         "matrixviz": "matrixviz",
     },
 
+    learnConcept: function(uuid) {
+        this.resetPage();
+        Concept.Student.render({}, this.pageElement);
+        this.currentComponent = ConceptLearn;
+    },
+
     createConcept: function() {
         this.resetPage();
-        Concept.render({}, this.pageElement);
-        this.currentComponent = Concept;
+        Concept.Creator.render({}, this.pageElement);
+        this.currentComponent = Concept.Creator;
     },
 
     editConcept: function(uuid) {
         this.resetPage();
-        Concept.render({uuid: uuid}, this.pageElement);
-        this.currentComponent = Concept;
+        Concept.Creator.render({uuid: uuid}, this.pageElement);
+        this.currentComponent = Concept.Creator;
     },
     
     matrixviz: function() {

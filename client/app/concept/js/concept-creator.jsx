@@ -19,364 +19,15 @@ var QuizSnippetComponent = QuizList.QuizSnippetComponent;
 var QuizCreator = require("./../../quiz/js/quiz-creator-view.jsx");
 var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
 
+var conceptSectionTypes = require("./concept-section-types");
+var SECTION_TYPES_AND_COMPONENTS = conceptSectionTypes.SECTION_TYPES_AND_COMPONENTS
+var SECTION_COMPONENTS_BY_TYPE = conceptSectionTypes.SECTION_COMPONENTS_BY_TYPE;
+var SECTIONS_SORTED_BY_TYPE = conceptSectionTypes.SECTIONS_SORTED_BY_TYPE;
+
 var ConceptModel = require("./models").ConceptModel;
 
-
-var PreviewComponent = React.createClass({
-
-    render: function() {
-        
-        return (
-            <div className="row" id="concept-creator-preview-section">
-
-                <div className="col-md-3">
-                </div>
-
-                <div className="col-md-6">
-                    <button className="btn btn-large waves-effect">Preview: See how the page appears to students </button>
-                </div>
-
-                <div className="col-md-3">
-                </div>
-            </div>
-        );
-    }   
-});
-
-var SectionHeadingComponent = React.createClass({
-
-    render: function() {
-        
-        return (
-            <h4> {this.props.sectionName} </h4>  
-        );
-    }
-});
-
-var ConceptNameSectionComponent = React.createClass({
-
-    getInitialState: function() {
-        return {
-            conceptName: app.store.getConceptName()
-        }
-    },
-
-    render: function() {
-        var className = this.props.htmlClass;
-        return (
-            <div className="row concept-creator-section">
-                <div className="col-xs-12">
-                    <SectionHeadingComponent sectionName="Concept Name" />
-                    <input  type="text" 
-                            placeholder="Name the concept" 
-                            value={this.state.conceptName}
-                            onKeyUp={this.updateConceptName}
-                            onChange={this.updateConceptName} />
-                </div>
-            </div>
-        );
-    },
-
-    updateConceptName: function(evt) {
-        var value = evt.target.value;
-        this.setState({
-            conceptName: value
-        });
-        app.store.saveConceptName(value);
-    }
-
-});
-
-//Since React doesn't support overriding mixin methods, 
-// we're using underscore to perform the same task. 
-var MarkdownComponentMixin = _.extend(MarkdownAndPreviewMixin, {
-
-    getInitialState: function() {
-        var section = app.store.getSectionAt(this.props.position);
-        var input = section.data.input;
-        return {
-            input: input,
-            display: md.mdAndMathToHtml(input)
-        }
-    },
-
-    onContentUpdated: function(state) {
-        var data = {
-            input: state.input
-        };
-        app.store.saveSectionDataAt(data, this.props.position);
-    }
-
-});
-
-var MarkdownComponent = React.createClass(MarkdownComponentMixin);
-
-var MarkdownSectionComponent = React.createClass({
-
-    render: function() {
-        return (
-            <div className="row concept-creator-section">
-                <SectionHeadingComponent sectionName="Markdown Section" />
-                <MarkdownComponent position={this.props.position} />
-            </div>
-        );
-    }
-});
-
-var VideoSectionComponent = React.createClass({
-
-    getInitialState: function() {
-        return app.store.getSectionAt(this.props.position).data;
-    },
-
-    render: function() {
-
-        var videoFrame;
-        if(this.state.url) {
-            videoFrame = <iframe width="560" height="315" src={this.state.url} frameborder="0" allowfullscreen></iframe>
-        }
-        else {
-            videoFrame = <h5>Enter the embed URL to see your video</h5>
-        }
-
-        return (
-            <div className="row concept-creator-section">
-                
-                <SectionHeadingComponent sectionName="Video" />
-
-                <input  type="url" 
-                        placeholder="Enter URL here" 
-                        value={this.state.url} 
-                        onKeyUp={this.updateURL}
-                        onChange={this.updateURL} /> 
-
-                {videoFrame}
-                
-            </div>
-        );
-        
-    },
-
-    updateURL: function(evt) {
-        var value = evt.target.value;
-        var newState = _.clone(this.state);
-        newState.url = value;
-        this.setState(newState);
-        app.store.saveSectionDataAt(newState, this.props.position);
-
-    }
-});
-
-var VisualizationSectionComponent = React.createClass({
-
-    componentDidMount: function() {
-        var view = matrixMultiply.render();
-        this.refs.content.appendChild(view.$el[0]);
-        view.render();
-    },
-
-    componentWillUnmount: function() {
-
-    },
-
-    render: function() {
-
-        return (
-            <div className="row concept-creator-section">
-                
-                <SectionHeadingComponent sectionName="Visualization" />
-                <div ref="content"> </div>
-                
-            </div>
-        );
-
-    }
-});
-
-var QuizSectionComponent = React.createClass({
-
-    getInitialState: function() {
-        var attrs = app.store.getSectionAt(this.props.position).data;
-        return _.extend(attrs, {
-            showQuizFilter: false,
-            showQuizCreator: false
-        });
-    },
-
-    componentDidMount: function() {
-        
-    },
-
-    render: function() {
-        var quizzes = this.state.quizzes;
-        var length = quizzes.length;
-
-        var components = []; 
-        if(length) {
-            for(var i = 0; i < length; i++) {
-                var quiz = quizzes[i];
-
-                var view =  <QuizSnippetComponent 
-                                key={i}
-                                quiz={quiz} /> 
-
-                components.push(view);
-            }
-
-        }
-        else {
-            components = <h5>You have not added any quizzes yet</h5>            
-        }
-
-        var quizFilterComponent; 
-        if(this.state.showQuizFilter) {
-            quizFilterComponent = <QuizFilterComponent ref="quizFilter" parent={this} />
-        }
-        else {
-            quizFilterComponent = <div></div>
-        }
-
-        var quizCreatorComponent; 
-        if(this.state.showQuizCreator) {
-            quizCreatorComponent = <QuizCreatorModalComponent ref="quizCreator" parent={this} />
-        }
-        else {
-            quizCreatorComponent = <div></div>
-        }
-
-        return (
-            <div className="row concept-creator-section concept-creator-quiz-section">
-
-                <SectionHeadingComponent sectionName="Quiz Section" />
-                <div className="collection">
-                    {components}
-                </div>
-
-                {quizFilterComponent}
-                {quizCreatorComponent}
-
-                <div className="row">
-                    <div className="col-md-4">
-                        <button className="btn btn-large waves-effect" 
-                                onClick={this.showQuizFilter}>
-                                Add Existing Quiz
-                        </button>
-                    </div>
-                    <div className="col-md-4">
-                        <button className="btn btn-large waves-effect" 
-                                onClick={this.showQuizCreator}>
-                                Create Quiz
-                        </button>
-                    </div>
-
-                </div>
-
-            </div>
-        );
-    },
-
-    showQuizFilter: function() {
-        this.setState({
-            showQuizFilter: true
-        });
-    },
-
-    removeQuizFilter: function() {
-        this.setState({
-            showQuizFilter: false
-        });
-    },
-
-    showQuizCreator: function() {
-        this.setState({
-            showQuizCreator: true
-        });
-    },
-
-    removeQuizCreator: function() {
-        this.setState({
-            showQuizCreator: false
-        });
-    },
-
-    selectQuiz: function(quiz) {
-        
-        var quizzes = _.clone(this.state.quizzes);
-        quizzes.push(quiz);
-        var uniqueQuizzes = _.uniq(quizzes);
-
-        this.setState({
-            quizzes: uniqueQuizzes,
-            showQuizFilter: false
-        });
-
-        app.store.saveSectionDataAt({
-            quizzes: quizzes
-        }, this.props.position);
-    }
-
-});
-
-var SECTION_TYPES_AND_COMPONENTS = {
-    
-    MARKDOWN: {
-        type: 1,
-        component: MarkdownSectionComponent,
-        name: "Markdown Section",
-        blankState: {
-            input: "",
-            display: ""
-        }
-    },
-
-    QUIZ: {
-        type: 2,
-        component: QuizSectionComponent,
-        name: "Quiz Section",
-        blankState: {
-            quizzes: []
-        }
-    },
-    
-    VIDEO: {
-        type: 3,
-        component: VideoSectionComponent,
-        name: "Video",
-        blankState: {
-            url: ""
-        }
-    },
-    
-    VISUALIZATION: {
-        type: 4,
-        component: VisualizationSectionComponent,
-        name: "Visualization",
-        blankState: {
-
-        }
-    }
-};
-
-var SECTION_COMPONENTS_BY_TYPE = function() {
-
-    var componentsByType = {};
-    _.each(_.values(SECTION_TYPES_AND_COMPONENTS), function(c) {
-        componentsByType[c.type] = c.component;
-    });
-
-    return componentsByType;
-}();
-
-var SECTIONS_SORTED_BY_TYPE = function() {
-    var sections = [];
-    _.each(_.values(SECTION_TYPES_AND_COMPONENTS), function(c) {
-        sections.push(c);
-    });
-
-    return _.sortBy(sections, "type");
-}();
-
-
+var components = require("./components");
+var SectionHeadingComponent = components.SectionHeadingComponent;
 
 var Store = function(options) {
     this.options = options;
@@ -464,6 +115,40 @@ _.extend(Store.prototype, Backbone.Events);
 Store.prototype.constructor = Store;
 
 
+var ConceptNameSectionComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            conceptName: this.props.store.getConceptName()
+        }
+    },
+
+    render: function() {
+        var className = this.props.htmlClass;
+        return (
+            <div className="row concept-creator-section">
+                <div className="col-xs-12">
+                    <SectionHeadingComponent sectionName="Concept Name" />
+                    <input  type="text" 
+                            placeholder="Name the concept" 
+                            value={this.state.conceptName}
+                            onKeyUp={this.updateConceptName}
+                            onChange={this.updateConceptName} />
+                </div>
+            </div>
+        );
+    },
+
+    updateConceptName: function(evt) {
+        var value = evt.target.value;
+        this.setState({
+            conceptName: value
+        });
+        this.props.store.saveConceptName(value);
+    }
+
+});
+
 var AddSectionComponent = React.createClass({
 
     render: function() {
@@ -505,6 +190,27 @@ var AddSectionComponent = React.createClass({
 
 });
 
+var PreviewComponent = React.createClass({
+
+    render: function() {
+        
+        return (
+            <div className="row" id="concept-creator-preview-section">
+
+                <div className="col-md-3">
+                </div>
+
+                <div className="col-md-6">
+                    <button className="btn btn-large waves-effect">Preview: See how the page appears to students </button>
+                </div>
+
+                <div className="col-md-3">
+                </div>
+            </div>
+        );
+    }   
+});
+
 var PageComponent = React.createClass({
 
     getInitialState: function() {
@@ -520,13 +226,17 @@ var PageComponent = React.createClass({
         for(var i = 0; i < length; i++) {
             var section = sections[i];
             var ComponentClass = SECTION_COMPONENTS_BY_TYPE[section.type];
-            var component = <ComponentClass key={i} position={i} parent={this} />
+            var component = <ComponentClass 
+                                key={i} 
+                                position={i} 
+                                parent={this} 
+                                store={app.store} />
             components.push(component);
         }
 
         return (
             <div>
-                <ConceptNameSectionComponent />
+                <ConceptNameSectionComponent store={app.store} />
                 {components}
                 <AddSectionComponent parent={this} />
 
