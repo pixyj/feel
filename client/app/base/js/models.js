@@ -41,6 +41,22 @@ var WebSocketModel = Backbone.Model.extend({
         return this._isNew;
     },
 
+    /*  Here's a nice blog on implementing auto save: 
+        engineering.hackerearth.com/2014/01/21/introducing-codeplayer/
+        But I want to save immediately instead of waiting since the data is critical 
+        and perform the compaction/batching on the server.
+
+        On the flip side, I've to run an additional websocket server process. 
+        
+        Other options:
+        1. Use django-websocket 
+        2. Use websockets using asyncio. 
+
+        But these libraries aren't as mature as Node. 
+
+        So I'll keep the current
+        design for now and think of alternate solutions in the background.  
+    */
     save: function() {
         this._setIsSaved(false);
         appWebSocket.save({
