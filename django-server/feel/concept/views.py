@@ -1,4 +1,5 @@
 import uuid
+import json
 
 from django.shortcuts import render
 from django.http import Http404
@@ -29,11 +30,13 @@ class ConceptDetailView(APIView):
         """
         try:
             concept = Concept.objects.get(pk=concept_id)
-        except (IndexError, ValueError):
+        except Concept.DoesNotExist:
             raise Http404
 
         serializer = ConceptSerializer(concept)
         data = serializer.data
+        for section in data['sections']:
+            section['data'] = json.loads(section['data'])
         return Response(data)
 
 
@@ -133,21 +136,20 @@ class ConceptDetailView(APIView):
             'last_modified_by': request.user
         }
         concept_attrs.update(audit_attrs)
-        
         with transaction.atomic():
             concept = get_concept_instance(concept_attrs, data)
             
             concept.conceptsection_set.all().delete()
             for position, serializer in enumerate(section_serializers):
+                #import ipdb;ipdb.set_trace()
                 section_attrs = {
                     'concept_id': concept.uuid,
                     'position': position,
+                    'type': serializer.data['type'],
+                    'data': json.dumps(request.data['sections'][position]['data'])
                 }
-                section_attrs.update(serializer.data)
                 section_attrs.update(audit_attrs)
-                
                 serializer.create(section_attrs)
                 
-
         return Response(data)
 
