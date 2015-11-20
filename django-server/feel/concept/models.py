@@ -36,16 +36,16 @@ class ConceptSection(TimestampedModel):
 
     concept = models.ForeignKey(Concept)
     position = models.IntegerField()
-    section_type = models.IntegerField(choices=SECTION_TYPES)
+    type = models.IntegerField(choices=SECTION_TYPES)
 
     #Denormalized Field. I did not want to create a new table for each section-type
     #Also, makes the API design match the application state on the client closely.  
-    data = JSONField()
+    data = models.TextField()
 
     objects = ConceptSectionManager()
 
     def __str__(self):
-        return "{} - Section {} at position {}".format(self.concept, self.section_type, self.position)
+        return "{} - Section {} at position {}".format(self.concept, self.type, self.position)
 
 
     class Meta:
