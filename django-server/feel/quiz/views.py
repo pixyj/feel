@@ -51,7 +51,7 @@ class QuizDetailView(APIView):
         """
         try:
             quiz = Quiz.objects.get(pk=quiz_id)
-        except (IndexError, ValueError):
+        except Quiz.DoesNotExist:
             raise Http404
 
         serializer = serializers.QuizSerializer(quiz)
@@ -156,13 +156,11 @@ class QuizDetailView(APIView):
         #import ipdb;ipdb.set_trace()
         with transaction.atomic():
             quiz = get_quiz_instance(quiz_attrs, data)
-            
             quiz.shortanswer_set.all().delete()
             quiz.choice_set.all().delete()
 
             #import ipdb;ipdb.set_trace()
             quiz.tags.all().delete()
-
             quiz.tags.add(*tags)
             
             for answer in data['answers']:
@@ -173,7 +171,6 @@ class QuizDetailView(APIView):
             for choice in data['choices']:
                 if choice.get('id'):
                     del choice['id']
-
                 choice_attrs = {"quiz": quiz}
                 choice_attrs.update(choice)
                 choice_attrs.update(audit_attrs)
