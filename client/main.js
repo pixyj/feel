@@ -40,8 +40,8 @@ var Router = Backbone.Router.extend({
 
     learnConcept: function(uuid) {
         this.resetPage();
-        Concept.Student.render({}, this.pageElement);
-        this.currentComponent = ConceptLearn;
+        Concept.Student.render({uuid: uuid}, this.pageElement);
+        this.currentComponent = Concept.Student;
     },
 
     createConcept: function() {

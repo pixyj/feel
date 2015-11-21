@@ -21,13 +21,14 @@ var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
 
 var conceptSectionTypes = require("./concept-section-types");
 var SECTION_TYPES_AND_COMPONENTS = conceptSectionTypes.SECTION_TYPES_AND_COMPONENTS
-var SECTION_COMPONENTS_BY_TYPE = conceptSectionTypes.SECTION_COMPONENTS_BY_TYPE;
+var CREATOR_SECTION_COMPONENTS_BY_TYPE = conceptSectionTypes.CREATOR_SECTION_COMPONENTS_BY_TYPE;
 var SECTIONS_SORTED_BY_TYPE = conceptSectionTypes.SECTIONS_SORTED_BY_TYPE;
 
 var ConceptModel = require("./models").ConceptModel;
 
-var components = require("./components");
+var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
+SectionComponentListMixin = components.SectionComponentListMixin;
 
 var Store = function(options) {
     this.options = options;
@@ -45,6 +46,10 @@ Store.prototype = {
 
     getConceptName: function() {
         return this.model.get("name");
+    },
+
+    getUUID: function() {
+        return this.model.get("uuid");
     },
 
     saveConceptName: function(name) {
@@ -193,6 +198,8 @@ var AddSectionComponent = React.createClass({
 var PreviewComponent = React.createClass({
 
     render: function() {
+
+        var studentURL = "#/concept/" + this.props.store.getUUID() + "/";
         
         return (
             <div className="row" id="concept-creator-preview-section">
@@ -201,7 +208,11 @@ var PreviewComponent = React.createClass({
                 </div>
 
                 <div className="col-md-6">
-                    <button className="btn btn-large waves-effect">Preview: See how the page appears to students </button>
+                    <a href={studentURL}>
+                        <button className="btn waves-effect blue">
+                            Preview: See how the page appears to students 
+                        </button>
+                    </a>
                 </div>
 
                 <div className="col-md-3">
@@ -213,26 +224,21 @@ var PreviewComponent = React.createClass({
 
 var PageComponent = React.createClass({
 
+    mixins: [SectionComponentListMixin],
+
     getInitialState: function() {
-        return app.store.toJSON();
+        return this.props.store.toJSON();
     },
 
     render: function() {
 
         var components = [];
-        var sections = app.store.getSections();
-        var length = sections.length;
+        var sections = this.props.store.getSections();
 
-        for(var i = 0; i < length; i++) {
-            var section = sections[i];
-            var ComponentClass = SECTION_COMPONENTS_BY_TYPE[section.type];
-            var component = <ComponentClass 
-                                key={i} 
-                                position={i} 
-                                parent={this} 
-                                store={app.store} />
-            components.push(component);
-        }
+        var componentProps = {
+            store: app.store
+        };
+        var components = this.getComponentList(sections, CREATOR_SECTION_COMPONENTS_BY_TYPE, componentProps) 
 
         return (
             <div>
@@ -240,7 +246,7 @@ var PageComponent = React.createClass({
                 {components}
                 <AddSectionComponent parent={this} />
 
-                <PreviewComponent />
+                <PreviewComponent store={app.store} />
             </div>
         );
     },
@@ -260,7 +266,7 @@ var render = function(options, element) {
     options = options || {};
 
     var onReady = function() {
-        ReactDOM.render(<PageComponent />, element);        
+        ReactDOM.render(<PageComponent store={app.store} />, element);        
     };
     options.onReady = onReady;
 
@@ -269,8 +275,6 @@ var render = function(options, element) {
     if(!options.uuid) {
         onReady();
     }
-
-
 
 
 };

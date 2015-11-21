@@ -64,10 +64,32 @@ var MarkdownSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section">
                 <SectionHeadingComponent sectionName="Markdown Section" />
-                <MarkdownComponent position={this.props.position} />
+                <MarkdownComponent position={this.props.position} store={this.props.store} />
             </div>
         );
     }
+});
+
+var StudentMarkdownSectionComponent = React.createClass({
+
+    render: function() {
+        return (
+            <div className="row concept-student-section">
+                <StudentMarkdownComponent store={this.props.store} />
+            </div>
+        );
+    }
+});
+
+
+var VideoFrameComponent = React.createClass({
+
+    render: function() {
+        return (
+            <iframe width="560" height="315" src={this.props.url} frameborder="0" allowfullscreen></iframe>
+        );
+    }
+
 });
 
 var VideoSectionComponent = React.createClass({
@@ -80,7 +102,7 @@ var VideoSectionComponent = React.createClass({
 
         var videoFrame;
         if(this.state.url) {
-            videoFrame = <iframe width="560" height="315" src={this.state.url} frameborder="0" allowfullscreen></iframe>
+            videoFrame = <VideoFrameComponent url={this.state.url} />
         }
         else {
             videoFrame = <h5>Enter the embed URL to see your video</h5>
@@ -264,6 +286,30 @@ var QuizSectionComponent = React.createClass({
 
 });
 
+
+var SectionComponentListMixin = {
+
+    getComponentList: function(sections, sectionComponentsByType, options) {
+
+        var components = [];
+        var sections = this.props.conceptStore.getSections();
+        var length; = sections.length;
+
+        for(var i = 0; i < length; i++) {
+            var section = sections[i];
+            var ComponentClass = sectionComponentsByType[section.type];
+            var component = <ComponentClass 
+                                key={i} 
+                                position={i} 
+                                parent={this} 
+                                {...options} />
+            components.push(component);
+        }
+        return components;
+    }
+};
+
+
 module.exports = {
     SectionHeadingComponent: SectionHeadingComponent,
     MarkdownComponentMixin: MarkdownComponentMixin,
@@ -271,5 +317,6 @@ module.exports = {
     MarkdownSectionComponent: MarkdownSectionComponent,
     VideoSectionComponent: VideoSectionComponent,
     VisualizationSectionComponent: VisualizationSectionComponent,
-    QuizSectionComponent: QuizSectionComponent
+    QuizSectionComponent: QuizSectionComponent,
+    SectionComponentListMixin: SectionComponentListMixin
 }
