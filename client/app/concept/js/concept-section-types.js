@@ -6,7 +6,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     
     MARKDOWN: {
         type: 1,
-        studentComponent: null,
+        studentComponent: C.StudentMarkdownSectionComponent,
         creatorComponent: C.MarkdownSectionComponent,
         name: "Markdown Section",
         blankState: {
@@ -27,7 +27,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     
     VIDEO: {
         type: 3,
-        studentComponent: null,
+        studentComponent: C.StudentVideoSectionComponent,
         creatorComponent: C.VideoSectionComponent,
         name: "Video",
         blankState: {
@@ -37,7 +37,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     
     VISUALIZATION: {
         type: 4,
-        studentComponent: null,
+        studentComponent: C.VisualizationSectionComponent,
         creatorComponent: C.VisualizationSectionComponent,
         name: "Visualization",
         blankState: {

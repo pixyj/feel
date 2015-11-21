@@ -10,6 +10,7 @@ var md = require("md");
 var MarkdownAndPreview = require("markdown-and-preview.jsx");
 MarkdownAndPreviewMixin = MarkdownAndPreview.MarkdownAndPreviewAttrs;
 MarkdownDisplayMixin = MarkdownAndPreview.MarkdownDisplayMixin;
+MarkdownDisplayComponent = MarkdownAndPreview.MarkdownDisplayComponent;
 
 var visualize = require("./../../matrixviz/js/api");
 var matrixMultiply = visualize.matrixMultiply;
@@ -86,10 +87,11 @@ var StudentMarkdownSectionComponent = React.createClass({
     mixins: [GetSectionDataMixin],
 
     render: function() {
-        var display = this.getSectionData(this.props.conceptStore).display;
+        var input = this.getSectionData(this.props.conceptStore).input;
+        var display = md.mdAndMathToHtml(input);
         return (
             <div className="row concept-student-section">
-                <StudentMarkdownComponent display={display} />
+                <MarkdownDisplayComponent display={display} />
             </div>
         );
     }
@@ -105,6 +107,22 @@ var VideoFrameComponent = React.createClass({
     }
 
 });
+
+var StudentVideoSectionComponent = React.createClass({
+
+    mixins: [GetSectionDataMixin],
+
+    render: function() {
+        var url = this.getSectionData(this.props.conceptStore).url;
+
+        return (
+            <div className="row concept-student-section">
+                <VideoFrameComponent url={url} />
+            </div>
+        );
+    }
+});
+
 
 var VideoSectionComponent = React.createClass({
 
@@ -333,5 +351,7 @@ module.exports = {
     QuizSectionComponent: QuizSectionComponent,
     SectionComponentListMixin: SectionComponentListMixin,
 
-    StudentMarkdownSectionComponent: StudentMarkdownSectionComponent
+    StudentMarkdownSectionComponent: StudentMarkdownSectionComponent,
+    StudentVideoSectionComponent: StudentVideoSectionComponent,
+
 }

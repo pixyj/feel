@@ -28,6 +28,8 @@ var ConceptModel = require("./models").ConceptModel;
 
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
+var SectionComponentListMixin = components.SectionComponentListMixin;
+
 
 
 var ConceptStore = function(options) {
@@ -39,19 +41,58 @@ ConceptStore.prototype = {
 
     fetch: function() {
         return this.model.fetch();
+    },
+
+    getConceptName: function() {
+        return this.model.get("name");
+    },
+
+    getSections: function() {
+        return this.model.get("sections");
+    },
+
+    getSectionDataAt: function(position) {
+        var data = this.model.attributes.sections[position].data;
+
+        //clone the object so that the view is free is mutate the object. 
+        return _.clone(data); 
     }
 };
 
 ConceptStore.prototype.constructor = ConceptStore;
 
-var PageComponent = React.createClass({
+var StudentConceptNameComponent = React.createClass({
 
     render: function() {
 
-
+        var message = this.props.conceptStore.getConceptName();
 
         return (
-            <div> Hi There </div>
+            <h4> 
+                {message}
+            </h4>
+        );
+    }
+});
+
+
+var PageComponent = React.createClass({
+
+    mixins: [SectionComponentListMixin],
+
+    render: function() {
+
+        var sections = this.props.conceptStore.getSections();
+        var options = {
+            conceptStore: this.props.conceptStore
+        }
+        var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, options);
+
+        return (
+            <div> 
+                <StudentConceptNameComponent conceptStore={this.props.conceptStore} />
+                {components}
+            </div>
         );
     }
 });
@@ -64,6 +105,7 @@ var app = {};
 
 
 var render = function(options, element) {
+
     app.conceptStore = new ConceptStore(options);
 
     app.conceptStore.fetch().then(function() {

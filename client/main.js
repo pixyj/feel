@@ -4,7 +4,9 @@ window.$ = $;
 var Backbone = require("backbone");
 window.Backbone = Backbone;
 
+
 var _ = require("underscore");
+window._ = _;
 
 var Quiz = require("./app/quiz/js/api");
 
