@@ -85,7 +85,22 @@ var MarkdownAndPreviewAttrs = {
 
 }
 
+var MarkdownDisplayComponentMixin = {
+
+
+    render: function() {
+        var className = this.props.className || "";
+        var display = this.props.display;
+
+        return (
+            <div className={className} dangerouslySetInnerHTML={{__html: display}} />
+        );
+        
+    }
+};
+
 module.exports = {
-    MarkdownAndPreviewAttrs: MarkdownAndPreviewAttrs
+    MarkdownAndPreviewAttrs: MarkdownAndPreviewAttrs,
+    MarkdownDisplayComponentMixin: MarkdownDisplayComponentMixin
 };
 

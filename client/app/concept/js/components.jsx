@@ -7,7 +7,9 @@ var Backbone = require("backbone");
 var utils = require("utils");
 var tags = require("tags.jsx");
 var md = require("md");
-var MarkdownAndPreviewMixin = require("markdown-and-preview.jsx").MarkdownAndPreviewAttrs;
+var MarkdownAndPreview = require("markdown-and-preview.jsx");
+MarkdownAndPreviewMixin = MarkdownAndPreview.MarkdownAndPreviewAttrs;
+MarkdownDisplayMixin = MarkdownAndPreview.MarkdownDisplayMixin;
 
 var visualize = require("./../../matrixviz/js/api");
 var matrixMultiply = visualize.matrixMultiply;
@@ -36,7 +38,7 @@ var SectionHeadingComponent = React.createClass({
 
 //Since React doesn't support overriding mixin methods, 
 // we're using underscore to perform the same task. 
-var MarkdownComponentMixin = _.extend(MarkdownAndPreviewMixin, {
+var MarkdownComponentMixin = utils.inherit({
 
     getInitialState: function() {
         var section = this.props.store.getSectionAt(this.props.position);
@@ -54,13 +56,15 @@ var MarkdownComponentMixin = _.extend(MarkdownAndPreviewMixin, {
         this.props.store.saveSectionDataAt(data, this.props.position);
     }
 
-});
+}, MarkdownAndPreviewMixin);
 
 var MarkdownComponent = React.createClass(MarkdownComponentMixin);
 
 var MarkdownSectionComponent = React.createClass({
 
     render: function() {
+
+        var x = 1;
         return (
             <div className="row concept-creator-section">
                 <SectionHeadingComponent sectionName="Markdown Section" />
@@ -70,12 +74,22 @@ var MarkdownSectionComponent = React.createClass({
     }
 });
 
+var GetSectionDataMixin = {
+
+    getSectionData: function(store) {
+        return store.getSectionDataAt(this.props.position);
+    }
+}
+
 var StudentMarkdownSectionComponent = React.createClass({
 
+    mixins: [GetSectionDataMixin],
+
     render: function() {
+        var display = this.getSectionData(this.props.conceptStore).display;
         return (
             <div className="row concept-student-section">
-                <StudentMarkdownComponent store={this.props.store} />
+                <StudentMarkdownComponent display={display} />
             </div>
         );
     }
@@ -292,8 +306,8 @@ var SectionComponentListMixin = {
     getComponentList: function(sections, sectionComponentsByType, options) {
 
         var components = [];
-        var sections = this.props.conceptStore.getSections();
-        var length; = sections.length;
+        
+        var length = sections.length;
 
         for(var i = 0; i < length; i++) {
             var section = sections[i];
@@ -313,10 +327,11 @@ var SectionComponentListMixin = {
 module.exports = {
     SectionHeadingComponent: SectionHeadingComponent,
     MarkdownComponentMixin: MarkdownComponentMixin,
-    MarkdownComponent: MarkdownComponent,
     MarkdownSectionComponent: MarkdownSectionComponent,
     VideoSectionComponent: VideoSectionComponent,
     VisualizationSectionComponent: VisualizationSectionComponent,
     QuizSectionComponent: QuizSectionComponent,
-    SectionComponentListMixin: SectionComponentListMixin
+    SectionComponentListMixin: SectionComponentListMixin,
+
+    StudentMarkdownSectionComponent: StudentMarkdownSectionComponent
 }
