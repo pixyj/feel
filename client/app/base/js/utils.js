@@ -61,12 +61,34 @@ var getUniqueId = function() {
 
 var uuid = require("./uuid");
 
+var inherit = function(child, parent) {
+
+    var childKeys = Object.keys(child);
+
+    var hashedChildKeys = {};
+    _.each(childKeys, function(key) {
+        hashedChildKeys[key] = true;
+    });
+
+    var parentKeys = Object.keys(parent);
+
+    var length = parentKeys.length;
+    for(var i = 0; i < length; i++) {
+        var key = parentKeys[i];
+        if( !hashedChildKeys[key] ) {
+            child[key] = parent[key];
+        }
+    }
+    return child;
+}
+
 module.exports = {
     getUTCDate: getUTCDate,
     prettyDate: prettyDate,
     getHumanizedTimeDiff: getHumanizedTimeDiff,
     getUniqueId: getUniqueId,
-    uuid: uuid
+    uuid: uuid,
+    inherit: inherit
 };
 
 window.utils = module.exports;
