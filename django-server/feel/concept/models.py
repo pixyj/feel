@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 
 from core.models import TimestampedModel
-from jsonfield import JSONField
+from quiz.models import Quiz
 
 
 class Concept(TimestampedModel):
@@ -11,6 +11,7 @@ class Concept(TimestampedModel):
 
     def __str__(self):
         return "{} created by {} ".format(self.name, self.created_by)
+
 
 
 class ConceptSectionManager(models.Manager):
@@ -22,16 +23,22 @@ class ConceptSectionManager(models.Manager):
 
 class ConceptSection(TimestampedModel):
 
+    PREREQ_QUIZ = 0
     MARKDOWN = 1
     QUIZ = 2
     VIDEO = 3
     VISUALIZATION = 4
+    EXTERNAL_RESOURCES = 5
+    EXIT_QUIZ = 6
 
     SECTION_TYPES = (
+        (PREREQ_QUIZ, 0),
         (MARKDOWN, 1),
         (QUIZ, 2),
         (VIDEO, 3),
         (VISUALIZATION, 4),
+        (EXTERNAL_RESOURCES, 5),
+        (EXIT_QUIZ, 6)
     )
 
     concept = models.ForeignKey(Concept)
@@ -43,6 +50,16 @@ class ConceptSection(TimestampedModel):
     data = models.TextField()
 
     objects = ConceptSectionManager()
+
+    def get_additional_info(self):
+        if self.type == ConceptSection.Quiz:
+            return self._get_quiz_info()
+
+
+    def _get_quiz_info(self):
+        data = json.loads(self.data)
+        quizzes = data['quizzes']
+
 
     def __str__(self):
         return "{} - Section {} at position {}".format(self.concept, self.type, self.position)

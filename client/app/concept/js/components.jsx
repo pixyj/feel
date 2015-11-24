@@ -248,7 +248,7 @@ var QuizSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section concept-creator-quiz-section">
 
-                <SectionHeadingComponent sectionName="Quiz Section" />
+                <SectionHeadingComponent sectionName={this.props.section.name} />
                 <div className="collection">
                     {components}
                 </div>
@@ -334,7 +334,8 @@ var SectionComponentListMixin = {
                                 key={i} 
                                 position={i} 
                                 parent={this} 
-                                {...options} />
+                                {...options} 
+                                section={section} />
             components.push(component);
         }
         return components;

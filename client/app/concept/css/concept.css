@@ -8,12 +8,16 @@
     margin-top: 2rem;
 }
 
+.concept-creator-add-section-row {
+    margin-bottom: 1rem;
+}
+
 .concept-creator-add-section button {
     width: 100%;
 }
 
 #concept-creator-preview-section {
-    margin-top: 2rem;
+    margin-top: 1rem;
     margin-bottom: 5rem;
 }
 

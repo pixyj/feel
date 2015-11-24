@@ -149,6 +149,7 @@ class ConceptDetailView(APIView):
                     'data': json.dumps(section_data)
                 }
                 section_attrs.update(audit_attrs)
+                serializer.create(section_attrs)
                 
                 
         return Response(data)

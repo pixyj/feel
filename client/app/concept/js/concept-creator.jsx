@@ -154,29 +154,77 @@ var ConceptNameSectionComponent = React.createClass({
 
 });
 
+var RowComponent = React.createClass({
+
+    render: function() {
+        var columns = this.props.columns;
+        var length = columns.length;
+
+        var components = [];
+        for(var i = 0; i < length; i++) {
+            components.push(columns[i]);
+        }
+
+        var className = "row " + this.props.className;
+
+        return (
+            <div className={className}>
+                {components}
+            </div>
+        );
+    }
+});
+
+var AddSectionButtonComponent = React.createClass({
+
+    render: function() {
+        var section = this.props.section;
+        var text = "Add " + section.name;
+        return (
+            <div className="col-md-4" key={this.props.key} > 
+                <button 
+                    className="btn waves-effect"
+                    data-section-type={section.type}
+                    onClick={this.handleClick}>{text}
+                </button> 
+            </div>
+        );
+    },
+
+    handleClick: function(evt) {
+        this.props.parent.addSection(evt);
+    }
+});
+
 var AddSectionComponent = React.createClass({
 
     render: function() {
 
-        var buttons = [];
         var sections = SECTIONS_SORTED_BY_TYPE;
         var length = SECTIONS_SORTED_BY_TYPE.length;
-        for(var i = 0; i < length; i++) {
-            var text = "Add " + sections[i].name;
-            var button = <div className="col-md-3" key={i} > 
-                            <button 
-                                className="btn waves-effect"
-                                data-section-type={sections[i].type}
-                                onClick={this.addSection}>{text}
-                            </button> 
-                         </div>
-            buttons.push(button);
+
+        var rowSections;
+        var buttonsPerRow = 3;
+        var rows = [];
+        for(var i = 0; i < parseInt(length / buttonsPerRow); i++) {
+            rowSections = sections.slice(i*buttonsPerRow, (i+1)*buttonsPerRow);
+            var rowLength = rowSections.length;
+            var buttons = [];
+            for(var j = 0; j < rowLength; j++) {
+                var button = <AddSectionButtonComponent 
+                            key={j} 
+                            section={rowSections[j]} 
+                            parent={this} />;
+                buttons.push(button);
+            }
+            var row = <RowComponent key={i} columns={buttons} className="concept-creator-add-section-row"/>
+            rows.push(row);
         }
         
         return (
 
             <div className="row concept-creator-add-section">
-                {buttons}
+                {rows}
             </div>
         );
     },
@@ -184,11 +232,12 @@ var AddSectionComponent = React.createClass({
     addSection: function(evt) {
         console.log(evt);
         var sectionType = parseInt(evt.target.getAttribute("data-section-type"));
-        var section = SECTIONS_SORTED_BY_TYPE[sectionType-1];
+        var section = SECTIONS_SORTED_BY_TYPE[sectionType];
         var blankState = _.clone(section.blankState);
         var sectionAttrs = {
             type: sectionType,
-            data: blankState
+            data: blankState,
+            name: section.name
         };
         this.props.parent.addSection(sectionAttrs);
     }

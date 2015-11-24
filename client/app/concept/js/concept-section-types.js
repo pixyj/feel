@@ -3,6 +3,26 @@ var _ = require("underscore");
 var C = require("./components.jsx");
 
 var SECTION_TYPES_AND_COMPONENTS = {
+
+    PREREQ_QUIZ: {
+        type: 0,
+        studentComponent: null,
+        creatorComponent: C.QuizSectionComponent,
+        name: "Prerequisite Quiz",
+        blankState: {
+            quizzes: []
+        }
+    },
+
+    EXIT_QUIZ: {
+        type: 6,
+        studentComponent: null,
+        creatorComponent: C.QuizSectionComponent,
+        name: "Exit Quiz",
+        blankState: {
+            quizzes: []
+        }
+    },
     
     MARKDOWN: {
         type: 1,
@@ -76,7 +96,12 @@ var SECTIONS_SORTED_BY_TYPE = function() {
 }();
 
 module.exports = {
+
     SECTION_TYPES_AND_COMPONENTS: SECTION_TYPES_AND_COMPONENTS,
+
     CREATOR_SECTION_COMPONENTS_BY_TYPE: CREATOR_SECTION_COMPONENTS_BY_TYPE,
+
     STUDENT_SECTION_COMPONENTS_BY_TYPE: STUDENT_SECTION_COMPONENTS_BY_TYPE,
-    SECTIONS_SORTED_BY_TYPE: SECTIONS_SORTED_BY_TYPE };
+
+    SECTIONS_SORTED_BY_TYPE: SECTIONS_SORTED_BY_TYPE 
+};
