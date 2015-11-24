@@ -141,15 +141,15 @@ class ConceptDetailView(APIView):
             
             concept.conceptsection_set.all().delete()
             for position, serializer in enumerate(section_serializers):
-                #import ipdb;ipdb.set_trace()
+                section_data = request.data['sections'][position]['data']
                 section_attrs = {
                     'concept_id': concept.uuid,
                     'position': position,
                     'type': serializer.data['type'],
-                    'data': json.dumps(request.data['sections'][position]['data'])
+                    'data': json.dumps(section_data)
                 }
                 section_attrs.update(audit_attrs)
-                serializer.create(section_attrs)
+                
                 
         return Response(data)
 
