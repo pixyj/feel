@@ -18,10 +18,10 @@ class TimestampedModelManager(models.Manager):
 
 class TimestampedModel(models.Model):
     
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name="%(class)s_created_by")
     
-    last_modified_at = models.DateTimeField()
+    last_modified_at = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, related_name="%(class)s_last_modified_by")
 
     objects = TimestampedModelManager()
