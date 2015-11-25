@@ -80,7 +80,7 @@ class ConceptDetailView(APIView):
         """
         found = True
         try:
-            concept_v1 = Concept.objects.get(pk=concept_id)
+            concept_v1 = Concept.objects.only('uuid').get(pk=concept_id)
         except Concept.DoesNotExist:
             found = False
 
@@ -99,6 +99,9 @@ class ConceptDetailView(APIView):
         Used in _save_concept_and_return_response during `PUT` to get a `Concept` object.
         """
         concept = Concept.objects.get(pk=concept_attrs['uuid'])
+        for field, value in concept_attrs.items():
+            setattr(concept, field, value)
+        concept.save()
         return concept
         
 
