@@ -7,7 +7,7 @@ from quiz.models import Quiz
 
 class Concept(TimestampedModel):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.TextField()
+    name = models.TextField(blank=True)
 
     def __str__(self):
         return "{} created by {} ".format(self.name, self.created_by)
