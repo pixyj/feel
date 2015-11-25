@@ -148,7 +148,7 @@ var ConceptNameSectionComponent = React.createClass({
     render: function() {
         var className = this.props.htmlClass;
         return (
-            <div className="row concept-creator-section">
+            <div className="row concept-creator-section card">
                 <SectionSaveStatusComponent store={this.props.store} />
                 <div className="col-xs-12">
                     <SectionHeadingComponent sectionName="Concept Name" />

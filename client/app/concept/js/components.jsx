@@ -99,7 +99,7 @@ var MarkdownSectionComponent = React.createClass({
     render: function() {
 
         return (
-            <div className="row concept-creator-section">
+            <div className="row concept-creator-section card">
                 <SectionSaveStatusComponent store={this.props.store} />
                 <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName="Markdown Section" />
@@ -175,7 +175,7 @@ var VideoSectionComponent = React.createClass({
         }
 
         return (
-            <div className="row concept-creator-section">
+            <div className="row concept-creator-section card">
                 <SectionSaveStatusComponent store={this.props.store} />
                 <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName="Video" />
@@ -218,7 +218,7 @@ var VisualizationSectionComponent = React.createClass({
     render: function() {
 
         return (
-            <div className="row concept-creator-section">
+            <div className="row concept-creator-section card">
                 <SectionSaveStatusComponent store={this.props.store} />
                 <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName="Visualization" />
@@ -282,7 +282,7 @@ var QuizSectionComponent = React.createClass({
         }
 
         return (
-            <div className="row concept-creator-section concept-creator-quiz-section">
+            <div className="row concept-creator-section concept-creator-quiz-section card">
                 <SectionSaveStatusComponent store={this.props.store} />
                 <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName={this.props.section.name} />
