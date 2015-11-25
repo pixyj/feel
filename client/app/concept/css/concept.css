@@ -1,7 +1,17 @@
 .concept-creator-section {
+    position: relative;
     border: 2px solid black;
     margin-top: 2rem;
     padding: 1rem;
+    padding-bottom: 2rem;
+}
+
+.concept-save-status {
+    position: absolute;
+    bottom: 0;
+    left: 2rem;
+    color: #337ab7;
+    font-weight: bolder;
 }
 
 .concept-creator-add-section {

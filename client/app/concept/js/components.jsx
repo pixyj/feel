@@ -22,7 +22,27 @@ var QuizSnippetComponent = QuizList.QuizSnippetComponent;
 var QuizCreator = require("./../../quiz/js/quiz-creator-view.jsx");
 var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
 
+var SaveStatusMixin = require("save-status-component.jsx").SaveStatusMixin;
 
+var SectionSaveStatusComponent = React.createClass({
+
+    mixins: [SaveStatusMixin],
+
+    CLASSNAME: "concept-save-status",
+
+    componentDidMount: function() {
+        this.props.store.on("change:isSaved", this.onSaveStatusChanged, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.store.off("change:isSaved", this.onSaveStatusChanged);
+    },
+
+    onSaveStatusChanged: function(isSaved) {
+        this.setIsSaved(isSaved);
+    }
+
+});
 
 
 var SectionHeadingComponent = React.createClass({
@@ -65,9 +85,9 @@ var MarkdownSectionComponent = React.createClass({
 
     render: function() {
 
-        var x = 1;
         return (
             <div className="row concept-creator-section">
+                <SectionSaveStatusComponent store={this.props.store} />
                 <SectionHeadingComponent sectionName="Markdown Section" />
                 <MarkdownComponent position={this.props.position} store={this.props.store} />
             </div>
@@ -142,7 +162,7 @@ var VideoSectionComponent = React.createClass({
 
         return (
             <div className="row concept-creator-section">
-                
+                <SectionSaveStatusComponent store={this.props.store} />
                 <SectionHeadingComponent sectionName="Video" />
 
                 <input  type="url" 
@@ -184,7 +204,7 @@ var VisualizationSectionComponent = React.createClass({
 
         return (
             <div className="row concept-creator-section">
-                
+                <SectionSaveStatusComponent store={this.props.store} />
                 <SectionHeadingComponent sectionName="Visualization" />
                 <div ref="content"> </div>
                 
@@ -247,7 +267,7 @@ var QuizSectionComponent = React.createClass({
 
         return (
             <div className="row concept-creator-section concept-creator-quiz-section">
-
+                <SectionSaveStatusComponent store={this.props.store} />
                 <SectionHeadingComponent sectionName={this.props.section.name} />
                 <div className="collection">
                     {components}
@@ -344,15 +364,20 @@ var SectionComponentListMixin = {
 
 
 module.exports = {
+    SectionSaveStatusComponent: SectionSaveStatusComponent,
     SectionHeadingComponent: SectionHeadingComponent,
-    MarkdownComponentMixin: MarkdownComponentMixin,
-    MarkdownSectionComponent: MarkdownSectionComponent,
-    VideoSectionComponent: VideoSectionComponent,
-    VisualizationSectionComponent: VisualizationSectionComponent,
-    QuizSectionComponent: QuizSectionComponent,
     SectionComponentListMixin: SectionComponentListMixin,
 
+    MarkdownComponentMixin: MarkdownComponentMixin,
+    MarkdownSectionComponent: MarkdownSectionComponent,
+
+    VideoSectionComponent: VideoSectionComponent,
+
+    VisualizationSectionComponent: VisualizationSectionComponent,
+
+    QuizSectionComponent: QuizSectionComponent,
+    
     StudentMarkdownSectionComponent: StudentMarkdownSectionComponent,
-    StudentVideoSectionComponent: StudentVideoSectionComponent,
+    StudentVideoSectionComponent: StudentVideoSectionComponent
 
 }

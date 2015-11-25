@@ -28,18 +28,20 @@ var ConceptModel = require("./models").ConceptModel;
 
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
-SectionComponentListMixin = components.SectionComponentListMixin;
+var SectionComponentListMixin = components.SectionComponentListMixin;
+var SectionSaveStatusComponent = components.SectionSaveStatusComponent;
 
 var Store = function(options) {
     this.options = options;
     this.model = new ConceptModel(options);
     if(!options.uuid) {
-        this._listenToSaveEvent();
+        this._listenToFirstSyncEvent();
     }
     else {
         this.isRouteSet = true;
         this.fetch();
     }
+    this._listenToSaveStatusChanged();
 };
 
 Store.prototype = {
@@ -76,7 +78,7 @@ Store.prototype = {
     },
 
     fetch: function() {
-        this.model.once("sync", this._afterFirstSync, this);
+        this.model.once("sync", this._onFirstSync, this);
         this.model.fetch();
     },
 
@@ -88,19 +90,26 @@ Store.prototype = {
         this.model.off("sync");
     },
 
-    _listenToSaveEvent: function() {
-        this.model.on("sync", this._onSaved, this);
+    _listenToFirstSyncEvent: function() {
+        this.model.once("sync", this._onFirstSync, this);
     },
 
-    _afterFirstSync: function() {
-        this._listenToSaveEvent();
+    _onFirstSync: function() {
         this.trigger("ready");
-        this._onSaved();
+        this.setRoute();
         this.options.onReady();
     },
 
-    _onSaved: function() {
-        this.setRoute()
+    _listenToSaveStatusChanged: function() {
+        this.model.on("change:isSaved", this._onSaveStatusChanged, this);
+    },
+
+    _onSaveStatusChanged: function(status) {
+        this.trigger("change:isSaved", status);
+    },
+
+    isSaved: function() {
+        return this.model.isSaved();
     },
 
     setRoute: function() {
@@ -132,6 +141,7 @@ var ConceptNameSectionComponent = React.createClass({
         var className = this.props.htmlClass;
         return (
             <div className="row concept-creator-section">
+                <SectionSaveStatusComponent store={this.props.store} />
                 <div className="col-xs-12">
                     <SectionHeadingComponent sectionName="Concept Name" />
                     <input  type="text" 

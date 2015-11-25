@@ -28,6 +28,7 @@ var WebSocketModel = Backbone.Model.extend({
             this.attributes.uuid = utils.uuid();
         }
         this._isSaved = true;
+        //this._triggerIsSavedChanged = _.debounce(this._triggerIsSavedChanged, 1000, {immedate: false});
     },
 
     url: function() {
@@ -71,7 +72,7 @@ var WebSocketModel = Backbone.Model.extend({
 
     onResponseReceived: function(payload, statusCode) {
         if(statusCode === 200 || statusCode === 201) {
-            console.log("Saved WebSocketModel");
+            console.info("Saved WebSocketModel");
             this._setIsSaved(true);
             this.trigger("sync", this);  
         }
@@ -80,12 +81,19 @@ var WebSocketModel = Backbone.Model.extend({
         }
     },
 
-    _setIsSaved: function(status) {
-        if(this._isSaved !== status) {
-            this.trigger("change:isSaved", status);    
-        }
-        this._isSaved = status;
+    isSaved: function() {
+        return this._isSaved;
+    },
 
+    _setIsSaved: function(status) {
+        this._isSaved = status;
+        this._triggerIsSavedChanged();
+
+    },
+
+    _triggerIsSavedChanged: function() {
+        console.info("isSaved changed");
+        this.trigger("change:isSaved", this._isSaved);
     }
 });
 
