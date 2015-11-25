@@ -36,4 +36,13 @@
     margin-bottom: 2rem;
     padding: 1rem;
 }
+
+.remove-item {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
     

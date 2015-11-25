@@ -31,6 +31,7 @@ var SectionHeadingComponent = components.SectionHeadingComponent;
 var SectionComponentListMixin = components.SectionComponentListMixin;
 var SectionSaveStatusComponent = components.SectionSaveStatusComponent;
 
+
 var Store = function(options) {
     this.options = options;
     this.model = new ConceptModel(options);
@@ -75,6 +76,13 @@ Store.prototype = {
     addSection: function(section) {
         this.model.attributes.sections.push(section);
         this.model.save();
+    },
+
+    removeSectionAt: function(position) {
+        var sections = this.model.attributes.sections;
+        sections.splice(position, 1);
+        this.model.save();
+        this.trigger("remove:section");
     },
 
     fetch: function() {
@@ -289,6 +297,14 @@ var PageComponent = React.createClass({
         return this.props.store.toJSON();
     },
 
+    componentDidMount: function() {
+        this.props.store.on("remove:section", this.updateState, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.store.off("remove:section", this.updateState);
+    },
+
     render: function() {
 
         var components = [];
@@ -311,8 +327,12 @@ var PageComponent = React.createClass({
     },
 
     addSection: function(section) {
-        app.store.addSection(section);
-        this.setState(app.store.toJSON());
+        this.props.store.addSection(section);
+        this.setState(this.props.store.toJSON());
+    },
+
+    updateState: function() {
+        this.setState(this.props.store.toJSON());
     }
 
 });

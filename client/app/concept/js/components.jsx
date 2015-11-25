@@ -23,6 +23,19 @@ var QuizCreator = require("./../../quiz/js/quiz-creator-view.jsx");
 var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
 
 var SaveStatusMixin = require("save-status-component.jsx").SaveStatusMixin;
+var RemoveItemComponent = require("remove-item-component.jsx").RemoveItemComponent;
+
+var RemoveItemMixin = require("remove-item-component.jsx").RemoveItemMixin;
+
+var SectionRemoveItemComponent = React.createClass({
+    
+    mixins: [RemoveItemMixin],
+
+    removeItem: function() {
+        this.props.store.removeSectionAt(this.props.position);
+    }
+
+})
 
 var SectionSaveStatusComponent = React.createClass({
 
@@ -88,6 +101,7 @@ var MarkdownSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section">
                 <SectionSaveStatusComponent store={this.props.store} />
+                <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName="Markdown Section" />
                 <MarkdownComponent position={this.props.position} store={this.props.store} />
             </div>
@@ -163,6 +177,7 @@ var VideoSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section">
                 <SectionSaveStatusComponent store={this.props.store} />
+                <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName="Video" />
 
                 <input  type="url" 
@@ -205,6 +220,7 @@ var VisualizationSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section">
                 <SectionSaveStatusComponent store={this.props.store} />
+                <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName="Visualization" />
                 <div ref="content"> </div>
                 
@@ -268,6 +284,7 @@ var QuizSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section concept-creator-quiz-section">
                 <SectionSaveStatusComponent store={this.props.store} />
+                <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName={this.props.section.name} />
                 <div className="collection">
                     {components}
