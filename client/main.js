@@ -19,6 +19,8 @@ var MatrixViz = require("./app/matrixviz/js/visualize");
 
 var Concept = require("./app/concept/js/api");
 
+var Course = require("./app/course/js/api");
+
 require("csrf");
 require("app-websocket");
 
@@ -32,6 +34,7 @@ var Router = Backbone.Router.extend({
     routes: {
         "creator/concept": "createConcept",
         "creator/concept/:uuid/": "editConcept",
+        "creator/course": "createCourse",
         "concept/:uuid/": "learnConcept",
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
@@ -56,6 +59,12 @@ var Router = Backbone.Router.extend({
         this.resetPage();
         Concept.Creator.render({uuid: uuid}, this.pageElement);
         this.currentComponent = Concept.Creator;
+    },
+
+    createCourse: function() {
+        this.resetPage();
+        Course.Creator.render({}, this.pageElement);
+        this.currentComponent = Course.Creator;
     },
     
     matrixviz: function() {

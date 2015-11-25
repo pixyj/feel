@@ -1,5 +1,9 @@
 "use strict";
 
+var $ = require("jquery");
+var _ = require("underscore");
+var Backbone = require("backbone");
+
 var app = {
     levelGap: 80,
     ns: 'http://www.w3.org/2000/svg',
@@ -7,7 +11,8 @@ var app = {
     NO_JUMP_CRISS_CROSS: 2,
     JUMP: 3,
     SVG_PADDING_FRACTION: 0.05,
-    STROKE_WIDTH: 3
+    STROKE_WIDTH: 3,
+    view: null
 };
 
 var graph = {
@@ -319,7 +324,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     var svgWidth = svgAttrs.width;
 
     var chapterClass = "chapter-box-" + node.chapterIndex;
-    var h4 = $("<h4>").html(node.name);
+    var h4 = $("<h5>").html(node.name);
     var p = $("<p>").addClass("concept-box").addClass(chapterClass).append(h4);
 
     //foreignObject does not work on IE #todo. But my initial technical audience does not use IE, I guess? 
@@ -888,10 +893,13 @@ var drawAllNodes = function(levels, svgAttrs) {
 };
 
 
-var init = function() {
+var init = function(svg) {
     
-    //cache the width so that it can used be in calculations without querying the dom each time.
-    var svg = $("svg");
+
+    svg.attr({
+        "height": "1400",
+        "width": "1000"
+    });
     
     svg.find("foreignObject").remove();
     svg.find("line").remove();
@@ -899,17 +907,41 @@ var init = function() {
 
     var svgAttrs = {
         svg: svg,
-        width: svg[0].offsetWidth
+        width: "1000"
     };
 
     var result = drawAllNodes(graph.levels, svgAttrs);
     drawAllEdges(graph, graph.edges, result.allNodes, result.allAlleys, svg);
 
-    //testDrawLine(svg);
+    return svg;
 };
 
+var render = function() {
+    app.view = new GraphView();
+    return app.view;
+}
 
-$(document).ready(init);
+var unmount = function() {
+    if(app.view) {
+        app.view.remove();   
+    }
+    app.view = null;
+}
 
-//window.onresize = init;
+var GraphView = Backbone.View.extend({
 
+    render: function() {
+        this.$el.addClass("row card");
+        this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        this.svg = $(this.svg);
+        this.$el.append(this.svg);
+        init(this.svg);
+        return this;
+    }
+
+});
+
+module.exports = {
+    render: render,
+    unmount: unmount
+}
