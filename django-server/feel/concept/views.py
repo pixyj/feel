@@ -123,7 +123,7 @@ class ConceptDetailView(APIView):
             section_serializers.append(serializer)
 
 
-        concept_fields = ['name', 'created_at']
+        concept_fields = ['name', 'created_at', 'is_published']
         concept_attrs = {}
         for field in concept_fields:
             concept_attrs[field] = data[field]

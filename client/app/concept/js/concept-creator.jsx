@@ -85,6 +85,19 @@ Store.prototype = {
         this.trigger("remove:section");
     },
 
+    isPublished: function() {
+
+    },
+
+    setIsPublished: function(isPublished) {
+        this.model.set("isPublished", isPublished);
+        this.model.save();
+    },
+
+    isPublished: function() {
+        return this.model.attributes.isPublished;
+    },
+
     fetch: function() {
         this.model.once("sync", this._onFirstSync, this);
         this.model.fetch();
@@ -289,6 +302,33 @@ var PreviewComponent = React.createClass({
     }   
 });
 
+var PublishComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            isPublished: this.props.store.isPublished()
+        }
+    },
+
+    render: function() {
+        var message = this.state.isPublished ? "UnPublish" : "Publish!";
+        return (
+            <div className="row" onClick={this.handleClick} >
+                <button className="btn btn-large waves-effect" id="concept-creator-publish-btn">{message}</button>
+            </div>
+        );
+
+    },
+
+    handleClick: function(evt) {
+        var isPublished = !this.state.isPublished;
+        this.setState({
+            isPublished: isPublished
+        });
+        this.props.store.setIsPublished(isPublished);
+    }
+});
+
 var PageComponent = React.createClass({
 
     mixins: [SectionComponentListMixin],
@@ -322,6 +362,12 @@ var PageComponent = React.createClass({
                 <AddSectionComponent parent={this} />
 
                 <PreviewComponent store={app.store} />
+
+                <PublishComponent store={app.store} />
+
+                <div className="end-of-page">
+                </div>
+
             </div>
         );
     },
@@ -340,6 +386,7 @@ var PageComponent = React.createClass({
 var app = {
 
 };
+
 
 var render = function(options, element) {
     options = options || {};

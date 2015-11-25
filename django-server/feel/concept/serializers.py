@@ -23,7 +23,7 @@ class ConceptSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Concept
-        fields = ('uuid', 'name', 'sections', )
+        fields = ('uuid', 'name', 'sections', 'is_published', )
         
 
 

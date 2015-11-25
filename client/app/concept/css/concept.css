@@ -27,6 +27,15 @@
 
 #concept-creator-preview-section {
     margin-top: 1rem;
+}
+
+#concept-creator-publish-btn {
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 2rem;
+}
+
+.end-of-page {
     margin-bottom: 5rem;
 }
 

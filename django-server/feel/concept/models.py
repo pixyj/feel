@@ -8,9 +8,10 @@ from quiz.models import Quiz
 class Concept(TimestampedModel):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.TextField(blank=True)
+    is_published = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{} created by {} ".format(self.name, self.created_by)
+        return "{} created by {} - Published? {}".format(self.name, self.created_by, self.is_published)
 
 
 

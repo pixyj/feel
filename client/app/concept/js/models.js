@@ -13,7 +13,8 @@ var ConceptModel = WebSocketModel.extend({
 
     defaults: {
         name: "",
-        sections: []
+        sections: [],
+        isPublished: false
     },
 
     BASE_URL: "/api/v1/concepts/"
