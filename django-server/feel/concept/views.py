@@ -98,8 +98,7 @@ class ConceptDetailView(APIView):
         """
         Used in _save_concept_and_return_response during `PUT` to get a `Concept` object.
         """
-        concept = Concept(**concept_attrs)
-        concept.save()
+        concept = Concept.objects.get(pk=concept_attrs['uuid'])
         return concept
         
 
@@ -108,8 +107,8 @@ class ConceptDetailView(APIView):
         Workhorse private method that saves data from request (either `POST` or `PUT`) into the database and returns
         appopriate HttpResponse
         """
+        #import ipdb; ipdb.set_trace()
         data=request.data
-        data["created_at"] = timezone.now()
         serializer = ConceptSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -123,15 +122,13 @@ class ConceptDetailView(APIView):
             section_serializers.append(serializer)
 
 
-        concept_fields = ['name', 'created_at', 'is_published']
+        concept_fields = ['name', 'is_published']
         concept_attrs = {}
         for field in concept_fields:
             concept_attrs[field] = data[field]
         concept_attrs['uuid'] = uuid.UUID(data['uuid'])
 
         audit_attrs = {
-            'created_at': data['created_at'],
-            'last_modified_at': data['created_at'],
             'created_by': created_by,
             'last_modified_by': request.user
         }
