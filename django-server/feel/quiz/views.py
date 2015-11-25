@@ -121,7 +121,9 @@ class QuizDetailView(APIView):
         """
         Used in _save_quiz_and_return_response during `PUT` to get a `Quiz` object.
         """
-        quiz = Quiz(**quiz_attrs)
+        quiz = Quiz.objects.get(pk=quiz_attrs['uuid'])
+        for field, value in quiz_attrs.items():
+            setattr(quiz, field, value)
         quiz.save()
         return quiz
         
@@ -132,20 +134,17 @@ class QuizDetailView(APIView):
         appopriate HttpResponse
         """
         data=request.data
-        data["created_at"] = timezone.now()
         serializer = serializers.QuizSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        quiz_fields = ['question_input', 'question_display', 'quiz_type', 'created_at']
+        quiz_fields = ['question_input', 'question_display', 'quiz_type']
         quiz_attrs = {}
         for field in quiz_fields:
             quiz_attrs[field] = data[field]
         quiz_attrs['uuid'] = uuid.UUID(data['uuid'])
 
         audit_attrs = {
-            'created_at': data['created_at'],
-            'last_modified_at': data['created_at'],
             'created_by': created_by,
             'last_modified_by': request.user
         }
