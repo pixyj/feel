@@ -928,12 +928,24 @@ var unmount = function() {
     app.view = null;
 }
 
+var TRIANGLE_MARKER =   '<defs> '                                   +
+                            '<marker id="Triangle" '                +
+                                    'viewBox="0 0 10 10" '          +
+                                    'refX="0" refY="5" '            +
+                                    'markerWidth="5" '              +
+                                    'markerHeight="5" '             +
+                                    'orient="auto"> '               +
+                                '<path d="M0,0 L10,5 L0,10 z" /> '  +
+                            '</marker> '                            +
+                        '</defs> '                                  ;
+
 var GraphView = Backbone.View.extend({
 
     render: function() {
         this.$el.addClass("row card");
         this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         this.svg = $(this.svg);
+        this.svg[0].innerHTML = TRIANGLE_MARKER;
         this.$el.append(this.svg);
         init(this.svg);
         return this;
