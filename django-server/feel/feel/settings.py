@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'core',
     'quiz',
     'concept',
+    'course',
 )
 
 MIDDLEWARE_CLASSES = (
