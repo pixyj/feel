@@ -8,7 +8,7 @@ svg {
 }
 
 
-.chapter-container h3{
+.chapter-container h3 {
     text-align: center;
     padding: 0.4em;
     font-size: 1.6em;
@@ -61,12 +61,14 @@ svg {
 }
 
 .concept-box {
+    border-radius: 0.6rem;
 }
 
 .concept-box h5 {
     text-align: center;
-    padding: 10px;
     font-size: 1.5em;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 body {

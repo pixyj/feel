@@ -896,18 +896,13 @@ var drawAllNodes = function(levels, svgAttrs) {
 var init = function(svg) {
     
 
-    svg.attr({
-        "height": "1400",
-        "width": "1000"
-    });
-    
     svg.find("foreignObject").remove();
     svg.find("line").remove();
 
 
     var svgAttrs = {
         svg: svg,
-        width: "1000"
+        width: svg.attr("width")
     };
 
     var result = drawAllNodes(graph.levels, svgAttrs);
@@ -916,8 +911,8 @@ var init = function(svg) {
     return svg;
 };
 
-var render = function() {
-    app.view = new GraphView();
+var render = function(options) {
+    app.view = new GraphView(options);
     return app.view;
 }
 
@@ -941,10 +936,17 @@ var TRIANGLE_MARKER =   '<defs> '                                   +
 
 var GraphView = Backbone.View.extend({
 
+    initialize: function(options) {
+        this.options = options;
+    },
+
     render: function() {
-        this.$el.addClass("row card");
         this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         this.svg = $(this.svg);
+        this.svg.attr({
+            width: this.options.width,
+            height: "1800"
+        });
         this.svg[0].innerHTML = TRIANGLE_MARKER;
         this.$el.append(this.svg);
         init(this.svg);
