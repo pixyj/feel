@@ -8,3 +8,8 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('name', )
 
+
+def set_model_attrs(model, attrs):
+    for field, value in attrs.items():
+        setattr(model, field, value)
+    return model

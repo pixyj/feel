@@ -32,7 +32,7 @@ class CourseDetailView(APIView):
         except Course.DoesNotExist:
             raise Http404
 
-        serializer = CourseSerializer(concept)
+        serializer = CourseSerializer(course)
         data = serializer.data
         return Response(data)
 
@@ -51,5 +51,22 @@ class CourseDetailView(APIView):
         serializer = CourseSerializer(course)
         return Response(serializer.data, status.HTTP_201_CREATED)
 
+    @method_decorator(login_required)
+    def put(self, request, course_id):
+        try:
+            course = Course.objects.get(pk=course_id)
+        except Course.DoesNotExist:
+            raise Http404
 
+        serializer = CourseSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        if request.user.id != course.created_by.id:
+            return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
+
+        validated_data = serializer.data
+        audit_attrs = get_audit_attrs(course.created_by, request.user)
+        validated_data.update(audit_attrs)
+        serializer.update(course, validated_data)
+        return Response(serializer.data, status.HTTP_200_OK)
