@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from core.views import get_user_and_user_key, get_audit_attrs
 
-from course.models import Course, CourseConcept, ConceptRelationship
+from course.models import Course, CourseConcept, ConceptDependency
 from course.serializers import CourseSerializer
 
 class CourseDetailView(APIView):
