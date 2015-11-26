@@ -27,10 +27,10 @@ class CourseConcept(TimestampedModel):
 
 
 
-class ConceptRelationship(TimestampedModel):
+class ConceptDependency(TimestampedModel):
     course = models.ForeignKey(Course)
-    before = models.ForeignKey(Concept, related_name="before_set")
-    after = models.ForeignKey(Concept, related_name="after_set")
+    start = models.ForeignKey(Concept, related_name="start_set")
+    end = models.ForeignKey(Concept, related_name="end_set")
 
     def __str__(self):
-        return "{} -> {} in {}".format(self.before, self.after, self. course)
+        return "{} -> {} in {}".format(self.start, self.end, self. course)
