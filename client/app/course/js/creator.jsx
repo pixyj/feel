@@ -8,6 +8,12 @@ var utils = require("utils");
 
 var connected = require("./../../conceptviz/js/connected");
 
+/********************************************************************************
+*   Store
+*
+*
+*********************************************************************************/
+
 var app = {
 
 };
@@ -25,6 +31,12 @@ Store.prototype = {
 
 Store.prototype.constructor = Store;
 
+/********************************************************************************
+*   React Components
+*
+*
+*********************************************************************************/
+
 var CourseNameComponent = React.createClass({
 
     getInitialState: function() {
@@ -36,7 +48,7 @@ var CourseNameComponent = React.createClass({
     //todo -> rename concept-creator-section to creator-section
     render: function() {
         return (
-            <div className="row concept-creator-section card">
+            <div className="row concept-creator-section">
                 <h4> Course Name </h4>
                 <input  type="text" 
                         placeholder="What's in a name?" 
@@ -56,46 +68,68 @@ var CourseNameComponent = React.createClass({
 });
 
 
-var PageComponent = React.createClass({
+/********************************************************************************
+*   Backbone Page View
+*
+*
+*********************************************************************************/
+
+var PageView = Backbone.View.extend({
+
+    initialize: function(options) {
+        this.options = options;
+        this.store = options.store;
+    },
 
     render: function() {
+        this.courseNameContainer = $("<div>");
 
-        return (
-            <div>
-                <CourseNameComponent store={this.props.store} />
-            </div>
+        var conceptContainer = $("<div>").addClass("row");
+        var left = $("<div>").addClass("col-md-3");
+        var middle = $("<div>").addClass("col-md-3");
+        var right = $("<div>").addClass("col-md-6");
+        this.listContainer = left;
+        this.dependencyContainer = middle;
+        this.graphContainer = right;
+        conceptContainer.append(left).append(middle).append(right);
 
-        );
+        this.$el.append(this.courseNameContainer).append(conceptContainer);
 
+        return this; 
+    },
+
+    addCourseName: function() {
+        ReactDOM.render(<PageComponent store={this.options.store} />, this.courseNameContainer[0]); 
+        return this;
+    },
+
+    addGraphView: function() {
+        this.graphView = connected.render({
+            width: this.graphContainer.width()
+        });
+        this.graphContainer.append(this.graphView.$el);
+        this.graphView.render();
+        return this;
     }
-})
+});
 
-Store.prototype.constructor = Store;
+/********************************************************************************
+*   PUBLIC `render` and `unmount` APIs
+*
+*
+*********************************************************************************/
 
 var render = function(options, element) {
-    options = options || {};
-
-    var onReady = function() {
-        ReactDOM.render(<PageComponent store={app.store} />, element); 
-        
-        var graphView = connected.render();  
-        $(element).append(graphView.$el);
-        graphView.render();     
-    };
-
-
     app.store = new Store(options);
 
-    onReady();
-    // options.onReady = onReady;
+    var pageView = new PageView({
+        store: app.store,
+        parent: element
+    }).render();
+    $(element).append(pageView.$el);
+    pageView.addCourseName().addGraphView();
 
-
-    // if(!options.uuid) {
-    //     onReady();
-    // }
-
-
-};
+}
 
 var unmount = function() {
 
