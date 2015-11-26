@@ -30,7 +30,7 @@ Store.prototype = {
     },
 
     getConcepts: function() {
-        return this.concepts;
+        return _.clone(this.concepts);
     },
 
     addConcept: function(concept) {
@@ -59,7 +59,7 @@ var TextInputMixin = {
     //todo -> rename concept-creator-section to creator-section
     render: function() {
         return (
-            <div className="row concept-creator-section creator-text-input" id={this.ID || ""}>
+            <div className="row creator-text-input" id={this.ID || ""}>
                 <h4> {this.HEADING} </h4>
                 <input  type="text" 
                         placeholder="What's in a name?" 
@@ -123,20 +123,15 @@ var ConceptNameComponent = React.createClass({
 
 });
 
-var ConceptListComponent = React.createClass({
+var ConceptListMixin = {
 
-    getInitialState: function() {
-        return {
-            concepts: this.props.store.getConcepts()
-        }
-    },
-
-    componentDidMount: function() {
+    componentWillMount: function() {
         this.props.store.on("add:concept", this.updateState, this);
     },
 
     componentWillUnmount: function() {
         this.props.store.off("add:concept", this.updateState);
+        this.cleanup();
     },
 
     updateState: function() {
@@ -145,25 +140,160 @@ var ConceptListComponent = React.createClass({
         });
     },
 
-    render: function() {
-
+    getListItems: function() {
         var concepts = this.state.concepts;
         var length = concepts.length;
 
         var components = [];
+        var ComponentClass = this.getComponentClass();
         for(var i = 0; i < length; i++) {
             var concept = concepts[i];
-            var item = <div className="collection-item" key={i}><h6>{concept.name}</h6></div>
+            var item = <ComponentClass key={i} name={concept.name} />
             components.push(item);
         }
+        return components;
+    }
+};
+
+var ConceptListItemComponent = React.createClass({
+
+    render: function() {
+        return (
+            <div className="collection-item" key={this.props.key} > 
+                {this.props.name} 
+            </div>
+        );
+    }
+});
+
+var ConceptListComponent = React.createClass({
+
+    mixins: [ConceptListMixin],
+
+    getInitialState: function() {
+        return {
+            concepts: this.props.store.getConcepts()
+        }
+    },
+
+    getComponentClass: function() {
+        return ConceptListItemComponent;
+    },
+
+    render: function() {
+
+        var components = this.getListItems();
 
         return (
             <div className="collection">
                 {components}
             </div>
         );
-    },
+    }
+
 });
+
+/********************************************************************************
+*   MIDDLE COLUMN - ADD CONCEPT DEPENDENCY
+*********************************************************************************/
+
+var ConceptSelectItemComponent = React.createClass({
+
+    render: function() {
+        return (
+            <option key={this.props.key} value={this.props.key} > 
+                {this.props.name} 
+            </option>
+        );
+    }
+});
+
+var ConceptSelectMixin = {
+
+    getInitialState: function() {
+        return {
+            concepts: this.props.store.getConcepts()
+        }
+    },
+
+    getComponentClass: function() {
+        return ConceptSelectItemComponent;
+    },
+
+    componentDidMount: function() {
+        this.afterRender();
+    },
+
+    componentDidUpdate: function() {
+        this.afterRender();
+    },
+
+    afterRender: function() {
+        this.cleanup();
+        $(this.refs.select).material_select();
+    },
+
+    cleanup: function() {
+        $(this.refs.select).material_select('destroy');
+    },
+
+    render: function() {
+
+        var components = this.getListItems();
+        return (
+            <div className="concept-select">
+                <h5>{this.LABEL}</h5>
+                <div className="input-field">
+                    <select ref="select">
+                        <option value="" disabled>Choose a Concept </option>
+                        {components}
+                    </select>
+                </div>
+            </div>
+        );
+    }
+};
+
+var ConceptSelectFromComponent = React.createClass({
+
+    mixins: [ConceptListMixin, ConceptSelectMixin],
+
+    LABEL: "From"
+
+});
+
+var ConceptSelectToComponent = React.createClass({
+
+    mixins: [ConceptListMixin, ConceptSelectMixin],
+
+    LABEL: "To"
+
+});
+
+var ConceptDependencyComponent = React.createClass({
+
+    getInitialState: function() {
+
+        return {
+            concepts: this.props.store.getConcepts(),
+            from: null,
+            to: null    
+        }
+
+    },
+
+    render: function() {
+
+        return (
+            <div>
+                <h5>Add Dependency</h5>
+                <ConceptSelectFromComponent store={this.props.store} />
+                <ConceptSelectToComponent store={this.props.store} />
+            </div>
+        );
+    }
+});
+
 
 /********************************************************************************
 *   Backbone Page View
@@ -189,9 +319,10 @@ var PageView = Backbone.View.extend({
         left.append(this.conceptNameContainer).append(this.listContainer);
 
         var middle = $("<div>").addClass("col-md-3");
+        this.dependencyContainer = middle;
+
         var right = $("<div>").addClass("col-md-6");
 
-        this.dependencyContainer = middle;
         this.graphContainer = right;
 
         conceptContainer.append(left)
@@ -205,7 +336,12 @@ var PageView = Backbone.View.extend({
     },
 
     renderChildren: function() {
-        this.addCourseName().addConceptName().addConceptList().addGraphView();
+        this.addCourseName()
+            .addConceptName()
+            .addConceptList()
+            .addSelectConceptDependency()
+            .addGraphView();
+
         return this;
     },
 
@@ -221,6 +357,12 @@ var PageView = Backbone.View.extend({
 
     addConceptList: function() {
         ReactDOM.render(<ConceptListComponent store={this.options.store} />, this.listContainer[0]);
+        return this;
+    },
+
+    addSelectConceptDependency: function() {
+        ReactDOM.render(<ConceptDependencyComponent store={this.options.store} />, this.dependencyContainer[0]);
+        
         return this;
     },
 

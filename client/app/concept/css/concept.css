@@ -66,4 +66,12 @@
 #creator-concept-name h4 {
     font-size: 1.7rem;
 }
-    
+
+.dropdown-content {
+    padding: 0;
+    list-style: none;
+}
+
+.concept-select {
+    margin-bottom: 2rem;
+}
