@@ -1,7 +1,7 @@
 import uuid
 import json
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -23,14 +23,11 @@ class CourseDetailView(APIView):
     GET, POST and PUT APIs for a single course
     """
 
-    def get(self, request, course_id, format=None):
+    def get(self, request, pk, format=None):
         """
         Get course by course_id
         """
-        try:
-            course = Course.objects.get(pk=course_id)
-        except Course.DoesNotExist:
-            raise Http404
+        course = get_object_or_404(Course, id=pk)
 
         serializer = CourseSerializer(course)
         data = serializer.data
@@ -52,11 +49,8 @@ class CourseDetailView(APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
 
     @method_decorator(login_required)
-    def put(self, request, course_id):
-        try:
-            course = Course.objects.get(pk=course_id)
-        except Course.DoesNotExist:
-            raise Http404
+    def put(self, request, pk):
+        course = get_object_or_404(Course, id=pk)
 
         serializer = CourseSerializer(data=request.data)
         if not serializer.is_valid():
@@ -70,3 +64,21 @@ class CourseDetailView(APIView):
         validated_data.update(audit_attrs)
         serializer.update(course, validated_data)
         return Response(serializer.data, status.HTTP_200_OK)
+
+
+class ConceptListView(APIView):
+
+    def get(self, pk, request):
+        return Response([])
+
+class ConceptDetailView(APIView):
+
+    def get(self, request, pk, format=None):
+        pass
+
+
+
+class DependencyListView(APIView):
+    
+    def get(self, pk, request):
+        return Response([])

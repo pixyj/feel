@@ -57,6 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'core.middleware.ProcessExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'feel.urls'

@@ -31,7 +31,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('uuid', 'name', 'is_published', )
+        fields = ('id', 'name', 'is_published', )
         
 
 
