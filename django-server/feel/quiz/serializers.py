@@ -23,7 +23,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ('uuid', 'question_input', 'question_display', 'quiz_type', 'created_at', 'answers', 'choices')
+        fields = ('id', 'question_input', 'question_display', 'quiz_type', 'created_at', 'answers', 'choices')
 
 
 class QuizAttemptSerializer(serializers.ModelSerializer):

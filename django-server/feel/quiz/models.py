@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from taggit.managers import TaggableManager
 
-from core.models import TimestampedModel
+from core.models import TimestampedModel, UUIDModel
 
 
 QUIZ_TYPES = (
@@ -13,9 +13,8 @@ QUIZ_TYPES = (
     (2, 'MCQ'),
 )
 
-class Quiz(TimestampedModel):
+class Quiz(TimestampedModel, UUIDModel):
 
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question_input = models.TextField()
     question_display = models.TextField()
     
@@ -30,7 +29,7 @@ class Quiz(TimestampedModel):
 
 
 
-class ShortAnswer(TimestampedModel):
+class ShortAnswer(TimestampedModel, UUIDModel):
 
     quiz = models.ForeignKey(Quiz)
     answer = models.TextField()
@@ -45,7 +44,7 @@ class ShortAnswer(TimestampedModel):
             self.quiz, self.created_by)
 
 
-class Choice(TimestampedModel):
+class Choice(TimestampedModel, UUIDModel):
     
     quiz = models.ForeignKey(Quiz)
     choice_input = models.TextField()
@@ -94,7 +93,7 @@ class QuizAttempManager(models.Manager):
 
 SESSION_KEY_MAX_LENGTH = 40 #Equal to session_key max length
 
-class QuizAttempt(models.Model):
+class QuizAttempt(UUIDModel):
 
     quiz = models.ForeignKey(Quiz)
     user = models.ForeignKey(User, null=True)

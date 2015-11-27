@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -25,6 +27,14 @@ class TimestampedModel(models.Model):
     last_modified_by = models.ForeignKey(User, related_name="%(class)s_last_modified_by")
 
     objects = TimestampedModelManager()
+
+    class Meta:
+        abstract = True
+
+
+class UUIDModel(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:
         abstract = True

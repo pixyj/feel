@@ -28,10 +28,7 @@ class ConceptDetailView(APIView):
         """
         Get concept by concept_id
         """
-        try:
-            concept = Concept.objects.get(pk=concept_id)
-        except Concept.DoesNotExist:
-            raise Http404
+        concept = get_object_or_404(pk=concept_id)
 
         serializer = ConceptSerializer(concept)
         data = serializer.data
@@ -80,7 +77,7 @@ class ConceptDetailView(APIView):
         """
         found = True
         try:
-            concept_v1 = Concept.objects.only('uuid').get(pk=concept_id)
+            concept_v1 = Concept.objects.only('id').get(pk=concept_id)
         except Concept.DoesNotExist:
             found = False
 
@@ -98,7 +95,7 @@ class ConceptDetailView(APIView):
         """
         Used in _save_concept_and_return_response during `PUT` to get a `Concept` object.
         """
-        concept = Concept.objects.get(pk=concept_attrs['uuid'])
+        concept = Concept.objects.get(pk=concept_attrs['id'])
         for field, value in concept_attrs.items():
             setattr(concept, field, value)
         concept.save()
@@ -129,7 +126,7 @@ class ConceptDetailView(APIView):
         concept_attrs = {}
         for field in concept_fields:
             concept_attrs[field] = data[field]
-        concept_attrs['uuid'] = uuid.UUID(data['uuid'])
+        concept_attrs['id'] = uuid.UUID(data['id'])
 
         audit_attrs = {
             'created_by': created_by,
@@ -143,7 +140,7 @@ class ConceptDetailView(APIView):
             for position, serializer in enumerate(section_serializers):
                 section_data = request.data['sections'][position]['data']
                 section_attrs = {
-                    'concept_id': concept.uuid,
+                    'concept_id': concept.id,
                     'position': position,
                     'type': serializer.data['type'],
                     'data': json.dumps(section_data)
