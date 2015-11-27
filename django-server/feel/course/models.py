@@ -4,13 +4,12 @@ from django.db import models
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
 
-from core.models import TimestampedModel
+from core.models import TimestampedModel, UUIDModel
 from concept.models import Concept
 
 
 
-class Course(TimestampedModel):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256, unique=True)
     is_published = models.BooleanField(default=False)
 
@@ -48,7 +47,7 @@ class Course(TimestampedModel):
 
 
 
-class CourseConcept(models.Model):
+class CourseConcept(TimestampedModel, UUIDModel):
     course = models.ForeignKey(Course)
     concept = models.ForeignKey(Concept)
 
@@ -64,7 +63,7 @@ class CourseConcept(models.Model):
 
 
 
-class ConceptDependency(TimestampedModel):
+class ConceptDependency(TimestampedModel, UUIDModel):
     course = models.ForeignKey(Course)
     start = models.ForeignKey(Concept, related_name="start_set")
     end = models.ForeignKey(Concept, related_name="end_set")

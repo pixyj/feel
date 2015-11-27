@@ -2,24 +2,24 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import uuid
 from django.conf import settings
+import uuid
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('concept', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('concept', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='ConceptDependency',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_modified_at', models.DateTimeField(auto_now=True)),
+                ('id', models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4, serialize=False)),
             ],
             options={
                 'abstract': False,
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_modified_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(serialize=False, default=uuid.uuid4, primary_key=True, editable=False)),
+                ('id', models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4, serialize=False)),
                 ('name', models.CharField(max_length=256, unique=True)),
                 ('is_published', models.BooleanField(default=False)),
                 ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='course_created_by')),
@@ -43,9 +43,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CourseConcept',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_modified_at', models.DateTimeField(auto_now=True)),
+                ('id', models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4, serialize=False)),
                 ('concept', models.ForeignKey(to='concept.Concept')),
                 ('course', models.ForeignKey(to='course.Course')),
+                ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='courseconcept_created_by')),
+                ('last_modified_by', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='courseconcept_last_modified_by')),
             ],
         ),
         migrations.AddField(
