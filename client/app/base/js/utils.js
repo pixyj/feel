@@ -59,8 +59,6 @@ var getUniqueId = function() {
     return getId;
 }();
 
-var uuid = require("./uuid");
-
 var inherit = function(child, parent) {
 
     var childKeys = Object.keys(child);
@@ -87,7 +85,6 @@ module.exports = {
     prettyDate: prettyDate,
     getHumanizedTimeDiff: getHumanizedTimeDiff,
     getUniqueId: getUniqueId,
-    uuid: uuid,
     inherit: inherit
 };
 

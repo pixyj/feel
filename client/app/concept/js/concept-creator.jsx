@@ -35,7 +35,7 @@ var SectionSaveStatusComponent = components.SectionSaveStatusComponent;
 var Store = function(options) {
     this.options = options;
     this.model = new ConceptModel(options);
-    if(!options.uuid) {
+    if(!options.id) {
         this._listenToFirstSyncEvent();
     }
     else {
@@ -51,8 +51,8 @@ Store.prototype = {
         return this.model.get("name");
     },
 
-    getUUID: function() {
-        return this.model.get("uuid");
+    getId: function() {
+        return this.model.get("id");
     },
 
     saveConceptName: function(name) {
@@ -137,9 +137,9 @@ Store.prototype = {
         if(this.isRouteSet) {
             return;
         }
-        var uuid = this.model.attributes.uuid;
+        var id = this.model.attributes.id;
         var fragment = Backbone.history.getFragment();
-        var fragmentNew = "{0}/{1}/".format(fragment, uuid);
+        var fragmentNew = "{0}/{1}/".format(fragment, id);
         Backbone.history.navigate(fragmentNew, {trigger: false});
         this.isRouteSet = true;
     }
@@ -279,7 +279,7 @@ var PreviewComponent = React.createClass({
 
     render: function() {
 
-        var studentURL = "#/concept/" + this.props.store.getUUID() + "/";
+        var studentURL = "#/concept/" + this.props.store.getId() + "/";
         
         return (
             <div className="row" id="concept-creator-preview-section">
@@ -398,7 +398,7 @@ var render = function(options, element) {
 
     app.store = new Store(options, element);
 
-    if(!options.uuid) {
+    if(!options.id) {
         onReady();
     }
 

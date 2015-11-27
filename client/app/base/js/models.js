@@ -23,26 +23,11 @@ var WebSocketModel = Backbone.Model.extend({
     BASE_URL: null,
 
     initialize: function() {
-        this._isNew = !this.attributes.uuid;
-        if(this._isNew) {
-            this.attributes.uuid = utils.uuid();
-        }
         this._isSaved = true;
         //this._triggerIsSavedChanged = _.debounce(this._triggerIsSavedChanged, 1000, {immedate: false});
     },
 
-    url: function() {
-        if(!this.BASE_URL) {
-            throw new Error("BASE_URL not specified", this, this.attributes);
-        }
-        return this.BASE_URL + this.attributes.uuid + "/";
-    },
-
-    isNew: function() {
-        return this._isNew;
-    },
-
-    /*  Here's a nice blog on implementing auto save: 
+    /*  Here's a nice blog post on implementing auto save: 
         engineering.hackerearth.com/2014/01/21/introducing-codeplayer/
         But I want to save immediately instead of waiting since the data is critical 
         and perform the compaction/batching on the server.
@@ -67,11 +52,18 @@ var WebSocketModel = Backbone.Model.extend({
             onSaved: this.onResponseReceived,
             context: this 
         });
-        this._isNew = false;
+    },
+
+    isNew: function() {
+        if(!this._isSaved) {
+            return false;
+        }
+        return this.attributes.id === undefined;
     },
 
     onResponseReceived: function(payload, statusCode) {
         if(statusCode === 200 || statusCode === 201) {
+            this.attributes.id = payload.id;
             console.info("Saved WebSocketModel");
             this._setIsSaved(true);
             this.trigger("sync", this);  
