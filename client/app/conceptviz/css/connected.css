@@ -1,4 +1,3 @@
-
 .chapters-and-concepts-heading {
     text-align: center;
 }
@@ -7,48 +6,21 @@ svg {
     overflow: scroll;
 }
 
-
 .chapter-container h3 {
     text-align: center;
     padding: 0.4em;
     font-size: 1.6em;
 }
 
-.chapter-box-1 {
+.concept-box-even {
     background-color: #B71C1C;
     color: white;
 }
 
-.chapter-box-2 {
+.concept-box-odd {
     background-color: #4A148C;
     color: white;
 }
-
-.chapter-box-3 {
-    background-color: #880E4F;
-    color: white;
-}
-
-.chapter-box-4 {
-    background-color: #004D40;
-    color: white;
-}
-
-.chapter-box-5 {
-    background-color: #263238;
-    color: white;
-}
-
-.chapter-box-6 {
-    background-color: #AD1457;
-    color: white;
-}
-
-.chapter-box-7 {
-    background-color: #33691E;
-    color: white;
-}
-
 
 .concept-text {
     font-weight: 500;

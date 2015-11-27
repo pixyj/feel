@@ -8,6 +8,8 @@ var utils = require("utils");
 
 var connected = require("./../../conceptviz/js/connected");
 
+var DAG = require("./../../conceptviz/js/DAG").DAG;
+
 /********************************************************************************
 *   Store
 *
@@ -21,6 +23,7 @@ var app = {
 var Store = function(options) {
     this.options = options;
     this.concepts = [];
+    this.dag = new DAG({});
 };
 
 Store.prototype = {
@@ -34,9 +37,40 @@ Store.prototype = {
     },
 
     addConcept: function(concept) {
+        if(!concept.id) {
+            concept.id = String(utils.getUniqueId());
+        }
         this.concepts.push(concept);
+        this.dag.addNode(concept);
         this.trigger("add:concept", concept, this);
+    },
+
+    addDependency: function(from, to) {
+
+        var edge = {
+            from: from,
+            to: to
+        };
+
+        this.dag.addEdge(from, to);
+        var nodesByLevel = this.dag.sort();
+        
+        var edges = this.dag.getEdges();
+        var graph = {
+            levels: nodesByLevel,
+            edges: edges
+        }
+        console.log("graph", graph);
+        this.trigger("add:dependency", graph, edge);
+    },
+
+    getGraph: function() {
+        return {
+            levels: this.dag.sort(),
+            edges: this.dag.getEdges()
+        }
     }
+
 };
 
 _.extend(Store.prototype, Backbone.Events);
@@ -148,7 +182,7 @@ var ConceptListMixin = {
         var ComponentClass = this.getComponentClass();
         for(var i = 0; i < length; i++) {
             var concept = concepts[i];
-            var item = <ComponentClass key={i} name={concept.name} />
+            var item = <ComponentClass key={i} name={concept.name} id={concept.id} />
             components.push(item);
         }
         return components;
@@ -201,7 +235,7 @@ var ConceptSelectItemComponent = React.createClass({
 
     render: function() {
         return (
-            <option key={this.props.key} value={this.props.key} > 
+            <option key={this.props.key} value={this.props.id} > 
                 {this.props.name} 
             </option>
         );
@@ -230,7 +264,14 @@ var ConceptSelectMixin = {
 
     afterRender: function() {
         this.cleanup();
-        $(this.refs.select).material_select();
+
+        var self = this;
+        var callback = function() {
+            console.log("selected ", self, arguments);
+            var value = $(self.refs.select).val(); 
+            self.props.parent.onConceptSelected(self.LABEL.toLowerCase(), value);
+        }
+        $(this.refs.select).material_select(callback);
     },
 
     cleanup: function() {
@@ -274,10 +315,12 @@ var ConceptDependencyComponent = React.createClass({
 
     getInitialState: function() {
 
+        //this is managed outside of React. 
+        self.from = null;
+        self.to = null;
+
         return {
-            concepts: this.props.store.getConcepts(),
-            from: null,
-            to: null    
+            concepts: this.props.store.getConcepts() 
         }
 
     },
@@ -287,10 +330,17 @@ var ConceptDependencyComponent = React.createClass({
         return (
             <div>
                 <h5>Add Dependency</h5>
-                <ConceptSelectFromComponent store={this.props.store} />
-                <ConceptSelectToComponent store={this.props.store} />
+                <ConceptSelectFromComponent store={this.props.store} parent={this} />
+                <ConceptSelectToComponent store={this.props.store} parent={this} />
             </div>
         );
+    },
+
+    onConceptSelected: function(label, value) {
+        this[label] = value || null;
+        if(label === "to" && this.from !== null) {
+            this.props.store.addDependency(this.from, this.to);
+        }
     }
 });
 
@@ -306,6 +356,8 @@ var PageView = Backbone.View.extend({
     initialize: function(options) {
         this.options = options;
         this.store = options.store;
+
+        this.listenTo(this.store, "add:dependency", this.refreshGraphView);
     },
 
     render: function() {
@@ -339,12 +391,13 @@ var PageView = Backbone.View.extend({
         this.addCourseName()
             .addConceptName()
             .addConceptList()
-            .addSelectConceptDependency()
+            .addConceptSelectDependency()
             .addGraphView();
 
         return this;
     },
 
+    //todo -> unmount components
     addCourseName: function() {
         ReactDOM.render(<CourseNameComponent store={this.options.store} />, this.courseNameContainer[0]); 
         return this;
@@ -360,9 +413,8 @@ var PageView = Backbone.View.extend({
         return this;
     },
 
-    addSelectConceptDependency: function() {
+    addConceptSelectDependency: function() {
         ReactDOM.render(<ConceptDependencyComponent store={this.options.store} />, this.dependencyContainer[0]);
-        
         return this;
     },
 
@@ -371,8 +423,12 @@ var PageView = Backbone.View.extend({
             width: this.graphContainer.width()
         });
         this.graphContainer.append(this.graphView.$el);
-        this.graphView.render();
+        this.graphView.render(this.store.getGraph());
         return this;
+    },
+
+    refreshGraphView: function(graph) {
+        this.graphView.refresh(graph);
     }
 });
 

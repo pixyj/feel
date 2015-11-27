@@ -32,7 +32,7 @@ DAG.prototype = {
         while(length) {
             iterations += 1;
             if(iterations === 100) {
-                throw new Error("Debug Error");
+                throw new Error("Max Iterations exceeded Error");
             }
             var sinkKeys = [];
             for(var i = 0; i < length; i++) {
@@ -70,9 +70,30 @@ DAG.prototype = {
         for(var i = 0; i < levelLength; i++) {
             var key = levelKeys[i];
             var levelNodes = levels[key];
+            _.each(levelNodes, function(node) {
+                node.parity = (i % 2 === 0) ? "even" : "odd";
+            });
             nodesByLevel.push(levelNodes);
         }
         return nodesByLevel;
+    },
+
+    getEdges: function() {
+        var edges = [];
+        var keys = Object.keys(this.nodes);
+        _.each(keys, function(key) {
+            var node = this.nodes[key];
+            var from = node.node.id;
+            var others = Object.keys(node.starts);
+            var length = others.length;
+            for(var i = 0; i < length; i++) {
+                edges.push({
+                    from: from,
+                    to: others[i]
+                });
+            }
+        }, this);
+        return edges;
     },
 
     _addNodeToLevel: function(nodesByLevel, node, nodeLevel) {

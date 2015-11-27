@@ -15,244 +15,6 @@ var app = {
     view: null
 };
 
-var graph = {
-
-    levels: [
-
-                [
-                    {
-                        name: "Comments",
-                        chapterIndex: 1,
-                        id: 1
-                    }
-                ],
-
-                [
-                    {
-                        name: "Basic Expressions",
-                        chapterIndex: 1,
-                        id: 2
-                    }
-                ],
-
-                [
-                    {
-                        name: "Variables",
-                        chapterIndex: 1,
-                        id: 3
-                    },
-                    
-                ],
-                [
-                    
-                    {
-                        name: "Numbers",
-                        chapterIndex: 1,
-                        id: 4
-                    },
-                    {
-                        name: "Strings",
-                        chapterIndex: 1,
-                        id: 5
-                    }
-                    
-                ],
-
-                [
-                    {
-                        name: "Lists",
-                        chapterIndex: 3,
-                        id: 6
-                    },
-                ],
-                [
-                    {
-                        name: "Programming Introduction",
-                        chapterIndex: 1,
-                        id: 7
-                    },
-                    {
-                        name: "Lists 2",
-                        chapterIndex: 1,
-                        id: 8
-                    }
-                ],
-                [
-                    {
-                        name: "Control Flow Tools",
-                        chapterIndex: 2,
-                        id: 9
-                    },
-
-                    {
-                        name: "Sets",
-                        chapterIndex: 3,
-                        id: 11
-                    },
-                ],
-                
-                [
-                    {
-                        name: "Defining Functions",
-                        chapterIndex: 2,
-                        id: 10
-                    },
-
-
-                    {
-                        name: "Dictionaries",
-                        chapterIndex: 3,
-                        id: 12
-                    },
-                ],
-                [
-
-                    {
-                        name: "Defining Functions 2",
-                        chapterIndex: 2,
-                        id: 14
-                    },
-
-                    {
-                        name: "I/O",
-                        chapterIndex: 5,
-                        id: 13
-                    },
-
-                    {
-                        name: "Sequences",
-                        chapterIndex: 3,
-                        id: 15
-                    },
-
-                    {
-                        name: "Errors and Exceptions",
-                        chapterIndex: 6,
-                        id: 19
-                    },
-                ],
-                [
-
-                    {
-                        name: "The del Statement",
-                        chapterIndex: 3,
-                        id: 16
-                    },
-                    {
-                        name: "Modules",
-                        chapterIndex: 4,
-                        id: 17
-                    },
-
-                    {
-                        name: "Functional Programming Tools",
-                        chapterIndex: 2,
-                        id: 18
-                    },
-                ],
-
-                [
-                    {
-                        name: "Scopes and Namespaces",
-                        chapterIndex: 4,
-                        id: 20
-                    },
-                    {
-                        name: "Classes",
-                        chapterIndex: 7,
-                        id: 21
-                    }
-                ]
-    ],
-
-    edges: [
-        {
-            from: 1,
-            to: 2
-        },
-        {
-            from: 2,
-            to: 3
-        },
-        {
-            from: 3,
-            to: 4
-        },
-        {
-            from: 3,
-            to: 5
-        },
-        {
-            from: 4,
-            to: 6
-        },
-        {
-            from: 5,
-            to: 6
-        },
-        {
-            from: 6,
-            to: 7
-        },
-        {
-            from: 6,
-            to: 8
-        },
-        {
-            from: 7,
-            to: 9
-        },
-        {
-            from: 8,
-            to: 11
-        },
-        {
-            from: 9,
-            to: 10
-        },
-        {
-            from: 10,
-            to: 14
-        },
-        {
-            from: 10,
-            to: 13
-        },
-        {
-            from: 12,
-            to: 15
-        },
-        {
-            from: 9,
-            to: 12
-        },
-        {
-            from: 14,
-            to: 18
-        },
-        {
-            from: 14,
-            to: 17
-        },
-        {
-            from: 12,
-            to: 16
-        },
-        {
-            from: 17,
-            to: 20
-        },
-        {
-            from: 17,
-            to: 21
-        },
-        {
-            from: 12,
-            to: 19
-        }
-    ]
-};
-
 var drawArrowEntry = function(nodeAttrs, svg) {
     var circle = document.createElementNS(app.ns, 'circle');
     var attrs = {
@@ -323,9 +85,9 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     var svg = svgAttrs.svg;
     var svgWidth = svgAttrs.width;
 
-    var chapterClass = "chapter-box-" + node.chapterIndex;
+    var parityClass = "concept-box-" + node.parity;
     var h4 = $("<h5>").html(node.name);
-    var p = $("<p>").addClass("concept-box").addClass(chapterClass).append(h4);
+    var p = $("<p>").addClass("concept-box").addClass(parityClass).append(h4);
 
     //foreignObject does not work on IE #todo. But my initial technical audience does not use IE, I guess? 
     //And making aligning svg text is a pain
@@ -893,7 +655,7 @@ var drawAllNodes = function(levels, svgAttrs) {
 };
 
 
-var init = function(svg) {
+var init = function(svg, graph) {
     
 
     svg.find("foreignObject").remove();
@@ -940,7 +702,7 @@ var GraphView = Backbone.View.extend({
         this.options = options;
     },
 
-    render: function() {
+    render: function(graph) {
         this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         this.svg = $(this.svg);
         this.svg.attr({
@@ -949,8 +711,12 @@ var GraphView = Backbone.View.extend({
         });
         this.svg[0].innerHTML = TRIANGLE_MARKER;
         this.$el.append(this.svg);
-        init(this.svg);
+        init(this.svg, graph);
         return this;
+    },
+
+    refresh: function(graph) {
+        init(this.svg, graph);
     }
 
 });
