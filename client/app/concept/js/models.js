@@ -17,7 +17,14 @@ var ConceptModel = WebSocketModel.extend({
         isPublished: false
     },
 
-    BASE_URL: "/api/v1/concepts/"
+    BASE_URL: "/api/v1/concepts/",
+
+    url: function() {
+        if(this.isNew()) {
+            return this.BASE_URL;
+        }
+        return "{0}{1}/".format(this.BASE_URL, this.attributes.id);
+    },
 
 });
 

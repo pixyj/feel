@@ -6,7 +6,7 @@ from core.models import TimestampedModel, UUIDModel
 from quiz.models import Quiz
 
 
-class Concept(TimestampedModel):
+class Concept(TimestampedModel, UUIDModel):
     name = models.TextField(blank=True)
     is_published = models.BooleanField(default=False)
 

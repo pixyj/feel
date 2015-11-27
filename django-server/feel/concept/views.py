@@ -1,7 +1,7 @@
 import uuid
 import json
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -28,7 +28,7 @@ class ConceptDetailView(APIView):
         """
         Get concept by concept_id
         """
-        concept = get_object_or_404(pk=concept_id)
+        concept = get_object_or_404(Concept, pk=concept_id)
 
         serializer = ConceptSerializer(concept)
         data = serializer.data
@@ -37,7 +37,7 @@ class ConceptDetailView(APIView):
         return Response(data)
 
 
-    def post(self, request, concept_id, format=None):
+    def post(self, request, format=None):
         """
         Create new concept
         Algo:
@@ -95,7 +95,7 @@ class ConceptDetailView(APIView):
         """
         Used in _save_concept_and_return_response during `PUT` to get a `Concept` object.
         """
-        concept = Concept.objects.get(pk=concept_attrs['id'])
+        concept = Concept.objects.get(pk=data['id'])
         for field, value in concept_attrs.items():
             setattr(concept, field, value)
         concept.save()
@@ -126,7 +126,6 @@ class ConceptDetailView(APIView):
         concept_attrs = {}
         for field in concept_fields:
             concept_attrs[field] = data[field]
-        concept_attrs['id'] = uuid.UUID(data['id'])
 
         audit_attrs = {
             'created_by': created_by,
@@ -149,5 +148,5 @@ class ConceptDetailView(APIView):
                 serializer.create(section_attrs)
                 
                 
-        return Response(data)
+        return Response({"id": concept.id})
 

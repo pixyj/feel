@@ -24,6 +24,7 @@ var WebSocketModel = Backbone.Model.extend({
 
     initialize: function() {
         this._isSaved = true;
+        this._waitingForPostResponse = false;
         //this._triggerIsSavedChanged = _.debounce(this._triggerIsSavedChanged, 1000, {immedate: false});
     },
 
@@ -44,6 +45,13 @@ var WebSocketModel = Backbone.Model.extend({
         design for now and think of alternate solutions in the background.  
     */
     save: function() {
+
+        //If response to POST request is not received yet, wait. 
+        if(this.isNew() && !this.isSaved()) {
+            this._waitingForPostResponse = true;
+            return;
+        }
+
         this._setIsSaved(false);
         appWebSocket.save({
             payload: this.toJSON(),
@@ -54,17 +62,15 @@ var WebSocketModel = Backbone.Model.extend({
         });
     },
 
-    isNew: function() {
-        if(!this._isSaved) {
-            return false;
-        }
-        return this.attributes.id === undefined;
-    },
-
     onResponseReceived: function(payload, statusCode) {
         if(statusCode === 200 || statusCode === 201) {
-            this.attributes.id = payload.id;
+            this.attributes.id = JSON.parse(payload).id;
             console.info("Saved WebSocketModel");
+            if(this._waitingForPostResponse) {
+                this._waitingForPostResponse = false;
+                this.save();
+                return;
+            }
             this._setIsSaved(true);
             this.trigger("sync", this);  
         }
