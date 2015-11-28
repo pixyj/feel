@@ -77,6 +77,13 @@ var QuizModel = WebSocketModel.extend({
             }
         }
         return attrs;
+    },
+
+    url: function() {
+        if(this.isNew()) {
+            return this.BASE_URL;
+        }
+        return "{0}{1}/".format(this.BASE_URL, this.attributes.id);
     }
 
 });

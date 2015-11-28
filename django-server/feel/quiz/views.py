@@ -18,28 +18,6 @@ from quiz import serializers
 
 
 
-class QuizList(APIView):
-    """
-    Collection API. Only GET method defined here
-    """
-
-    permission_classes = (IsAuthenticated, )
-
-
-    def get(self, request, format=None):
-        """
-        List latest version of all quizzes
-        """
-        quizzes = Quiz.objects.prefetch_related('shortanswer_set').\
-                               prefetch_related('choice_set').\
-                               filter(created_by=request.user).\
-                               order_by("-created_at")
-            
-        serializer = serializers.QuizSerializer(quizzes, many=True)
-        return Response(serializer.data)
-
-
-
 class QuizDetailView(APIView):
     """
     GET, POST and PUT APIs for individual quizzes
@@ -60,7 +38,7 @@ class QuizDetailView(APIView):
         return Response(data)
 
 
-    def post(self, request, quiz_id, format=None):
+    def post(self, request, format=None):
         """
         Create new quiz
         Algo:
@@ -121,7 +99,7 @@ class QuizDetailView(APIView):
         """
         Used in _save_quiz_and_return_response during `PUT` to get a `Quiz` object.
         """
-        quiz = Quiz.objects.get(pk=quiz_attrs['uuid'])
+        quiz = Quiz.objects.get(pk=data['id'])
         for field, value in quiz_attrs.items():
             setattr(quiz, field, value)
         quiz.save()
@@ -142,7 +120,6 @@ class QuizDetailView(APIView):
         quiz_attrs = {}
         for field in quiz_fields:
             quiz_attrs[field] = data[field]
-        quiz_attrs['uuid'] = uuid.UUID(data['uuid'])
 
         audit_attrs = {
             'created_by': created_by,
@@ -176,7 +153,30 @@ class QuizDetailView(APIView):
                 choice_instance = Choice.objects.create(**choice_attrs)
                 choice['id'] = choice_instance.id
 
+        data['id'] = quiz.id
         return Response(data)
+
+
+
+class QuizListAndPostView(QuizDetailView):
+    """
+    Collection API. Only GET method defined here
+    """
+
+    permission_classes = (IsAuthenticated, )
+
+
+    def get(self, request, format=None):
+        """
+        List latest version of all quizzes
+        """
+        quizzes = Quiz.objects.prefetch_related('shortanswer_set').\
+                               prefetch_related('choice_set').\
+                               filter(created_by=request.user).\
+                               order_by("-created_at")
+            
+        serializer = serializers.QuizSerializer(quizzes, many=True)
+        return Response(serializer.data)
 
 
 

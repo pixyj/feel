@@ -65,6 +65,7 @@ var WebSocketModel = Backbone.Model.extend({
     onResponseReceived: function(payload, statusCode) {
         if(statusCode === 200 || statusCode === 201) {
             this.attributes.id = JSON.parse(payload).id;
+            utils.assert(this.attributes.id !== undefined, "idAttribute not returned by server");
             console.info("Saved WebSocketModel");
             if(this._waitingForPostResponse) {
                 this._waitingForPostResponse = false;
