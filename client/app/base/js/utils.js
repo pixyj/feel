@@ -78,6 +78,12 @@ var inherit = function(child, parent) {
         }
     }
     return child;
+};
+
+var assert = function(condition, message) {
+    if(!condition) {
+        console.error(message);
+    }
 }
 
 module.exports = {
@@ -85,7 +91,8 @@ module.exports = {
     prettyDate: prettyDate,
     getHumanizedTimeDiff: getHumanizedTimeDiff,
     getUniqueId: getUniqueId,
-    inherit: inherit
+    inherit: inherit,
+    assert: assert
 };
 
 window.utils = module.exports;
