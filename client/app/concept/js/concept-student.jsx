@@ -72,10 +72,11 @@ var PageComponent = React.createClass({
     render: function() {
 
         var sections = this.props.page.sections;
-        // var options = {
-        //     conceptStore: this.props.conceptStore
-        // }
-        var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, {});
+        var props = {
+            page: this.props.page
+        };
+
+        var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, props);
         return (
             <div> 
                 <StudentConceptNameComponent page={this.props.page} />

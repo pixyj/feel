@@ -22,6 +22,8 @@ var QuizSnippetComponent = QuizList.QuizSnippetComponent;
 var QuizCreator = require("./../../quiz/js/quiz-creator-view.jsx");
 var QuizCreatorModalComponent = QuizCreator.QuizCreatorModalComponent;
 
+var StudentQuizComponents = require("./../../quiz/js/quiz-student-view.jsx");
+
 var SaveStatusMixin = require("save-status-component.jsx").SaveStatusMixin;
 var RemoveItemComponent = require("remove-item-component.jsx").RemoveItemComponent;
 
@@ -391,6 +393,9 @@ module.exports = {
     VisualizationSectionComponent: VisualizationSectionComponent,
 
     QuizSectionComponent: QuizSectionComponent,
+    StudentPrereqQuizSection: StudentQuizComponents.StudentPrereqQuizSection,
+    StudentQuizSection: StudentQuizComponents.StudentQuizSection,
+    StudentExitQuizSection: StudentQuizComponents.StudentExitQuizSection,
     
     StudentMarkdownSectionComponent: StudentMarkdownSectionComponent,
     StudentVideoSectionComponent: StudentVideoSectionComponent

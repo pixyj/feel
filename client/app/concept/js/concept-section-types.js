@@ -6,7 +6,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
 
     PREREQ_QUIZ: {
         type: 0,
-        studentComponent: null,
+        studentComponent: C.StudentPrereqQuizSection,
         creatorComponent: C.QuizSectionComponent,
         name: "Prerequisite Quiz",
         blankState: {
@@ -16,7 +16,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
 
     EXIT_QUIZ: {
         type: 6,
-        studentComponent: null,
+        studentComponent: C.StudentExitQuizSection,
         creatorComponent: C.QuizSectionComponent,
         name: "Exit Quiz",
         blankState: {
@@ -37,7 +37,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
 
     QUIZ: {
         type: 2,
-        studentComponent: null,
+        studentComponent: C.StudentQuizSection,
         creatorComponent: C.QuizSectionComponent,
         name: "Quiz Section",
         blankState: {

@@ -247,6 +247,103 @@ var QuizPreview = React.createClass({
 
 });
 
+
+var QuizSectionMixin = {
+
+    render: function() {
+
+        return (
+            <div className="card quiz-student-section">
+                <h5> {this.getHeading()} </h5>
+                <StudentQuizView section={this.props.section} />
+            </div>
+        );
+    }
+};
+
+var StudentPrereqQuizSection = React.createClass({
+
+    mixins: [QuizSectionMixin],
+
+    getHeading: function() {
+        return "Take this pretest to check if you're ready to learn about {0}".format(this.props.page.name);
+    }
+
+});
+
+var StudentQuizSection = React.createClass({
+
+    mixins: [QuizSectionMixin],
+
+    getHeading: function() {
+        return "Test your understanding";
+    }
+
+});
+
+var StudentExitQuizSection = React.createClass({
+
+    mixins: [QuizSectionMixin],
+
+    getHeading: function() {
+        return "Answer these questions and you'll be done!";
+    }
+
+});
+
+
+var StudentSingleQuizView = React.createClass({
+
+    render: function() {
+
+        var submitStore = {};
+        return (
+            <div>
+                <div className="student-quiz-container">
+                    <div className="student-quiz-number">
+                        <p>{this.props.number}.</p>
+                    </div>
+                    <div className="student-quiz-body">
+                        <QuizQuestionView questionDisplay={this.props.quiz.questionDisplay} ref="questionView" />
+                        <QuizAnswerSubmitView store={this.props.quiz} submitStore={submitStore} />
+                    </div>
+                    <div className="clearfix"> </div>
+                </div>
+                <hr className="student-quiz-end-line" />
+            </div>
+        );  
+    }
+
+});
+
+var StudentQuizView = React.createClass({
+
+    render: function() {
+        var quizzes = this.props.section.data.quizzes;
+
+        var i = 0;
+        var length = quizzes.length;
+        var components = [];
+        for(var i = 0; i < length; i++) {
+            var quiz = quizzes[i];
+            var component = <StudentSingleQuizView quiz={quiz} key={i} number={i+1} />
+            components.push(component);
+        }
+
+        return (
+            <div>
+                {components}
+            </div>
+        );
+    }
+});
+
+
+
 module.exports = {
-    QuizPreview: QuizPreview
+    QuizPreview: QuizPreview,
+    StudentQuizView: StudentQuizView,
+    StudentPrereqQuizSection: StudentPrereqQuizSection,
+    StudentQuizSection: StudentQuizSection,
+    StudentExitQuizSection: StudentExitQuizSection
 }

@@ -27,14 +27,15 @@ textarea {
     border-right: 3px dashed aliceblue;
 }
 
-.quiz-student-choice-container {
-    margin-top: 50px;
-}
-
-.quiz-creator-question-input, .quiz-question-preview {
+.quiz-creator-question-input {
     height: 200px;
     overflow: scroll;
 }
+
+.quiz-student-section {
+    padding: 1.15rem;
+}
+
 
 .save-status {
     position: absolute;
@@ -44,7 +45,9 @@ textarea {
 
 
 .quiz-question-preview {
-    padding: 5px;
+    font-size: 1.2rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
 }
 
 .md-preview-with-content {
@@ -111,10 +114,10 @@ input[type=range]::-webkit-slider-thumb {
 .quiz-student-choice {
     font-size: 1.15em;
     cursor: pointer;
-    padding-left: 5px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    margin-bottom: 6px;
+    padding-left: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .quiz-student-choice-selected {
@@ -142,6 +145,21 @@ input[type=range]::-webkit-slider-thumb {
 
 .quiz-snippet {
     margin-bottom: 1rem !important;
+}
+
+.student-quiz-number {
+    float: left;
+    width: 4%;
+    font-size: 1.2em;
+}
+
+.student-quiz-body {
+    float: right;
+    width: 96%;
+}
+
+.student-quiz-end-line { 
+    margin-top: 2rem;
 }
 
 /* Problem solving page css 
