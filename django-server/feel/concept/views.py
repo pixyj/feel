@@ -150,3 +150,15 @@ class ConceptDetailView(APIView):
                 
         return Response({"id": concept.id})
 
+
+
+class StudentView(APIView):
+
+    def get(self, request, pk):
+        concept = get_object_or_404(Concept, pk=pk)
+        #import ipdb;ipdb.set_trace()
+        page = concept.fetch_student_page()
+        return Response(page)
+
+
+

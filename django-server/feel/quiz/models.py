@@ -22,6 +22,10 @@ class Quiz(TimestampedModel, UUIDModel):
 
     tags = TaggableManager(blank=True)
 
+    @classmethod
+    def get_detailed_quizzes_in(klass, ids):
+        return Quiz.objects.filter(pk__in=ids).prefetch_related('shortanswer_set').prefetch_related('choice_set')
+
 
     def __str__(self):
         return "{} - Created by {}".format(self.question_input, self.created_by)
