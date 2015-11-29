@@ -24,7 +24,7 @@ var SECTION_TYPES_AND_COMPONENTS = conceptSectionTypes.SECTION_TYPES_AND_COMPONE
 var STUDENT_SECTION_COMPONENTS_BY_TYPE = conceptSectionTypes.STUDENT_SECTION_COMPONENTS_BY_TYPE;
 var SECTIONS_SORTED_BY_TYPE = conceptSectionTypes.SECTIONS_SORTED_BY_TYPE;
 
-var ConceptModel = require("./models").ConceptModel;
+var PageModel = require("./models").StudentConceptPageModel;
 
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
@@ -32,40 +32,29 @@ var SectionComponentListMixin = components.SectionComponentListMixin;
 
 
 
-var ConceptStore = function(options) {
+var PageStore = function(options) {
 
-    this.model = new ConceptModel(options);
+    this.model = new PageModel(options);
 };
 
-ConceptStore.prototype = {
+PageStore.prototype = {
 
     fetch: function() {
         return this.model.fetch();
     },
 
-    getConceptName: function() {
-        return this.model.get("name");
-    },
-
-    getSections: function() {
-        return this.model.get("sections");
-    },
-
-    getSectionDataAt: function(position) {
-        var data = this.model.attributes.sections[position].data;
-
-        //clone the object so that the view is free is mutate the object. 
-        return _.clone(data); 
+    toJSON: function() {
+        return this.model.toJSON()
     }
 };
 
-ConceptStore.prototype.constructor = ConceptStore;
+PageStore.prototype.constructor = PageStore;
 
 var StudentConceptNameComponent = React.createClass({
 
     render: function() {
 
-        var message = this.props.conceptStore.getConceptName();
+        var message = this.props.page.name;
 
         return (
             <h4> 
@@ -82,23 +71,22 @@ var PageComponent = React.createClass({
 
     render: function() {
 
-        var sections = this.props.conceptStore.getSections();
-        var options = {
-            conceptStore: this.props.conceptStore
-        }
-        var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, options);
-
+        var sections = this.props.page.sections;
+        // var options = {
+        //     conceptStore: this.props.conceptStore
+        // }
+        var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, {});
         return (
             <div> 
-                <StudentConceptNameComponent conceptStore={this.props.conceptStore} />
+                <StudentConceptNameComponent page={this.props.page} />
                 {components}
             </div>
         );
     }
 });
 
-var renderPage = function(conceptStore, element) {
-    ReactDOM.render(<PageComponent conceptStore={conceptStore} />, element);
+var renderPage = function(page, element) {
+    ReactDOM.render(<PageComponent page={page} />, element);
 };
 
 var app = {};
@@ -106,10 +94,11 @@ var app = {};
 
 var render = function(options, element) {
 
-    app.conceptStore = new ConceptStore(options);
+    app.pageStore = new PageStore(options);
 
-    app.conceptStore.fetch().then(function() {
-        renderPage(app.conceptStore, element);
+    app.pageStore.fetch().then(function() {
+        var page = app.pageStore.toJSON();
+        renderPage(page, element);
     });
 };
 

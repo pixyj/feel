@@ -118,10 +118,9 @@ var GetSectionDataMixin = {
 
 var StudentMarkdownSectionComponent = React.createClass({
 
-    mixins: [GetSectionDataMixin],
 
     render: function() {
-        var input = this.getSectionData(this.props.conceptStore).input;
+        var input = this.props.section.data.input;
         var display = md.mdAndMathToHtml(input);
         return (
             <div className="row concept-student-section">
@@ -144,10 +143,9 @@ var VideoFrameComponent = React.createClass({
 
 var StudentVideoSectionComponent = React.createClass({
 
-    mixins: [GetSectionDataMixin],
 
     render: function() {
-        var url = this.getSectionData(this.props.conceptStore).url;
+        var url = this.props.section.data.url;
 
         return (
             <div className="row concept-student-section">

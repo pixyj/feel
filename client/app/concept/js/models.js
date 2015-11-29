@@ -28,6 +28,15 @@ var ConceptModel = WebSocketModel.extend({
 
 });
 
+var StudentConceptPageModel = Backbone.Model.extend({
+
+    url: function() {
+        return "/api/v1/student/concepts/{0}/".format(this.attributes.id)
+    }
+
+});
+
 module.exports = {
-    ConceptModel: ConceptModel
+    ConceptModel: ConceptModel,
+    StudentConceptPageModel: StudentConceptPageModel
 };
