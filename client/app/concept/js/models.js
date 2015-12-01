@@ -3,9 +3,6 @@ var Backbone = require("backbone");
 
 var utils = require("utils");
 
-var appWebSocket = require("app-websocket");
-appWebSocket = appWebSocket.appWebSocket;
-
 var StreamSaveModel = require("models").StreamSaveModel;
 
 
