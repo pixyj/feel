@@ -1,7 +1,7 @@
 var Backbone = require("backbone");
 var _ = require("underscore");
 
-var appWebSocket = require("app-websocket").appWebSocket;
+//var appWebSocket = require("app-websocket").appWebSocket;
 
 var UserModel = Backbone.Model.extend({
 
@@ -18,85 +18,71 @@ var UserModel = Backbone.Model.extend({
     }
 });
 
-var WebSocketModel = Backbone.Model.extend({
+var StreamSaveModel = Backbone.Model.extend({
 
-    BASE_URL: null,
+    MAX_REQUESTS_PER_SECOND: 1,
 
     initialize: function() {
-        this._isSaved = true;
-        this._waitingForPostResponse = false;
+        
         //this._triggerIsSavedChanged = _.debounce(this._triggerIsSavedChanged, 1000, {immedate: false});
+
+        this._lastRequestId = 0;
+        this._lastSavedRequestId = 0;
+        this._isSaved = true;
+
+        this._saveImpl = _.throttle(this._saveImpl, 1000 / this.MAX_REQUESTS_PER_SECOND);
     },
 
-    /*  Here's a nice blog post on implementing auto save: 
-        engineering.hackerearth.com/2014/01/21/introducing-codeplayer/
-        But I want to save immediately instead of waiting since the data is critical 
-        and perform the compaction/batching on the server.
-
-        On the flip side, I've to run an additional websocket server process. 
-        
-        Other options:
-        1. Use django-websocket 
-        2. Use websockets using asyncio. 
-
-        But these libraries aren't as mature as Node. 
-
-        So I'll keep the current
-        design for now and think of alternate solutions in the background.  
-    */
     save: function() {
 
-        //If response to POST request is not received yet, wait. 
-        if(this.isNew() && !this.isSaved()) {
-            this._waitingForPostResponse = true;
-            return;
+        if(this.isSaved()) {
+            this._lastRequestId += 1;
+            this._saveImpl();
         }
+        else {
+            this._lastRequestId += 1;
+        }
+        this._updateIsSaved();
 
-        this._setIsSaved(false);
-        appWebSocket.save({
-            payload: this.toJSON(),
-            url: this.url(),
-            httpMethod: this.isNew() ? "POST": "PUT",
-            onSaved: this.onResponseReceived,
-            context: this 
+    },
+
+    _saveImpl: function() {
+
+        var requestId = this._lastRequestId;  
+        var self = this; 
+        
+        Backbone.Model.prototype.save.apply(this, arguments).then(function() {
+            self._lastSavedRequestId = requestId;
+            self._updateIsSaved();
+            if(!self.isSaved()) {
+                self._saveImpl();
+            }
         });
     },
 
-    onResponseReceived: function(payload, statusCode) {
-        if(statusCode === 200 || statusCode === 201) {
-            this.attributes.id = JSON.parse(payload).id;
-            utils.assert(this.attributes.id !== undefined, "idAttribute not returned by server");
-            console.info("Saved WebSocketModel");
-            if(this._waitingForPostResponse) {
-                this._waitingForPostResponse = false;
-                this.save();
-                return;
-            }
-            this._setIsSaved(true);
-            this.trigger("sync", this);  
-        }
-        else {
-            throw new Error("Websocket message not saved", statusCode, this.attributes);
-        }
-    },
-
     isSaved: function() {
-        return this._isSaved;
+        return this._lastSavedRequestId == this._lastRequestId;
     },
 
-    _setIsSaved: function(status) {
-        this._isSaved = status;
-        this._triggerIsSavedChanged();
+    _updateIsSaved: function() {
+        var previousStatus, currentStatus;
+        previousStatus = this._isSaved;
+        currentStatus = this.isSaved();
+        this._isSaved = currentStatus;
 
+        if(previousStatus !== currentStatus) {
+            this._triggerIsSavedChanged();
+        }
     },
 
     _triggerIsSavedChanged: function() {
-        console.info("isSaved changed");
+        console.info("isSaved changed", this._isSaved);
         this.trigger("change:isSaved", this._isSaved);
     }
 });
 
+
 module.exports = {
     UserModel: UserModel,
-    WebSocketModel: WebSocketModel
+    StreamSaveModel: StreamSaveModel
 };

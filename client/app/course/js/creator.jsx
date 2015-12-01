@@ -10,6 +10,8 @@ var connected = require("./../../conceptviz/js/connected");
 
 var DAG = require("./../../conceptviz/js/DAG").DAG;
 
+var StreamSaveModel = require("models").StreamSaveModel;
+
 /********************************************************************************
 *   Store
 *
@@ -20,16 +22,85 @@ var app = {
 
 };
 
+var CourseModel = StreamSaveModel.extend({
+
+    defaults: {
+        name: "",
+        isPublished: false
+    },
+
+    BASE_URL: "/api/v1/courses/",
+
+    initialize: function() {
+        this._isNew = this.isNew();
+    },
+
+    isNew: function() {
+        return Backbone.Model.prototype.isNew.call(this);
+    },
+
+    url: function() {
+        if(this.isNew()) {
+            return this.BASE_URL;
+        }
+        return "{0}{1}/".format(this.BASE_URL, this.id);
+    }
+});
+
+var ConceptModel = Backbone.Model.extend({
+
+});
+
+var ConceptCollection = Backbone.Collection.extend({
+
+    initialize: function(options) {
+        this.course = options.course;
+    },
+
+    model: ConceptModel,
+
+    url: function() {
+        return "{}/concepts/".format(this.course.url())
+    },
+
+});
+
+var DependencyModel = Backbone.Model.extend({
+
+});
+
+var DependencyCollection = Backbone.Collection.extend({
+
+    model: DependencyModel,
+
+    initialize: function(options) {
+        this.course = options.course;
+    },
+
+    url: function() {
+        return "{}/dependencies/".format(this.course.url());
+    }
+});
+
 var Store = function(options) {
     this.options = options;
     this.concepts = [];
     this.dag = new DAG({});
+
+    this._course = new CourseModel(options);
+    this._concepts = new ConceptCollection({course: this.courseModel});
+    this._dependencies = new DependencyCollection({course: this.courseModel});
 };
 
 Store.prototype = {
 
     getName: function() {
-        return "";
+        return this._course.get("name");
+    },
+
+    setName: function(name) {
+        this._course.set("name", name);
+        this._course.save();
     },
 
     getConcepts: function() {
@@ -69,6 +140,22 @@ Store.prototype = {
             levels: this.dag.sort(),
             edges: this.dag.getEdges()
         }
+    },
+
+    fetch: function() {
+        
+        if(this._course.isNew()) {
+            return $.Deferred().resolve().promise() 
+        }
+
+        var one = this._course.fetch();
+        var two = this._concepts.fetch();
+        var three = this._dependencies.fetch();
+
+        var promises = [one, two, three];
+
+        return $.when.apply($, promises);
+
     }
 
 };
@@ -123,7 +210,7 @@ var CourseNameComponent = React.createClass({
     HEADING: "Course Name",
 
     saveState: function(name) {
-
+        this.props.store.setName(name);
     }
 
 });
@@ -439,14 +526,21 @@ var PageView = Backbone.View.extend({
 *********************************************************************************/
 
 var render = function(options, element) {
+
     app.store = new Store(options);
 
-    var pageView = new PageView({
-        store: app.store,
-        parent: element
-    }).render();
-    $(element).append(pageView.$el);
-    pageView.renderChildren();
+    app.store.fetch().then(function() {
+
+        var pageView = new PageView({
+            store: app.store,
+            parent: element
+        }).render();
+
+        $(element).append(pageView.$el);
+        pageView.renderChildren();
+
+        app.pageView = pageView;
+    });
 
 }
 

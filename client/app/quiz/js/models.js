@@ -4,10 +4,8 @@ var Backbone = require("backbone");
 var md = require("md");
 var utils = require("utils");
 
-var appWebSocket = require("app-websocket");
-appWebSocket = appWebSocket.appWebSocket;
 
-var WebSocketModel = require("models").WebSocketModel;
+var StreamSaveModel = require("models").StreamSaveModel;
 
 var constants = {
     SHORT_ANSWER: 1,
@@ -51,7 +49,7 @@ var GuessCollection = Backbone.Collection.extend({
 });
 
 //#todo -> consider changing answers to short-answers to be explicit. 
-var QuizModel = WebSocketModel.extend({
+var QuizModel = StreamSaveModel.extend({
     
     defaults: {
         quizType: constants.MCQ,

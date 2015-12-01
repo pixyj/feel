@@ -6,10 +6,10 @@ var utils = require("utils");
 var appWebSocket = require("app-websocket");
 appWebSocket = appWebSocket.appWebSocket;
 
-var WebSocketModel = require("models").WebSocketModel;
+var StreamSaveModel = require("models").StreamSaveModel;
 
 
-var ConceptModel = WebSocketModel.extend({
+var ConceptModel = StreamSaveModel.extend({
 
     defaults: {
         name: "",
