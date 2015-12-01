@@ -6,8 +6,10 @@ play.*
 .sass-cache
 *.log
 *.zip
-*.sublime-project
-*.sublime-workspace
+feel.sublime-project
+feel.sublime-workspace
 db.sqlite3
 __pycache__
 node_modules
+bundle.js
+
