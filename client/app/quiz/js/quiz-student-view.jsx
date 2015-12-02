@@ -165,6 +165,7 @@ var QuizAnswerSubmitView = React.createClass({
 
     render: function() {
         var answerSubmitView;
+        
         if(this.props.store.quizType === constants.SHORT_ANSWER) {
             answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" store={this.props.store}/>
         }
@@ -173,6 +174,10 @@ var QuizAnswerSubmitView = React.createClass({
         }
 
         var feedback = this.getResultFeedback();
+        var feedbackClass = "quiz-result-feedback ";
+        if(this.state.result) {
+            feedbackClass += "quiz-correct-result-feedback quiz-status-transition"
+        }
 
         var submitButton;
         if(this.state.result === true) {
@@ -190,7 +195,7 @@ var QuizAnswerSubmitView = React.createClass({
             <div>
                 {answerSubmitView}
                 {submitButton}
-                <span className="quiz-result-feedback"> {feedback} </span>
+                <span className={feedbackClass}> {feedback} </span>
             </div>
 
         );
@@ -281,10 +286,10 @@ var StudentSingleQuizAttemptComponent = React.createClass({
         var className = "student-quiz-attempt-status ";
         
         if(result) {
-            className += "student-quiz-correct-status";
+            className += "student-quiz-correct-status quiz-status-transition";
         }
         else {
-            className += "student-quiz-not-correct-status";
+            className += "student-quiz-not-correct-status quiz-status-transition";
         }
 
         return <span className={className}>✓</span>

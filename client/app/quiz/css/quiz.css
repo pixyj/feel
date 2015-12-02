@@ -111,8 +111,21 @@ input[type=range]::-webkit-slider-thumb {
     line-height: 56px;
     font-size: 1.6rem;
     color: #5cb85c;
+    border-radius: 50%;
+    padding: 1rem;
 }
 
+.quiz-correct-result-feedback {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.quiz-status-transition {
+    transition: background-color 0.4s ease-in;
+    -ms-transition: background-color 0.4s ease-in;
+    -moz-transition: background-color 0.4s ease-in;
+    -webkit-transition: background-color 0.4s ease-in;
+}
 
 .quiz-student-choice {
     font-size: 1.15em;
@@ -173,18 +186,23 @@ input[type=range]::-webkit-slider-thumb {
 
 }
 
-.student-quiz-attempt-list {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+.student-quiz-not-correct-status {
+    color: rgba(0, 0, 0, 0.2);
+    background-color: #FFFFFF;
 }
 
 .student-quiz-correct-status {
+    
     background-color: #5cb85c;
     color: rgb(255, 255, 255);
+
 }
 
-.student-quiz-not-correct-status {
-    color: rgba(0, 0, 0, 0.2);
+
+
+.student-quiz-attempt-list {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 /* Problem solving page css 
