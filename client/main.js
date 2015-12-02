@@ -22,7 +22,7 @@ var Concept = require("./app/concept/js/api");
 var Course = require("./app/course/js/api");
 
 require("csrf");
-//require("app-websocket");
+
 
 var Router = Backbone.Router.extend({
 

@@ -1,7 +1,6 @@
 var Backbone = require("backbone");
 var _ = require("underscore");
 
-//var appWebSocket = require("app-websocket").appWebSocket;
 
 var UserModel = Backbone.Model.extend({
 
