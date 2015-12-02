@@ -31,14 +31,6 @@ var CourseModel = StreamSaveModel.extend({
 
     BASE_URL: "/api/v1/courses/",
 
-    initialize: function() {
-        this._isNew = this.isNew();
-    },
-
-    isNew: function() {
-        return Backbone.Model.prototype.isNew.call(this);
-    },
-
     url: function() {
         if(this.isNew()) {
             return this.BASE_URL;
@@ -60,7 +52,7 @@ var ConceptCollection = Backbone.Collection.extend({
     model: ConceptModel,
 
     url: function() {
-        return "{}/concepts/".format(this.course.url())
+        return "{0}concepts/".format(this.course.url())
     },
 
 });
@@ -78,7 +70,7 @@ var DependencyCollection = Backbone.Collection.extend({
     },
 
     url: function() {
-        return "{}/dependencies/".format(this.course.url());
+        return "{0}dependencies/".format(this.course.url());
     }
 });
 
@@ -87,9 +79,15 @@ var Store = function(options) {
     this.concepts = [];
     this.dag = new DAG({});
 
+
     this._course = new CourseModel(options);
-    this._concepts = new ConceptCollection({course: this.courseModel});
-    this._dependencies = new DependencyCollection({course: this.courseModel});
+    this._concepts = new ConceptCollection({course: this._course});
+    this._dependencies = new DependencyCollection({course: this._course});
+
+    this.isRouteSet = !this._course.isNew();
+    if(!this.isRouteSet) {
+        this._course.once("sync", this.setRoute, this);
+    }
 };
 
 Store.prototype = {
@@ -156,6 +154,18 @@ Store.prototype = {
 
         return $.when.apply($, promises);
 
+    },
+
+    setRoute: function() {
+        
+        if(this.isRouteSet) {
+            return;
+        }
+        var id = this._course.attributes.id;
+        var fragment = Backbone.history.getFragment();
+        var fragmentNew = "{0}/{1}/".format(fragment, id);
+        Backbone.history.navigate(fragmentNew, {trigger: false});
+        this.isRouteSet = true;
     }
 
 };
