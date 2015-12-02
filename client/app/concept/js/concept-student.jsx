@@ -50,6 +50,10 @@ PageStore.prototype = {
 
     getSectionQuizzes: function() {
         return this.model.attributes.sectionQuizzes;
+    },
+
+    cleanup: function() {
+        this.model.off();
     }
 };
 
@@ -92,31 +96,39 @@ var PageComponent = React.createClass({
     }
 });
 
+var app = {};
+
+
 var renderPage = function(page, attemptStore, element) {
     ReactDOM.render(<PageComponent page={page} attemptStore={attemptStore} />, element);
 };
 
-var app = {};
-
-
 var render = function(options, element) {
 
     app.pageStore = new PageStore(options);
-
-
-    app.pageStore.fetch().then(function() {
-        var page = app.pageStore.toJSON();
-
-        app.attemptStore = new QuizAttemptStore({
-            sectionQuizzes: page.sectionQuizzes
-        });
-
-        renderPage(page,app.attemptStore, element);
+    app.attemptStore = new QuizAttemptStore({
+        sectionQuizzes: {},
+        conceptId: options.id
     });
+    app.element = element;
+
+    var one = app.pageStore.fetch();
+    var two = app.attemptStore.fetch();
+    var promises = [one, two];
+
+    $.when.apply($, promises).then(function() {
+        var page = app.pageStore.toJSON();
+        app.attemptStore.setSectionQuizzes(page.sectionQuizzes).initializeAttempts();
+        renderPage(page, app.attemptStore, element);
+    });
+
 };
 
 var unmount = function() {
 
+    app.pageStore.cleanup();
+    app.attemptStore.cleanup();
+    ReactDOM.unmountComponentAtNode(app.element);
 };
 
 module.exports = {
