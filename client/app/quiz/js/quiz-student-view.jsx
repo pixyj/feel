@@ -163,19 +163,25 @@ var QuizAnswerSubmitView = React.createClass({
 
     getInitialState: function() {
         return {
-            result: null
+            result: this.props.attemptStore.getAttempt(this.props.store.id).result
         }
     },
 
     render: function() {
         var answerSubmitView;
         
-        if(this.props.store.quizType === constants.SHORT_ANSWER) {
-            answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" store={this.props.store}/>
+        if(this.state.result) {
+            answerSubmitView = <div> </div>
         }
         else {
-            answerSubmitView = <MCQSubmitView  ref="answerSubmitView" store={this.props.store}/>
+            if(this.props.store.quizType === constants.SHORT_ANSWER) {
+                answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" store={this.props.store}/>
+            }
+            else {
+                answerSubmitView = <MCQSubmitView  ref="answerSubmitView" store={this.props.store}/>
+            }
         }
+
 
         var feedback = this.getResultFeedback();
         var feedbackClass = "quiz-result-feedback ";

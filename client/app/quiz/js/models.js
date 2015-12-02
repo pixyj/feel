@@ -198,6 +198,10 @@ QuizAttemptStore.prototype = {
         return attempt;
     },
 
+    isAnswered: function(quizId) {
+        return this.getAttempt(quizId).result === true;
+    },
+
     getSectionAttemptStatuses: function(sectionId) {
 
         var quizzes = this.sectionQuizzes[sectionId];
