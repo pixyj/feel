@@ -207,7 +207,13 @@ class QuizAttemptView(APIView):
 
             "created_at": timezone.now()
         }
-        QuizAttempt.objects.create(**attrs)
+        
+        try:
+            attempt = QuizAttempt.objects.create(**attrs)
+        except IntegrityError:
+            return Response("Attempt Number not unique", status.HTTP_400_BAD_REQUEST)
+
+        data['id'] = attempt.id
         return Response(request.data, status.HTTP_201_CREATED)
 
 
