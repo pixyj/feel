@@ -10,7 +10,7 @@ from concept.models import Concept
 
 
 class Course(TimestampedModel, UUIDModel):
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256)
     is_published = models.BooleanField(default=False)
 
     @property
