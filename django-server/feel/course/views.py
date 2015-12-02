@@ -68,7 +68,7 @@ class CourseDetailView(APIView):
 
 class ConceptListView(APIView):
 
-    def get(self, pk, request):
+    def get(self, request, pk):
         return Response([])
 
 class ConceptDetailView(APIView):
@@ -80,5 +80,5 @@ class ConceptDetailView(APIView):
 
 class DependencyListView(APIView):
     
-    def get(self, pk, request):
+    def get(self, request, pk):
         return Response([])
