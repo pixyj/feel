@@ -3,7 +3,7 @@ import uuid
 from django.shortcuts import render
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.utils import timezone
 
 from rest_framework.views  import APIView
@@ -182,12 +182,12 @@ class QuizListAndPostView(QuizDetailView):
 
 class QuizAttemptView(APIView):
 
-    def post(self, request, quiz_id, version, format=None):
+    def post(self, request, quiz_id, format=None):
         user, user_key = get_user_and_user_key(request)
         data = request.data
 
         try:
-            quiz = Quiz.objects.get(quiz_id=quiz_id, version=version)
+            quiz = Quiz.objects.get(pk=quiz_id)
         except Quiz.DoesNotExist:
             return({"quiz_does_not_exist": True}, status.HTTP_400_BAD_REQUEST)
 
