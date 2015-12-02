@@ -65,7 +65,7 @@ class Choice(TimestampedModel, UUIDModel):
 
 
 
-class QuizAttempManager(models.Manager):
+class QuizAttemptManager(models.Manager):
 
     def _get_choices(self, choice_string_list):
         if choice_string_list == "":
@@ -101,9 +101,8 @@ class QuizAttempt(UUIDModel):
 
     quiz = models.ForeignKey(Quiz)
     user = models.ForeignKey(User, null=True)
-
     #user_key = user_id if user is logged-in else session_key
-    user_key = models.CharField(max_length=SESSION_KEY_MAX_LENGTH)
+    user_key = models.CharField(max_length=SESSION_KEY_MAX_LENGTH, db_index=True)
 
     attempt_number = models.IntegerField()
     result = models.BooleanField()
@@ -113,7 +112,7 @@ class QuizAttempt(UUIDModel):
 
     created_at = models.DateTimeField()
 
-    objects = QuizAttempManager()
+    objects = QuizAttemptManager()
 
     class Meta:
         unique_together = ("quiz", "user_key", "attempt_number", )
