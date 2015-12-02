@@ -10,9 +10,13 @@ var StreamSaveModel = require("models").StreamSaveModel;
 var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
-    CORRECT_FEEDBACK: "Correct",
-    WRONG_FEEDBACK: "Nope",
-    QUESTION_PLACEHOLDER: "Enter the Question in Markdown"
+    CORRECT_FEEDBACK: "☺",
+    WRONG_FEEDBACK: "☹",
+    QUESTION_PLACEHOLDER: "Enter the Question in Markdown",
+
+    NOT_ATTEMPTED: 0,
+    INCORRECTLY_ATTEMPTED: 1,
+    ANSWERED: 2
 };
 
 //#todo -> Should I just change it the name to `GuessModel` ?
@@ -109,6 +113,52 @@ var QuizBankCollection = Backbone.Collection.extend({
 
 });
 
+var QuizAttemptStore = function(options) {
+    this.sectionQuizzes = options.sectionQuizzes;
+
+    this.attempts = {};
+};
+
+QuizAttemptStore.prototype = {
+
+    addAttempt: function(attempt) {
+        console.log("Adding attempt: ", attempt);
+        this.attempts[attempt.quizId] = attempt;
+        this.trigger("add:attempt", attempt);
+    },
+
+    getAttempt: function(quizId) {
+        var attempt = this.attempts[quizId];
+        if(!attempt) {
+            return {
+                result: null,
+                guess: ""
+            };
+        }
+        return attempt;
+    },
+
+    getSectionAttemptStatuses: function(sectionId) {
+
+        var quizzes = this.sectionQuizzes[sectionId];
+        var statuses = {};
+
+        _.each(quizzes, function(q) {
+            var attempt = this.attempts[q.id];
+            statuses[q.id] = false;
+            if(attempt && attempt.result === true) {
+                statuses[q.id] = true;
+            }
+        }, this);
+
+        return statuses;
+    }
+
+};
+
+_.extend(QuizAttemptStore.prototype, Backbone.Events);
+QuizAttemptStore.prototype.constructor = QuizAttemptStore;
+
 
 module.exports = {
     constants: constants,
@@ -116,7 +166,9 @@ module.exports = {
     MCQAnswerModel: ShortAnswerSubmitModel,
     GuessCollection: GuessCollection,
     QuizModel: QuizModel,
-    QuizBankCollection: QuizBankCollection
+    QuizBankCollection: QuizBankCollection,
+    QuizAttemptStore: QuizAttemptStore
+
 };
 
 window.QuizModel = QuizModel;

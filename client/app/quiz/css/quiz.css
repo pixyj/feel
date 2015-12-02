@@ -107,7 +107,10 @@ input[type=range]::-webkit-slider-thumb {
 
 .quiz-result-feedback {
     margin-left: 10px;
-    
+    height: 54px;
+    line-height: 56px;
+    font-size: 1.6rem;
+    color: #5cb85c;
 }
 
 
@@ -121,7 +124,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .quiz-student-choice-selected {
-    background-color: #C62828;
+    background-color: #5bc0de;
     color: white;
 }
 
@@ -160,6 +163,28 @@ input[type=range]::-webkit-slider-thumb {
 
 .student-quiz-end-line { 
     margin-top: 2rem;
+}
+
+.student-quiz-attempt-status {
+    padding: 1rem;
+    margin-right: 2rem;
+    font-size: 1.3rem;
+    border-radius: 50%;
+
+}
+
+.student-quiz-attempt-list {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.student-quiz-correct-status {
+    background-color: #5cb85c;
+    color: rgb(255, 255, 255);
+}
+
+.student-quiz-not-correct-status {
+    color: rgba(0, 0, 0, 0.2);
 }
 
 /* Problem solving page css 

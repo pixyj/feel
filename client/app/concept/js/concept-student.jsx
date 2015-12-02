@@ -25,6 +25,7 @@ var STUDENT_SECTION_COMPONENTS_BY_TYPE = conceptSectionTypes.STUDENT_SECTION_COM
 var SECTIONS_SORTED_BY_TYPE = conceptSectionTypes.SECTIONS_SORTED_BY_TYPE;
 
 var PageModel = require("./models").StudentConceptPageModel;
+var QuizAttemptStore = require("./../../quiz/js/models").QuizAttemptStore;
 
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
@@ -45,6 +46,10 @@ PageStore.prototype = {
 
     toJSON: function() {
         return this.model.toJSON()
+    },
+
+    getSectionQuizzes: function() {
+        return this.model.attributes.sectionQuizzes;
     }
 };
 
@@ -73,7 +78,8 @@ var PageComponent = React.createClass({
 
         var sections = this.props.page.sections;
         var props = {
-            page: this.props.page
+            page: this.props.page,
+            attemptStore: this.props.attemptStore
         };
 
         var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, props);
@@ -86,8 +92,8 @@ var PageComponent = React.createClass({
     }
 });
 
-var renderPage = function(page, element) {
-    ReactDOM.render(<PageComponent page={page} />, element);
+var renderPage = function(page, attemptStore, element) {
+    ReactDOM.render(<PageComponent page={page} attemptStore={attemptStore} />, element);
 };
 
 var app = {};
@@ -97,9 +103,15 @@ var render = function(options, element) {
 
     app.pageStore = new PageStore(options);
 
+
     app.pageStore.fetch().then(function() {
         var page = app.pageStore.toJSON();
-        renderPage(page, element);
+
+        app.attemptStore = new QuizAttemptStore({
+            sectionQuizzes: page.sectionQuizzes
+        });
+
+        renderPage(page,app.attemptStore, element);
     });
 };
 

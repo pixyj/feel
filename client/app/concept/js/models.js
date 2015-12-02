@@ -21,7 +21,7 @@ var ConceptModel = StreamSaveModel.extend({
             return this.BASE_URL;
         }
         return "{0}{1}/".format(this.BASE_URL, this.attributes.id);
-    },
+    }
 
 });
 
