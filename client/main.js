@@ -35,6 +35,7 @@ var Router = Backbone.Router.extend({
         "creator/concept": "createConcept",
         "creator/concept/:id/": "editConcept",
         "creator/course": "createCourse",
+        "creator/course/:id/": "editCourse",
         "concept/:id/": "learnConcept",
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
@@ -62,8 +63,16 @@ var Router = Backbone.Router.extend({
     },
 
     createCourse: function() {
+        this._showCourse({});
+    },
+
+    editCourse: function(id) {
+        this._showCourse({id: id});
+    },
+
+    _showCourse: function(options) {
         this.resetPage();
-        Course.Creator.render({}, this.pageElement);
+        Course.Creator.render(options, this.pageElement);
         this.currentComponent = Course.Creator;
     },
     
