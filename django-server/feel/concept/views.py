@@ -16,7 +16,7 @@ from core.views import get_user_and_user_key
 
 from concept.models import Concept, ConceptSection
 from concept.serializers import ConceptSerializer, ConceptSectionSerializer
-
+from quiz.serializers import QuizAttemptSerializer;
 
 
 class ConceptDetailView(APIView):
@@ -152,7 +152,7 @@ class ConceptDetailView(APIView):
 
 
 
-class StudentView(APIView):
+class StudentConceptPageView(APIView):
 
     def get(self, request, pk):
         concept = get_object_or_404(Concept, pk=pk)
@@ -164,3 +164,17 @@ class StudentView(APIView):
 
 
 
+class StudentQuizAttemptView(APIView):
+
+    def get(self, request, pk):
+        concept = get_object_or_404(Concept, pk=pk)
+
+        _, user_key = get_user_and_user_key(request)
+        attempts = concept.get_user_quizattempts(user_key)
+        serializer = QuizAttemptSerializer(attempts, many=True)
+        serialized_attempts = serializer.data
+        for attempt in serialized_attempts:
+            attempt['quizId'] = attempt['quiz']
+            del attempt['quiz']
+            
+        return Response(serializer.data)

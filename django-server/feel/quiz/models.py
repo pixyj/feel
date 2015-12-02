@@ -60,12 +60,12 @@ class Choice(TimestampedModel, UUIDModel):
 
     def __str__(self):
         status = "correct" if self.is_correct else "wrong"
-        return "{} is a {} choice to {} Created by {}".format(self.choice_input, status, self.quiz, self.created_by)
+        return "{} is a {} choice to {} - Created by {}".format(self.choice_input, status, self.quiz, self.created_by)
 
 
 
 
-class QuizAttemptManager(models.Manager):
+class QuizUserAttemptManager(models.Manager):
 
     def _get_choices(self, choice_string_list):
         if choice_string_list == "":
@@ -90,6 +90,8 @@ class QuizAttemptManager(models.Manager):
 
         return attempts
 
+    def get_user_attempts_in_quizzes(self, user_key, quiz_ids):
+        return QuizAttempt.objects.filter(user_key=user_key).filter(quiz__in=quiz_ids)
 
 
 #https://github.com/pramodliv1/conceptgrapher/blob/master/server/cg/quiz/models.py
@@ -110,9 +112,9 @@ class QuizAttempt(UUIDModel):
     answer = models.TextField(blank=True)
     choices = models.TextField(blank=True) #Denormalized -> Contains choiceIds separated by commas to make writes faster
 
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(db_index=True)
 
-    objects = QuizAttemptManager()
+    objects = QuizUserAttemptManager()
 
     class Meta:
         unique_together = ("quiz", "user_key", "attempt_number", )
@@ -123,4 +125,4 @@ class QuizAttempt(UUIDModel):
         else:
             user_print = self.user
 
-        return "{} attempted {} - Result: {}".format(user_print, self.quiz, self.result)
+        return "{} - {} attempted {} - Result: {}".format(self.created_at, user_print, self.quiz, self.result)

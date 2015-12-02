@@ -122,10 +122,45 @@ var QuizAttemptModel = Backbone.Model.extend({
 
 });
 
+var QuizAttemptCollection = Backbone.Collection.extend({
+    
+    model: QuizAttemptModel,
+
+    initialize: function(options) {
+        this.conceptId = options.conceptId;
+        utils.assert(this.conceptId, "QuizAttemptCollection: Concept Id needs to be specified ");
+    },
+
+    parse: function(response) {
+        var latestAttempts = {};
+
+        //filter latest attempts.
+        _.each(response, function(attempt) {
+            var previous = latestAttempts[attempt.quizId];
+            if(!previous) {
+                latestAttempts[attempt.quizId] = attempt;
+            }
+            else {
+                if(previous.attemptNumber < attempt.attemptNumber) {
+                    latestAttempts[attempt.quizId] = attempt;
+                }
+            }
+        });
+
+        return _.values(latestAttempts);
+    },
+
+    url: function() {
+        return "/api/v1/student/concepts/{0}/quizattempts/".format(this.conceptId);
+    }
+});
+
 var QuizAttemptStore = function(options) {
     this.sectionQuizzes = options.sectionQuizzes;
-
+    this.conceptId = options.conceptId;
     this.attempts = {};
+
+    this.attemptCollection = new QuizAttemptCollection({conceptId: options.conceptId});
 };
 
 QuizAttemptStore.prototype = {
@@ -141,18 +176,15 @@ QuizAttemptStore.prototype = {
         else {
             attemptNumber = 1;
         }
+        attempt.attemptNumber = attemptNumber;
 
         this.attempts[attempt.quizId] = attempt;
+        
         this.trigger("add:attempt", attempt);
-
-        var model = new QuizAttemptModel({
-            quizId: attempt.quizId,
-            result: attempt.result,
-            answer: attempt.answer,
-            choices: attempt.choices,
-            attemptNumber: attemptNumber
-        });
+        
+        var model = new QuizAttemptModel(attempt);
         model.save();
+
     },
 
     getAttempt: function(quizId) {
@@ -180,8 +212,25 @@ QuizAttemptStore.prototype = {
         }, this);
 
         return statuses;
-    }
+    },
 
+    fetch: function() {
+        return this.attemptCollection.fetch();
+    },
+
+    setSectionQuizzes: function(sectionQuizzes) {
+        this.sectionQuizzes = sectionQuizzes;
+        return this;
+    },
+
+    initializeAttempts: function() {
+        this.attempts = _.indexBy(this.attemptCollection.toJSON(), "quizId");
+        return this;
+    },
+
+    cleanup: function() {
+        this.attemptCollection.off();
+    }
 };
 
 _.extend(QuizAttemptStore.prototype, Backbone.Events);

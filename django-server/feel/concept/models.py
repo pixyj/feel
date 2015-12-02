@@ -1,12 +1,14 @@
+import itertools
 import uuid
 import json
+
 from collections import defaultdict
 
 from django.db import models
 from django.utils.text import slugify
 
 from core.models import TimestampedModel, UUIDModel
-from quiz.models import Quiz
+from quiz.models import Quiz, QuizAttempt
 from quiz.serializers import QuizSerializer
 
 
@@ -30,6 +32,16 @@ class Concept(TimestampedModel, UUIDModel):
         data['section_quizzes'] = section_quizzes
         return data
 
+
+    def get_user_quizattempts(self, user_key):
+        sections = self.conceptsection_set.all()
+        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
+
+        quiz_ids = []
+        for section, quizzes in section_quizzes.items():
+            quiz_ids.extend([quiz['id'] for quiz in quizzes])
+
+        return QuizAttempt.objects.get_user_attempts_in_quizzes(user_key, quiz_ids)
 
     def __str__(self):
         return "{} created by {} - Published? {}".format(self.name, self.created_by, self.is_published)
