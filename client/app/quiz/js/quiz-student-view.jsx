@@ -53,7 +53,10 @@ var ShortAnswerSubmitView = React.createClass({
     },
 
     getCurrentGuess: function() {
-        return this.state.guess;
+        return {
+            answer: this.state.guess,
+            choices: []
+        };
     }
 });
 
@@ -147,11 +150,12 @@ var MCQSubmitView = React.createClass({
             }
 
         }
-        if(selectedChoices.length < 2) {
-            return selectedChoices.join("") || "Trick question! None of the options are correct";
-        }
 
-        return selectedChoices.join(", ");
+
+        return {
+            answer: "",
+            choices: selectedChoices.join(", ")
+        };
     }
 });
 
@@ -210,11 +214,13 @@ var QuizAnswerSubmitView = React.createClass({
             result: result
         });
 
-        this.props.attemptStore.addAttempt({
+        var attempt = _.extend({
             result: result,
-            guess: this.refs.answerSubmitView.getCurrentGuess(),
             quizId: this.props.store.id
-        });
+        }, this.refs.answerSubmitView.getCurrentGuess());
+
+        this.props.attemptStore.addAttempt(attempt);
+
     },
 
     getResultFeedback: function() {

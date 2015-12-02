@@ -113,6 +113,15 @@ var QuizBankCollection = Backbone.Collection.extend({
 
 });
 
+
+var QuizAttemptModel = Backbone.Model.extend({
+
+    url: function() {
+        return "/api/v1/quizzes/{0}/attempts/".format(this.attributes.quizId);
+    }
+
+});
+
 var QuizAttemptStore = function(options) {
     this.sectionQuizzes = options.sectionQuizzes;
 
@@ -123,8 +132,27 @@ QuizAttemptStore.prototype = {
 
     addAttempt: function(attempt) {
         console.log("Adding attempt: ", attempt);
+
+        var existingAttempt = this.attempts[attempt.quizId];
+        var attemptNumber;
+        if(existingAttempt) {
+            attemptNumber = existingAttempt.attemptNumber + 1;
+        }
+        else {
+            attemptNumber = 1;
+        }
+
         this.attempts[attempt.quizId] = attempt;
         this.trigger("add:attempt", attempt);
+
+        var model = new QuizAttemptModel({
+            quizId: attempt.quizId,
+            result: attempt.result,
+            answer: attempt.answer,
+            choices: attempt.choices,
+            attemptNumber: attemptNumber
+        });
+        model.save();
     },
 
     getAttempt: function(quizId) {
