@@ -50,14 +50,15 @@ var StreamSaveModel = Backbone.Model.extend({
 
         var requestId = this._lastRequestId;  
         var self = this; 
-        
-        Backbone.Model.prototype.save.apply(this, arguments).then(function() {
+        var callback = function() {
             self._lastSavedRequestId = requestId;
             self._updateIsSaved();
             if(!self.isSaved()) {
                 self._saveImpl();
             }
-        });
+        };
+        
+        Backbone.Model.prototype.save.apply(this, arguments).then(callback).fail(callback);
     },
 
     isSaved: function() {
