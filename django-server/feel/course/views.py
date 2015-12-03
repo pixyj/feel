@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db import IntegrityError
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
@@ -112,7 +113,41 @@ class ConceptDetailView(APIView):
 
 
 
-class DependencyListView(APIView):
+class DependencyView(APIView):
     
     def get(self, request, course_id):
-        return Response([])
+        course = get_object_or_404(Course, id=course_id)
+        concepts = course.concepts
+        concept_ids = {}
+        for c in concepts:
+            concept_ids[c.id] = c.concept.id
+
+        deps = course.dependencies
+        serialized_deps = []
+        for dep in deps:
+            serialized_deps.append({
+                "start": concept_ids[dep.start_id],
+                "end": concept_ids[dep.end_id]
+            })
+        return Response(serialized_deps)
+
+
+    @method_decorator(login_required)
+    def post(self, request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+
+        audit_attrs = get_audit_attrs(request.user)
+
+        try:
+            start = course.courseconcept_set.get(concept=request.data['from'])
+            end = course.courseconcept_set.get(concept=request.data['to'])
+            dep = ConceptDependency.objects.create(course=course, start=start, end=end, **audit_attrs)
+
+        except CourseConcept.DoesNotExist:
+            return Response({"Concept does not exist"}, status.HTTP_400_BAD_REQUEST)
+
+        except IntegrityError:
+            return Response({"Dependency exists"}, status.HTTP_400_BAD_REQUEST)
+
+        return Response({"id": dep.id}, status=status.HTTP_201_CREATED)
+
