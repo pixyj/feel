@@ -14,9 +14,15 @@ class CourseConceptSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseConcept
-        fields = ('course_id', 'concept_id', )
+        fields = ('concept', )
 
 
+
+class ConceptDependencySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConceptDependency
+        fields = ('start', 'end', )
 
 class CourseSerializer(serializers.ModelSerializer):
 

@@ -16,7 +16,10 @@ from rest_framework.permissions import IsAuthenticated
 from core.views import get_user_and_user_key, get_audit_attrs
 
 from course.models import Course, CourseConcept, ConceptDependency
-from course.serializers import CourseSerializer
+from course.serializers import CourseSerializer, CourseConceptSerializer, ConceptDependencySerializer
+
+from concept.models import Concept
+
 
 class CourseDetailView(APIView):
     """
@@ -66,19 +69,50 @@ class CourseDetailView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-class ConceptListView(APIView):
+class ConceptView(APIView):
 
-    def get(self, request, pk):
-        return Response([])
+    def get(self, request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+
+        concepts = []
+        for c in course.concepts:
+            concepts.append({
+                "id": c.concept.id,
+                "name": c.concept.name,
+                "is_published": c.concept.is_published
+            })
+        return Response(concepts)
+
+
+    @method_decorator(login_required)
+    def post(self, request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+
+        # serializer = CourseConceptSerializer(data=request.data)
+        # if not serializer.is_valid():
+        #     return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+        audit_attrs = get_audit_attrs(request.user)
+
+        concept_data = {"name": request.data['name'], "is_published": False}
+        concept_data.update(audit_attrs)
+
+        with transaction.atomic():
+            concept = Concept.objects.create(**concept_data)
+            courseconcept = CourseConcept.objects.create(concept=concept, course=course, **audit_attrs)
+
+        return Response({"id": concept.id}, status=status.HTTP_201_CREATED)
+
+
 
 class ConceptDetailView(APIView):
 
-    def get(self, request, pk, format=None):
+    def get(self, request, course_id, format=None):
         pass
 
 
 
 class DependencyListView(APIView):
     
-    def get(self, request, pk):
+    def get(self, request, course_id):
         return Response([])
