@@ -40,7 +40,19 @@ var CourseModel = StreamSaveModel.extend({
 
     studentURL: function() {
         utils.assert(this.attributes.slug, "Slug not found");
-        return "/#/{0}/".format(this.attributes.slug);
+        return "#/{0}/".format(this.attributes.slug);
+    },
+
+    creatorURL: function() {
+        var base = "/creator/course/";
+        var url;
+        if(this.attributes.isPublished) {
+            url = "{0}{1}/".format(base, this.attributes.slug);
+        }
+        else {
+            url = "{0}{1}/".format(base, this.attributes.id);
+        }
+        return url;
     }
 });
 
@@ -122,7 +134,6 @@ var Store = function(options) {
     this._dependencies = new DependencyCollection({course: this._course, dag: this.dag});
 
     if(this._course.isNew()) {
-        this.setRoute = _.once(this.setRoute);
         this._course.once("sync", this.setRoute, this);
     }
     this.listenToEvents();
@@ -171,6 +182,7 @@ Store.prototype = {
         if(!this._isPublishedChanged) {
             return;
         }
+        this.setRoute(true);
         this._isPublishedChanged = false;
         this.trigger("change:isPublished", this.isPublished(), this);
     },
@@ -248,18 +260,17 @@ Store.prototype = {
         var fetchedPromise = $.when.apply($, promises);
         fetchedPromise.then(function() {
             self._dependencies.initializeDAG();
+            self.setRoute(true);
         });
 
         return fetchedPromise;
 
     },
 
-    setRoute: function() {
-        var id = this._course.attributes.id;
-        var fragment = Backbone.history.getFragment();
-        var fragmentNew = "{0}/{1}/".format(fragment, id);
-        Backbone.history.navigate(fragmentNew, {trigger: false});
-        this.isRouteSet = true;
+    setRoute: function(replace) {
+        replace = replace || false;
+        var url = this._course.creatorURL();
+        Backbone.history.navigate(url, {trigger: false, replace: replace});
     }
 
 };
@@ -275,6 +286,18 @@ Store.prototype.constructor = Store;
 
 var TextInputMixin = {
 
+    componentWillMount: function() {
+        this.props.store.on("change:isPublished", this.updateState, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.store.off("change:isPublished", this.updateState);
+    },
+
+    updateState: function() {
+        this.setState(this.getInitialState);
+    },
+
     //todo -> rename concept-creator-section to creator-section
     render: function() {
         return (
@@ -284,7 +307,8 @@ var TextInputMixin = {
                         placeholder="What's in a name?" 
                         value={this.state.name} 
                         onKeyUp={this.updateName} 
-                        onChange={this.updateName} /> 
+                        onChange={this.updateName} 
+                        disabled={this.state.isPublished} /> 
             </div>
         );
     },
@@ -305,7 +329,8 @@ var CourseNameComponent = React.createClass({
 
     getInitialState: function() {
         return {
-            name: this.props.store.getName()
+            name: this.props.store.getName(),
+            isPublished: this.props.store.isPublished()
         }
     },
 
@@ -438,7 +463,8 @@ var ConceptNameComponent = React.createClass({
 
     getInitialState: function() {
         return {
-            name: ""
+            name: "",
+            isPublished: this.props.store.isPublished()
         }
     },
 
