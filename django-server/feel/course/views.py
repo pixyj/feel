@@ -55,6 +55,9 @@ class CourseDetailView(APIView):
     @method_decorator(login_required)
     def put(self, request, pk):
         course = get_object_or_404(Course, id=pk)
+        if course.created_by.id != request.user.id:
+            return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
+
 
         serializer = CourseSerializer(data=request.data)
         if not serializer.is_valid():
@@ -88,10 +91,9 @@ class ConceptView(APIView):
     @method_decorator(login_required)
     def post(self, request, course_id):
         course = get_object_or_404(Course, id=course_id)
+        if course.created_by.id != request.user.id:
+            return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
 
-        # serializer = CourseConceptSerializer(data=request.data)
-        # if not serializer.is_valid():
-        #     return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
         audit_attrs = get_audit_attrs(request.user)
 
@@ -135,8 +137,11 @@ class DependencyView(APIView):
     @method_decorator(login_required)
     def post(self, request, course_id):
         course = get_object_or_404(Course, id=course_id)
+        if course.created_by.id != request.user.id:
+            return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
 
         audit_attrs = get_audit_attrs(request.user)
+
 
         try:
             start = course.courseconcept_set.get(concept=request.data['from'])
