@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Course, CourseConcept, ConceptDependency
+from .models import Course, CourseSlug, CourseConcept, ConceptDependency
 
 
 class CourseConceptInline(admin.StackedInline):
@@ -20,5 +20,6 @@ class CourseAdmin(admin.ModelAdmin):
     
 
 admin.site.register(Course, CourseAdmin)
+admin.site.register(CourseSlug)
 admin.site.register(CourseConcept)
 admin.site.register(ConceptDependency)

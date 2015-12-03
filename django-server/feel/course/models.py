@@ -1,10 +1,10 @@
 import uuid
 
-from django.db import models
+from django.db import models, transaction
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
 
-from core.models import TimestampedModel, UUIDModel
+from core.models import TimestampedModel, UUIDModel, SlugModel
 from concept.models import Concept
 
 
@@ -13,7 +13,29 @@ class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256)
     is_published = models.BooleanField(default=False)
 
+    def publish_and_slugify(self):
+        self.is_published = True
+        with transaction.atomic():
+            slug = slugify(self.name)
+            previous = CourseSlug.objects.filter(slug__contains=slug).last()
+            if previous is not None:
+                try:
+                    number = int(previous.slug.split("-")[-1]) + 1
+                except ValueError:
+                    number = 1
+                slug = "{}-{}".format(slug, number)
 
+            courseslug = CourseSlug.objects.create(course=self, slug=slug)
+            self.save()
+
+        return courseslug
+
+    def unpublish(self):
+        self.is_published = False
+        with transaction.atomic():
+            self.courseslug_set.all().delete()
+            self.save()
+            
 
     @property
     def concepts(self):
@@ -49,6 +71,13 @@ class Course(TimestampedModel, UUIDModel):
 
     def __str__(self):
         return "{} created by {} - Published? {}".format(self.name, self.created_by, self.is_published)
+
+
+class CourseSlug(SlugModel):
+    course = models.ForeignKey(Course)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.course, self.slug)
 
 
 

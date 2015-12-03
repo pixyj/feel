@@ -38,3 +38,23 @@ class UUIDModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+
+class SlugModel(models.Model):
+
+    slug = models.CharField(max_length=40, primary_key=True)
+
+    # def save(self, *args, **kwargs):
+        
+    #     try:
+    #         previous = Model.objects.get(slug=self.slug)
+    #         number = int(previous.slug.split("-")[-1]) + 1
+    #         self.slug = "{}-{}".format(slug, number)
+    #     except self.DoesNotExist:
+    #         pass
+    #     super(models.Model, self).save(*args, **kwargs)
+
+
+    class Meta:
+        abstract = True
