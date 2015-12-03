@@ -88,3 +88,5 @@ class ConceptDependency(TimestampedModel, UUIDModel):
         return "{} -> {} in {}".format(self.start, self.end, self. course)
 
 
+    class Meta:
+        unique_together = ('course', 'start', 'end', )
