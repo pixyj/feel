@@ -118,9 +118,19 @@ var Store = function(options) {
         this.setRoute = _.once(this.setRoute);
         this._course.once("sync", this.setRoute, this);
     }
+    this.listenToEvents();
+    window.course = this._course;
 };
 
 Store.prototype = {
+
+    listenToEvents: function() {
+        this._course.on("sync", this.onCourseSynced, this);
+    },
+
+    cleanup: function() {
+        this._course.off("sync", this.onCourseSynced);
+    },
 
     getName: function() {
         return this._course.get("name");
@@ -129,6 +139,29 @@ Store.prototype = {
     setName: function(name) {
         this._course.set("name", name);
         this._course.save();
+    },
+
+    isPublished: function() {
+        return this._course.attributes.isPublished;
+    },
+
+    togglePublish: function() {
+        var isPublished = !this.isPublished();
+        this._course.set({
+            isPublished: isPublished
+        });
+
+        var self = this;
+        this._isPublishedChanged = true;
+        this._course.save();
+    },
+
+    onCourseSynced: function() {
+        if(!this._isPublishedChanged) {
+            return;
+        }
+        this._isPublishedChanged = false;
+        this.trigger("change:isPublished", this.isPublished(), this);
     },
 
     getConcepts: function() {
@@ -274,6 +307,103 @@ var CourseNameComponent = React.createClass({
         this.props.store.setName(name);
     }
 
+});
+
+var CoursePublishComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            isPublished: this.props.store.isPublished(),
+            disabled: false,
+            publishedJustNow: false
+        };
+    },
+
+    componentWillMount: function() {
+        this.props.store.on("change:isPublished", this.updateState, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.store.off("change:isPublished", this.updateState);
+    },
+
+    updateState: function() {
+        this.setState({
+            isPublished: this.props.store.isPublished(),
+            disabled: false,
+            publishedJustNow: true
+        });
+    },
+
+    render: function() {
+
+        var className = "btn btn-large waves-effect ";
+        if(this.state.isPublished) {
+            className += "course-published ";
+        }
+        else {
+            className += "course-not-published ";
+        }
+
+        var publishedJustNow = "";
+        var justNowDisplay = {
+            false: "Unpublished",
+            true: "Published!"
+        };
+        if(this.state.publishedJustNow) {
+            publishedJustNow = <h6 className="course-published-just-now">
+                                    {justNowDisplay[this.state.isPublished]}
+                                </h6>
+            this.showAndHidePublishedJustNowMessage(); 
+        }
+
+        var display = {
+            false: "Publish",
+            true: "Unpublish",
+        }
+        return (
+            <div id="course-publish-container">
+                <div>
+                    <button className={className} 
+                            onClick={this.handleClick}  
+                            disabled={this.state.disabled} >
+
+                        {display[this.state.isPublished]} 
+                    </button>
+                    <div>{publishedJustNow}</div>
+                </div>
+            </div>
+        );
+    },
+
+    showAndHidePublishedJustNowMessage: function() {
+
+        if(this._timer) {
+            clearTimeout(this._timer);
+        }
+
+        var self = this;
+        this._timer = setTimeout(function() {
+                        self.hidePublishedJustNow();
+                    }, 2000);
+    },
+
+    hidePublishedJustNow: function() {
+        this.setState({
+            publishedJustNow: false
+        });
+    },
+
+    handleClick: function() {
+        if(this.state.disabled) {
+            return;
+        }
+
+        this.props.store.togglePublish();
+        this.setState({
+            disabled: true
+        });
+    }
 });
 
 /********************************************************************************
@@ -518,7 +648,12 @@ var PageView = Backbone.View.extend({
     },
 
     render: function() {
-        this.courseNameContainer = $("<div>");
+        var courseNameAndPublishContainer = $("<div>").addClass("row");
+        this.courseNameContainer = $("<div>").addClass("col-md-6");
+        this.coursePublishContainer = $("<div>").addClass("col-md-6");
+        
+        courseNameAndPublishContainer.append(this.courseNameContainer)
+                                     .append(this.coursePublishContainer);
 
         var conceptContainer = $("<div>").addClass("row");
 
@@ -538,7 +673,7 @@ var PageView = Backbone.View.extend({
                         .append(middle)
                         .append(right);
 
-        this.$el.append(this.courseNameContainer)
+        this.$el.append(courseNameAndPublishContainer)
                 .append(conceptContainer);
 
         return this; 
@@ -546,6 +681,7 @@ var PageView = Backbone.View.extend({
 
     renderChildren: function() {
         this.addCourseName()
+            .addCoursePublish()
             .addConceptName()
             .addConceptList()
             .addConceptSelectDependency()
@@ -556,22 +692,32 @@ var PageView = Backbone.View.extend({
 
     //todo -> unmount components
     addCourseName: function() {
-        ReactDOM.render(<CourseNameComponent store={this.options.store} />, this.courseNameContainer[0]); 
+        ReactDOM.render(<CourseNameComponent store={this.options.store} />, 
+            this.courseNameContainer[0]); 
+        return this;
+    },
+
+    addCoursePublish: function() {
+        ReactDOM.render(<CoursePublishComponent store={this.options.store} />, 
+            this.coursePublishContainer[0]);
         return this;
     },
 
     addConceptName: function() {
-        ReactDOM.render(<ConceptNameComponent store={this.options.store} />, this.conceptNameContainer[0]); 
+        ReactDOM.render(<ConceptNameComponent store={this.options.store} />, 
+            this.conceptNameContainer[0]); 
         return this;
     },
 
     addConceptList: function() {
-        ReactDOM.render(<ConceptListComponent store={this.options.store} />, this.listContainer[0]);
+        ReactDOM.render(<ConceptListComponent store={this.options.store} />, 
+            this.listContainer[0]);
         return this;
     },
 
     addConceptSelectDependency: function() {
-        ReactDOM.render(<ConceptDependencyComponent store={this.options.store} />, this.dependencyContainer[0]);
+        ReactDOM.render(<ConceptDependencyComponent store={this.options.store} />, 
+            this.dependencyContainer[0]);
         return this;
     },
 
@@ -587,6 +733,10 @@ var PageView = Backbone.View.extend({
     refreshGraphView: function(graph) {
         this.graphView.refresh(graph);
     }
+
+    // remove: function() {
+
+    // }
 });
 
 /********************************************************************************

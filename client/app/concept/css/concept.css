@@ -75,3 +75,22 @@
 .concept-select {
     margin-bottom: 2rem;
 }
+
+#course-publish-container {
+    padding-top: 2rem;
+}
+
+.course-published {
+    width: 40%;
+    margin-left: 30%;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.course-not-published {
+    width: 70%;
+    margin-left: 15%;    
+}
+
+.course-published-just-now {
+    text-align: center;
+}

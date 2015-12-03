@@ -26,9 +26,11 @@ class Course(TimestampedModel, UUIDModel):
                 slug = "{}-{}".format(slug, number)
 
             courseslug = CourseSlug.objects.create(course=self, slug=slug)
+            CourseSlug.objects.filter(course=self).exclude(slug=slug).delete()
             self.save()
+            
         return courseslug
-        
+
 
     def unpublish(self):
         self.is_published = False
