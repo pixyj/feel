@@ -2,7 +2,8 @@ import uuid
 import json
 
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db import IntegrityError
@@ -16,10 +17,24 @@ from rest_framework.permissions import IsAuthenticated
 
 from core.views import get_user_and_user_key, get_audit_attrs
 
-from course.models import Course, CourseConcept, ConceptDependency
-from course.serializers import CourseSerializer, CourseConceptSerializer, ConceptDependencySerializer
+from course.models import Course, CourseSlug, CourseConcept, ConceptDependency
+from course.serializers import CourseSerializer, CourseConceptSerializer
+from course.serializers import ConceptDependencySerializer
 
 from concept.models import Concept
+
+
+def get_course_or_404(id_or_slug):
+    try:
+        pk = uuid.UUID(id_or_slug)
+        return get_object_or_404(Course, id=pk)
+    except ValueError:
+        try:
+            courseslug = CourseSlug.objects.get(slug=id_or_slug)
+            return courseslug.course
+        except CourseSlug.DoesNotExist:
+            raise Http404
+
 
 
 class CourseDetailView(APIView):
@@ -31,7 +46,7 @@ class CourseDetailView(APIView):
         """
         Get course by course_id
         """
-        course = get_object_or_404(Course, id=pk)
+        course = get_course_or_404(pk)
 
         if not course.is_published and request.user != course.created_by:
             return Response({"Have": "a little patience", "url": "https://youtu.be/273eSvOwpKk"}, 
@@ -59,7 +74,7 @@ class CourseDetailView(APIView):
 
     @method_decorator(login_required)
     def put(self, request, pk):
-        course = get_object_or_404(Course, id=pk)
+        course = get_course_or_404(pk)
         if course.created_by.id != request.user.id:
             return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -100,7 +115,7 @@ class CourseDetailView(APIView):
 class ConceptView(APIView):
 
     def get(self, request, course_id):
-        course = get_object_or_404(Course, id=course_id)
+        course = get_course_or_404(course_id)
 
         concepts = []
         for c in course.concepts:
@@ -114,7 +129,7 @@ class ConceptView(APIView):
 
     @method_decorator(login_required)
     def post(self, request, course_id):
-        course = get_object_or_404(Course, id=course_id)
+        course = get_course_or_404(course_id)
         if course.created_by.id != request.user.id:
             return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -142,7 +157,7 @@ class ConceptDetailView(APIView):
 class DependencyView(APIView):
     
     def get(self, request, course_id):
-        course = get_object_or_404(Course, id=course_id)
+        course = get_course_or_404(course_id)
         concepts = course.concepts
         concept_ids = {}
         for c in concepts:
@@ -160,7 +175,7 @@ class DependencyView(APIView):
 
     @method_decorator(login_required)
     def post(self, request, course_id):
-        course = get_object_or_404(Course, id=course_id)
+        course = get_course_or_404(course_id)
         if course.created_by.id != request.user.id:
             return Response({"permission": "denied"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -179,4 +194,5 @@ class DependencyView(APIView):
             return Response({"Dependency exists"}, status.HTTP_400_BAD_REQUEST)
 
         return Response({"id": dep.id}, status=status.HTTP_201_CREATED)
+
 
