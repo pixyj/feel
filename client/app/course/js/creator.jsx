@@ -41,12 +41,17 @@ var CourseModel = StreamSaveModel.extend({
 
 var ConceptModel = Backbone.Model.extend({
 
+    parse: function(attrs) {
+        attrs.url = "/#creator/concept/{0}/".format(attrs.id);
+        return attrs;
+    }
 });
 
 var ConceptCollection = Backbone.Collection.extend({
 
     initialize: function(options) {
         this.course = options.course;
+        this.dag = options.dag;
     },
 
     model: ConceptModel,
@@ -55,6 +60,13 @@ var ConceptCollection = Backbone.Collection.extend({
         return "{0}concepts/".format(this.course.url())
     },
 
+    parse: function(concepts) {
+        _.each(concepts, function(c) {
+            this.dag.addNode(c);
+        }, this);
+
+        return concepts;
+    }
 });
 
 var DependencyModel = Backbone.Model.extend({
@@ -76,16 +88,15 @@ var DependencyCollection = Backbone.Collection.extend({
 
 var Store = function(options) {
     this.options = options;
-    this.concepts = [];
     this.dag = new DAG({});
 
 
     this._course = new CourseModel(options);
-    this._concepts = new ConceptCollection({course: this._course});
-    this._dependencies = new DependencyCollection({course: this._course});
+    this._concepts = new ConceptCollection({course: this._course, dag: this.dag});
+    this._dependencies = new DependencyCollection({course: this._course, dag: this.dag});
 
-    this.isRouteSet = !this._course.isNew();
-    if(!this.isRouteSet) {
+    if(this._course.isNew()) {
+        this.setRoute = _.once(this.setRoute);
         this._course.once("sync", this.setRoute, this);
     }
 };
@@ -102,16 +113,23 @@ Store.prototype = {
     },
 
     getConcepts: function() {
-        return _.clone(this.concepts);
+        return this._concepts.toJSON();
     },
 
     addConcept: function(concept) {
-        if(!concept.id) {
-            concept.id = String(utils.getUniqueId());
+
+        var model = this._concepts.add(concept);
+        var self = this;
+
+        var onSaved = function() {
+            self.trigger("add:concept", concept, self);
         }
-        this.concepts.push(concept);
-        this.dag.addNode(concept);
-        this.trigger("add:concept", concept, this);
+        if(model.isNew()) {
+            model.save().then(onSaved);
+        }
+        else {
+            onSaved();
+        }
     },
 
     addDependency: function(from, to) {
@@ -157,10 +175,6 @@ Store.prototype = {
     },
 
     setRoute: function() {
-        
-        if(this.isRouteSet) {
-            return;
-        }
         var id = this._course.attributes.id;
         var fragment = Backbone.history.getFragment();
         var fragmentNew = "{0}/{1}/".format(fragment, id);
@@ -180,12 +194,6 @@ Store.prototype.constructor = Store;
 *********************************************************************************/
 
 var TextInputMixin = {
-
-    getInitialState: function() {
-        return {
-            name: this.props.store.getName()
-        }
-    },
 
     //todo -> rename concept-creator-section to creator-section
     render: function() {
@@ -215,6 +223,12 @@ var CourseNameComponent = React.createClass({
 
     mixins: [TextInputMixin],
 
+    getInitialState: function() {
+        return {
+            name: this.props.store.getName()
+        }
+    },
+
     ID: "creator-course-name",
 
     HEADING: "Course Name",
@@ -236,6 +250,12 @@ var ConceptNameComponent = React.createClass({
     HEADING: "Add Concept",
 
     ID: "creator-concept-name",
+
+    getInitialState: function() {
+        return {
+            name: ""
+        }
+    },
 
     saveState: function(name, evt) {
         console.log("saveState", evt.type);
@@ -279,7 +299,10 @@ var ConceptListMixin = {
         var ComponentClass = this.getComponentClass();
         for(var i = 0; i < length; i++) {
             var concept = concepts[i];
-            var item = <ComponentClass key={i} name={concept.name} id={concept.id} />
+            var item = <ComponentClass  key={i} 
+                                        name={concept.name} 
+                                        id={concept.id} 
+                                        url={concept.url} />
             components.push(item);
         }
         return components;
@@ -291,7 +314,7 @@ var ConceptListItemComponent = React.createClass({
     render: function() {
         return (
             <div className="collection-item" key={this.props.key} > 
-                {this.props.name} 
+                <a href={this.props.url}> {this.props.name} </a>
             </div>
         );
     }
