@@ -13,15 +13,23 @@ class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256)
     is_published = models.BooleanField(default=False)
 
+
+
     @property
-    def concepts_and_dependencies(self):
-        concepts = self.get_concepts()
-        deps = [dep for dep in self.conceptdependency_set.only('start', 'end').all()]
-        return (concepts, deps, )
+    def concepts(self):
+        return CourseConcept.courseconcepts.items(self)
+
+
+    @property
+    def dependencies(self):
+        dependencies = [dep for dep in self.conceptdependency_set.only('start', 'end').all()]
+        return dependencies
+
 
     @property
     def url(self):
         return "/course/{}/"(slugify(self.name))
+
 
     def get_concept_by_name(self, name):
         slug = slugify(name)
@@ -31,15 +39,12 @@ class Course(TimestampedModel, UUIDModel):
             raise Concept.DoesNotExist
         return filtered_concepts[0]
 
+
     def add_concept(self, name):
         concept = Concept.objects.create(created_by=self.created_by,\
                             last_modified_by=self.created_by, name=name)
         courseconcept = CourseConcept.objects.create(course=self,concept=concept)
         return concept
-
-    def get_concepts(self):
-        concept_ids = [concept_id for concept in self.courseconcept_set.only('concept').all()]
-        return [concept for concept in Concept.objects.filter(pk__in=concept_ids)]
 
 
     def __str__(self):
@@ -47,16 +52,27 @@ class Course(TimestampedModel, UUIDModel):
 
 
 
+class CourseConceptManager(models.Manager):
+
+    def items(self, course):
+        return course.courseconcept_set.select_related('concept').only('concept').all()
+
+
 class CourseConcept(TimestampedModel, UUIDModel):
     course = models.ForeignKey(Course)
     concept = models.ForeignKey(Concept)
+
+    courseconcepts = CourseConceptManager()
+
 
     @property
     def url(self):
         return "{}{}/".format(self.course.url, slugify(self.concept.name))
 
+
     def __str__(self):
         return "{} belonging to {}".format(self.concept, self.course)
+
 
     class Meta:
         unique_together = ("course", "concept", )
@@ -65,8 +81,10 @@ class CourseConcept(TimestampedModel, UUIDModel):
 
 class ConceptDependency(TimestampedModel, UUIDModel):
     course = models.ForeignKey(Course)
-    start = models.ForeignKey(Concept, related_name="start_set")
-    end = models.ForeignKey(Concept, related_name="end_set")
+    start = models.ForeignKey(CourseConcept, related_name="start_set")
+    end = models.ForeignKey(CourseConcept, related_name="end_set")
 
     def __str__(self):
         return "{} -> {} in {}".format(self.start, self.end, self. course)
+
+
