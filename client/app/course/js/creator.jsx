@@ -79,10 +79,29 @@ var DependencyCollection = Backbone.Collection.extend({
 
     initialize: function(options) {
         this.course = options.course;
+        this.dag = options.dag;
     },
 
     url: function() {
         return "{0}dependencies/".format(this.course.url());
+    },
+
+    parse: function(response) {
+
+        var deps = [];
+        _.each(response, function(d) {
+            deps.push({
+                from: d.start,
+                to: d.end
+            });
+        });
+        return deps;
+    },
+
+    initializeDAG: function() {
+        _.each(this.toJSON(), function(dep) {
+            this.dag.addEdge(dep.from, dep.to);
+        }, this);
     }
 });
 
@@ -139,16 +158,27 @@ Store.prototype = {
             to: to
         };
 
-        this.dag.addEdge(from, to);
-        var nodesByLevel = this.dag.sort();
-        
-        var edges = this.dag.getEdges();
-        var graph = {
-            levels: nodesByLevel,
-            edges: edges
+        var model = this._dependencies.add(edge);
+        var self = this;
+        var onSaved = function() {
+            self.dag.addEdge(from, to);
+            var nodesByLevel = self.dag.sort();
+            
+            var edges = self.dag.getEdges();
+            var graph = {
+                levels: nodesByLevel,
+                edges: edges
+            }
+            self.trigger("add:dependency", graph, edge);
+        };
+
+        if(model.isNew()) {
+            model.save().then(onSaved);
         }
-        console.log("graph", graph);
-        this.trigger("add:dependency", graph, edge);
+        else {
+            onSaved();
+        }
+        
     },
 
     getGraph: function() {
@@ -170,7 +200,14 @@ Store.prototype = {
 
         var promises = [one, two, three];
 
-        return $.when.apply($, promises);
+        var self = this;
+
+        var fetchedPromise = $.when.apply($, promises);
+        fetchedPromise.then(function() {
+            self._dependencies.initializeDAG();
+        });
+
+        return fetchedPromise;
 
     },
 
