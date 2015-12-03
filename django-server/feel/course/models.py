@@ -27,15 +27,15 @@ class Course(TimestampedModel, UUIDModel):
 
             courseslug = CourseSlug.objects.create(course=self, slug=slug)
             self.save()
-
         return courseslug
+        
 
     def unpublish(self):
         self.is_published = False
         with transaction.atomic():
             self.courseslug_set.all().delete()
             self.save()
-            
+
 
     @property
     def concepts(self):
@@ -76,7 +76,7 @@ class Course(TimestampedModel, UUIDModel):
 class CourseSlug(SlugModel):
     course = models.ForeignKey(Course)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} - {}".format(self.course, self.slug)
 
 

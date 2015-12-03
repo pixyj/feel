@@ -69,8 +69,27 @@ class CourseDetailView(APIView):
         validated_data = serializer.data
         audit_attrs = get_audit_attrs(course.created_by, request.user)
         validated_data.update(audit_attrs)
-        serializer.update(course, validated_data)
-        return Response(serializer.data, status.HTTP_200_OK)
+
+        previous_is_published = course.is_published
+        course = serializer.update(course, validated_data)
+
+        response = serializer.data
+        if previous_is_published != course.is_published:
+            #import ipdb; ipdb.set_trace()
+            response = dict(serializer.data)
+            if course.is_published:
+                courseslug = course.publish_and_slugify()
+            else:
+                courseslug = None
+                course.unpublish()
+            if courseslug is not None:
+                response['slug'] = courseslug.slug
+            else:
+                response['slug'] = None
+
+
+        return Response(response, status.HTTP_200_OK)
+
 
 
 class ConceptView(APIView):
