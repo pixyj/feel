@@ -94,3 +94,9 @@
 .course-published-just-now {
     text-align: center;
 }
+
+#course-publish-share {
+    margin-left: 5%;
+    line-height: 54px;
+    font-size: 1.2em;
+}

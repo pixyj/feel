@@ -36,6 +36,11 @@ var CourseModel = StreamSaveModel.extend({
             return this.BASE_URL;
         }
         return "{0}{1}/".format(this.BASE_URL, this.id);
+    },
+
+    studentURL: function() {
+        utils.assert(this.attributes.slug, "Slug not found");
+        return "/#/{0}/".format(this.attributes.slug);
     }
 });
 
@@ -86,6 +91,8 @@ var DependencyCollection = Backbone.Collection.extend({
         return "{0}dependencies/".format(this.course.url());
     },
 
+    //from is a keyword in Python, so I'm using start and end on the server
+    //todo -> change client code to start and end as well. 
     parse: function(response) {
 
         var deps = [];
@@ -143,6 +150,10 @@ Store.prototype = {
 
     isPublished: function() {
         return this._course.attributes.isPublished;
+    },
+
+    getStudentURL: function() {
+        return this._course.studentURL();
     },
 
     togglePublish: function() {
@@ -234,7 +245,6 @@ Store.prototype = {
         var promises = [one, two, three];
 
         var self = this;
-
         var fetchedPromise = $.when.apply($, promises);
         fetchedPromise.then(function() {
             self._dependencies.initializeDAG();
@@ -361,6 +371,13 @@ var CoursePublishComponent = React.createClass({
             false: "Publish",
             true: "Unpublish",
         }
+
+        var studentLink = "";
+        if(this.state.isPublished) {
+            var url = this.props.store.getStudentURL();
+            studentLink = <a href={url} id="course-publish-share"> Share! </a>
+        }
+
         return (
             <div id="course-publish-container">
                 <div>
@@ -370,6 +387,7 @@ var CoursePublishComponent = React.createClass({
 
                         {display[this.state.isPublished]} 
                     </button>
+                    {studentLink}
                     <div>{publishedJustNow}</div>
                 </div>
             </div>
