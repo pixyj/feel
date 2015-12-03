@@ -86,8 +86,9 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     var svgWidth = svgAttrs.width;
 
     var parityClass = "concept-box-" + node.parity;
-    var h4 = $("<h5>").html(node.name);
-    var p = $("<p>").addClass("concept-box").addClass(parityClass).append(h4);
+    var a = $("<a>").attr("href", node.url).addClass(parityClass).html(node.name);
+    var h4 = $("<h5>").append(a);
+    var p = $("<div>").addClass("concept-box card").append(h4);
 
     //foreignObject does not work on IE #todo. But my initial technical audience does not use IE, I guess? 
     //And making aligning svg text is a pain

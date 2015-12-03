@@ -13,13 +13,11 @@ svg {
 }
 
 .concept-box-even {
-    background-color: #B71C1C;
-    color: white;
+    color: #4A148C;
 }
 
 .concept-box-odd {
-    background-color: #4A148C;
-    color: white;
+    color: #4cae4c;
 }
 
 .concept-text {
@@ -30,10 +28,6 @@ svg {
 
 .concept-name-svg {
     padding: 0.3em;
-}
-
-.concept-box {
-    border-radius: 0.6rem;
 }
 
 .concept-box h5 {
