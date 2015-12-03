@@ -13,31 +13,12 @@ class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256)
     is_published = models.BooleanField(default=False)
 
-    def publish_and_slugify(self):
-        self.is_published = True
-        with transaction.atomic():
-            slug = slugify(self.name)
-            previous = CourseSlug.objects.filter(slug__contains=slug).last()
-            if previous is not None:
-                try:
-                    number = int(previous.slug.split("-")[-1]) + 1
-                except ValueError:
-                    number = 1
-                slug = "{}-{}".format(slug, number)
-
-            courseslug = CourseSlug.objects.create(course=self, slug=slug)
-            CourseSlug.objects.filter(course=self).exclude(slug=slug).delete()
-            self.save()
-            
-        return courseslug
-
-
-    def unpublish(self):
-        self.is_published = False
-        with transaction.atomic():
-            self.courseslug_set.all().delete()
-            self.save()
-
+    @property
+    def slug(self):
+        if not self.is_published:
+            return None
+        return self.courseslug_set.last().slug
+        
 
     @property
     def concepts(self):
@@ -62,6 +43,32 @@ class Course(TimestampedModel, UUIDModel):
         if not filtered_concepts:
             raise Concept.DoesNotExist
         return filtered_concepts[0]
+
+
+    def publish_and_slugify(self):
+        self.is_published = True
+        with transaction.atomic():
+            slug = slugify(self.name)
+            previous = CourseSlug.objects.filter(slug__contains=slug).last()
+            if previous is not None:
+                try:
+                    number = int(previous.slug.split("-")[-1]) + 1
+                except ValueError:
+                    number = 1
+                slug = "{}-{}".format(slug, number)
+
+            courseslug = CourseSlug.objects.create(course=self, slug=slug)
+            CourseSlug.objects.filter(course=self).exclude(slug=slug).delete()
+            self.save()
+
+        return courseslug
+
+
+    def unpublish(self):
+        self.is_published = False
+        with transaction.atomic():
+            self.courseslug_set.all().delete()
+            self.save()
 
 
     def add_concept(self, name):

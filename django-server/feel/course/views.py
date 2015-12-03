@@ -33,9 +33,14 @@ class CourseDetailView(APIView):
         """
         course = get_object_or_404(Course, id=pk)
 
+        if not course.is_published and request.user != course.created_by:
+            return Response({"Have": "a little patience", "url": "https://youtu.be/273eSvOwpKk"}, 
+                status=status.HTTP_403_FORBIDDEN)
+
         serializer = CourseSerializer(course)
         data = serializer.data
         return Response(data)
+
 
     @method_decorator(login_required)
     def post(self, request):
