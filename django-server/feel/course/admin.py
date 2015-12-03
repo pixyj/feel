@@ -20,3 +20,5 @@ class CourseAdmin(admin.ModelAdmin):
     
 
 admin.site.register(Course, CourseAdmin)
+admin.site.register(CourseConcept)
+admin.site.register(ConceptDependency)
