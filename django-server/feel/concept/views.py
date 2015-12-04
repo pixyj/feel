@@ -19,6 +19,14 @@ from concept.serializers import ConceptSerializer, ConceptSectionSerializer
 from quiz.serializers import QuizAttemptSerializer;
 
 
+def get_concept_page(concept):
+    serializer = ConceptSerializer(concept)
+    data = serializer.data
+    for section in data['sections']:
+        section['data'] = json.loads(section['data'])
+    return data
+
+
 class ConceptDetailView(APIView):
     """
     GET, POST and PUT APIs for individual concepts
@@ -29,11 +37,7 @@ class ConceptDetailView(APIView):
         Get concept by concept_id
         """
         concept = get_object_or_404(Concept, pk=concept_id)
-
-        serializer = ConceptSerializer(concept)
-        data = serializer.data
-        for section in data['sections']:
-            section['data'] = json.loads(section['data'])
+        data = get_concept_page(concept)
         return Response(data)
 
 

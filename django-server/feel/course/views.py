@@ -22,6 +22,7 @@ from course.serializers import CourseSerializer, CourseConceptSerializer
 from course.serializers import ConceptDependencySerializer
 
 from concept.models import Concept
+from concept.views import get_concept_page
 
 
 def get_course_or_404(id_or_slug):
@@ -196,3 +197,14 @@ class DependencyView(APIView):
         return Response({"id": dep.id}, status=status.HTTP_201_CREATED)
 
 
+class StudentConceptView(APIView):
+
+    def get(self, request, course_slug, concept_slug):
+        course = get_course_or_404(course_slug)
+        courseconcept = course.courseconcept_set.filter(slug=concept_slug).last()
+        if not courseconcept:
+            raise Http404
+        
+        concept = courseconcept.concept
+        data = get_concept_page(concept)
+        return Response(data)
