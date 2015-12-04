@@ -167,18 +167,22 @@ class StudentConceptPageView(APIView):
         return Response(page)
 
 
+def get_quizattempts(request, concept):
+    _, user_key = get_user_and_user_key(request)
+    attempts = concept.get_user_quizattempts(user_key)
+    serializer = QuizAttemptSerializer(attempts, many=True)
+    serialized_attempts = serializer.data
+    for attempt in serialized_attempts:
+        attempt['quizId'] = attempt['quiz']
+        del attempt['quiz']
+    return serialized_attempts
+
 
 class StudentQuizAttemptView(APIView):
 
     def get(self, request, pk):
         concept = get_object_or_404(Concept, pk=pk)
 
-        _, user_key = get_user_and_user_key(request)
-        attempts = concept.get_user_quizattempts(user_key)
-        serializer = QuizAttemptSerializer(attempts, many=True)
-        serialized_attempts = serializer.data
-        for attempt in serialized_attempts:
-            attempt['quizId'] = attempt['quiz']
-            del attempt['quiz']
-            
-        return Response(serializer.data)
+        attempts = get_quizattempts(request, concept)
+        return Response(attempts)
+

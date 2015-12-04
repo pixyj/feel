@@ -22,7 +22,7 @@ from course.serializers import CourseSerializer, CourseConceptSerializer
 from course.serializers import ConceptDependencySerializer
 
 from concept.models import Concept
-from concept.views import get_concept_page
+from concept.views import get_concept_page, get_quizattempts
 
 
 def get_course_or_404(id_or_slug):
@@ -206,5 +206,9 @@ class StudentConceptView(APIView):
             raise Http404
         
         concept = courseconcept.concept
-        data = get_concept_page(concept)
-        return Response(data)
+        page = get_concept_page(concept)
+        quizattempts = get_quizattempts(request, concept)
+        return Response({
+            "page": page,
+            "quizattempts": quizattempts
+        })
