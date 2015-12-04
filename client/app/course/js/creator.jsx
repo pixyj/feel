@@ -500,7 +500,6 @@ var ConceptListMixin = {
 
     componentWillUnmount: function() {
         this.props.store.off("add:concept", this.updateState);
-        this.cleanup();
     },
 
     updateState: function() {
