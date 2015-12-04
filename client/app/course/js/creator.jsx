@@ -503,7 +503,14 @@ var ConceptListMixin = {
     },
 
     getListItems: function() {
-        var concepts = this.state.concepts;
+        
+        var concepts;
+        if(!this.state) {
+            concepts = this.props.concepts;
+        }
+        else {
+            concepts = this.state.concepts;
+        }
         var length = concepts.length;
 
         var components = [];
@@ -575,38 +582,8 @@ var ConceptSelectItemComponent = React.createClass({
 
 var ConceptSelectMixin = {
 
-    getInitialState: function() {
-        return {
-            concepts: this.props.store.getConcepts()
-        }
-    },
-
     getComponentClass: function() {
         return ConceptSelectItemComponent;
-    },
-
-    componentDidMount: function() {
-        this.afterRender();
-    },
-
-    componentDidUpdate: function() {
-        this.afterRender();
-    },
-
-    afterRender: function() {
-        this.cleanup();
-
-        var self = this;
-        var callback = function() {
-            console.log("selected ", self, arguments);
-            var value = $(self.refs.select).val(); 
-            self.props.parent.onConceptSelected(self.LABEL.toLowerCase(), value);
-        }
-        $(this.refs.select).material_select(callback);
-    },
-
-    cleanup: function() {
-        $(this.refs.select).material_select('destroy');
     },
 
     render: function() {
@@ -614,15 +591,22 @@ var ConceptSelectMixin = {
         var components = this.getListItems();
         return (
             <div className="concept-select">
-                <h5>{this.LABEL}</h5>
                 <div className="input-field">
-                    <select ref="select">
-                        <option value="" disabled>Choose a Concept </option>
+                    <select ref="select" 
+                            value={this.props.value || ""}
+                            onChange={this.onChange} >
+
+                        <option value=""> {this.LABEL.toUpperCase()} </option>
                         {components}
+
                     </select>
                 </div>
             </div>
         );
+    },
+
+    onChange: function(evt) {
+        this.props.parent.onConceptSelected(this.LABEL, evt.target.value);
     }
 };
 
@@ -646,33 +630,64 @@ var ConceptDependencyComponent = React.createClass({
 
     getInitialState: function() {
 
-        //this is managed outside of React. 
-        self.from = null;
-        self.to = null;
-
         return {
-            concepts: this.props.store.getConcepts() 
+            concepts: this.props.store.getConcepts(),
+            from: null,
+            to: null
         }
 
+    },
+
+    //> null !== null
+    //> false
+    isEnabled: function() {
+        var from = this.state.from;
+        var to = this.state.to;
+        return from !== null && to !== null && from !== to;
     },
 
     render: function() {
 
         return (
             <div>
-                <h5>Add Dependency</h5>
-                <ConceptSelectFromComponent store={this.props.store} parent={this} />
-                <ConceptSelectToComponent store={this.props.store} parent={this} />
+                <h5>Dependency</h5>
+
+                <ConceptSelectFromComponent 
+                    store={this.props.store} 
+                    parent={this} 
+                    value={this.state.from || ""} 
+                    concepts = {this.state.concepts} />
+
+                <ConceptSelectToComponent 
+                    store={this.props.store} 
+                    parent={this} 
+                    value={this.state.to || ""} 
+                    concepts = {this.state.concepts} />
+
+                <button className="btn" 
+                        onClick={this.addDependency} 
+                        disabled={!this.isEnabled()}>Add</button>
             </div>
         );
     },
 
     onConceptSelected: function(label, value) {
-        this[label] = value || null;
-        if(label === "to" && this.from !== null) {
-            this.props.store.addDependency(this.from, this.to);
-        }
-    }
+        label = label.toLowerCase();
+        value = value || null;
+
+        var partialState = {};
+        partialState[label] = value;
+        this.setState(partialState);
+    },
+
+    addDependency: function() {
+        utils.assert(this.isEnabled(), "Houston, we've had a problem");
+        this.props.store.addDependency(this.state.from, this.state.to);
+        this.setState({
+            from: null,
+            to: null
+        });
+    }   
 });
 
 
