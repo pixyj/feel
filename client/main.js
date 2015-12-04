@@ -38,17 +38,18 @@ var Router = Backbone.Router.extend({
         "creator/course/:id/": "editCourse",
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
-        "concept/:id/": "learnConcept",
+        "concept/:id/": "previewConcept",
         ":id/": "learnCourse",
+        ":courseSlug/:conceptSlug/": "learnCourseConcept",
         "": "matrixviz",
         "login": "gotoLogin",
         "matrixviz": "matrixviz",
     },
 
-    learnConcept: function(id) {
+    previewConcept: function(id) {
         this.resetPage();
-        Concept.Student.render({id: id}, this.pageElement);
-        this.currentComponent = Concept.Student;
+        Concept.Preview.render({id: id}, this.pageElement);
+        this.currentComponent = Concept.Preview;
     },
 
     createConcept: function() {
@@ -81,6 +82,15 @@ var Router = Backbone.Router.extend({
         this.resetPage();
         Course.Student.render({id: id}, this.pageElement);
         this.currentComponent = Course.Student;
+    },
+
+    learnCourseConcept: function(courseSlug, conceptSlug) {
+        this.resetPage();
+        Concept.Student.render({
+            courseSlug: courseSlug, 
+            conceptSlug: conceptSlug
+        }, this.pageElement);
+        this.currentComponent = Concept.Student;
     },
     
     matrixviz: function() {

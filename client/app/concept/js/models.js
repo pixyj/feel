@@ -33,7 +33,18 @@ var StudentConceptPageModel = Backbone.Model.extend({
 
 });
 
+var StudentCourseConceptPageModel = Backbone.Model.extend({
+
+    url: function() {
+        var attrs = this.attributes;
+        return "/api/v1/courses/{0}/concepts/{1}/".format(attrs.courseSlug,
+            attrs.conceptSlug);
+    }
+
+});
+
 module.exports = {
     ConceptModel: ConceptModel,
-    StudentConceptPageModel: StudentConceptPageModel
+    StudentConceptPageModel: StudentConceptPageModel,
+    StudentCourseConceptPageModel: StudentCourseConceptPageModel
 };

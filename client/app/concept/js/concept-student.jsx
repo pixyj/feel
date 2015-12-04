@@ -24,8 +24,12 @@ var SECTION_TYPES_AND_COMPONENTS = conceptSectionTypes.SECTION_TYPES_AND_COMPONE
 var STUDENT_SECTION_COMPONENTS_BY_TYPE = conceptSectionTypes.STUDENT_SECTION_COMPONENTS_BY_TYPE;
 var SECTIONS_SORTED_BY_TYPE = conceptSectionTypes.SECTIONS_SORTED_BY_TYPE;
 
-var PageModel = require("./models").StudentConceptPageModel;
+var models = require("./models");
+var StudentConceptPageModel = models.StudentConceptPageModel;
+var StudentCourseConceptPageModel = models.StudentCourseConceptPageModel;
+
 var QuizAttemptStore = require("./../../quiz/js/models").QuizAttemptStore;
+var QuizAttemptCollection = require("./../../quiz/js/models").QuizAttemptCollection;
 
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
@@ -35,7 +39,7 @@ var SectionComponentListMixin = components.SectionComponentListMixin;
 
 var PageStore = function(options) {
 
-    this.model = new PageModel(options);
+    this.model = options.model;
 };
 
 PageStore.prototype = {
@@ -98,31 +102,61 @@ var PageComponent = React.createClass({
 
 var app = {};
 
+var renderImpl = function(pageStore, attemptStore, element) {
 
-var renderPage = function(page, attemptStore, element) {
+    var page = pageStore.toJSON();
+    attemptStore.setSectionQuizzes(page.sectionQuizzes).initializeAttempts();
     ReactDOM.render(<PageComponent page={page} attemptStore={attemptStore} />, element);
+
+    app.pageStore = pageStore;
+    app.attemptStore  = attemptStore;
+    app.element = element;
+
 };
 
 var render = function(options, element) {
 
-    app.pageStore = new PageStore(options);
-    app.attemptStore = new QuizAttemptStore({
-        sectionQuizzes: {},
-        conceptId: options.id
-    });
-    app.element = element;
+    var model = new StudentCourseConceptPageModel(options);
+    
+    model.fetch().then(function() {
+        
+        var pageModel = new StudentConceptPageModel(model.attributes.page)
+        var pageStore = new PageStore({
+            model: pageModel
+        });
 
-    var one = app.pageStore.fetch();
-    var two = app.attemptStore.fetch();
+        var attemptCollection = new QuizAttemptCollection(model.attributes.quizattempts);
+        var attemptStore = new QuizAttemptStore({
+            attemptCollection: attemptCollection
+        });
+
+        renderImpl(pageStore, attemptStore, element);
+
+    });
+};
+
+
+var renderPreview = function(options, element) {
+    
+    var pageStore = new PageStore({
+        model: new StudentConceptPageModel({id: options.id})
+    });
+
+    var attemptStore = new QuizAttemptStore({
+        attemptCollection: new QuizAttemptCollection({
+            conceptId: options.id
+        })
+    });
+
+    var one = pageStore.fetch();
+    var two = attemptStore.fetch();
     var promises = [one, two];
 
     $.when.apply($, promises).then(function() {
-        var page = app.pageStore.toJSON();
-        app.attemptStore.setSectionQuizzes(page.sectionQuizzes).initializeAttempts();
-        renderPage(page, app.attemptStore, element);
+        renderImpl(pageStore, attemptStore, element);
     });
-
 };
+
 
 var unmount = function() {
 
@@ -133,6 +167,7 @@ var unmount = function() {
 
 module.exports = {
     render: render, 
+    renderPreview: renderPreview,
     unmount: unmount
 }
 

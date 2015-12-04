@@ -127,8 +127,9 @@ var QuizAttemptCollection = Backbone.Collection.extend({
     model: QuizAttemptModel,
 
     initialize: function(options) {
-        this.conceptId = options.conceptId;
-        utils.assert(this.conceptId, "QuizAttemptCollection: Concept Id needs to be specified ");
+        if(options.conceptId) {
+            this.conceptId = options.conceptId;
+        }
     },
 
     parse: function(response) {
@@ -156,11 +157,9 @@ var QuizAttemptCollection = Backbone.Collection.extend({
 });
 
 var QuizAttemptStore = function(options) {
-    this.sectionQuizzes = options.sectionQuizzes;
-    this.conceptId = options.conceptId;
+    this.sectionQuizzes = {};
     this.attempts = {};
-
-    this.attemptCollection = new QuizAttemptCollection({conceptId: options.conceptId});
+    this.attemptCollection = options.attemptCollection;
 };
 
 QuizAttemptStore.prototype = {
@@ -248,7 +247,8 @@ module.exports = {
     GuessCollection: GuessCollection,
     QuizModel: QuizModel,
     QuizBankCollection: QuizBankCollection,
-    QuizAttemptStore: QuizAttemptStore
+    QuizAttemptStore: QuizAttemptStore,
+    QuizAttemptCollection: QuizAttemptCollection
 
 };
 
