@@ -18,7 +18,7 @@ class Course(TimestampedModel, UUIDModel):
         if not self.is_published:
             return None
         return self.courseslug_set.last().slug
-        
+
 
     @property
     def concepts(self):
@@ -59,6 +59,7 @@ class Course(TimestampedModel, UUIDModel):
 
             courseslug = CourseSlug.objects.create(course=self, slug=slug)
             CourseSlug.objects.filter(course=self).exclude(slug=slug).delete()
+            [c.slugify() for c in self.courseconcept_set.select_related('concept').all()]
             self.save()
 
         return courseslug
@@ -69,6 +70,7 @@ class Course(TimestampedModel, UUIDModel):
         with transaction.atomic():
             self.courseslug_set.all().delete()
             self.save()
+            self.courseconcept_set.all().update(slug="")
 
 
     def add_concept(self, name):
@@ -83,6 +85,7 @@ class Course(TimestampedModel, UUIDModel):
 
 
 class CourseSlug(SlugModel):
+    #use one-to-one instead
     course = models.ForeignKey(Course)
 
     def __str__(self):
@@ -99,6 +102,7 @@ class CourseConceptManager(models.Manager):
 class CourseConcept(TimestampedModel, UUIDModel):
     course = models.ForeignKey(Course)
     concept = models.ForeignKey(Concept)
+    slug = models.CharField(max_length=200, default="")
 
     courseconcepts = CourseConceptManager()
 
@@ -107,6 +111,11 @@ class CourseConcept(TimestampedModel, UUIDModel):
     def url(self):
         return "{}{}/".format(self.course.url, slugify(self.concept.name))
 
+
+    def slugify(self):
+        self.slug = self.concept.slug
+        self.save()
+        return self.slug
 
     def __str__(self):
         return "{} belonging to {}".format(self.concept, self.course)
