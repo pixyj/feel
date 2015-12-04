@@ -36,9 +36,10 @@ var Router = Backbone.Router.extend({
         "creator/concept/:id/": "editConcept",
         "creator/course": "createCourse",
         "creator/course/:id/": "editCourse",
-        "concept/:id/": "learnConcept",
         "creator/quiz": "createQuiz",
         "creator/quiz/:id": "editQuiz",
+        "concept/:id/": "learnConcept",
+        ":id/": "learnCourse",
         "": "matrixviz",
         "login": "gotoLogin",
         "matrixviz": "matrixviz",
@@ -75,6 +76,12 @@ var Router = Backbone.Router.extend({
         Course.Creator.render(options, this.pageElement);
         this.currentComponent = Course.Creator;
     },
+
+    learnCourse: function(id) {
+        this.resetPage();
+        Course.Student.render({id: id}, this.pageElement);
+        this.currentComponent = Course.Student;
+    },
     
     matrixviz: function() {
         MatrixViz.render();
@@ -106,10 +113,17 @@ var Router = Backbone.Router.extend({
         var page = document.createElement("div");
         page.setAttribute("id", "page-content");
         page.setAttribute("class", "container");
-
+        //this.renderLoading(page);
         var pageFull = document.getElementById("page-full");
         pageFull.appendChild(page);
         this.pageElement = page;
+    },
+
+    renderLoading: function(page) {
+        var progress = $("<div>").addClass("progress");
+        var child = $("<div>").addClass("indeterminate");
+        progress.append(child);
+        $(page).append(progress);
     },
 
     home: function() {

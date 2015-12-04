@@ -1,5 +1,8 @@
-var render = function() {
 
+
+
+var render = function() {
+    console.log("hi", arguments);
 };
 
 var unmount = function() {
