@@ -111,7 +111,12 @@ var DependencyCollection = Backbone.Collection.extend({
 });
 
 var CreatorStore = function(options) {
+    
+    if(!options.hasOwnProperty("setRoute")) {
+        options.setRoute = true;
+    } 
     this.options = options;
+
     this.dag = new DAG({});
 
 
@@ -261,6 +266,10 @@ CreatorStore.prototype = {
     },
 
     setRoute: function(replace) {
+
+        if(!this.options.setRoute) {
+            return;
+        }
         replace = replace || false;
         var url = this._course.creatorURL();
         Backbone.history.navigate(url, {trigger: false, replace: replace});
