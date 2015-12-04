@@ -214,12 +214,18 @@ Store.prototype = {
             to: to
         };
 
+        var nodesByLevel;
+        try {
+            this.dag.addEdge(from, to);
+            nodesByLevel = this.dag.sort();    
+        } catch (e) {
+            this.dag.removeEdge(from, to);
+            return false;
+        }
+        
         var model = this._dependencies.add(edge);
         var self = this;
         var onSaved = function() {
-            self.dag.addEdge(from, to);
-            var nodesByLevel = self.dag.sort();
-            
             var edges = self.dag.getEdges();
             var graph = {
                 levels: nodesByLevel,
@@ -235,6 +241,7 @@ Store.prototype = {
             onSaved();
         }
         
+        return true;
     },
 
     getGraph: function() {
@@ -633,7 +640,9 @@ var ConceptDependencyComponent = React.createClass({
         return {
             concepts: this.props.store.getConcepts(),
             from: null,
-            to: null
+            to: null,
+            cycleDetected: false,
+            justAdded: false
         }
 
     },
@@ -647,6 +656,18 @@ var ConceptDependencyComponent = React.createClass({
     },
 
     render: function() {
+
+        var cycleComponent = "";
+        if(this.state.cycleDetected) {
+            cycleComponent = <div>Cycle detected</div>
+            this.hideFeedbackComponentsAfterTimeout();
+        }
+
+        var justAddedComponent = "";
+        if(this.state.justAdded) {
+            justAddedComponent = <div>👍</div>
+            this.hideFeedbackComponentsAfterTimeout();
+        }
 
         return (
             <div>
@@ -667,8 +688,25 @@ var ConceptDependencyComponent = React.createClass({
                 <button className="btn" 
                         onClick={this.addDependency} 
                         disabled={!this.isEnabled()}>Add</button>
+
+                {cycleComponent}
+                {justAddedComponent}
             </div>
         );
+    },
+
+    hideFeedbackComponentsAfterTimeout: function() {
+        if(this._timer) {
+            clearTimeout(this._timer);
+        }
+
+        var self = this;
+        this._timer = setTimeout(function() {
+            self.setState({
+                cycleDetected: false,
+                justAdded: false
+            });
+        }, 2000);
     },
 
     onConceptSelected: function(label, value) {
@@ -681,11 +719,14 @@ var ConceptDependencyComponent = React.createClass({
     },
 
     addDependency: function() {
-        utils.assert(this.isEnabled(), "Houston, we've had a problem");
-        this.props.store.addDependency(this.state.from, this.state.to);
+
+        var isAdded = this.props.store.addDependency(this.state.from, this.state.to);    
+        
         this.setState({
             from: null,
-            to: null
+            to: null,
+            cycleDetected: !isAdded,
+            justAdded: isAdded
         });
     }   
 });

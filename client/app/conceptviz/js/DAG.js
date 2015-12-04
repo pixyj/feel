@@ -20,6 +20,12 @@ DAG.prototype = {
         this.nodes[to].ends[from] = from;
     },
 
+    removeEdge: function(from, to) {
+        delete this.nodes[from].starts[to];
+        delete this.nodes[to].ends[from];
+        return this;
+    },
+
     //This is an implementation of topological sort as explained by the awesome Prof. Roughgarden
     //https://class.coursera.org/algo/lecture/52
     sort: function() {
