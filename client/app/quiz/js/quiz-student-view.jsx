@@ -264,11 +264,7 @@ var QuizPreview = React.createClass({
 
         return (
             <div>
-                
                 <QuizQuestionView questionDisplay={this.props.store.questionDisplay} ref="questionView" />
-                <QuizAnswerSubmitView store={this.props.store} submitStore={this.props.submitStore} />
-                
-
             </div>
         );  
     }
