@@ -5,6 +5,7 @@ var _ = require("underscore");
 var Backbone = require("backbone");
 
 var utils = require("utils");
+var RadioGroup = require("radio-group.jsx").RadioGroup;
 var CreatorStore = require("./models").CreatorStore;
 
 
@@ -67,6 +68,43 @@ Store.prototype.constructor = Store;
 *
 *********************************************************************************/
 
+var STUDENT_SKILL_ESTIMATION_LEVELS = [
+
+    {
+        value: 0,
+        display: "I'm completely new"
+    },
+    {
+        value: 1,
+        display: "I consider myself a beginner"
+    },
+    {
+        value: 2,
+        display: "I've studied these topics, but I'm a bit rusty."
+    },
+    {
+        value: 4,
+        display: "I'm familiar with most/all of these topics."
+    }
+];
+
+var StudentSkillEstimationComponent = React.createClass({
+
+    render: function() {
+
+        var rows = [];
+        var levels =  STUDENT_SKILL_ESTIMATION_LEVELS;
+        var radioGroup = <RadioGroup items={levels} />
+
+        return (
+            <div>
+                <h4>Which one these describes you best?</h4>
+                {radioGroup}
+            </div>
+        );
+    }
+});
+
 
 var PageComponent = React.createClass({
 
@@ -79,12 +117,21 @@ var PageComponent = React.createClass({
         return (
             <div>
                 <h3> Welcome to {this.props.store.getCourseName()}  </h3>
-                <div ref="graphContainer"> </div>
+                <div className="row"> 
+                    <div className="col-xs-5 col-md-6">
+                        <StudentSkillEstimationComponent parent={this} />
+                    </div>
+                    <div    className="col-xs-7 col-md-6" 
+                            ref="graphContainer" 
+                            parent={this} >
+                    </div>
+                </div>
             </div>
         );
     },
 
     renderGraph: function() {
+        return;
         var graphContainer = $(ReactDOM.findDOMNode(this.refs.graphContainer));
         this.graphView = connected.render({
             width: graphContainer.width()
