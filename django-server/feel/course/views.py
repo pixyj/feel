@@ -23,6 +23,7 @@ from course.serializers import ConceptDependencySerializer
 
 from concept.models import Concept
 from concept.views import get_concept_page, get_quizattempts
+from concept.serializers import ConceptSerializer
 
 
 def get_course_or_404(id_or_slug):
@@ -118,14 +119,9 @@ class ConceptView(APIView):
     def get(self, request, course_id):
         course = get_course_or_404(course_id)
 
-        concepts = []
-        for c in course.concepts:
-            concepts.append({
-                "id": c.concept.id,
-                "name": c.concept.name,
-                "is_published": c.concept.is_published
-            })
-        return Response(concepts)
+        concepts = [cc.concept for cc in course.concepts]
+        serializer = ConceptSerializer(concepts, many=True)
+        return Response(serializer.data)
 
 
     @method_decorator(login_required)
