@@ -44,6 +44,7 @@ var Router = Backbone.Router.extend({
         "": "matrixviz",
         "login": "gotoLogin",
         "matrixviz": "matrixviz",
+        "*path": "notFound"
     },
 
     previewConcept: function(id) {
@@ -144,6 +145,16 @@ var Router = Backbone.Router.extend({
 
         this.currentComponent = this;
         
+    },
+
+    notFound: function() {
+        this.resetPage();
+        var h4 = $("<h4>").html("Oops. Page Not found.").css({
+            "margin-top": "3%",
+            "text-align": "center"
+        });
+        $(this.pageElement).append(h4);
+        this.currentComponent = this;
     },
 
     unmount: function() {
