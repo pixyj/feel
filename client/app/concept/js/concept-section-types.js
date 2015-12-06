@@ -4,34 +4,23 @@ var C = require("./components.jsx");
 
 var SECTION_TYPES_AND_COMPONENTS = {
 
-    PREREQ_QUIZ: {
+    COURSE_PRETEST: {
         type: 0,
         studentComponent: C.StudentPrereqQuizSection,
         creatorComponent: C.QuizSectionComponent,
-        name: "Prerequisite Quiz",
+        name: "Course Pretest",
         blankState: {
             quizzes: []
         }
     },
 
-    EXIT_QUIZ: {
-        type: 6,
-        studentComponent: C.StudentExitQuizSection,
+    PREREQ_QUIZ: {
+        type: 1,
+        studentComponent: C.StudentPrereqQuizSection,
         creatorComponent: C.QuizSectionComponent,
-        name: "Exit Quiz",
+        name: "Prerequisite Quiz",
         blankState: {
             quizzes: []
-        }
-    },
-    
-    MARKDOWN: {
-        type: 1,
-        studentComponent: C.StudentMarkdownSectionComponent,
-        creatorComponent: C.MarkdownSectionComponent,
-        name: "Markdown Section",
-        blankState: {
-            input: "",
-            display: ""
         }
     },
 
@@ -44,9 +33,30 @@ var SECTION_TYPES_AND_COMPONENTS = {
             quizzes: []
         }
     },
-    
-    VIDEO: {
+
+    EXIT_QUIZ: {
         type: 3,
+        studentComponent: C.StudentExitQuizSection,
+        creatorComponent: C.QuizSectionComponent,
+        name: "Exit Quiz",
+        blankState: {
+            quizzes: []
+        }
+    },
+    
+    MARKDOWN: {
+        type: 4,
+        studentComponent: C.StudentMarkdownSectionComponent,
+        creatorComponent: C.MarkdownSectionComponent,
+        name: "Markdown Section",
+        blankState: {
+            input: "",
+            display: ""
+        }
+    },
+
+    VIDEO: {
+        type: 5,
         studentComponent: C.StudentVideoSectionComponent,
         creatorComponent: C.VideoSectionComponent,
         name: "Video",
@@ -56,7 +66,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     },
     
     VISUALIZATION: {
-        type: 4,
+        type: 6,
         studentComponent: C.VisualizationSectionComponent,
         creatorComponent: C.VisualizationSectionComponent,
         name: "Visualization",

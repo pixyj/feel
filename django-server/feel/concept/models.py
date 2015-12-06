@@ -43,6 +43,27 @@ class Concept(TimestampedModel, UUIDModel):
 
         return QuizAttempt.objects.get_user_attempts_in_quizzes(user_key, quiz_ids)
 
+    @property
+    def course_pretest_quiz(self):
+        section = self.conceptsection_set.filter(type=ConceptSection.COURSE_PRETEST).last()
+        if not section:
+            return None
+
+        quiz_ids = section.get_quiz_info()
+        if not quiz_ids:
+            return None
+
+        quiz_id = quiz_ids[0]['id']
+        quiz = Quiz.get_detailed_quizzes_in([quiz_id]).first()
+        if not quiz:
+            #todo -> log error here
+            return None
+        serializer = QuizSerializer(quiz)
+        return serializer.data
+
+
+
+
     def __str__(self):
         return "{} created by {} - Published? {}".format(self.name, self.created_by, self.is_published)
 
@@ -57,22 +78,22 @@ class ConceptSectionManager(models.Manager):
 
 class ConceptSection(TimestampedModel, UUIDModel):
 
-    PREREQ_QUIZ = 0
-    MARKDOWN = 1
+    COURSE_PRETEST = 0
+    PREREQ_QUIZ = 1
     QUIZ = 2
-    VIDEO = 3
-    VISUALIZATION = 4
-    EXTERNAL_RESOURCES = 5
-    EXIT_QUIZ = 6
+    EXIT_QUIZ = 3
+    MARKDOWN = 4
+    VIDEO = 5
+    VISUALIZATION = 6
 
     SECTION_TYPES = (
-        (PREREQ_QUIZ, 0),
-        (MARKDOWN, 1),
+        (COURSE_PRETEST, 0),
+        (PREREQ_QUIZ, 1),
         (QUIZ, 2),
-        (VIDEO, 3),
-        (VISUALIZATION, 4),
-        (EXTERNAL_RESOURCES, 5),
-        (EXIT_QUIZ, 6)
+        (EXIT_QUIZ, 3),
+        (MARKDOWN, 4),
+        (VIDEO, 5),
+        (VISUALIZATION, 6)
     )
 
     concept = models.ForeignKey(Concept)
@@ -87,10 +108,10 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
     def get_additional_info(self):
         if self.type == ConceptSection.Quiz:
-            return self._get_quiz_info()
+            return self.get_quiz_info()
 
 
-    def _get_quiz_info(self):
+    def get_quiz_info(self):
         data = json.loads(self.data)
         quizzes = data['quizzes']
         return quizzes
@@ -102,7 +123,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
     def is_quiz_section(self):
         section_type = self.type
-        return section_type in [self.PREREQ_QUIZ, self.QUIZ, self.EXIT_QUIZ]
+        return section_type in [self.COURSE_PRETEST, self.PREREQ_QUIZ, self.QUIZ, self.EXIT_QUIZ]
 
     @classmethod
     def get_quiz_sections(klass, sections):
@@ -120,7 +141,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
         section_quizzes = defaultdict(list)
         #import ipdb;ipdb.set_trace()
         for section in quiz_sections:
-            for quiz in section._get_quiz_info():
+            for quiz in section.get_quiz_info():
                 quiz_id = quiz['id']
                 all_quiz_ids.append(quiz_id)
                 section_id_by_quiz_id[quiz_id] = section.id
