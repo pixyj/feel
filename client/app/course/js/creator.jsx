@@ -95,6 +95,9 @@ var CoursePublishComponent = React.createClass({
 
     componentWillUnmount: function() {
         this.props.store.off("change:isPublished", this.updateState);
+        if(this._timer) {
+            clearTimeout(this._timer);
+        }
     },
 
     updateState: function() {
