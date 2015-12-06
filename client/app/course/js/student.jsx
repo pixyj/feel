@@ -72,10 +72,10 @@ Store.prototype.constructor = Store;
 
 /*----------------------------Estimation Components-----------------------------*/
 
-var StartLearningMixin = {
+var StartLearningAtMixin = {
 
     render: function() {
-        var concept = this.getStartLearningConcept();
+        var concept = this.getStartLearningAtConcept();
         this._cachedConcept = concept;
         return (
             <div>
@@ -96,9 +96,9 @@ var StartLearningMixin = {
 
 var CompletelyNewComponent = React.createClass({
 
-    mixins: [StartLearningMixin],
+    mixins: [StartLearningAtMixin],
 
-    getStartLearningConcept: function() {
+    getStartLearningAtConcept: function() {
         return this.props.store.getRootConcept();
     }
 
