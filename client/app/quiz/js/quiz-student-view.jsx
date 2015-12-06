@@ -404,7 +404,7 @@ var StudentPrereqQuizSection = React.createClass({
     mixins: [QuizSectionMixin],
 
     getHeading: function() {
-        return "Take this pretest to check if you're ready to learn about {0}".format(this.props.page.name);
+        return "Take this pretest to check if you're ready to learn {0}".format(this.props.page.name);
     }
 
 });
