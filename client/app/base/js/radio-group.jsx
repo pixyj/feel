@@ -69,6 +69,7 @@ var RadioGroup = React.createClass({
         this.setState({
             selected: currentKey
         });
+        this.props.onChange.call(this.props.parent, currentKey);
     }
 
 });

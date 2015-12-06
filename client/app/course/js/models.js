@@ -235,11 +235,25 @@ CreatorStore.prototype = {
         return true;
     },
 
+    getRootConcept: function() {
+
+        var graph = this.getGraph();
+        var levels = graph.levels;
+        if(!levels.length) {
+            return null;
+        }
+        return levels[0][0];
+    },
+
+    getConceptURL: function(conceptSlug) {
+        return "{0}{1}/".format(this._course.studentURL(), conceptSlug);
+    },
+
     getGraph: function() {
         return {
             levels: this.dag.sort(),
             edges: this.dag.getEdges()
-        }
+        };
     },
 
     fetch: function() {

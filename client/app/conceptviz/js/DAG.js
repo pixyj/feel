@@ -15,7 +15,7 @@ DAG.prototype = {
     },
 
     addEdge: function(from, to) {
-        console.log("Adding edge from ", from, "to", to);
+        //console.log("Adding edge from ", from, "to", to);
         this.nodes[from].starts[to] = to;
         this.nodes[to].ends[from] = from;
     },

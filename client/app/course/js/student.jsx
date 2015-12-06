@@ -39,11 +39,12 @@ Store.prototype = {
         return mergedPromise;            
     },
 
-    //provide a declarative way to define wrapper functions
-    //This is why I love JavaScript
+    //provide a declarative way to proxy functions defined in CreatorStore
     creatorAPIs: {
         'getCourseName': 'getName',
-        'getGraph': 'getGraph'
+        'getGraph': 'getGraph',
+        'getRootConcept': 'getRootConcept',
+        'getConceptURL': 'getConceptURL'
     },
 
     initializeCreatorAPIs: function() {
@@ -63,48 +64,159 @@ Store.prototype.constructor = Store;
 
 
 /********************************************************************************
-*   Components
+*  COMPONENTS
 *
-*
+*  
 *********************************************************************************/
 
-var STUDENT_SKILL_ESTIMATION_LEVELS = [
 
-    {
-        value: 0,
-        display: "I'm completely new"
+/*----------------------------Estimation Components-----------------------------*/
+
+var StartLearningMixin = {
+
+
+    render: function() {
+        var concept = this.getStartLearningConcept();
+        return (
+            <div>
+                <h5>Cool, you can start learning at <i>{concept.name}</i></h5>
+                <button className="btn btn-large" 
+                        onClick={this.routeToConcept}>
+                        Start Learning! 
+                </button>
+            </div>
+        );
     },
-    {
-        value: 1,
-        display: "I consider myself a beginner"
-    },
-    {
-        value: 2,
-        display: "I've studied these topics, but I'm a bit rusty."
-    },
-    {
-        value: 4,
-        display: "I'm familiar with most/all of these topics."
+
+    routeToConcept: function() {
+        var url = this.props.store.getConceptURL(concept.slug);
+        Backbone.history.navigate(url, {trigger: true});
     }
-];
+};
 
-var StudentSkillEstimationComponent = React.createClass({
+var CompletelyNewComponent = React.createClass({
+
+    mixins: [StartLearningMixin],
+
+    getStartLearningConcept: function() {
+        return this.props.store.getRootConcept();
+    }
+
+});
+
+var QuizOrBrowseComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            showQuiz: false
+        }
+    },
 
     render: function() {
 
-        var rows = [];
-        var levels =  STUDENT_SKILL_ESTIMATION_LEVELS;
-        var radioGroup = <RadioGroup items={levels} />
-
         return (
             <div>
-                <h4>Which one these describes you best?</h4>
-                {radioGroup}
+                <h5>Awesome. You can take a short test so that you get started at the right level for you
+                        OR you can select any concept on the graph </h5> 
+                <button className="btn btn-large" onClick={this.startQuiz}> Start Quiz </button>
             </div>
         );
+    },
+
+    startQuiz: function() {
+        this.setState({
+            startQuiz: true
+        });
     }
 });
 
+/*----------------------------Estimation Configuration -----------------------------*/
+
+var STUDENT_SKILL_ESTIMATION_LEVELS = [
+    {
+        value: 0,
+        display: "I'm completely new",
+        ComponentClass: CompletelyNewComponent,
+        props: {
+            quizStartPoint: null
+        }
+    },
+    {
+        value: 1,
+        display: "I consider myself a beginner",
+        ComponentClass: QuizOrBrowseComponent,
+        props: {
+            quizStartPoint: 0.25
+        }
+    },
+    {
+        value: 2,
+        display: "I've studied these topics, but I'm a bit rusty.",
+        ComponentClass: QuizOrBrowseComponent,
+        props: {
+            quizStartPoint: 0.5
+        }
+    },
+    {
+        value: 3,
+        display: "I'm familiar with most/all of these topics.",
+        ComponentClass: QuizOrBrowseComponent,
+        props: {
+            quizStartPoint: 0.75
+        }
+    }
+];
+
+/*------------------------Root Estimation Component -----------------------------*/
+
+var StudentSkillEstimationComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            level: null
+        };
+    },
+
+    getLevelComponentClass: function(level) {
+        return STUDENT_SKILL_ESTIMATION_LEVELS[level].ComponentClass;
+    },
+
+    render: function() {
+
+        var radioGroup = "";
+        var levelComponent = "";
+        var heading = "";
+        if(this.state.level === null) {
+            heading = <h4>Which of these describes you best?</h4>
+            var rows = [];
+            var levels =  STUDENT_SKILL_ESTIMATION_LEVELS;
+            radioGroup = <RadioGroup items={levels} onChange={this.onSkillEstimated} parent={this}/>
+        }
+        else {
+            var props = STUDENT_SKILL_ESTIMATION_LEVELS[this.state.level].props;
+            props.store = this.props.store;
+            var ComponentClass = this.getLevelComponentClass(this.state.level);
+            levelComponent = <ComponentClass {...props} />
+        }
+
+        return (
+            <div>
+                {heading}
+                {radioGroup}
+                {levelComponent}
+            </div>
+        );
+    },
+
+    onSkillEstimated: function(level) {
+        console.log("Skill estimated:");
+        this.setState({
+            level: level
+        });
+    }
+});
+
+/*------------------------------------PAGE--------------------------------------*/
 
 var PageComponent = React.createClass({
 
@@ -119,7 +231,7 @@ var PageComponent = React.createClass({
                 <h3> Welcome to {this.props.store.getCourseName()}  </h3>
                 <div className="row"> 
                     <div className="col-xs-5 col-md-6">
-                        <StudentSkillEstimationComponent parent={this} />
+                        <StudentSkillEstimationComponent parent={this} store={this.props.store} />
                     </div>
                     <div    className="col-xs-7 col-md-6" 
                             ref="graphContainer" 
