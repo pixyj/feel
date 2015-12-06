@@ -74,9 +74,9 @@ Store.prototype.constructor = Store;
 
 var StartLearningMixin = {
 
-
     render: function() {
         var concept = this.getStartLearningConcept();
+        this._cachedConcept = concept;
         return (
             <div>
                 <h5>Cool, you can start learning at <i>{concept.name}</i></h5>
@@ -89,7 +89,7 @@ var StartLearningMixin = {
     },
 
     routeToConcept: function() {
-        var url = this.props.store.getConceptURL(concept.slug);
+        var url = this.props.store.getConceptURL(this._cachedConcept.slug);
         Backbone.history.navigate(url, {trigger: true});
     }
 };
