@@ -193,7 +193,7 @@ var RowComponent = React.createClass({
 
         var components = [];
         for(var i = 0; i < length; i++) {
-            components.push(columns[i]);
+            components.push(columns[i] || "");
         }
 
         var className = "row " + this.props.className;
@@ -237,7 +237,8 @@ var AddSectionComponent = React.createClass({
         var rowSections;
         var buttonsPerRow = 3;
         var rows = [];
-        for(var i = 0; i < parseInt(length / buttonsPerRow); i++) {
+
+        for(var i = 0; i < Math.ceil(length / buttonsPerRow); i++) {
             rowSections = sections.slice(i*buttonsPerRow, (i+1)*buttonsPerRow);
             var rowLength = rowSections.length;
             var buttons = [];
