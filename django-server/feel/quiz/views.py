@@ -34,7 +34,7 @@ class QuizDetailView(APIView):
 
         serializer = serializers.QuizSerializer(quiz)
         data = serializer.data
-        data['tags'] = [{"name": tag.name} for tag in quiz.tags.all()]
+        data['tags'] = []
         return Response(data)
 
 
@@ -126,7 +126,6 @@ class QuizDetailView(APIView):
             'last_modified_by': request.user
         }
         quiz_attrs.update(audit_attrs)
-        tags = [tag['name'] for tag in data['tags']]
         
         #todo - Maybe create separate APIs for answers,choices and tags too?
         #import ipdb;ipdb.set_trace()
@@ -134,11 +133,6 @@ class QuizDetailView(APIView):
             quiz = get_quiz_instance(quiz_attrs, data)
             quiz.shortanswer_set.all().delete()
             quiz.choice_set.all().delete()
-
-            #import ipdb;ipdb.set_trace()
-            quiz.tags.all().delete()
-            quiz.tags.add(*tags)
-            
             for answer in data['answers']:
                 answer_attrs = {"quiz": quiz, "answer": answer['answer']}
                 answer_attrs.update(audit_attrs)
