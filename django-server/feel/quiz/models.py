@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
-from taggit.managers import TaggableManager
+#from taggit.managers import TaggableManager
 
 from core.models import TimestampedModel, UUIDModel
 
@@ -20,7 +20,7 @@ class Quiz(TimestampedModel, UUIDModel):
     
     quiz_type = models.IntegerField(choices=QUIZ_TYPES)
 
-    tags = TaggableManager(blank=True)
+    #tags = TaggableManager(blank=True)
 
     @classmethod
     def get_detailed_quizzes_in(klass, ids):

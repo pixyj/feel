@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from quiz.models import Quiz, ShortAnswer, Choice, QuizAttempt
-from core.serializers import TagSerializer
+
 
 class ShortAnswerSerializer(serializers.ModelSerializer):
 
