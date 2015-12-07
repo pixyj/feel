@@ -319,7 +319,6 @@ var QuizCreatorView = React.createClass({
                           onChange={this.updateQuestionText} 
                           value = {this.props.store.questionInput} /> 
 
-                <TagListBaseView store={this.props.store} />
                 {answerInputView}
 
                 <button className="quiz-creator-mcq-toggle-button btn" onClick={this.toggleQuizType}>{toggleMessage}</button>
