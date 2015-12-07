@@ -21,27 +21,6 @@ class Concept(TimestampedModel, UUIDModel):
     def slug(self):
         return slugify(self.name)
 
-    
-    def fetch_student_page(self):
-        sections = self.conceptsection_set.all()
-        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
-        serialized_concept = ConceptSerializer(self)
-
-        data = serialized_concept.data
-        data['section_quizzes'] = section_quizzes
-        return data
-
-
-    def get_user_quizattempts(self, user_key):
-        sections = self.conceptsection_set.all()
-        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
-
-        quiz_ids = []
-        for section, quizzes in section_quizzes.items():
-            quiz_ids.extend([quiz['id'] for quiz in quizzes])
-
-        return QuizAttempt.objects.get_user_attempts_in_quizzes(user_key, quiz_ids)
-
     @property
     def course_pretest_quiz(self):
         section = self.conceptsection_set.filter(type=ConceptSection.COURSE_PRETEST).last()
@@ -60,7 +39,39 @@ class Concept(TimestampedModel, UUIDModel):
         serializer = QuizSerializer(quiz)
         return serializer.data
 
+    
+    def fetch_student_page(self):
+        sections = self.conceptsection_set.all()
+        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
+        serialized_concept = ConceptSerializer(self)
 
+        data = serialized_concept.data
+        data['section_quizzes'] = section_quizzes
+        return data
+
+
+    def get_quiz_ids(self):
+        sections = self.conceptsection_set.all()
+        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
+
+        quiz_ids = []
+        for section, quizzes in section_quizzes.items():
+            quiz_ids.extend([quiz['id'] for quiz in quizzes])
+        return quiz_ids
+
+
+    def get_user_quizattempts(self, user_key):
+        quiz_ids = self.get_quiz_ids()
+        return QuizAttempt.objects.get_user_attempts_in_quizzes(user_key, quiz_ids)
+
+
+    def get_student_progress(self, user_key):
+        quiz_ids = self.get_quiz_ids()
+        count = QuizAttempt.objects.get_answered_quiz_count_in(user_key, quiz_ids)
+        return {
+            "answered": count,
+            "total": len(quiz_ids)
+        }
 
 
     def __str__(self):

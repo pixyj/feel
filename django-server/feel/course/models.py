@@ -19,7 +19,7 @@ class Course(TimestampedModel, UUIDModel):
             return None
         return self.courseslug_set.last().slug
 
-
+    #todo -> Change to courseconcept 
     @property
     def concepts(self):
         return CourseConcept.courseconcepts.items(self)
@@ -30,19 +30,26 @@ class Course(TimestampedModel, UUIDModel):
         dependencies = [dep for dep in self.conceptdependency_set.only('start', 'end').all()]
         return dependencies
 
+    @property
+    def pretest_quizzes(self):
+        concepts = [cc.concept for cc in CourseConcept.items(self)]
+        quiz_by_concept_id = {}
+        for concept in concepts:
+            quiz_by_concept_id[concept.id] = concept.course_pretest_quiz
+        return quiz_by_concept_id
 
     @property
     def url(self):
         return "/course/{}/"(slugify(self.name))
 
 
-    def get_concept_by_name(self, name):
-        slug = slugify(name)
-        concepts = self.get_concepts()
-        filtered_concepts = list(filter(lambda c : c.slug == slug, concepts))
-        if not filtered_concepts:
-            raise Concept.DoesNotExist
-        return filtered_concepts[0]
+    def get_student_progress(self, user_key):
+        concept_progress = {}
+
+        for cc in self.concepts:
+            concept = cc.concept
+            concept_progress[str(concept.id)] = concept.get_student_progress(user_key)
+        return concept_progress
 
 
     def publish_and_slugify(self):

@@ -193,6 +193,7 @@ class DependencyView(APIView):
         return Response({"id": dep.id}, status=status.HTTP_201_CREATED)
 
 
+
 class StudentConceptView(APIView):
 
     def get(self, request, course_slug, concept_slug):
@@ -208,3 +209,13 @@ class StudentConceptView(APIView):
             "page": page,
             "quizattempts": quizattempts
         })
+
+
+class StudentProgressView(APIView):
+
+    def get(self, request, course_slug):
+        course = get_course_or_404(course_slug)
+        _, user_key = get_user_and_user_key(request)
+
+        progress = course.get_student_progress(user_key)
+        return Response(progress)

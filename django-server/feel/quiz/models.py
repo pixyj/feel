@@ -93,6 +93,11 @@ class QuizUserAttemptManager(models.Manager):
     def get_user_attempts_in_quizzes(self, user_key, quiz_ids):
         return QuizAttempt.objects.filter(user_key=user_key).filter(quiz__in=quiz_ids)
 
+    #todo -> ensure multiple correct attempts for same quiz is 
+    #either avoided or remove duplicates in this query. 
+    def get_answered_quiz_count_in(self, user_key, quiz_ids):
+        return self.get_user_attempts_in_quizzes(user_key, quiz_ids).filter(result=True).count()
+
 
 #https://github.com/pramodliv1/conceptgrapher/blob/master/server/cg/quiz/models.py
 #The QuizAttempt model is inspired by the same model from my previous project
