@@ -1,7 +1,5 @@
 from rest_framework import serializers
 
-from core.serializers import TagSerializer
-
 from concept.models import Concept, ConceptSection
 
 

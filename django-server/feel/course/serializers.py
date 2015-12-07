@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.serializers import TagSerializer, set_model_attrs
+from core.serializers import set_model_attrs
 
 from course.models import Course, CourseConcept, ConceptDependency
 
