@@ -139,11 +139,13 @@ class ConceptDetailView(APIView):
             
             concept.conceptsection_set.all().delete()
             for position, serializer in enumerate(section_serializers):
-                section_data = request.data['sections'][position]['data']
+                section_attrs = request.data['sections'][position]
+                section_data =  section_attrs['data']
+                section_type = section_attrs['type']
                 section_attrs = {
                     'concept_id': concept.id,
                     'position': position,
-                    'type': serializer.data['type'],
+                    'type': section_type,
                     'data': section_data
                 }
                 section_attrs.update(audit_attrs)
