@@ -22,8 +22,6 @@ from quiz.serializers import QuizAttemptSerializer;
 def get_concept_page(concept):
     serializer = ConceptSerializer(concept)
     data = serializer.data
-    for section in data['sections']:
-        section['data'] = json.loads(section['data'])
     return data
 
 
@@ -146,7 +144,7 @@ class ConceptDetailView(APIView):
                     'concept_id': concept.id,
                     'position': position,
                     'type': serializer.data['type'],
-                    'data': json.dumps(section_data)
+                    'data': section_data
                 }
                 section_attrs.update(audit_attrs)
                 serializer.create(section_attrs)
@@ -161,9 +159,6 @@ class StudentConceptPageView(APIView):
     def get(self, request, pk):
         concept = get_object_or_404(Concept, pk=pk)
         page = concept.fetch_student_page()
-        #todo -> This code is copy-pasted. Fix it.
-        for section in page['sections']:
-            section['data'] = json.loads(section['data'])
         return Response(page)
 
 

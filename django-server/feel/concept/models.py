@@ -1,16 +1,15 @@
 import itertools
 import uuid
-import json
 
 from collections import defaultdict
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.text import slugify
 
 from core.models import TimestampedModel, UUIDModel
 from quiz.models import Quiz, QuizAttempt
 from quiz.serializers import QuizSerializer
-
 
 
 
@@ -102,7 +101,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
     #Denormalized Field. I did not want to create a new table for each section-type
     #Also, makes the API design match the application state on the client closely.  
-    data = models.TextField()
+    data = JSONField()
 
     objects = ConceptSectionManager()
 
@@ -112,7 +111,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
 
     def get_quiz_info(self):
-        data = json.loads(self.data)
+        data = self.data
         quizzes = data['quizzes']
         return quizzes
 
