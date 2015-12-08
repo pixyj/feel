@@ -1,12 +1,16 @@
 var _ = require("underscore");
 var Backbone = require("backbone");
 
-
 var StreamSaveModel = require("models").StreamSaveModel;
 var utils = require("utils");
 
 var DAG = require("./../../conceptviz/js/DAG").DAG;
 
+/********************************************************************************
+*  Creator Models:
+*
+*
+*********************************************************************************/
 
 var CourseModel = StreamSaveModel.extend({
 
@@ -109,6 +113,12 @@ var DependencyCollection = Backbone.Collection.extend({
         }, this);
     }
 });
+
+/********************************************************************************
+*  Creator Store:
+*
+*
+*********************************************************************************/
 
 var CreatorStore = function(options) {
     
@@ -294,6 +304,85 @@ CreatorStore.prototype = {
 _.extend(CreatorStore.prototype, Backbone.Events);
 CreatorStore.prototype.constructor = CreatorStore;
 
+/********************************************************************************
+*  Student Models and Stores
+*
+*
+*********************************************************************************/
+
+var ProgressModel = Backbone.Model.extend({
+
+    url: function() {
+        return "/api/v1/courses/{0}/student-progress/".format(this.attributes.id);
+    },
+
+    isNew: function() {
+
+        var keys = Object.keys(this.attributes);
+        var length = keys.length;
+        for(var i = 0; i < length; i++) {
+            var progress = this.attributes[keys[i]];
+            if(progress.answered > 0) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    parse: function(response) {
+        _.each(response, function(attrs, id) {
+            attrs.progress = this.calculateProgress(attrs.answered, attrs.total);
+        }, this);
+        return response;
+    },
+
+    calculateProgress: function(answered, total) {
+        if(total === 0) {
+            return 1;
+        }
+        return answered / total;
+    }
+
+});
+
+var StudentStore = function(options) {
+    this._progress = new ProgressModel({
+        id: options.id
+    });
+};
+
+StudentStore.prototype = {
+
+    SKILL_ESTIMATION_KEY: "course:skillEstimation",
+
+    setSkillEstimationLevel: function(level) {
+        localStorage.setItem(this.SKILL_ESTIMATION_KEY, level);
+    },
+
+    getSkillEstimationLevel: function() {
+        return localStorage.getItem(this.SKILL_ESTIMATION_KEY);
+    },
+
+    isUserNew: function() {
+        var isSkillEstimated = localStorage.getItem(this.SKILL_ESTIMATION_KEY) === null;
+        var hasAnsweredAtLeastOneQuiz = this._progress.isNew();
+        return !isSkillEstimated && !hasAnsweredAtLeastOneQuiz;
+    },
+
+    fetch: function() {
+        return this._progress.fetch();
+    },
+
+    getProgress: function() {
+        return this._progress.toJSON();
+    }
+};
+
+StudentStore.prototype.constructor = StudentStore;
+_.extend(StudentStore.prototype, Backbone.Events);
+
+
 module.exports = {
-    CreatorStore: CreatorStore
-}
+    CreatorStore, CreatorStore,
+    StudentStore: StudentStore
+};

@@ -80,15 +80,35 @@ var getForeignObjectAttrs = function(levelIndex, position, levelConceptCount, le
     return attrs;
 };
 
-var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs, levelHeight) {
+var drawNode = function(node, levelIndex, position, levelConceptCount, 
+    svgAttrs, levelHeight, showProgress) {
     
     var svg = svgAttrs.svg;
     var svgWidth = svgAttrs.width;
 
+
+    var progress = $("<div>");
+    if(showProgress && node.progress && node.progress !== 0) {
+
+        var determinate = $("<div>").addClass("progress-bar determinate").css({
+            width: (node.progress * 100) + "%"
+        });
+        progress.addClass("progress").append(determinate).css({
+            margin: "0",
+            height: "6px"
+        });
+    };
+
+    var parent = $("<div>").addClass("concept-box card");
+
     var parityClass = "concept-box-" + node.parity;
-    var a = $("<a>").attr("href", node.url).addClass(parityClass).html(node.name);
-    var h4 = $("<h5>").append(a);
-    var p = $("<div>").addClass("concept-box card").append(h4);
+    var content = $("<a>").attr("href", node.url).addClass(parityClass);
+    
+    var h4 = $("<h5>").html(node.name);
+    content.append(h4).append(progress);
+
+    parent.append(content);
+    var p = parent;
 
     //foreignObject does not work on IE #todo. But my initial technical audience does not use IE, I guess? 
     //And making aligning svg text is a pain
@@ -120,7 +140,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount, svgAttrs,
     };
 };
 
-var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
+var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight, showProgress) {
 
     var i, length;
     length = level.length;
@@ -131,7 +151,7 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight) {
     var levelNodesArray = [];
     for(i = 0; i < length; i++) {
         var node = level[i];
-        var nodeAttrs = drawNode(node, levelIndex, i, length, svgAttrs, levelHeight);
+        var nodeAttrs = drawNode(node, levelIndex, i, length, svgAttrs, levelHeight, showProgress);
         levelNodes[node.id] = nodeAttrs;
         levelNodesArray.push(nodeAttrs);
         var height = nodeAttrs.height;
@@ -628,7 +648,7 @@ var drawAllEdges = function(graph, inputEdges, allNodes, allAlleys, svg) {
     }
 };
 
-var drawAllNodes = function(levels, svgAttrs) {
+var drawAllNodes = function(levels, svgAttrs, showProgress) {
 
     var i, length;
     length = levels.length;
@@ -643,7 +663,7 @@ var drawAllNodes = function(levels, svgAttrs) {
     var allAlleys = [];
     for(i = 0 ; i < length; i++) {
         var level = levels[i];
-        var levelAttrs = drawLevelNodes(level, i, svgAttrs, cumulativeLevelHeight);
+        var levelAttrs = drawLevelNodes(level, i, svgAttrs, cumulativeLevelHeight, showProgress);
         _.extend(allNodes, levelAttrs.levelNodes);
         var maxLevelHeight = levelAttrs.maxHeight;
         cumulativeLevelHeight = cumulativeLevelHeight + maxLevelHeight + levelGap;
@@ -656,7 +676,7 @@ var drawAllNodes = function(levels, svgAttrs) {
 };
 
 
-var init = function(svg, graph) {
+var init = function(svg, graph, showProgress) {
     
 
     svg.find("foreignObject").remove();
@@ -668,8 +688,17 @@ var init = function(svg, graph) {
         width: svg.attr("width")
     };
 
-    var result = drawAllNodes(graph.levels, svgAttrs);
+    var result = drawAllNodes(graph.levels, svgAttrs, showProgress);
     drawAllEdges(graph, graph.edges, result.allNodes, result.allAlleys, svg);
+
+    // if(showProgress) {
+    //     setTimeout(function() {
+    //         _.each(result.allNodes, function(n) {
+    //             n.p.find(".progress-bar").addClass("determinate");
+    //         });
+    //     }, 500);
+
+    // }
 
     return svg;
 };
@@ -701,6 +730,7 @@ var GraphView = Backbone.View.extend({
 
     initialize: function(options) {
         this.options = options;
+        this.showProgress = options.showProgress || false;
     },
 
     render: function(graph) {
@@ -712,7 +742,7 @@ var GraphView = Backbone.View.extend({
         });
         this.svg[0].innerHTML = TRIANGLE_MARKER;
         this.$el.append(this.svg);
-        init(this.svg, graph);
+        init(this.svg, graph, this.showProgress);
         return this;
     },
 

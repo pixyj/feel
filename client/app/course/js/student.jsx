@@ -6,8 +6,10 @@ var Backbone = require("backbone");
 
 var utils = require("utils");
 var RadioGroup = require("radio-group.jsx").RadioGroup;
-var CreatorStore = require("./models").CreatorStore;
 
+var models = require("./models");
+var CreatorStore = models.CreatorStore;
+var StudentStore = models.StudentStore;
 
 var connected = require("./../../conceptviz/js/connected");
 
@@ -19,43 +21,68 @@ var connected = require("./../../conceptviz/js/connected");
 
 var Store = function(options) {
     this.id = options.id;
-    this.creatorStore = new CreatorStore({
+    this._creator = new CreatorStore({
         id: this.id,
         setRoute: false
     });
+    this._student = new StudentStore({
+        id: this.id
+    });
 
-    this.initializeCreatorAPIs();
+    this.initializeStoreAPIs(this._creator, this.creatorAPIs);
+    this.initializeStoreAPIs(this._student, this.studentAPIs);
 };
 
 Store.prototype = {
 
     fetch: function() {
 
-        var one = this.creatorStore.fetch();
-        var promises = [one];
+        var one = this._creator.fetch();
+        var two = this._student.fetch();
+        var promises = [one, two];
 
         var mergedPromise = $.when.apply($, promises);
 
         return mergedPromise;            
     },
 
-    //provide a declarative way to proxy functions defined in CreatorStore
+    //provide a declarative way to proxy methods defined in Creator and Student stores
     creatorAPIs: {
         'getCourseName': 'getName',
-        'getGraph': 'getGraph',
         'getRootConcept': 'getRootConcept',
         'getConceptURL': 'getConceptURL'
     },
 
-    initializeCreatorAPIs: function() {
+    studentAPIs: {
+        'getSkillEstimationLevel': 'getSkillEstimationLevel',
+        'setSkillEstimationLevel': 'setSkillEstimationLevel'
+    },
+
+    initializeStoreAPIs: function(store, methodMap) {
 
         var self = this;
-        var creator = this.creatorStore;
-        _.each(this.creatorAPIs, function(creatorMethod, myMethod) {
+        _.each(methodMap, function(storeMethod, myMethod) {
             this[myMethod] = function() {
-                return creator[creatorMethod].apply(creator, arguments);
+                return store[storeMethod].apply(store, arguments);
             };
         }, this);
+    },
+
+    getGraph: function() {
+        var graph = this._creator.getGraph();
+        var progressByConceptId = this._student.getProgress();
+
+        var length = graph.levels.length;
+        for(var i = 0; i < length; i++) {
+            var levelNodes = graph.levels[i];
+            var levelLength = levelNodes.length;
+            for(var j = 0; j < levelLength; j++) {
+                var node = levelNodes[j];
+                node.progress = progressByConceptId[node.id].progress; 
+                node.url = this.getConceptURL(node.slug);
+            }
+        }
+        return graph;
     }
 
 };
@@ -79,7 +106,7 @@ var StartLearningAtMixin = {
         this._cachedConcept = concept;
         return (
             <div>
-                <h5>Cool, you can start learning at <i>{concept.name}</i></h5>
+                <h5>You can start learning at <i>{concept.name}</i></h5>
                 <button className="btn btn-large" 
                         onClick={this.routeToConcept}>
                         Start Learning! 
@@ -173,7 +200,7 @@ var StudentSkillEstimationComponent = React.createClass({
 
     getInitialState: function() {
         return {
-            level: null
+            level: this.props.store.getSkillEstimationLevel()
         };
     },
 
@@ -213,6 +240,7 @@ var StudentSkillEstimationComponent = React.createClass({
         this.setState({
             level: level
         });
+        this.props.store.setSkillEstimationLevel(level);
     }
 });
 
@@ -243,10 +271,10 @@ var PageComponent = React.createClass({
     },
 
     renderGraph: function() {
-        return;
         var graphContainer = $(ReactDOM.findDOMNode(this.refs.graphContainer));
         this.graphView = connected.render({
-            width: graphContainer.width()
+            width: graphContainer.width(),
+            showProgress: true
         });
         graphContainer.append(this.graphView.$el);
         this.graphView.render(this.props.store.getGraph());
