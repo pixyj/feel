@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^api/v1/courses/(?P<pk>[\w\-]+)/$', views.CourseDetailView.as_view()),
     url(r'^api/v1/courses/(?P<course_id>[\w\-]+)/concepts/$', views.ConceptView.as_view()),
     url(r'^api/v1/courses/(?P<course_id>[\w\-]+)/dependencies/$', views.DependencyView.as_view()),
+    url(r'^api/v1/courses/(?P<course_id>[\w\-]+)/pretest/$', views.PretestView.as_view()),
     
 
     url(r'^api/v1/courses/(?P<course_slug>[\w\-]+)/concepts/(?P<concept_slug>[\w\-]+)/$',\

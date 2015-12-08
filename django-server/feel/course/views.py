@@ -193,6 +193,13 @@ class DependencyView(APIView):
         return Response({"id": dep.id}, status=status.HTTP_201_CREATED)
 
 
+class PretestView(APIView):
+
+    def get(self, request, course_id):
+        course = get_course_or_404(course_id)
+        pretest_quizzes = course.pretest_quizzes
+        return Response(pretest_quizzes)
+
 
 class StudentConceptView(APIView):
 

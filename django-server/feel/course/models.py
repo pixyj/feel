@@ -32,10 +32,10 @@ class Course(TimestampedModel, UUIDModel):
 
     @property
     def pretest_quizzes(self):
-        concepts = [cc.concept for cc in CourseConcept.items(self)]
+        concepts = [cc.concept for cc in self.concepts]
         quiz_by_concept_id = {}
         for concept in concepts:
-            quiz_by_concept_id[concept.id] = concept.course_pretest_quiz
+            quiz_by_concept_id[str(concept.id)] = concept.course_pretest_quiz
         return quiz_by_concept_id
 
     @property
