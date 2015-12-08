@@ -1,9 +1,14 @@
 body {
-    background: url("/retina_dust.png")
+    background: url("/retina_dust.png");
+}
+
+#top-progress-bar {
+    visibility: hidden;
+    margin: 0;
 }
 
 textarea {
-    resize: none
+    resize: none;
 }
 
 #page-container {
