@@ -16,10 +16,10 @@ var models = require("models");
 var UserModel = models.UserModel;
 
 var MatrixViz = require("./app/matrixviz/js/visualize");
-
 var Concept = require("./app/concept/js/api");
-
 var Course = require("./app/course/js/api");
+
+var ProgressBar = require("top-progress-bar");
 
 require("csrf");
 
@@ -29,6 +29,7 @@ var Router = Backbone.Router.extend({
     initialize: function(options) {
         this.currentComponent = null;
         this.userModel = options.userModel;
+        ProgressBar.init();
     },
     
     routes: {
@@ -117,6 +118,7 @@ var Router = Backbone.Router.extend({
     },
 
     resetPage: function() {
+        ProgressBar.reset();
         if(this.currentComponent !== null) {
             this.currentComponent.unmount(this.pageElement);
             this.pageElement.remove();
