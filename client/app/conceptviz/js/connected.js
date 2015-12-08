@@ -99,14 +99,12 @@ var drawNode = function(node, levelIndex, position, levelConceptCount,
         });
     };
 
-    var parent = $("<div>").addClass("concept-box card");
-
     var parityClass = "concept-box-" + node.parity;
     var content = $("<a>").attr("href", node.url).addClass(parityClass);
-    
     var h4 = $("<h5>").html(node.name);
     content.append(h4).append(progress);
 
+    var parent = $("<div>").addClass("concept-box card");
     parent.append(content);
     var p = parent;
 
@@ -132,6 +130,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount,
         node: f,
         f: f,
         p: p,
+        el: content,
         levelIndex: levelIndex,
         levelConceptCount: levelConceptCount,
         levelPosition: position,
@@ -700,7 +699,7 @@ var init = function(svg, graph, showProgress) {
 
     // }
 
-    return svg;
+    return result.allNodes;
 };
 
 var render = function(options) {
@@ -731,6 +730,7 @@ var GraphView = Backbone.View.extend({
     initialize: function(options) {
         this.options = options;
         this.showProgress = options.showProgress || false;
+        this.activeNode = null;
     },
 
     render: function(graph) {
@@ -742,12 +742,25 @@ var GraphView = Backbone.View.extend({
         });
         this.svg[0].innerHTML = TRIANGLE_MARKER;
         this.$el.append(this.svg);
-        init(this.svg, graph, this.showProgress);
+        this.allNodes = init(this.svg, graph, this.showProgress);
+        window.graphView = this;
         return this;
     },
 
     refresh: function(graph) {
-        init(this.svg, graph);
+        this.allNodes = init(this.svg, graph, this.showProgress);
+        return this;
+    },
+
+    setActiveNode: function(id) {
+        if(this.activeNode) {
+            this.activeNode.el.removeClass("concept-box-active");
+            this.activeNode.el.parent().removeClass("concept-box-active");
+        }
+        this.activeNode = this.allNodes[id];
+        this.activeNode.el.addClass("concept-box-active");
+        this.activeNode.el.parent().addClass("concept-box-active");
+        return this;
     }
 
 });

@@ -20,6 +20,12 @@ svg {
     color: #4cae4c;
 }
 
+.concept-box-active {
+    color: white;
+    background: #9C27B0 !important; 
+    transition: 0.5s ease;
+}
+
 .concept-text {
     font-weight: 500;
     color: white;

@@ -35,7 +35,7 @@ var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
 var SectionComponentListMixin = components.SectionComponentListMixin;
 
-
+var ProgressBar = require("top-progress-bar");
 
 var PageStore = function(options) {
 
@@ -115,11 +115,11 @@ var renderImpl = function(pageStore, attemptStore, element) {
 };
 
 var render = function(options, element) {
-
+    ProgressBar.setProgress(0.2);
     var model = new StudentCourseConceptPageModel(options);
     
     model.fetch().then(function() {
-        
+        ProgressBar.setProgress(0.8);
         var pageModel = new StudentConceptPageModel(model.attributes.page)
         var pageStore = new PageStore({
             model: pageModel
@@ -131,6 +131,7 @@ var render = function(options, element) {
         });
 
         renderImpl(pageStore, attemptStore, element);
+        ProgressBar.setProgress(1);
 
     });
 };

@@ -130,6 +130,7 @@ var QuizAttemptCollection = Backbone.Collection.extend({
         if(options.conceptId) {
             this.conceptId = options.conceptId;
         }
+        this._channel = options.channel || this;
     },
 
     parse: function(response) {
@@ -179,7 +180,7 @@ QuizAttemptStore.prototype = {
 
         this.attempts[attempt.quizId] = attempt;
         
-        this.trigger("add:attempt", attempt);
+        this._channel.trigger("add:attempt", attempt);
         
         var model = new QuizAttemptModel(attempt);
         model.save();

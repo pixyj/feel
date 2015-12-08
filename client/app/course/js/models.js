@@ -114,6 +114,14 @@ var DependencyCollection = Backbone.Collection.extend({
     }
 });
 
+var PretestModel = Backbone.Model.extend({
+
+    url: function() {
+        return "/api/v1/courses/{0}/pretest/".format(this.attributes.id);
+    }
+
+});
+
 /********************************************************************************
 *  Creator Store:
 *
@@ -384,5 +392,6 @@ _.extend(StudentStore.prototype, Backbone.Events);
 
 module.exports = {
     CreatorStore, CreatorStore,
-    StudentStore: StudentStore
+    StudentStore: StudentStore,
+    PretestModel: PretestModel
 };

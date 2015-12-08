@@ -10,8 +10,15 @@ var RadioGroup = require("radio-group.jsx").RadioGroup;
 var models = require("./models");
 var CreatorStore = models.CreatorStore;
 var StudentStore = models.StudentStore;
+var PretestModel = models.PretestModel;
+
+var quizModels = require("./../../quiz/js/models");
+var QuizAttemptStore = quizModels.QuizAttemptStore;
+var QuizAttemptCollection = quizModels.QuizAttemptCollection;
 
 var connected = require("./../../conceptviz/js/connected");
+
+var ProgressBar = require("top-progress-bar");
 
 /********************************************************************************
 *   Store
@@ -25,12 +32,25 @@ var Store = function(options) {
         id: this.id,
         setRoute: false
     });
+    
     this._student = new StudentStore({
         id: this.id
     });
 
+    this._attempt = new QuizAttemptStore({
+        attemptCollection: new QuizAttemptCollection({}),
+        channel: this
+    });
+
     this.initializeStoreAPIs(this._creator, this.creatorAPIs);
     this.initializeStoreAPIs(this._student, this.studentAPIs);
+    this.initializeStoreAPIs(this._attempt, this.attemptAPIs);
+
+    this._pretest = new PretestModel({
+        id: this.id
+    });
+
+
 };
 
 Store.prototype = {
@@ -58,6 +78,10 @@ Store.prototype = {
         'setSkillEstimationLevel': 'setSkillEstimationLevel'
     },
 
+    attemptAPIs: {
+        'addAttempt': 'addAttempt',
+    },
+
     initializeStoreAPIs: function(store, methodMap) {
 
         var self = this;
@@ -83,6 +107,24 @@ Store.prototype = {
             }
         }
         return graph;
+    },
+
+    fetchPretest: function() {
+
+        var promise = $.Deferred();
+        var self = this;
+        this._pretest.fetch().then(function() {
+            promise.resolve({
+                quizzes: self._pretest.attributes,
+                attemptStore: self._attempt
+            });
+        });
+
+        return promise;
+    },
+
+    cleanup: function() {
+        //todo
     }
 
 };
@@ -244,6 +286,15 @@ var StudentSkillEstimationComponent = React.createClass({
     }
 });
 
+var PretestComponent = React.createClass({
+
+    render: function() {
+        return (
+            <h4> Are you ready </h4>
+        );
+    }
+});
+
 /*------------------------------------PAGE--------------------------------------*/
 
 var PageComponent = React.createClass({
@@ -254,12 +305,20 @@ var PageComponent = React.createClass({
 
     render: function() {
 
+        var leftComponent = "";
+        if(false) {
+            leftComponent = <StudentSkillEstimationComponent parent={this} store={this.props.store} />
+        }
+        else {
+            leftComponent = <PretestComponent store={this.props.store} />
+        }
+
         return (
             <div>
                 <h3> Welcome to {this.props.store.getCourseName()}  </h3>
                 <div className="row"> 
                     <div className="col-xs-5 col-md-6">
-                        <StudentSkillEstimationComponent parent={this} store={this.props.store} />
+                        {leftComponent}
                     </div>
                     <div    className="col-xs-7 col-md-6" 
                             ref="graphContainer" 
@@ -293,15 +352,20 @@ var app = {
 };
 
 var render = function(options, element) {
+    ProgressBar.setProgress(0.2);
     console.log("hi", arguments);
 
     var store = new Store(options);
     store.fetch().then(function() {
+        ProgressBar.setProgress(0.8);
         ReactDOM.render(<PageComponent store={store} />, element); 
+        ProgressBar.setProgress(1);
     });
 
     app.store = store;
     app.element = element;
+
+    window.store = store;
 
 };
 
