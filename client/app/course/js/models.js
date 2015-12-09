@@ -106,7 +106,7 @@ var DependencyCollection = Backbone.Collection.extend({
         });
         return deps;
     },
-
+    
     initializeDAG: function() {
         _.each(this.toJSON(), function(dep) {
             this.dag.addEdge(dep.from, dep.to);
@@ -353,36 +353,122 @@ var ProgressModel = Backbone.Model.extend({
 
 });
 
+var StudentStates = {
+
+    NEW_VISITOR: 0,
+
+    COMPLETELY_NEW: 1,
+
+    PRETEST: 2,
+
+    DASHBOARD: 3
+};
+
 var StudentStore = function(options) {
+
+    this._channel = options.channel || this;
+
     this._progress = new ProgressModel({
         id: options.id
     });
+    
+    if(this.getState() === null) {
+        this.setState(StudentStates.NEW_VISITOR);
+    }
+
 };
 
 StudentStore.prototype = {
 
-    SKILL_ESTIMATION_KEY: "course:skillEstimation",
+    STATE_KEY: "student:course:state",
 
+    SKILL_ESTIMATION_KEY: "student:course:skill-estimation",
+
+    /**
+     * set student state. Use the number code, not the name
+     * @param {int} state
+     */
+    setState: function(state) {
+        this._storeInteger(this.STATE_KEY, state);
+        this._channel.trigger("change:state", state, this);
+    },
+
+    /**
+     * @return {Number}
+     */
+    getState: function() {
+        return this._loadInteger(this.STATE_KEY);
+    },
+
+    /**
+     * Use the number code, not the name
+     * @param {int} level
+     */
     setSkillEstimationLevel: function(level) {
-        localStorage.setItem(this.SKILL_ESTIMATION_KEY, level);
+        this._storeInteger(this.SKILL_ESTIMATION_KEY, level);
     },
 
+    /**
+     * @return {Number}
+     */
     getSkillEstimationLevel: function() {
-        return localStorage.getItem(this.SKILL_ESTIMATION_KEY);
+        return this._loadInteger(this.SKILL_ESTIMATION_KEY);
     },
 
-    isUserNew: function() {
-        var isSkillEstimated = localStorage.getItem(this.SKILL_ESTIMATION_KEY) === null;
-        var hasAnsweredAtLeastOneQuiz = this._progress.isNew();
-        return !isSkillEstimated && !hasAnsweredAtLeastOneQuiz;
+    _storeInteger: function(key, value) {
+        localStorage.setItem(key, value);
     },
 
-    fetch: function() {
-        return this._progress.fetch();
+    _loadInteger: function(key) {
+        var value = localStorage.getItem(key);
+        if(value === null) {
+            return value;
+        };
+        return parseInt(value);
     },
 
+    /**
+    * Get number of questions attempted, total number of questions and progress 
+    * in each concept.
+    * Example: 
+    *   {
+    *        "id": "awesome",
+    *        "d597a0f8-ba60-45fe-819c-6a7aa0210d6a": {
+    *            "total": 4,
+    *            "answered": 2,
+    *            "progress": 0.5
+    *        },
+    *        "906be0d8-aaa0-458b-ab04-6330f956975f": {
+    *            "total": 5,
+    *            "answered": 2,
+    *            "progress": 0.4
+    *        },
+    *        "92416f00-2228-4799-8caa-d7cb27286eef": {
+    *            "total": 1,
+    *            "answered": 1,
+    *            "progress": 1
+    *        }
+    *    }
+    * @return {object} 
+    */
     getProgress: function() {
         return this._progress.toJSON();
+    },
+
+    /**
+    *  1. Fetch student progress
+    *  2. Return a promise that is resolved after step 3
+    *  3. If the student has answered at least one quiz correctly, show dashboard 
+    *  @return {Promise}
+    */
+    fetch: function() {
+
+        var self = this;
+        return this._progress.fetch().then(function() {
+            if(!self._progress.isNew()) {
+                self.setState(StudentStates.DASHBOARD);
+            }
+        });
     }
 };
 
@@ -393,5 +479,6 @@ _.extend(StudentStore.prototype, Backbone.Events);
 module.exports = {
     CreatorStore, CreatorStore,
     StudentStore: StudentStore,
-    PretestModel: PretestModel
+    PretestModel: PretestModel,
+    StudentStates: StudentStates
 };
