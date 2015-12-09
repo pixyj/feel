@@ -5,6 +5,8 @@ var constants = models.constants;
 var md = require("md");
 var utils = require("utils");
 
+var ListMixin = require("list-mixin.jsx").ListMixin;
+
 var ShortAnswerSubmitView = React.createClass({
 
     getInitialState: function() {
@@ -360,22 +362,25 @@ var StudentSingleQuizView = React.createClass({
 
 var StudentQuizView = React.createClass({
 
-    render: function() {
-        var quizzes = this.props.section.data.quizzes;
+    mixins: [ListMixin],
 
-        var i = 0;
-        var length = quizzes.length;
-        var components = [];
-        for(var i = 0; i < length; i++) {
-            var quiz = quizzes[i];
-            var component = <StudentSingleQuizView 
-                                quiz={quiz} 
-                                attemptStore={this.props.attemptStore}
-                                parent={this}
-                                key={i} 
-                                number={i+1} />
-            components.push(component);
-        }
+    _buildProps: function(quiz, i) {
+        return {
+            quiz: quiz,
+            parent: this,
+            attemptStore: this.props.attemptStore,
+            number: i + 1
+        };
+    },
+
+    render: function() {
+        
+        var quizzes = this.props.section.data.quizzes;
+        var components = this.createList({
+            ComponentClass: StudentSingleQuizView,
+            collection: quizzes,
+            buildProps: this._buildProps
+        });
 
         return (
             <div>
