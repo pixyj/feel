@@ -28,7 +28,7 @@ var drawArrowEntry = function(nodeAttrs, svg) {
     _.each(_.keys(attrs), function(key) {
         circle.setAttribute(key, attrs[key]);
     });
-    //console.log("Circle", attrs);
+    //console.info("Circle", attrs);
     //svg.append(circle);
 };
 
@@ -112,7 +112,7 @@ var drawNode = function(node, levelIndex, position, levelConceptCount,
     //And making aligning svg text is a pain
     var attrs = getForeignObjectAttrs(levelIndex, position, levelConceptCount, svgWidth, levelHeight);
     var f = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
-    console.log("Node", attrs, node, " at level ", levelIndex, " in position", position);
+    console.info("Node", attrs, node, " at level ", levelIndex, " in position", position);
 
 
     f = $(f).append(p).attr(attrs);
@@ -157,8 +157,8 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight, showProg
         maxHeight = _.max([maxHeight, height]);
         drawArrowEntry(nodeAttrs, svgAttrs.svg);
     }
-    console.log("Max height at level ", levelIndex, " is ", maxHeight);
-    console.log("-----------------------   End of level ", levelIndex,  "-------------------------------");
+    console.info("Max height at level ", levelIndex, " is ", maxHeight);
+    console.info("-----------------------   End of level ", levelIndex,  "-------------------------------");
 
     _.each(levelNodes, function(n) {
         n.p.css("height", maxHeight);
@@ -616,7 +616,7 @@ var drawAllEdges = function(graph, inputEdges, allNodes, allAlleys, svg) {
         drawnLevelGapTraffic[key] = 0;
     });
 
-    console.log(edges, edgesBetweenLevelsCount);
+    console.info(edges, edgesBetweenLevelsCount);
 
     console.info("Traffic levels. Where is Silk Board? ", totalLevelGapTraffic);
         
