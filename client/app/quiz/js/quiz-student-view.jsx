@@ -21,7 +21,8 @@ var ShortAnswerSubmitView = React.createClass({
                        onChange={this.updateGuess} 
                        className="quiz-student-short-answer-input"
                        value={this.state.guess || ""} 
-                       id={id} />
+                       id={id} 
+                       disabled={this.props.disabled} />
                 <label htmlFor={id}>Your answer</label>
             </div>
         );
@@ -79,16 +80,19 @@ var ChoiceSingleCheckView = React.createClass({
         var selectedClass = "quiz-student-choice-selected";
         var notSelectedClass = "quiz-student-choice-not-selected"
         var selected = this.state.isSelected ? selectedClass : notSelectedClass;
+        var enabled = this.props.disabled ? "" : "quiz-student-choice-enabled";
 
-        var classArray = ['quiz-student-choice', selected];
-        var classes = classArray.join(" ");
-
+        var classes = ['quiz-student-choice', selected, enabled].join(" ");
+        
         return (
             <div dangerouslySetInnerHTML={{__html: html}} className={classes} onClick={this.toggleSelection} />
         )
     },
 
     toggleSelection: function() {
+        if(this.props.disabled) {
+            return;
+        }
         this.setState({
             isSelected: !this.state.isSelected
         });
@@ -109,7 +113,11 @@ var MCQSubmitView = React.createClass({
         for(var i = 0; i < length; i++) {
             var choice = this.props.store.choices[i];
             var domId = "quiz-preview-checkbox-" + i;
-            var row = <ChoiceSingleCheckView choice={choice} key={domId} ref={domId}/>
+            var row = <ChoiceSingleCheckView 
+                            choice={choice} 
+                            key={domId} 
+                            ref={domId}
+                            disabled={this.props.disabled} />
             rows.push(row);
         }
         return (
@@ -169,42 +177,36 @@ var QuizAnswerSubmitView = React.createClass({
 
     render: function() {
         var answerSubmitView;
+        var result = this.state.result;
         
-        if(this.state.result) {
-            answerSubmitView = <div> </div>
+        if(this.props.store.quizType === constants.SHORT_ANSWER) {
+            answerSubmitView = <ShortAnswerSubmitView 
+                                    ref="answerSubmitView" 
+                                    store={this.props.store} 
+                                    disabled={result} />
         }
         else {
-            if(this.props.store.quizType === constants.SHORT_ANSWER) {
-                answerSubmitView = <ShortAnswerSubmitView ref="answerSubmitView" store={this.props.store}/>
-            }
-            else {
-                answerSubmitView = <MCQSubmitView  ref="answerSubmitView" store={this.props.store}/>
-            }
+            answerSubmitView = <MCQSubmitView  
+                                    ref="answerSubmitView" 
+                                    store={this.props.store} 
+                                    disabled={result} />
         }
 
 
         var feedback = this.getResultFeedback();
         var feedbackClass = "quiz-result-feedback ";
-        if(this.state.result) {
+        if(result) {
             feedbackClass += "quiz-correct-result-feedback quiz-status-transition"
-        }
-
-        var submitButton;
-        if(this.state.result === true) {
-            submitButton = <span></span>
-        }
-        else {
-            submitButton = <button  className="btn waves-effect waves-light btn-large" 
-                                    onClick={this.checkAnswer} >
-                                    Submit
-                            </button>
         }
 
         return (
 
             <div>
                 {answerSubmitView}
-                {submitButton}
+                <button  className="btn waves-effect waves-light btn-large" 
+                                                onClick={this.checkAnswer} disabled={result}>
+                                                Submit
+                                        </button>
                 <span className={feedbackClass}> {feedback} </span>
             </div>
 
@@ -392,8 +394,10 @@ var QuizSectionMixin = {
         return (
             <div className="card quiz-student-section">
                 <h5> {this.getHeading()} </h5>
-                <StudentQuizView section={this.props.section} attemptStore={this.props.attemptStore} />
-                <StudentQuizAttemptListComponent section={this.props.section} attemptStore={this.props.attemptStore} />
+                <StudentQuizView section={this.props.section} 
+                    attemptStore={this.props.attemptStore} />
+                <StudentQuizAttemptListComponent section={this.props.section} 
+                    attemptStore={this.props.attemptStore} />
             </div>
         );
     }
