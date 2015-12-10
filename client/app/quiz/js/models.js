@@ -166,6 +166,7 @@ var QuizAttemptStore = function(options) {
 
 QuizAttemptStore.prototype = {
 
+    //attemptNumber is set on the client. Should we move it to the server? #todo
     addAttempt: function(attempt) {
         console.log("Adding attempt: ", attempt);
 
@@ -183,9 +184,8 @@ QuizAttemptStore.prototype = {
         
         this._channel.trigger("add:attempt", attempt);
         
-        var model = new QuizAttemptModel(attempt);
-        model.save();
-
+        var model = this.attemptCollection.add(attempt);
+        return model.save();
     },
 
     getAttempt: function(quizId) {
@@ -201,6 +201,10 @@ QuizAttemptStore.prototype = {
 
     isAnswered: function(quizId) {
         return this.getAttempt(quizId).result === true;
+    },
+
+    isEmpty: function() {
+        return this.attemptCollection.length === 0;
     },
 
     getSectionAttemptStatuses: function(sectionId) {
@@ -235,6 +239,10 @@ QuizAttemptStore.prototype = {
 
     cleanup: function() {
         this.attemptCollection.off();
+        if(this._channel === this) {
+            this.off();
+        }
+        this.attempts = {}
     }
 };
 
