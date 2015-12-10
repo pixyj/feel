@@ -171,15 +171,9 @@ var MCQSubmitView = React.createClass({
 
 var QuizAnswerSubmitView = React.createClass({
 
-    getInitialState: function() {
-        return {
-            result: this.props.attemptStore.getAttempt(this.props.store.id).result
-        }
-    },
-
     render: function() {
         var answerSubmitView;
-        var result = this.state.result;
+        var result = this.props.result;
         
         if(this.props.store.quizType === constants.SHORT_ANSWER) {
             answerSubmitView = <ShortAnswerSubmitView 
@@ -220,16 +214,16 @@ var QuizAnswerSubmitView = React.createClass({
         
         var result = this.refs.answerSubmitView.checkAnswer();
 
-        this.setState({
-            result: result
-        });
-
         var attempt = _.extend({
             result: result,
             quizId: this.props.store.id
         }, this.refs.answerSubmitView.getCurrentGuess());
 
         this.props.attemptStore.addAttempt(attempt);
+
+        this.props.parent.setState({
+            result: result
+        });
 
     },
 
@@ -238,7 +232,7 @@ var QuizAnswerSubmitView = React.createClass({
             false: constants.WRONG_FEEDBACK,
             true: constants.CORRECT_FEEDBACK,
             null: ""
-        }[this.state.result];
+        }[this.props.result];
     }
 
 });
@@ -273,6 +267,50 @@ var QuizPreview = React.createClass({
         );  
     }
 
+});
+
+var StudentSingleQuizView = React.createClass({
+
+    getInitialState: function() {
+        var result = this.props.attemptStore.getAttempt(this.props.quiz.id).result;
+        console.log("Quiz: ", this.props.quiz.id, "Result: ", result);
+        return {
+            result: result
+        }
+    },
+
+
+    render: function() {
+
+        var submitStore = {};
+        // hack - getInitialState is called only once per component. 
+        //Since the same component is used to show different quizzes by the parent, 
+        //we have a problem where the state is not updated. Hence, this hack. 
+        //We should move the state to the parent. #todo
+        
+        var result = this.getInitialState().result;  
+        return (
+            <div>
+                <div className="student-quiz-container">
+                    <div className="student-quiz-number">
+                        <p>{this.props.number}.</p>
+                    </div>
+                    <div className="student-quiz-body">
+                        <QuizQuestionView 
+                            questionDisplay={this.props.quiz.questionDisplay} 
+                            ref="questionView" />
+                        <QuizAnswerSubmitView 
+                            store={this.props.quiz} 
+                            attemptStore={this.props.attemptStore}
+                            parent={this} 
+                            result={result} />
+                    </div>
+                    <div className="clearfix"> </div>
+                </div>
+                <hr className="student-quiz-end-line" />
+            </div>
+        );  
+    }
 
 });
 
@@ -332,31 +370,6 @@ var StudentQuizAttemptListComponent = React.createClass({
             </div>
         );
     }
-});
-
-
-var StudentSingleQuizView = React.createClass({
-
-    render: function() {
-
-        var submitStore = {};
-        return (
-            <div>
-                <div className="student-quiz-container">
-                    <div className="student-quiz-number">
-                        <p>{this.props.number}.</p>
-                    </div>
-                    <div className="student-quiz-body">
-                        <QuizQuestionView questionDisplay={this.props.quiz.questionDisplay} ref="questionView" />
-                        <QuizAnswerSubmitView store={this.props.quiz} attemptStore={this.props.attemptStore} />
-                    </div>
-                    <div className="clearfix"> </div>
-                </div>
-                <hr className="student-quiz-end-line" />
-            </div>
-        );  
-    }
-
 });
 
 
@@ -443,5 +456,6 @@ module.exports = {
     StudentQuizView: StudentQuizView,
     StudentPrereqQuizSection: StudentPrereqQuizSection,
     StudentQuizSection: StudentQuizSection,
-    StudentExitQuizSection: StudentExitQuizSection
+    StudentExitQuizSection: StudentExitQuizSection,
+    StudentSingleQuizView: StudentSingleQuizView
 }
