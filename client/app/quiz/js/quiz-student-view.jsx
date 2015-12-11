@@ -84,7 +84,7 @@ var ChoiceSingleCheckView = React.createClass({
         var selected = this.state.isSelected ? selectedClass : notSelectedClass;
         var enabled = this.props.disabled ? "" : "quiz-student-choice-enabled";
 
-        var classes = ['quiz-student-choice', selected, enabled].join(" ");
+        var classes = ['quiz-student-choice waves-effect', selected, enabled].join(" ");
         
         return (
             <div dangerouslySetInnerHTML={{__html: html}} className={classes} onClick={this.toggleSelection} />
