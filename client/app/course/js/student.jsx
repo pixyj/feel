@@ -11,10 +11,13 @@ var models = require("./models");
 var CreatorStore = models.CreatorStore;
 var StudentStore = models.StudentStore;
 var PretestModel = models.PretestModel;
+var StudentStates = models.StudentStates;
 
 var quizModels = require("./../../quiz/js/models");
 var QuizAttemptStore = quizModels.QuizAttemptStore;
 var QuizAttemptCollection = quizModels.QuizAttemptCollection;
+
+var StudentSingleQuizView = require("./../../quiz/js/quiz-student-view.jsx").StudentSingleQuizView;
 
 var connected = require("./../../conceptviz/js/connected");
 
@@ -28,13 +31,15 @@ var ProgressBar = require("top-progress-bar");
 
 var Store = function(options) {
     this.id = options.id;
+
     this._creator = new CreatorStore({
         id: this.id,
         setRoute: false
     });
     
     this._student = new StudentStore({
-        id: this.id
+        id: this.id,
+        channel: this
     });
 
     this._attempt = new QuizAttemptStore({
@@ -42,15 +47,14 @@ var Store = function(options) {
         channel: this
     });
 
-    this.initializeStoreAPIs(this._creator, this.creatorAPIs);
-    this.initializeStoreAPIs(this._student, this.studentAPIs);
-    this.initializeStoreAPIs(this._attempt, this.attemptAPIs);
-
     this._pretest = new PretestModel({
         id: this.id
     });
 
-
+    this._initializeStoreAPIs(this._creator, this.creatorAPIs);
+    this._initializeStoreAPIs(this._student, this.studentAPIs);
+    this._initializeStoreAPIs(this._attempt, this.attemptAPIs);
+    this._initializeStoreAPIs(this._pretest, this.pretestAPIs);
 };
 
 Store.prototype = {
@@ -75,14 +79,20 @@ Store.prototype = {
 
     studentAPIs: {
         'getSkillEstimationLevel': 'getSkillEstimationLevel',
-        'setSkillEstimationLevel': 'setSkillEstimationLevel'
+        'setSkillEstimationLevel': 'setSkillEstimationLevel',
+        'getState': 'getState',
+        'setState': 'setState'
     },
 
     attemptAPIs: {
         'addAttempt': 'addAttempt',
     },
 
-    initializeStoreAPIs: function(store, methodMap) {
+    pretestAPIs: {
+        'getConceptQuiz': 'getConceptQuiz'
+    },
+
+    _initializeStoreAPIs: function(store, methodMap) {
 
         var self = this;
         _.each(methodMap, function(storeMethod, myMethod) {
@@ -109,11 +119,16 @@ Store.prototype = {
         return graph;
     },
 
+    getAttemptStore: function() {
+        return this._attempt;
+    },
+
     fetchPretest: function() {
 
         var promise = $.Deferred();
         var self = this;
         this._pretest.fetch().then(function() {
+            self.initializePretest();
             promise.resolve({
                 quizzes: self._pretest.attributes,
                 attemptStore: self._attempt
@@ -123,32 +138,97 @@ Store.prototype = {
         return promise;
     },
 
+    initializePretest: function() {
+        var conceptsInLevels = this.getGraph().levels;
+        this._orderedConcepts = _.flatten(conceptsInLevels);
+
+        this._pretestState = {
+            startLearningAtConcept: null,
+            currentConceptIndex: 1,
+            hasAnsweredAllQuizzes: false,
+            previousAttemptResult: null
+        };
+
+        //#todo -> Change to this._channel.on
+        this.on("add:attempt", this._updatePretestState, this);
+    },
+
+    _updatePretestState: function(attempt) {
+        if(attempt.result) {
+            if(this._pretestState.currentConceptIndex === this._orderedConcepts.length - 1) {
+                this._pretestState.hasAnsweredAllQuizzes = true;
+                this.trigger("complete:pretest", this._pretestState);
+            }
+            else if(this._pretestState.previousAttemptResult === false) {
+                this._pretestState.startLearningAtConcept = this._orderedConcepts[this._pretest.currentConceptIndex];
+                this.trigger("complete:pretest", this._pretestState);
+            }
+            else {
+                this._pretestState.currentConceptIndex += 1;
+                this._pretestState.previousAttemptResult = true;
+            }
+        }
+        else {
+            if(this._pretestState.currentConceptIndex === 0) {
+                this._pretestState.startLearningAtConcept = this._orderedConcepts[0];
+                this.trigger("complete:pretest", this._pretestState);
+            }
+            else if(this._pretestState.previousAttemptResult === true) {
+                var currentConceptIndex = this._pretestState.currentConceptIndex;
+                var startLearningAtConceptIndex = currentConceptIndex;
+                this._pretestState.startLearningAtConcept = this._orderedConcepts[startLearningAtConceptIndex];
+                this.trigger("complete:pretest", this._pretestState);
+            }
+            else {
+                this._pretestState.currentConceptIndex -= 1;
+                this._pretestState.previousAttemptResult = false;
+            }
+        }
+    },
+
+    getPretestCompletionConcept: function() {
+        return this._pretest.startLearningAtConcept;
+    },
+
+    getNextPretestQuizAndHighlightConcept: function() {
+        var concept = this._orderedConcepts[this._pretestState.currentConceptIndex];
+        
+        quiz = this._pretest.getConceptQuiz(concept.id);
+        utils.assert(quiz, "/{0}/{1}/ does not have a PRETEST Quiz".format(
+            this.getCourseName(), concept.slug));
+
+        this.trigger("highlight:concept", concept);
+
+        return quiz;
+
+    },
+
     cleanup: function() {
         //todo
     }
 
 };
 
+_.extend(Store.prototype, Backbone.Events);
 Store.prototype.constructor = Store;
 
-
 /********************************************************************************
-*  COMPONENTS
+*  Components
 *
-*  
+*
 *********************************************************************************/
-
-
-/*----------------------------Estimation Components-----------------------------*/
 
 var StartLearningAtMixin = {
 
     render: function() {
-        var concept = this.getStartLearningAtConcept();
-        this._cachedConcept = concept;
+
+        var concept = this.props.concept || this.getStartLearningAtConcept();
+        this._url = this.props.store.getConceptURL(concept.slug);
+
         return (
             <div>
-                <h5>You can start learning at <i>{concept.name}</i></h5>
+                <h5>You can start learning at <a href={this._url}> {concept.name}</a>
+                </h5>
                 <button className="btn btn-large" 
                         onClick={this.routeToConcept}>
                         Start Learning! 
@@ -158,10 +238,12 @@ var StartLearningAtMixin = {
     },
 
     routeToConcept: function() {
-        var url = this.props.store.getConceptURL(this._cachedConcept.slug);
-        Backbone.history.navigate(url, {trigger: true});
+        Backbone.history.navigate(this._url, {trigger: true});
     }
 };
+
+var StartLearningAtComponent = React.createClass(StartLearningAtMixin);
+
 
 var CompletelyNewComponent = React.createClass({
 
@@ -169,6 +251,17 @@ var CompletelyNewComponent = React.createClass({
 
     getStartLearningAtConcept: function() {
         return this.props.store.getRootConcept();
+    }
+
+});
+
+
+var PretestCompletedComponent = React.createClass({
+    
+    mixins: [StartLearningAtMixin],
+
+    getStartLearningAtConcept: function() {
+        return this.props.store.getPretestCompletionConcept();
     }
 
 });
@@ -185,7 +278,7 @@ var QuizOrBrowseComponent = React.createClass({
 
         return (
             <div>
-                <h5>Awesome. You can take a short test so that you get started at the right level for you
+                <h5>You can take a short test to get started at the right concept for you
                         OR you can select any concept on the graph </h5> 
                 <button className="btn btn-large" onClick={this.startQuiz}> Start Quiz </button>
             </div>
@@ -199,9 +292,10 @@ var QuizOrBrowseComponent = React.createClass({
     }
 });
 
+
 /*----------------------------Estimation Configuration -----------------------------*/
 
-var STUDENT_SKILL_ESTIMATION_LEVELS = [
+var SELF_SKILL_ESTIMATION_LEVELS = [
     {
         value: 0,
         display: "I'm completely new",
@@ -236,93 +330,219 @@ var STUDENT_SKILL_ESTIMATION_LEVELS = [
     }
 ];
 
-/*------------------------Root Estimation Component -----------------------------*/
-
-var StudentSkillEstimationComponent = React.createClass({
-
-    getInitialState: function() {
-        return {
-            level: this.props.store.getSkillEstimationLevel()
-        };
-    },
+var SelfSkillEstimationComponent = React.createClass({
 
     getLevelComponentClass: function(level) {
         return STUDENT_SKILL_ESTIMATION_LEVELS[level].ComponentClass;
     },
 
     render: function() {
-
-        var radioGroup = "";
-        var levelComponent = "";
-        var heading = "";
-        if(this.state.level === null) {
-            heading = <h4>Which of these describes you best?</h4>
-            var rows = [];
-            var levels =  STUDENT_SKILL_ESTIMATION_LEVELS;
-            radioGroup = <RadioGroup items={levels} onChange={this.onSkillEstimated} parent={this}/>
-        }
-        else {
-            var props = STUDENT_SKILL_ESTIMATION_LEVELS[this.state.level].props;
-            props.store = this.props.store;
-            var ComponentClass = this.getLevelComponentClass(this.state.level);
-            levelComponent = <ComponentClass {...props} />
-        }
+        
+        var levels =  SELF_SKILL_ESTIMATION_LEVELS;
+        var radioGroup = <RadioGroup items={levels} onChange={this.onSkillEstimated} parent={this}/>
 
         return (
             <div>
-                {heading}
+                <h4>Which of these describes you best?</h4>
                 {radioGroup}
-                {levelComponent}
             </div>
         );
     },
 
     onSkillEstimated: function(level) {
         console.log("Skill estimated:");
-        this.setState({
-            level: level
-        });
         this.props.store.setSkillEstimationLevel(level);
+
+        var nextState = (level === 0) ? StudentStates.COMPLETELY_NEW : StudentStates.PRETEST;
+        this.props.store.setState(nextState);
     }
 });
 
+// else {
+//     var props = STUDENT_SKILL_ESTIMATION_LEVELS[this.state.level].props;
+//     props.store = this.props.store;
+//     var ComponentClass = this.getLevelComponentClass(this.state.level);
+//     levelComponent = <ComponentClass {...props} />
+// }
 var PretestComponent = React.createClass({
+
+    getInitialState: function() {
+        
+        return {
+            quiz: null,
+            showNextBtn: false,
+            isPretestCompleted: false
+        };
+
+    },
+
+    componentWillMount: function() {
+
+        var self = this;
+        ProgressBar.setProgress(0.2);
+        this.props.store.fetchPretest().then(function() {
+            ProgressBar.setProgress(1);
+            self.showNextPretestQuiz();
+        });
+
+        this.props.store.on("add:attempt", this.showNextBtn, this);
+        this.props.store.on("complete:pretest", this.updateIsPretestCompleted, this);
+    },
+
+    componentWillUnmount: function() {
+        
+        this.props.store.off("add:attempt", this.showNextBtn, this);
+        this.props.store.off("complete:pretest", this.updateIsPretestCompleted);
+
+    },
+
+    showNextBtn: function() {
+        this.setState({
+            showNextBtn: true
+        })
+    },
+
+    updateQuiz: function(quiz) {
+        this.setState({
+            quiz: quiz
+        });
+    },
+
+    updateIsPretestCompleted: function(pretestStateAttrs) {
+        this._pretestStateAttrs = pretestStateAttrs;
+
+        this.setState({
+            isPretestCompleted: true,
+            showNextBtn: false
+        });
+    },
+
+    ALL_QUESTIONS_ANSWERED_MESSAGE: "Awesome! Select any concept you'd  like to review and start learning.",
+
+    render: function() {
+
+        var startLearningAtComponent = "";
+        if(this.state.isPretestCompleted) {
+            if(this._pretestStateAttrs.hasAnsweredAllQuizzes) {
+                startLearningAtComponent = <h5>{this.ALL_QUESTIONS_ANSWERED_MESSAGE}</h5>
+            }
+            else {
+                startLearningAtComponent = <StartLearningAtComponent 
+                                            concept={this._pretestStateAttrs.startLearningAtConcept}
+                                            store={this.props.store} />
+            }
+        }
+        else {
+
+        };
+
+        var quizComponent = "";
+        if(this.state.quiz !== null) {
+            quizComponent = <StudentSingleQuizView 
+                                quiz={this.state.quiz} 
+                                attemptStore={this.props.store.getAttemptStore()} />
+
+        }
+        var nextBtn = ""; 
+        if(this.state.showNextBtn) {
+            nextBtn = <button className="btn" onClick={this.showNextPretestQuiz}>Next</button>
+        }
+        return (
+            <div>
+                {quizComponent}
+                {nextBtn}
+                {startLearningAtComponent}
+            </div>
+        );
+    },
+
+    showNextPretestQuiz: function() {
+        var quiz = this.props.store.getNextPretestQuizAndHighlightConcept();
+
+        this.setState({
+            showNextBtn: false,
+            quiz: quiz
+        });
+    }
+});
+
+var DashboardComponent = React.createClass({
 
     render: function() {
         return (
-            <h4> Are you ready </h4>
+            <h4>This is your dashboard </h4>
         );
     }
+
 });
 
-/*------------------------------------PAGE--------------------------------------*/
+/********************************************************************************
+*  Student States -> Component map
+*
+*  
+*********************************************************************************/
+var SS = StudentStates;
+
+var StudentStateComponents = function() {
+
+    var componentsByStateName = {
+        NEW_VISITOR: SelfSkillEstimationComponent,
+        COMPLETELY_NEW: CompletelyNewComponent,
+        PRETEST: PretestComponent,
+        DASHBOARD: DashboardComponent
+    };
+
+    var componentsByStateCode = {};
+    _.each(componentsByStateName, function(component, name) {
+        componentsByStateCode[StudentStates[name]] = component;
+    });
+
+    return componentsByStateCode;
+}();
 
 var PageComponent = React.createClass({
+
+    /**
+    * getInitialState is also used internally to update the state.
+    */
+    getInitialState: function() {
+        return {
+            state: this.props.store.getState()
+        }
+    },
 
     componentDidMount: function() {
         this.renderGraph();
     },
 
+    componentWillMount: function() {
+        this.props.store.on("change:state", this.updateState, this);
+        this.props.store.on("highlight:concept", this.highlightConcept, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.store.off("change:state", this.updateState);
+        this.props.store.off("highlight:concept", this.highlightConcept);
+    },
+
+    updateState: function() {
+        this.setState(this.getInitialState());
+    },
+
     render: function() {
 
-        var leftComponent = "";
-        if(false) {
-            leftComponent = <StudentSkillEstimationComponent parent={this} store={this.props.store} />
-        }
-        else {
-            leftComponent = <PretestComponent store={this.props.store} />
-        }
+        var StateComponentClass = StudentStateComponents[this.state.state];
+        var stateComponent = <StateComponentClass 
+                                store={this.props.store} />
 
         return (
             <div>
                 <h3> Welcome to {this.props.store.getCourseName()}  </h3>
                 <div className="row"> 
-                    <div className="col-xs-5 col-md-6">
-                        {leftComponent}
+                    <div className="col-xs-5 col-md-6" ref="graphContainer">
                     </div>
-                    <div    className="col-xs-7 col-md-6" 
-                            ref="graphContainer" 
-                            parent={this} >
+                    <div className="col-xs-7 col-md-6">
+                        {stateComponent}
                     </div>
                 </div>
             </div>
@@ -338,7 +558,12 @@ var PageComponent = React.createClass({
         graphContainer.append(this.graphView.$el);
         this.graphView.render(this.props.store.getGraph());
         return this;
+    },
+
+    highlightConcept: function(concept) {
+        this.graphView.highlightNode(concept.id);
     }
+
 });
 
 /********************************************************************************

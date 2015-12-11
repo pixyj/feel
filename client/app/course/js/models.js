@@ -118,7 +118,11 @@ var PretestModel = Backbone.Model.extend({
 
     url: function() {
         return "/api/v1/courses/{0}/pretest/".format(this.attributes.id);
-    }
+    },
+
+    getConceptQuiz: function(conceptId) {
+        return this.attributes[conceptId];
+    },
 
 });
 
@@ -362,6 +366,8 @@ var StudentStates = {
     PRETEST: 2,
 
     DASHBOARD: 3
+
+
 };
 
 var StudentStore = function(options) {
@@ -371,7 +377,7 @@ var StudentStore = function(options) {
     this._progress = new ProgressModel({
         id: options.id
     });
-    
+
     if(this.getState() === null) {
         this.setState(StudentStates.NEW_VISITOR);
     }

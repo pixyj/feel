@@ -752,14 +752,20 @@ var GraphView = Backbone.View.extend({
         return this;
     },
 
-    setActiveNode: function(id) {
-        if(this.activeNode) {
-            this.activeNode.el.removeClass("concept-box-active");
-            this.activeNode.el.parent().removeClass("concept-box-active");
-        }
+    highlightNode: function(id) {
+        this.tonedownActiveNode();
         this.activeNode = this.allNodes[id];
         this.activeNode.el.addClass("concept-box-active");
         this.activeNode.el.parent().addClass("concept-box-active");
+        return this;
+    },
+
+    tonedownActiveNode: function() {
+        if(this.activeNode) {
+            this.activeNode.el.removeClass("concept-box-active");
+            this.activeNode.el.parent().removeClass("concept-box-active");
+            this.activeNode = null;
+        }
         return this;
     }
 
