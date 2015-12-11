@@ -6,21 +6,17 @@
     margin-bottom: 1rem;
 }
 
+.radio-item:hover {
+    color: #4A148C;
+}
+
 .radio-box {
     border-radius: 50%;
     border: 1px solid #9e9e9e;
     height: 100%;
 }
 
-
-
 .radio-box-selected {
     background: #9e9e9e;
-    transition: 0.28s ease;
-    -webkit-transition: 0.28s ease;
-    -moz-transition: 0.28s ease;
-    -o-transition: 0.28s ease;
-    -ms-transition: 0.28s ease;
+    transition: background 0.4s ease-out;
 }
-
-

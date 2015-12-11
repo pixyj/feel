@@ -336,14 +336,21 @@ var SelfSkillEstimationComponent = React.createClass({
         return STUDENT_SKILL_ESTIMATION_LEVELS[level].ComponentClass;
     },
 
+    HEADING: "Which of these describes you best",
+
     render: function() {
         
         var levels =  SELF_SKILL_ESTIMATION_LEVELS;
-        var radioGroup = <RadioGroup items={levels} onChange={this.onSkillEstimated} parent={this}/>
+        var hideOnSelection = true;
+        var radioGroup = <RadioGroup 
+                            heading={this.HEADING}
+                            items={levels} 
+                            onChange={this.onSkillEstimated} 
+                            parent={this} 
+                            hideOnSelection={hideOnSelection} />
 
         return (
             <div>
-                <h4>Which of these describes you best?</h4>
                 {radioGroup}
             </div>
         );
