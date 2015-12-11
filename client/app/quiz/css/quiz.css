@@ -131,6 +131,7 @@ input[type=range]::-webkit-slider-thumb {
     padding-top: .2rem;
     padding-bottom: 0.2rem;
     margin-bottom: 1rem;
+    display: block;
 }
 
 .quiz-student-choice-enabled {
