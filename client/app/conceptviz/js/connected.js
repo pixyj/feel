@@ -6,6 +6,7 @@ var Backbone = require("backbone");
 
 var app = {
     levelGap: 80,
+    LevelZeroGap: 20,
     ns: 'http://www.w3.org/2000/svg',
     NO_JUMP_STRAIGHT: 1,
     NO_JUMP_CRISS_CROSS: 2,
@@ -218,16 +219,6 @@ var drawLevelNodes = function(level, levelIndex, svgAttrs, levelHeight, showProg
         }
         alleys.push(rightAlleyAttrs);
     }
-
-    _.each(alleys, function(a) {
-        var circleAttrs = {
-            cx: (a.x_start + a.x_end) / 2,
-            cy: (a.y_start + a.y_end) / 2,
-            r: 5,
-            fill: "red"
-        };
-        //drawCircle(circleAttrs, svgAttrs.svg);
-    });
 
     return {
         levelNodes: levelNodes,
@@ -656,7 +647,7 @@ var drawAllNodes = function(levels, svgAttrs, showProgress) {
     //As of now I'm trying to minimize usage of global variable by making a local copy 
     //and using the local variable everywhere else in this function, at least. 
     var levelGap = app.levelGap;
-    var cumulativeLevelHeight = levelGap;
+    var cumulativeLevelHeight = app.LevelZeroGap;
 
     var allNodes = {};
     var allAlleys = [];
