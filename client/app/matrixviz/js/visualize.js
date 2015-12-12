@@ -623,6 +623,8 @@ var MatrixShapeOptionsView = Backbone.View.extend({
 
 var InputOptionsView = Backbone.View.extend({
 
+    el: "<div class='row'>",
+
     events: {
         "click button": "onVisualizeClicked"
     },
@@ -639,8 +641,7 @@ var InputOptionsView = Backbone.View.extend({
 
     render: function() {
 
-        var row = $("<div class='row'> </div>");
-        this.$el.append(row);
+        var row = this.$el;
 
         var speedAndShapeColumn = $("<div class='col-xs-12 col-md-8'> </div>");
         var speedAndShapeContainer = $("<div class='row'>");
@@ -730,10 +731,12 @@ var ContainerView = Backbone.View.extend({
                 context: this
             }
         });
-        this.inputOptionsView.render();
-
         this.visualizationEl = $("<div>");
         this.$el.append(this.inputOptionsView.$el).append(this.visualizationEl);
+        this.inputOptionsView.render();
+
+        
+        
         return this;
     },
 

@@ -207,7 +207,7 @@ var VisualizationSectionComponent = React.createClass({
 
     componentDidMount: function() {
         var view = matrixMultiply.render();
-        this.refs.content.appendChild(view.$el[0]);
+        $(this.refs.content.getDOMNode()).append(view.$el);
         view.render();
     },
 
