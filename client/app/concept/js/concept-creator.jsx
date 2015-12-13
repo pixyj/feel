@@ -139,7 +139,7 @@ Store.prototype = {
         }
         var id = this.model.attributes.id;
         var fragment = Backbone.history.getFragment();
-        var fragmentNew = "{0}/{1}/".format(fragment, id);
+        var fragmentNew = "{0}{1}/".format(fragment, id);
         Backbone.history.navigate(fragmentNew, {trigger: false});
         this.isRouteSet = true;
     }
@@ -354,17 +354,28 @@ var PageComponent = React.createClass({
         var componentProps = {
             store: app.store
         };
-        var components = this.getComponentList(sections, CREATOR_SECTION_COMPONENTS_BY_TYPE, componentProps) 
+        var components = this.getComponentList(sections, CREATOR_SECTION_COMPONENTS_BY_TYPE, componentProps);
+
+        var preview;
+        var publish;
+        if(this.props.store.getId() === null) {
+            preview = "";
+            publish = "";
+        }
+        else {
+            preview = <PreviewComponent store={this.props.store} />
+            publish = <PublishComponent store={this.props.store} />
+        }
 
         return (
             <div>
-                <ConceptNameSectionComponent store={app.store} />
+                <ConceptNameSectionComponent store={this.props.store} />
                 {components}
                 <AddSectionComponent parent={this} />
 
-                <PreviewComponent store={app.store} />
-
-                <PublishComponent store={app.store} />
+                {preview}
+                {publish}
+                
 
                 <div className="end-of-page">
                 </div>

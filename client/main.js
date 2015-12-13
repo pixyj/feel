@@ -33,7 +33,7 @@ var Router = Backbone.Router.extend({
     },
     
     routes: {
-        "creator/concept": "createConcept",
+        "creator/concept/": "createConcept",
         "creator/concept/:id/": "editConcept",
         "creator/course/": "createCourse",
         "creator/course/:id/": "editCourse",
