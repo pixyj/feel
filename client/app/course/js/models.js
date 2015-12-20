@@ -210,6 +210,7 @@ CreatorStore.prototype = {
         var self = this;
 
         var onSaved = function() {
+            self.dag.addNode(model.toJSON());
             self.trigger("add:concept", concept, self);
         }
         if(model.isNew()) {
