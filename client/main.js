@@ -35,18 +35,18 @@ var Router = Backbone.Router.extend({
     },
     
     routes: {
-        "creator/concept/": "createConcept",
-        "creator/concept/:id/": "editConcept",
-        "creator/course/": "createCourse",
-        "creator/course/:id/": "editCourse",
-        "creator/quiz": "createQuiz",
-        "creator/quiz/:id": "editQuiz",
+        "creator/concept(/)": "createConcept",
+        "creator/concept/:id(/)": "editConcept",
+        "creator/course(/)": "createCourse",
+        "creator/course(/):id/": "editCourse",
+        "creator/quiz(/)": "createQuiz",
+        "creator/quiz/:id(/)": "editQuiz",
         "concept/:id/": "previewConcept",
-        ":id/": "learnCourse",
-        ":courseSlug/:conceptSlug/": "learnCourseConcept",
+        ":id(/)": "learnCourse",
+        ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
         "": "matrixviz",
-        "login": "gotoLogin",
-        "matrixviz": "matrixviz",
+        "login(/)": "gotoLogin",
+        "matrixviz(/)": "matrixviz",
         "*path": "notFound"
     },
 
@@ -174,7 +174,7 @@ var Router = Backbone.Router.extend({
         }
 
         if(callback) {
-            callback.apply(this, args);
+            callback.apply(this, arguments);
         }
     },
 
