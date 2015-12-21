@@ -194,7 +194,7 @@ var init = function() {
     var userModel = new UserModel();
     userModel.fetch().then(function() {
         var router = new Router({userModel: userModel});
-        Backbone.history.start({pushState: false});
+        Backbone.history.start({pushState: true});
         console.log(userModel.toJSON());
 
     });

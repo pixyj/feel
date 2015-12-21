@@ -280,7 +280,7 @@ var PreviewComponent = React.createClass({
 
     render: function() {
 
-        var studentURL = "#/concept/" + this.props.store.getId() + "/";
+        var studentURL = "/concept/" + this.props.store.getId() + "/";
         
         return (
             <div className="row" id="concept-creator-preview-section">

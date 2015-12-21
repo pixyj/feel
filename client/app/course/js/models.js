@@ -30,7 +30,7 @@ var CourseModel = StreamSaveModel.extend({
 
     studentURL: function() {
         utils.assert(this.attributes.slug, "Slug not found");
-        return "#/{0}/".format(this.attributes.slug);
+        return "/{0}/".format(this.attributes.slug);
     },
 
     creatorURL: function() {
@@ -49,7 +49,7 @@ var CourseModel = StreamSaveModel.extend({
 var ConceptModel = Backbone.Model.extend({
 
     parse: function(attrs) {
-        attrs.url = "/#creator/concept/{0}/".format(attrs.id);
+        attrs.url = "/creator/concept/{0}/".format(attrs.id);
         return attrs;
     }
 });

@@ -1,4 +1,4 @@
-var katex = require("../../../katex/katex.min");
+var katex = require("./../../vendor/katex/katex.min");
 window.katex = katex;
 
 var commonmark = window.commonmark;
