@@ -1,8 +1,12 @@
 from django.http import HttpResponse
 from django.middleware import csrf
 from django.shortcuts import render
-from django.utils import timezone
 
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+
+from django.utils.decorators import method_decorator
+from django.utils import timezone
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,16 +19,25 @@ class UserDetail(APIView):
         data = {}
         user = request.user
         if request.user.is_anonymous():
-            data = {"is_anonymous": True}
+            data = {"is_anonymous": True, "username": ""}
             csrftoken = csrf.get_token(request)
             session = request.session
             if session.session_key is None:
                 session.create()
         else:
-            data = {"is_anonymous": False, "id": user.id}
+            data = {"is_anonymous": False, "id": user.id, "username": user.username}
         return Response(data)
 
-  
+
+class LogoutView(APIView):
+
+    @method_decorator(login_required)
+    def put(self, request):
+        logout(request)
+        return Response({"is_anonymous": True, "username": ""})
+
+
+
 def get_user_and_user_key(request):
     if request.user.is_authenticated():
         return (request.user, str(request.user.id))
