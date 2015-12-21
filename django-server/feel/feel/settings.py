@@ -37,6 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 
     #'raven.contrib.django.raven_compat',
 
@@ -115,7 +121,29 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+####################################################################################
+#All Auth Stuff
+# http://django-allauth.readthedocs.org/en/latest/installation.html
 
+
+AUTHENTICATION_BACKENDS = (
+    
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+    
+)
+
+SITE_ID = 2
+
+SOCIALACCOUNT_PROVIDERS = \
+    { 'google':
+        { 'SCOPE': ['profile', 'email'],
+          'AUTH_PARAMS': { 'access_type': 'online' } }}
+
+####################################################################################
 #DJANGO-REST-FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -127,6 +155,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+####################################################################################
 import raven
 
 RAVEN_CONFIG = {
@@ -136,8 +165,7 @@ RAVEN_CONFIG = {
     #'release': raven.fetch_git_sha(os.path.dirname(__file__)),
 }
 
-
-
+####################################################################################
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'redis_cache.RedisCache',
