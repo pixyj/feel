@@ -161,9 +161,15 @@ var renderPreview = function(options, element) {
 
 var unmount = function() {
 
-    app.pageStore.cleanup();
-    app.attemptStore.cleanup();
-    ReactDOM.unmountComponentAtNode(app.element);
+    //unmount only if pageStore is fetched. 
+    //If page is not found, don't do anything. 
+    if(app.pageStore) {
+        app.pageStore.cleanup();
+        app.pageStore = null;
+        app.attemptStore.cleanup();
+        app.attemptStore = null;
+        ReactDOM.unmountComponentAtNode(app.element);
+    }
 };
 
 module.exports = {

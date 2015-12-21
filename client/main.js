@@ -30,6 +30,8 @@ var Router = Backbone.Router.extend({
         this.currentComponent = null;
         this.userModel = options.userModel;
         ProgressBar.init();
+
+        Backbone.on("app:notFound", this.notFound, this);
     },
     
     routes: {

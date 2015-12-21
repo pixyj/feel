@@ -606,7 +606,10 @@ var render = function(options, element) {
 
 var unmount = function() {
     app.store.cleanup();
-    app.pageView.remove();
+    if(app.pageView) {
+        app.pageView.remove();
+        app.pageView = null;
+    }
 };
 
 module.exports = {

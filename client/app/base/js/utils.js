@@ -61,19 +61,12 @@ var getUniqueId = function() {
 
 var inherit = function(child, parent) {
 
-    var childKeys = Object.keys(child);
-
-    var hashedChildKeys = {};
-    _.each(childKeys, function(key) {
-        hashedChildKeys[key] = true;
-    });
-
     var parentKeys = Object.keys(parent);
 
     var length = parentKeys.length;
     for(var i = 0; i < length; i++) {
         var key = parentKeys[i];
-        if( !hashedChildKeys[key] ) {
+        if( !child.hasOwnProperty(key) ) {
             child[key] = parent[key];
         }
     }

@@ -1,8 +1,12 @@
 var _ = require("underscore");
 var Backbone = require("backbone");
 
-var StreamSaveModel = require("models").StreamSaveModel;
+
 var utils = require("utils");
+
+var base = require("models");
+var StreamSaveModel = base.StreamSaveModel;
+var NotFoundMixin = base.NotFoundMixin;
 
 var DAG = require("./../../conceptviz/js/DAG").DAG;
 
@@ -45,6 +49,8 @@ var CourseModel = StreamSaveModel.extend({
         return url;
     }
 });
+
+utils.inherit(CourseModel.prototype, NotFoundMixin);
 
 var ConceptModel = Backbone.Model.extend({
 

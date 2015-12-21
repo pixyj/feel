@@ -3,8 +3,9 @@ var Backbone = require("backbone");
 
 var utils = require("utils");
 
-var StreamSaveModel = require("models").StreamSaveModel;
-
+var base = require("models");
+var StreamSaveModel = base.StreamSaveModel;
+var NotFoundMixin = base.NotFoundMixin;
 
 var ConceptModel = StreamSaveModel.extend({
 
@@ -24,6 +25,7 @@ var ConceptModel = StreamSaveModel.extend({
     }
 
 });
+utils.inherit(ConceptModel.prototype, NotFoundMixin);
 
 var StudentConceptPageModel = Backbone.Model.extend({
 
@@ -32,6 +34,7 @@ var StudentConceptPageModel = Backbone.Model.extend({
     }
 
 });
+utils.inherit(StudentConceptPageModel.prototype, NotFoundMixin);
 
 var StudentCourseConceptPageModel = Backbone.Model.extend({
 
@@ -42,6 +45,7 @@ var StudentCourseConceptPageModel = Backbone.Model.extend({
     }
 
 });
+utils.inherit(StudentCourseConceptPageModel.prototype, NotFoundMixin);
 
 module.exports = {
     ConceptModel: ConceptModel,
