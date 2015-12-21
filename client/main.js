@@ -21,6 +21,8 @@ var Course = require("./app/course/js/api");
 
 var ProgressBar = require("top-progress-bar");
 
+var UserStatus = require("./app/user/js/user-status.jsx");
+
 require("csrf");
 
 
@@ -38,10 +40,10 @@ var Router = Backbone.Router.extend({
         "creator/concept(/)": "createConcept",
         "creator/concept/:id(/)": "editConcept",
         "creator/course(/)": "createCourse",
-        "creator/course(/):id/": "editCourse",
+        "creator/course/:id(/)": "editCourse",
         "creator/quiz(/)": "createQuiz",
         "creator/quiz/:id(/)": "editQuiz",
-        "concept/:id/": "previewConcept",
+        "concept/:id(/)": "previewConcept",
         ":id(/)": "learnCourse",
         ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
         "": "matrixviz",
@@ -174,7 +176,7 @@ var Router = Backbone.Router.extend({
         }
 
         if(callback) {
-            callback.apply(this, arguments);
+            callback.apply(this, args);
         }
     },
 
@@ -195,6 +197,7 @@ var init = function() {
 
     var userModel = new UserModel();
     userModel.fetch().then(function() {
+        UserStatus.render(userModel, document.getElementById("user-status"));
         var router = new Router({userModel: userModel});
         Backbone.history.start({pushState: true});
         console.log(userModel.toJSON());

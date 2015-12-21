@@ -21,12 +21,70 @@
         <link rel="stylesheet" type="text/css" href="/app/quiz/css/quiz.css">
         
         <link rel="stylesheet" type="text/css" href="/app/concept/css/concept.css">
+
+        <style type="text/css">
+        #left {
+            float: left;
+            width: 25%;
+        }
+        #search-bar {
+            float: left;
+            width: 50%;
+            padding-right: 5%;
+        }
+        #user-status {
+            float: left;
+            width: 25%;
+            cursor: pointer;
+        }
+        #top-navbar {
+            background: #fefefe;
+            position: relative;
+        }
+        .username-or-login-btn {
+            text-align: center;
+            font-size: 2rem;
+            line-height: 60px;
+        }
+        #logout {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 25%;
+            background: #AEAEAE;
+            height: 60px;
+            line-height: 60px;
+            font-size: 1.2rem;
+            text-align: center;
+            z-index: 4;
+        }
+        #logout-cancel {
+            z-index: 3;
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+        </style>
         
     </head>
 
     <body>       
         <div id="top-progress-bar" class="progress">
             <div class="determinate">
+            </div>
+        </div>
+        <div id="top-navbar">
+            <div id="left">
+            .
+            </div>
+            <div id="search-bar">
+                <input type="text" placeholder="Search" />
+            </div>
+            <div id="user-status">
+            </div>
+            <div class="clearfix">
             </div>
         </div>
         <div id="page-full">
@@ -38,6 +96,8 @@
         <script type="text/javascript" src="/dist/bundle.js"> </script>
 
         <script type="text/javascript" src="/app/vendor/materialize/js/bin/materialize.js"> </script>
+
+        <script type="text/javascript" src="/app/vendor/ace/ace.js" async></script>
         
     </body>
 

@@ -14,6 +14,11 @@ var UserModel = Backbone.Model.extend({
 
     isAuthenticated: function() {
         return !this.attributes.isAnonymous;
+    },
+
+    logout: function() {
+        this.url = "/api/v1/user/logout/";
+        return this.save();
     }
 });
 
