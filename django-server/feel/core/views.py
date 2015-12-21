@@ -1,5 +1,8 @@
+from django.http import HttpResponse
+from django.middleware import csrf
 from django.shortcuts import render
 from django.utils import timezone
+
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,9 +16,12 @@ class UserDetail(APIView):
         user = request.user
         if request.user.is_anonymous():
             data = {"is_anonymous": True}
+            csrftoken = csrf.get_token(request)
+            session = request.session
+            if session.session_key is None:
+                session.create()
         else:
             data = {"is_anonymous": False, "id": user.id}
-
         return Response(data)
 
   
