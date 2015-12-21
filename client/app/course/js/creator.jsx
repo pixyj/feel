@@ -475,6 +475,8 @@ var PageView = Backbone.View.extend({
         this.store = options.store;
 
         this.listenTo(this.store, "add:dependency", this.refreshGraphView);
+
+        this.reactNodes = [];
     },
 
     render: function() {
@@ -520,34 +522,34 @@ var PageView = Backbone.View.extend({
         return this;
     },
 
+    addComponent: function(ComponentClass, element) {
+        ReactDOM.render(<ComponentClass store={this.options.store} />, element);
+        this.reactNodes.push(element);
+    },
+
     //todo -> unmount components
     addCourseName: function() {
-        ReactDOM.render(<CourseNameComponent store={this.options.store} />, 
-            this.courseNameContainer[0]); 
+        this.addComponent(CourseNameComponent, this.courseNameContainer[0]);
         return this;
     },
 
     addCoursePublish: function() {
-        ReactDOM.render(<CoursePublishComponent store={this.options.store} />, 
-            this.coursePublishContainer[0]);
+        this.addComponent(CoursePublishComponent, this.coursePublishContainer[0]);
         return this;
     },
 
     addConceptName: function() {
-        ReactDOM.render(<ConceptNameComponent store={this.options.store} />, 
-            this.conceptNameContainer[0]); 
+        this.addComponent(ConceptNameComponent, this.conceptNameContainer[0]);
         return this;
     },
 
     addConceptList: function() {
-        ReactDOM.render(<ConceptListComponent store={this.options.store} />, 
-            this.listContainer[0]);
+        this.addComponent(ConceptListComponent, this.listContainer[0]);
         return this;
     },
 
     addConceptSelectDependency: function() {
-        ReactDOM.render(<ConceptDependencyComponent store={this.options.store} />, 
-            this.dependencyContainer[0]);
+        this.addComponent(ConceptDependencyComponent, this.dependencyContainer[0]);
         return this;
     },
 
@@ -562,11 +564,14 @@ var PageView = Backbone.View.extend({
 
     refreshGraphView: function(graph) {
         this.graphView.refresh(graph);
+    },
+
+    remove: function() {
+        _.each(this.reactNodes, function(node) {
+            ReactDOM.unmountComponentAtNode(node);
+        });
+        this.graphView.remove();
     }
-
-    // remove: function() {
-
-    // }
 });
 
 /********************************************************************************
@@ -600,7 +605,8 @@ var render = function(options, element) {
 }
 
 var unmount = function() {
-
+    app.store.cleanup();
+    app.pageView.remove();
 };
 
 module.exports = {
