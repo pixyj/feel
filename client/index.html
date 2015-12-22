@@ -81,19 +81,32 @@
             z-index: 3;
             background-color: rgba(255,255,255,0.97);
         }
+        .overlay:after {
+            content: "X";
+            position: fixed;
+            right: 10px;
+            top: -5px;
+            cursor: pointer;
+            z-index: 3;
+            font-weight: bolder;
+            font-size: 2rem;
+        }
 
         #login-form {
             position: fixed;
-            top: 5%;
+            top: 6%;
             left: 0%;
             width: 100%;
             display: block;
             z-index: 4;
             text-align: center;
+/*            border: 1px solid black;*/
         }
         @media(min-width: 992px) {
-            left: 25%;
-            width: 50%;
+            #login-form {
+                left: 25%;
+                width: 50%;
+            }
         }
         </style>
         
