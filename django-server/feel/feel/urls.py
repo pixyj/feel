@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'', include('quiz.urls')),
     url(r'', include('concept.urls')),
     url(r'', include('course.urls')),
+    url(r'', include('codequiz.urls')),
     url(r'', include('core.urls')),
-       
 ]
 
