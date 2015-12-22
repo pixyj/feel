@@ -77,7 +77,14 @@ var assert = function(condition, message) {
     if(!condition) {
         console.error(message);
     }
-}
+};
+
+var addTrailingSlash = function(fragment) {
+    if(fragment.slice(fragment.length-1) === "/") {
+        return fragment;
+    }
+    return fragment + "/";
+};
 
 module.exports = {
     getUTCDate: getUTCDate,
@@ -85,60 +92,8 @@ module.exports = {
     getHumanizedTimeDiff: getHumanizedTimeDiff,
     getUniqueId: getUniqueId,
     inherit: inherit,
-    assert: assert
+    assert: assert,
+    addTrailingSlash: addTrailingSlash
 };
 
 window.utils = module.exports;
-
-/*
-var vectorReverse = function(v) {
-    var r = _.map(v, function(i) {
-        return -i;
-    });
-    return r;
-};
-
-var vectorAdd = function(a, b) {
-    var lengthA = a.length;
-    var lengthB = b.length;
-
-    if(lengthA !== lengthB) {
-        throw new Error("Vector lengths not equal. vectorAdd cannot be performed for ", a, b)
-    }
-
-    var result = new Array(lengthA);
-    for(var i = 0; i < lengthA; i++) {
-        result[i] = a[i] + b[i];
-    }
-    return result;
-}
-
-var vectorSubtract = function(a, b) {
-    return vectorAdd(a, vectorReverse(b));
-}
-
-var vectorDotProduct = function(a, b) {
-
-    var lengthA = a.length;
-    var lengthB = b.length;
-
-    if(lengthA !== lengthB) {
-        throw new Error("Vector lengths not equal. vectorDotProduct cannot be performed", a, b);
-    }
-
-    var result = 0;
-    for(var i = 0; i < lengthA; i++) {
-        result += a[i]*b[i]
-    }
-    return result;
-};  
-
-var vectorMultiplyByScalar = function(v, scale) {
-    var length = v.length;
-    var result = new Array(length);
-    for(var i = 0 ; i < length; i++) {
-        result[i] = v[i] * scale;
-    }
-    return result;
-};
-*/
