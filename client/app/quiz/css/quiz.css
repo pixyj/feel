@@ -9,6 +9,8 @@ body {
 
 textarea {
     resize: none;
+    background: white;
+    overflow: scroll;
 }
 
 #page-container {

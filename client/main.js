@@ -23,6 +23,8 @@ var ProgressBar = require("top-progress-bar");
 
 var UserStatus = require("./app/user/js/user-status.jsx");
 
+var CodeQuiz = require("./app/code-quiz/js/api");
+
 require("csrf");
 
 
@@ -43,6 +45,8 @@ var Router = Backbone.Router.extend({
         "creator/course/:id(/)": "editCourse",
         "creator/quiz(/)": "createQuiz",
         "creator/quiz/:id(/)": "editQuiz",
+        "creator/code-quiz(/)": "createCodeQuiz",
+        "creator/code-quiz/:id(/)": "editCodeQuiz",
         "concept/:id(/)": "previewConcept",
         ":id(/)": "learnCourse",
         ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
@@ -97,6 +101,24 @@ var Router = Backbone.Router.extend({
             conceptSlug: conceptSlug
         }, this.pageElement);
         this.currentComponent = Concept.Student;
+    },
+
+    createCodeQuiz: function() {
+        this._showCodeQuiz({
+            id: null
+        });
+    },
+
+    editCodeQuiz: function(id) {
+        this._showCodeQuiz({
+            id: id
+        });
+    },
+
+    _showCodeQuiz: function(options) {
+        this.resetPage();
+        CodeQuiz.Creator.render(options, this.pageElement);
+        this.currentComponent = CodeQuiz.Creator;
     },
     
     matrixviz: function() {

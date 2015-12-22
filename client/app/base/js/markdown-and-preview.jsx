@@ -101,8 +101,11 @@ var MarkdownDisplayComponentMixin = {
 
 var MarkdownDisplayComponent = React.createClass(MarkdownDisplayComponentMixin);
 
+var MarkdownAndPreviewComponent = React.createClass(MarkdownAndPreviewAttrs);
+
 module.exports = {
     MarkdownAndPreviewAttrs: MarkdownAndPreviewAttrs,
+    MarkdownAndPreviewComponent: MarkdownAndPreviewComponent,
     MarkdownDisplayComponentMixin: MarkdownDisplayComponentMixin,
     MarkdownDisplayComponent: MarkdownDisplayComponent
 };
