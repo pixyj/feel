@@ -40,7 +40,7 @@ var UserStatusComponent = React.createClass({
             username = <div id="login-btn" 
                             className="username-or-login-btn"
                             onClick={this.showLoginForm}>
-                            Login
+                            <btn className="btn">Login</btn>
                         </div>
         }
         var logout = "";

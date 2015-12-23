@@ -48,6 +48,7 @@ var Router = Backbone.Router.extend({
         "creator/code-quiz(/)": "createCodeQuiz",
         "creator/code-quiz/:id(/)": "editCodeQuiz",
         "concept/:id(/)": "previewConcept",
+        "code-quiz/:id(/)": "attemptCodeQuiz",
         ":id(/)": "learnCourse",
         ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
         "": "matrixviz",
@@ -119,6 +120,14 @@ var Router = Backbone.Router.extend({
         this.resetPage();
         CodeQuiz.Creator.render(options, this.pageElement);
         this.currentComponent = CodeQuiz.Creator;
+    },
+
+    attemptCodeQuiz: function(id) {
+        this.resetPage();
+        CodeQuiz.Student.render({
+            id: id
+        }, this.pageElement);
+        this.currentComponent = CodeQuiz.Student;
     },
     
     matrixviz: function() {

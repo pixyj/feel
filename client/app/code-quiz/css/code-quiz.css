@@ -3,6 +3,12 @@
 }
 
 #code-editor {
-    height: 200px;
-    width: 50%;
+    height: 500px;
+    width: 80%;
+    font-size: 1rem;
+}
+
+#code-quiz-submit-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }

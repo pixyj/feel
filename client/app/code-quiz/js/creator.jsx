@@ -12,25 +12,7 @@ var mdAndMathToHtml = require("md").mdAndMathToHtml;
 var MarkdownAndPreviewMixin = require("markdown-and-preview.jsx").MarkdownAndPreviewAttrs;
 var ListMixin = require("list-mixin.jsx").ListMixin;
 var CodeView = require("code-view").CodeView;
-var CodeQuizModel = StreamSaveModel.extend({
-
-    defaults: {
-        problemStatement: "",
-        bootstrapCode: "",
-        timeLimit: 5000,
-        memoryLimit: 262144,
-        testCases: []
-    },
-
-    BASE_URL: "/api/v1/codequizzes/",
-
-    url: function() {
-        if(this.isNew()) {
-            return this.BASE_URL;
-        }
-        return "{0}{1}/".format(this.BASE_URL, this.attributes.id);
-    }
-});
+var CodeQuizModel = require("./models").CodeQuizModel;
 
 var Store = function(options) {
     this.options = options;
