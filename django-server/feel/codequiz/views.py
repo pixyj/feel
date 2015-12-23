@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from core.views import get_user_and_user_key, get_audit_attrs
 
-from .models import CodeQuiz
+from .models import CodeQuiz, CodeQuizAttempt
 from .serializers import CodeQuizSerializer
 
 class CodeQuizPostView(APIView):
@@ -71,3 +71,19 @@ class CodeQuizGetAndPutView(APIView):
 
         serializer.update(codequiz, attrs)
         return Response(request.data)
+
+
+class CodeQuizAttemptView(APIView):
+
+    def post(self, request, pk):
+        codequiz = get_object_or_404(CodeQuiz, id=pk)
+        user, user_key = get_user_and_user_key(request)
+        attrs = {
+            'code': request.data['code'],
+            'user': user,
+            'user_key': user_key,
+            'codequiz': codequiz
+        }
+        attempt = CodeQuizAttempt.objects.create(**attrs)
+        attempt.submit()
+        return Response({"result": attempt.result, 'id': attempt.id}, status.HTTP_201_CREATED)
