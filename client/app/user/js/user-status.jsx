@@ -128,7 +128,9 @@ Store.prototype = {
     },
 
     logout: function() {
-        return this._user.logout();
+        return this._user.logout().then(function() {
+            Backbone.history.navigate("/", {trigger: true});
+        });
     }
 };
 
