@@ -65,6 +65,7 @@ class CodeQuizAttempt(UUIDModel):
         http_response = session.post(SUBMIT_URL, data=payload)
         response = http_response.json()
         self.response = response
+        outputs = None
         if http_response.status_code == 200:
             self.state = 2
             outputs = [output.strip() for output in response['result']['stdout']]
@@ -73,7 +74,7 @@ class CodeQuizAttempt(UUIDModel):
         else:
             self.state = 3
         self.save()
-        return response
+        return outputs
 
     def __str__(self):
         if self.user is None:

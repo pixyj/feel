@@ -85,5 +85,10 @@ class CodeQuizAttemptView(APIView):
             'codequiz': codequiz
         }
         attempt = CodeQuizAttempt.objects.create(**attrs)
-        attempt.submit()
-        return Response({"result": attempt.result, 'id': attempt.id}, status.HTTP_201_CREATED)
+        outputs = attempt.submit()
+        json_response = {
+            'result': attempt.result,
+            'id': attempt.id,
+            'outputs': outputs
+        }
+        return Response(json_response, status.HTTP_201_CREATED)
