@@ -28,8 +28,14 @@ var CodeQuizModel = StreamSaveModel.extend({
 
 var CodeQuizAttemptModel = Backbone.Model.extend({
 
+    defaults: {
+        code: "",
+        result: null,
+        outputs: null
+    },
+
     url: function() {
-        return "/api/v1/codequizattempts/{0}/".format(this.attributes.codequizId)
+        return "/api/v1/codequizattempts/{0}/".format(this.attributes.codequizId);
     }
 });
 

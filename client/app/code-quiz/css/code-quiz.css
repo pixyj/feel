@@ -12,3 +12,9 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
+
+.quiz-feedback {
+    line-height: 56px;
+    height: 56px;
+    font-size: 3rem;
+}

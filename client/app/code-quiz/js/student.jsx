@@ -11,87 +11,148 @@ var mdAndMathToHtml = require("md").mdAndMathToHtml;
 var MarkdownDisplayComponent = require("markdown-and-preview.jsx").MarkdownDisplayComponent;
 var ListMixin = require("list-mixin.jsx").ListMixin;
 var CodeView = require("code-view").CodeView;
+var LoadingCircle = require("loading-circle.jsx").LoadingCircle;
+
 var CodeQuizModel = require("./models").CodeQuizModel;
 var CodeQuizAttemptModel = require("./models").CodeQuizAttemptModel;
 
+var Constants = require("app-constants");
+
 var Store = function(options) {
     this.options = options;
-    this._model = new CodeQuizModel({
+    this._codequiz = new CodeQuizModel({
         id: options.id
     });
     this._attempt = new CodeQuizAttemptModel({
         codequizId: options.id
-    })
+    });
+    this._evaluationState = "NOT_EVALUATED";
 };
 
 Store.prototype = {
 
     getProblemStatement: function() {
-        return this._model.attributes.problemStatement;
+        return this._codequiz.attributes.problemStatement;
     },
 
     getBootstrapCode: function() {
-        return this._model.attributes.bootstrapCode;
+        return this._codequiz.attributes.bootstrapCode;
     },
 
     cleanup: function() {
         this.off();
-        this._model.off();
+        this._codequiz.off();
+        this._attempt.off();
     },
 
     fetch: function() {
-        return this._model.fetch();
+        return this._codequiz.fetch();
     },
 
     setCode: function(code) {
         this._attempt.attributes.code = code;
+        if(this._evaluationState != "NOT_EVALUATED") {
+            this._evaluationState = "NOT_EVALUATED";
+            this.trigger("change:evaluationState", this._evaluationState);
+        }
     },
 
     submit: function() {
-        return this._attempt.save()
+        this._evaluationState = "EVALUATING";
+
+        var self = this;
+        return this._attempt.save().then(function() {
+            self._evaluationState = "EVALUATED";
+            self._attempt.attributes.id = null; //hack
+        });
     },
 
     toJSON: function() {
-        return this._model.toJSON();
+        var codequizAttrs = this._codequiz.toJSON();
+        var attemptAttrs = this._attempt.toJSON();
+        var attrs = _.extend(attemptAttrs, codequizAttrs);
+        attrs.evaluationState = this._evaluationState;
+        return attrs;
     }
 };
 _.extend(Store.prototype, Backbone.Events);
 Store.prototype.constructor = Store;
 
+var ResultDetailsComponent = React.createClass({
+
+    //todo
+    render: function() {
+        return (
+            <div> 
+                
+            </div>
+        );
+    }
+});
+
 var CodeSubmitComponent = React.createClass({
 
     getInitialState: function() {
-        return {
-            evaluationState: "NOT_EVALUATED"
-        };
+        return this.props.store.toJSON()
+    },
+
+    componentWillMount: function() {
+        this.props.store.on("change:evaluationState", this.updateEvaluationState, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.store.off("change:evaluationState", this.updateEvaluationState);
+    }, 
+
+    updateEvaluationState: function(evaluationState) {
+        this.setState({
+            evaluationState: evaluationState
+        });
     },
 
     render: function() {
 
-        var disabled = !this.state.evaluationState === "NOT_EVALUATED";
+        var enabled = this.state.evaluationState === "NOT_EVALUATED";
+        var result = "";
+        var resultDetails = "";
+        if(this.state.evaluationState === "EVALUATED") {
+
+            result = this.state.result === true ? Constants.QUIZ_FEEDBACK.CORRECT : Constants.QUIZ_FEEDBACK.WRONG;
+            resultDetails = <ResultDetailsComponent {...this.state} />
+        }
+
+        var loading = "";
+        if(this.state.evaluationState === "EVALUATING") {
+            loading = <LoadingCircle />
+        }
         return (
             <div id="code-quiz-submit-container">
-                <button className="btn btn-large waves-effect" 
-                        onClick={this.submit} 
-                        disabled={disabled}>
-                        Submit
-                </button>
+                <div className="row">
+                    <div className="col-xs-3">
+                        <button className="btn btn-large waves-effect" 
+                                onClick={this.submit} 
+                                disabled={!enabled}>
+                                Submit
+                        </button>
+                    </div>
+                    <div className="col-xs-9 quiz-feedback">
+                        {loading}
+                        {result}
+                    </div>
+                </div>
+                {resultDetails}
             </div>
         );
     },
 
     submit: function() {
-        var code = this.props.parent.getCode();
-        this.props.store.setCode(code);
         this.setState({
             evaluationState: "EVALUATING"
         });
 
         var self = this;
         this.props.store.submit().then(function() {
-            self.setState({
-                evaluationState: "EVALUATED"
-            });
+            self.setState(self.getInitialState());
         });
     }
 });
@@ -112,19 +173,26 @@ var PageComponent = React.createClass({
     componentDidMount: function() {
         var codeView = new CodeView({
             code: this.props.store.getBootstrapCode(),
-            listenToInputChange: false
+            listenToInputChange: true
         });
         $("#code-container").append(codeView.$el);
         codeView.render();
         this.codeView = codeView;
+
+        this.codeView.on("change", this.updateCode, this);
     },
 
     componentWillUnmount: function() {
+        this.codeView.off("change", this.updateCode);
         this.codeView.remove();
     },
 
     getCode: function() {
         return this.codeView.val()
+    },
+
+    updateCode: function(code) {
+        this.props.store.setCode(code);
     }
 });
 

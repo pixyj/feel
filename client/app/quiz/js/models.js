@@ -4,14 +4,15 @@ var Backbone = require("backbone");
 var md = require("md");
 var utils = require("utils");
 
+var Constants = require("app-constants");
 
 var StreamSaveModel = require("models").StreamSaveModel;
 
 var constants = {
     SHORT_ANSWER: 1,
     MCQ: 2,
-    CORRECT_FEEDBACK: "☺",
-    WRONG_FEEDBACK: "☹",
+    CORRECT_FEEDBACK: Constants.QUIZ_FEEDBACK.CORRECT,
+    WRONG_FEEDBACK: Constants.QUIZ_FEEDBACK.WRONG,
     QUESTION_PLACEHOLDER: "Enter the Question in Markdown",
 
     NOT_ATTEMPTED: 0,
