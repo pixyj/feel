@@ -51,7 +51,7 @@ var Router = Backbone.Router.extend({
         "code-quiz/:id(/)": "attemptCodeQuiz",
         ":id(/)": "learnCourse",
         ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
-        "": "matrixviz",
+        "(/)": "home",
         "login(/)": "gotoLogin",
         "matrixviz(/)": "matrixviz",
         "*path": "notFound"
