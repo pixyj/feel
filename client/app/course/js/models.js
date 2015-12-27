@@ -6,7 +6,7 @@ var utils = require("utils");
 
 var base = require("models");
 var StreamSaveModel = base.StreamSaveModel;
-var NotFoundMixin = base.NotFoundMixin;
+var NotFoundMixin = require("not-found-mixin").NotFoundMixin;
 
 var DAG = require("./../../conceptviz/js/DAG").DAG;
 
@@ -50,7 +50,7 @@ var CourseModel = StreamSaveModel.extend({
     }
 });
 
-utils.inherit(CourseModel.prototype, NotFoundMixin);
+//utils.inherit(CourseModel.prototype, NotFoundMixin);
 
 var ConceptModel = Backbone.Model.extend({
 

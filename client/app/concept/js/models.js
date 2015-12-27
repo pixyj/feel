@@ -5,7 +5,7 @@ var utils = require("utils");
 
 var base = require("models");
 var StreamSaveModel = base.StreamSaveModel;
-var NotFoundMixin = base.NotFoundMixin;
+var NotFoundMixin = require("not-found-mixin").NotFoundMixin;
 
 var ConceptModel = StreamSaveModel.extend({
 
@@ -25,7 +25,7 @@ var ConceptModel = StreamSaveModel.extend({
     }
 
 });
-utils.inherit(ConceptModel.prototype, NotFoundMixin);
+//utils.inherit(ConceptModel.prototype, NotFoundMixin);
 
 var StudentConceptPageModel = Backbone.Model.extend({
 
