@@ -25,9 +25,9 @@ class CodeQuiz(TimestampedModel, UUIDModel):
         return [test_case['output'].strip() for test_case in self.test_cases]
 
     
-    def __str__(self):
-        return "{} created by {}".format(self.problem_statement, 
-            self.created_by)
+    # def __str__(self):
+    #     return "{} created by {}".format(self.problem_statement, 
+    #         self.created_by)
 
 
 EVALUATION_STATE = (

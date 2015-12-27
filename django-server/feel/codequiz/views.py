@@ -20,7 +20,7 @@ from core.views import get_user_and_user_key, get_audit_attrs
 from .models import CodeQuiz, CodeQuizAttempt
 from .serializers import CodeQuizSerializer
 
-class CodeQuizPostView(APIView):
+class CodeQuizListAndPostView(APIView):
 
     @method_decorator(login_required)
     def post(self, request, format=None):
@@ -40,6 +40,22 @@ class CodeQuizPostView(APIView):
         response_data['id'] = codequiz.id
         return Response(response_data, status.HTTP_201_CREATED)
 
+    @method_decorator(login_required)
+    def get(self, request):
+        user, _ = get_user_and_user_key(request)
+        codequizzes = CodeQuiz.objects.filter(created_by=user)
+
+        #Um, django-rest-framework is unable to serialize for me. 
+        #todo -> debug later
+        data = [ 
+            {
+                "problem_statement": cq.problem_statement, 
+                "id": str(cq.id),
+                "created_at": cq.created_at
+            }
+            for cq in codequizzes
+        ]
+        return Response(data)
 
 
 class CodeQuizGetAndPutView(APIView):

@@ -16,3 +16,5 @@ class CodeQuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = CodeQuiz
         fields = ('id', 'problem_statement', 'bootstrap_code', 'time_limit', 'memory_limit', )
+
+
