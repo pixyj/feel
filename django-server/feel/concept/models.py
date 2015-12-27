@@ -91,19 +91,21 @@ class ConceptSection(TimestampedModel, UUIDModel):
     COURSE_PRETEST = 0
     PREREQ_QUIZ = 1
     QUIZ = 2
-    EXIT_QUIZ = 3
-    MARKDOWN = 4
-    VIDEO = 5
-    VISUALIZATION = 6
+    CODE_QUIZ = 3
+    EXIT_QUIZ = 4
+    MARKDOWN = 5
+    VIDEO = 6
+    VISUALIZATION = 7
 
     SECTION_TYPES = (
         (COURSE_PRETEST, 0),
         (PREREQ_QUIZ, 1),
         (QUIZ, 2),
-        (EXIT_QUIZ, 3),
-        (MARKDOWN, 4),
-        (VIDEO, 5),
-        (VISUALIZATION, 6)
+        (CODE_QUIZ, 3),
+        (EXIT_QUIZ, 4),
+        (MARKDOWN, 5),
+        (VIDEO, 6),
+        (VISUALIZATION, 7)
     )
 
     concept = models.ForeignKey(Concept)
