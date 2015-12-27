@@ -51,6 +51,11 @@ class CodeQuizAttempt(UUIDModel):
     response = JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def outputs(self):
+        return [output.strip() for output in self.response['result']['stdout']]
+    
+
     def submit(self):
         assert(self.state in [0, 3])
         payload = {
@@ -68,7 +73,7 @@ class CodeQuizAttempt(UUIDModel):
         outputs = None
         if http_response.status_code == 200:
             self.state = 2
-            outputs = [output.strip() for output in response['result']['stdout']]
+            outputs = self.outputs
             if self.codequiz.output_list == outputs:
                 self.result = True
         else:

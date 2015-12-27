@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db import IntegrityError
+from django.db.utils import IntegrityError
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
@@ -94,14 +94,21 @@ class CodeQuizAttemptView(APIView):
     def post(self, request, pk):
         codequiz = get_object_or_404(CodeQuiz, id=pk)
         user, user_key = get_user_and_user_key(request)
+        code = request.data['code']
         attrs = {
-            'code': request.data['code'],
+            'code': code,
             'user': user,
             'user_key': user_key,
             'codequiz': codequiz
         }
-        attempt = CodeQuizAttempt.objects.create(**attrs)
-        outputs = attempt.submit()
+        try:
+            attempt = CodeQuizAttempt.objects.create(**attrs)
+            outputs = attempt.submit()
+        except IntegrityError:
+            attempt = CodeQuizAttempt.objects.filter(user=user,
+                codequiz=codequiz, code=code).first()
+            outputs = attempt.outputs
+        
         json_response = {
             'result': attempt.result,
             'id': attempt.id,
