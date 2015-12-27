@@ -29,6 +29,8 @@ var RemoveItemComponent = require("remove-item-component.jsx").RemoveItemCompone
 
 var RemoveItemMixin = require("remove-item-component.jsx").RemoveItemMixin;
 
+var CodeQuizSectionComponent = require("./../../code-quiz/js/creator.jsx").ConceptSectionComponent;
+
 var SectionRemoveItemComponent = React.createClass({
     
     mixins: [RemoveItemMixin],
@@ -387,17 +389,15 @@ module.exports = {
 
     MarkdownComponentMixin: MarkdownComponentMixin,
     MarkdownSectionComponent: MarkdownSectionComponent,
-
+    
     VideoSectionComponent: VideoSectionComponent,
-
     VisualizationSectionComponent: VisualizationSectionComponent,
-
     QuizSectionComponent: QuizSectionComponent,
+    CodeQuizSectionComponent: CodeQuizSectionComponent,
+
     StudentPrereqQuizSection: StudentQuizComponents.StudentPrereqQuizSection,
     StudentQuizSection: StudentQuizComponents.StudentQuizSection,
     StudentExitQuizSection: StudentQuizComponents.StudentExitQuizSection,
-    
     StudentMarkdownSectionComponent: StudentMarkdownSectionComponent,
-    StudentVideoSectionComponent: StudentVideoSectionComponent
-
+    StudentVideoSectionComponent: StudentVideoSectionComponent,
 }

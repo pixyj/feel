@@ -34,8 +34,18 @@ var SECTION_TYPES_AND_COMPONENTS = {
         }
     },
 
-    EXIT_QUIZ: {
+    CODE_QUIZ: {
         type: 3,
+        studentComponent: null,
+        creatorComponent: C.CodeQuizSectionComponent,
+        name: "Code Quiz",
+        blankState: {
+            quizzes: []
+        }
+    },
+
+    EXIT_QUIZ: {
+        type: 4,
         studentComponent: C.StudentExitQuizSection,
         creatorComponent: C.QuizSectionComponent,
         name: "Exit Quiz",
@@ -45,7 +55,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     },
     
     MARKDOWN: {
-        type: 4,
+        type: 5,
         studentComponent: C.StudentMarkdownSectionComponent,
         creatorComponent: C.MarkdownSectionComponent,
         name: "Markdown Section",
@@ -56,7 +66,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     },
 
     VIDEO: {
-        type: 5,
+        type: 6,
         studentComponent: C.StudentVideoSectionComponent,
         creatorComponent: C.VideoSectionComponent,
         name: "Video",
@@ -66,7 +76,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
     },
     
     VISUALIZATION: {
-        type: 6,
+        type: 7,
         studentComponent: C.VisualizationSectionComponent,
         creatorComponent: C.VisualizationSectionComponent,
         name: "Visualization",

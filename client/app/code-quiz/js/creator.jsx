@@ -14,6 +14,9 @@ var ListMixin = require("list-mixin.jsx").ListMixin;
 var CodeView = require("code-view").CodeView;
 var CodeQuizModel = require("./models").CodeQuizModel;
 
+var FetchFilterAndSelectMixin = require("fetch-filter-and-select.jsx").FetchFilterAndSelectMixin;
+var Ago = require("ago.jsx").Ago;
+
 var Store = function(options) {
     this.options = options;
     this._model = new CodeQuizModel({
@@ -205,6 +208,100 @@ var ProblemStatement = React.createClass({
 
 });
 
+var FilterMe = [
+    {
+        value: "one"
+    },
+    {
+        value: "two"
+    },
+    {
+        value: "three"
+    }
+];
+
+var ItemComponent = React.createClass({
+
+    render: function() {
+        var problemStatement = mdAndMathToHtml(this.props.problemStatement);
+        return (
+            <div>
+                <div dangerouslySetInnerHTML={{__html: problemStatement}} />
+                <Ago action="Created" 
+                     time={this.props.createdAt} /> 
+            </div>
+        );
+    }
+});
+
+var FetchFilterAndSelectComponent = React.createClass({
+
+    mixins: [FetchFilterAndSelectMixin],
+
+    filterCollection: function(value) {
+        return _.filter(this.collection, function(item) {
+            return item.problemStatement.indexOf(value) !== -1;
+        });
+    },
+
+    select: function(item) {
+        this.props.parent.select(item);
+    }
+});
+
+var ConceptSectionComponent = React.createClass({
+
+    mixins: [ListMixin],
+
+    getInitialState: function() {
+        var attrs = this._getSectionData();
+        attrs.showSelectItem = false;
+        attrs.showCreateItem = false;
+        return attrs;
+    },
+
+    select: function(item) {
+        var data = this._getSectionData();
+        data.quizzes.push({
+            id: item.id,
+            problemStatement: item.problemStatement,
+            createdAt: item.createdAt
+        });
+
+        this.setState({
+            quizzes: data.quizzes
+        });
+        this.props.store.saveSectionDataAt(data, this.props.position);
+    },
+
+    _getSectionData: function() {
+        return _.clone(this.props.store.getSectionAt(this.props.position).data);
+    },
+
+    _buildSelectedQuizProps: function(item, index) {
+        return item;
+    },
+
+    render: function() {
+        var listComponents = this.createList({
+            ComponentClass: ItemComponent,
+            collection: this.state.quizzes,
+            buildProps: this._buildSelectedQuizProps
+        });
+
+        return (
+            <div className="row concept-creator-section card">
+                <h5> Selected Code-Quizzes </h5>
+                {listComponents}
+                <FetchFilterAndSelectComponent 
+                    url="/api/v1/codequizzes/"
+                    ListItemComponent={ItemComponent} 
+                    parent={this} />
+            </div>
+        );
+    }
+});
+
 var PageComponent = React.createClass({
 
     componentWillMount: function() {
@@ -254,6 +351,7 @@ var app = {
 
 };
 
+
 var render = function(options, element) {
 
     options.updateURL = true;
@@ -273,5 +371,6 @@ var unmount = function() {
 
 module.exports = {
     render: render,
-    unmount: unmount
+    unmount: unmount,
+    ConceptSectionComponent: ConceptSectionComponent
 }

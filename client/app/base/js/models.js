@@ -40,10 +40,12 @@ var StreamSaveModel = Backbone.Model.extend({
     save: function() {
 
         if(this.isSaved()) {
+            console.info("saving", this._lastRequestId);
             this._lastRequestId += 1;
             this._saveImpl();
         }
         else {
+            console.info("inc requestId, don't save now");
             this._lastRequestId += 1;
         }
         this._updateIsSaved();
@@ -55,14 +57,15 @@ var StreamSaveModel = Backbone.Model.extend({
         var requestId = this._lastRequestId;  
         var self = this; 
         var callback = function() {
+            console.info("Saved: ", requestId);
             self._lastSavedRequestId = requestId;
             self._updateIsSaved();
             if(!self.isSaved()) {
+                console.info("saving ", self._lastRequestId);
                 self._saveImpl();
             }
         };
-        
-        Backbone.Model.prototype.save.apply(this, arguments).then(callback).fail(callback);
+        Backbone.Model.prototype.save.apply(this, arguments).then(callback);
     },
 
     isSaved: function() {
@@ -86,22 +89,7 @@ var StreamSaveModel = Backbone.Model.extend({
     }
 });
 
-var NotFoundMixin = {
-
-    initialize: function() {
-        this.on("error", this.onError, this);
-    },
-
-    onError: function(self, response) {
-        if(response && response.status && response.status === 404) {
-            Backbone.trigger("app:notFound");
-        }
-    },
-};
-
-
 module.exports = {
     UserModel: UserModel,
-    StreamSaveModel: StreamSaveModel,
-    NotFoundMixin: NotFoundMixin
+    StreamSaveModel: StreamSaveModel
 };
