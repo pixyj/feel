@@ -1,16 +1,22 @@
 var _ = require("underscore");
 var Backbone = require("backbone");
 
+var utils = require("utils");
+
 var CodeView = Backbone.View.extend({
 
     initialize: function(options) {
         this.options = options;
-        var div = $("<div>").attr("id", "code-editor");
+        this.domId = "code-editor-{0}".format(utils.getUniqueId());
+        var div = $("<div>").attr({
+            "id": this.domId,
+            "class": "code-editor"
+        });
         this.$el.append(div);
     },
 
     render: function() {
-        this.editor = ace.edit("code-editor");
+        this.editor = ace.edit(this.domId);
         this.editor.setTheme("ace/theme/monokai");
         this.editor.getSession().setMode("ace/mode/python");
         this.editor.setValue(this.options.code || "");

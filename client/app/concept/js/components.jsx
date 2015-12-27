@@ -30,6 +30,7 @@ var RemoveItemComponent = require("remove-item-component.jsx").RemoveItemCompone
 var RemoveItemMixin = require("remove-item-component.jsx").RemoveItemMixin;
 
 var CodeQuizSectionComponent = require("./../../code-quiz/js/creator.jsx").ConceptSectionComponent;
+var StudentCodeQuizSectionComponent = require("./../../code-quiz/js/student.jsx").StudentCodeQuizSectionComponent;
 
 var SectionRemoveItemComponent = React.createClass({
     
@@ -400,4 +401,5 @@ module.exports = {
     StudentExitQuizSection: StudentQuizComponents.StudentExitQuizSection,
     StudentMarkdownSectionComponent: StudentMarkdownSectionComponent,
     StudentVideoSectionComponent: StudentVideoSectionComponent,
-}
+    StudentCodeQuizSectionComponent: StudentCodeQuizSectionComponent
+};

@@ -159,15 +159,8 @@ var CodeSubmitComponent = React.createClass({
 
 var PageComponent = React.createClass({
 
-    render: function() {
-        var problemStatementDisplay = mdAndMathToHtml(this.props.store.getProblemStatement());
-        return (
-            <div>
-                <MarkdownDisplayComponent display={problemStatementDisplay} />
-                <div id="code-container"></div>
-                <CodeSubmitComponent store={this.props.store} parent={this} />
-            </div>
-        );
+    componentWillMount: function() {
+        this._codeContainerId = "code-container-{0}".format(utils.getUniqueId());
     },
 
     componentDidMount: function() {
@@ -175,7 +168,7 @@ var PageComponent = React.createClass({
             code: this.props.store.getBootstrapCode(),
             listenToInputChange: true
         });
-        $("#code-container").append(codeView.$el);
+        $("#"+this._codeContainerId).append(codeView.$el);
         codeView.render();
         this.codeView = codeView;
 
@@ -193,6 +186,84 @@ var PageComponent = React.createClass({
 
     updateCode: function(code) {
         this.props.store.setCode(code);
+    },
+
+    render: function() {
+        var problemStatementDisplay = mdAndMathToHtml(this.props.store.getProblemStatement());
+        return (
+            <div>
+                <MarkdownDisplayComponent display={problemStatementDisplay} />
+                <div id={this._codeContainerId}></div>
+                <CodeSubmitComponent store={this.props.store} parent={this} />
+            </div>
+        );
+    }
+});
+
+var ConceptSectionItemComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            isDataFetched: false,
+            store: null
+        }
+    },
+
+    componentWillMount: function() {
+        this.store = new Store({
+            id: this.props.id
+        });
+
+        var self = this;
+        this.store.fetch().then(function() {
+            self.setState({
+                store: self.store,
+                isDataFetched: true
+            });
+        });
+    },
+
+    componentWillUnmount: function() {
+        this.store.cleanup();
+    },
+
+    render: function() {
+        var content;
+        if(!this.state.isDataFetched) {
+            content = <LoadingCircle />
+        }
+        else {
+            content = <PageComponent store={this.store} />
+        }
+        return (
+            <div>
+                {content}
+            </div>
+        );
+    }
+});
+
+var ConceptSectionComponent = React.createClass({
+
+    mixins: [ListMixin],
+
+    _buildProps: function(item) {
+        return {
+            id: item.id
+        };
+    },
+
+    render: function() {
+
+        var list = this.createList({
+            ComponentClass: ConceptSectionItemComponent,
+            collection: this.props.section.data.quizzes,
+            buildProps: this._buildProps
+        });
+
+        return (
+            <div> {list} </div>
+        );
     }
 });
 
@@ -216,5 +287,6 @@ var unmount = function() {
 
 module.exports = {
     render: render,
-    unmount: unmount
+    unmount: unmount,
+    StudentCodeQuizSectionComponent: ConceptSectionComponent
 };

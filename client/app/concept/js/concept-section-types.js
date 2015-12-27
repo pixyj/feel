@@ -36,7 +36,7 @@ var SECTION_TYPES_AND_COMPONENTS = {
 
     CODE_QUIZ: {
         type: 3,
-        studentComponent: null,
+        studentComponent: C.StudentCodeQuizSectionComponent,
         creatorComponent: C.CodeQuizSectionComponent,
         name: "Code Quiz",
         blankState: {

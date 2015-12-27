@@ -2,9 +2,9 @@
     height: 150px;
 }
 
-#code-editor {
-    height: 500px;
-    width: 80%;
+.code-editor {
+    height: 200px;
+    width: 100%;
     font-size: 1rem;
 }
 
