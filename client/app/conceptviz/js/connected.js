@@ -1,8 +1,8 @@
 "use strict";
 
-var $ = require("jquery");
-var _ = require("underscore");
-var Backbone = require("backbone");
+var $ = require("lib").$;
+var _ = require("lib")._;
+var Backbone = require("lib").Backbone;
 
 var app = {
     levelGap: 80,

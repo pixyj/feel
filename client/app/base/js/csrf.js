@@ -1,4 +1,4 @@
-var $ = require("jquery");
+var $ = require("lib").$;
 
 var csrfSafeMethod = function(method) {
     // these HTTP methods do not require CSRF protection

@@ -1,4 +1,4 @@
-var _ = require("underscore");
+var _ = require("lib")._;
 
 var DAG = function(options) {
     this.nodes = options.nodes || {};

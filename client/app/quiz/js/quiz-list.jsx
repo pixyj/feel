@@ -1,9 +1,9 @@
-var React = require("react");
-var ReactDOM = require("react-dom");
+var React = require("lib").React;
+var ReactDOM = require("lib").ReactDOM;
 
 
-var $ = require("jquery"); //used for modal stuff
-var _ = require("underscore");
+var $ = require("lib").$; //used for modal stuff
+var _ = require("lib")._;
 
 var utils = require("utils");
 

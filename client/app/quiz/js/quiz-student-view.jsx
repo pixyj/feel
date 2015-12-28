@@ -1,4 +1,4 @@
-var React = require("react");
+var React = require("lib").React;
 
 var models = require("./models");
 var constants = models.constants;

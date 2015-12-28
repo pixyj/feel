@@ -1,5 +1,5 @@
-var matrixMultiply = require("./visualize.js");
+// var matrixMultiply = require("./visualize.js");
 
-module.exports = {
-    matrixMultiply: matrixMultiply
-};
+// module.exports = {
+//     matrixMultiply: matrixMultiply
+// };

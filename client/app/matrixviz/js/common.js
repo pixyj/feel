@@ -1,9 +1,9 @@
 var S = require("sylvester");
 
-var $ = require("jquery");
-var _ = require("underscore");
+var $ = require("lib").$;
+var _ = require("lib")._;
 
-var Backbone = require("backbone");
+var Backbone = require("lib").Backbone;
 
 var mapPointsInPlace = function(points, fnArray) {
     var length = points.length;

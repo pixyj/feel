@@ -1,5 +1,5 @@
-var React = require("react");
-var ReactDOM = require("react-dom");
+var React = require("lib").React;
+var ReactDOM = require("lib").ReactDOM;
 
 var RemoveItemMixin = {
 

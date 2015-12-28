@@ -1,5 +1,5 @@
-var _ = require("underscore");
-var React = require("react");
+var _ = require("lib")._;
+var React = require("lib").React;
 
 var TagSingleViewMixin = {
 

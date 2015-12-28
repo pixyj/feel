@@ -1,6 +1,6 @@
-var React = require("react");
-var ReactDOM = require("react-dom");
-var _ = require("underscore");
+var React = require("lib").React;
+var ReactDOM = require("lib").ReactDOM;
+var _ = require("lib")._;
 
 var md = require("md");
 

@@ -1,8 +1,8 @@
-var React = require("react");
+var React = require("lib").React;
 var ListMixin = require("./list-mixin.jsx").ListMixin;
 var LoadingCircle = require("./loading-circle.jsx").LoadingCircle;
 
-var Backbone = require("backbone");
+var Backbone = require("lib").Backbone;
 
 var ListItem = React.createClass({
 

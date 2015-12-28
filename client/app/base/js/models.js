@@ -1,5 +1,5 @@
-var Backbone = require("backbone");
-var _ = require("underscore");
+var Backbone = require("lib").Backbone;
+var _ = require("lib")._;
 
 
 var UserModel = Backbone.Model.extend({

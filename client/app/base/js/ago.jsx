@@ -1,4 +1,4 @@
-var React = require("react");
+var React = require("lib").React;
 var utils = require("utils");
 
 var Ago = React.createClass({

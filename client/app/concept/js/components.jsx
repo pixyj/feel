@@ -1,8 +1,8 @@
-var React = require("react");
-var ReactDOM = require("react-dom");
+var React = require("lib").React;
+var ReactDOM = require("lib").ReactDOM;
 
-var _ = require("underscore");
-var Backbone = require("backbone");
+var _ = require("lib")._;
+var Backbone = require("lib").Backbone;
 
 var utils = require("utils");
 var tags = require("tags.jsx");
@@ -12,8 +12,8 @@ MarkdownAndPreviewMixin = MarkdownAndPreview.MarkdownAndPreviewAttrs;
 MarkdownDisplayMixin = MarkdownAndPreview.MarkdownDisplayMixin;
 MarkdownDisplayComponent = MarkdownAndPreview.MarkdownDisplayComponent;
 
-var visualize = require("./../../matrixviz/js/api");
-var matrixMultiply = visualize.matrixMultiply;
+//var visualize = require("./../../matrixviz/js/api");
+//var matrixMultiply = visualize.matrixMultiply;
 
 var QuizList = require("./../../quiz/js/quiz-list.jsx");
 var QuizFilterComponent = QuizList.QuizFilterComponent;
@@ -209,9 +209,9 @@ var VideoSectionComponent = React.createClass({
 var VisualizationSectionComponent = React.createClass({
 
     componentDidMount: function() {
-        var view = matrixMultiply.render();
-        $(this.refs.content.getDOMNode()).append(view.$el);
-        view.render();
+        //var view = matrixMultiply.render();
+        //$(this.refs.content.getDOMNode()).append(view.$el);
+        //view.render();
     },
 
     componentWillUnmount: function() {

@@ -1,32 +1,21 @@
-var $ = require("jquery");
-window.jQuery = $;
-window.$ = $;
-var Backbone = require("backbone");
-window.Backbone = Backbone;
-
-
-var _ = require("underscore");
-window._ = _;
-
-var Quiz = require("./app/quiz/js/api");
+var $ = require("lib").$;
+var Backbone = require("lib").Backbone;
+var _ = require("lib")._;
 
 var Utils = require("./app/base/js/utils");
 var md = require("./app/base/js/md");
 var models = require("models");
 var UserModel = models.UserModel;
 
-var MatrixViz = require("./app/matrixviz/js/visualize");
-var Concept = require("./app/concept/js/api");
-var Course = require("./app/course/js/api");
-
+var UserStatus = require("./app/user/js/user-status.jsx");
 var ProgressBar = require("top-progress-bar");
 
-var UserStatus = require("./app/user/js/user-status.jsx");
-
+var Quiz = require("./app/quiz/js/api");
+var Concept = require("./app/concept/js/api");
+var Course = require("./app/course/js/api");
 var CodeQuiz = require("./app/code-quiz/js/api");
 
 require("csrf");
-
 
 var Router = Backbone.Router.extend({
 
@@ -53,7 +42,6 @@ var Router = Backbone.Router.extend({
         ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
         "(/)": "home",
         "login(/)": "gotoLogin",
-        "matrixviz(/)": "matrixviz",
         "*path": "notFound"
     },
 
@@ -128,10 +116,6 @@ var Router = Backbone.Router.extend({
             id: id
         }, this.pageElement);
         this.currentComponent = CodeQuiz.Student;
-    },
-    
-    matrixviz: function() {
-        MatrixViz.render();
     },
 
     authRequiredRoutes: ['creator'],

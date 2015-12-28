@@ -1,5 +1,5 @@
-var _ = require("underscore");
-var Backbone = require("backbone");
+var _ = require("lib")._;
+var Backbone = require("lib").Backbone;
 var StreamSaveModel = require("models").StreamSaveModel;
 
 var CodeQuizModel = StreamSaveModel.extend({
