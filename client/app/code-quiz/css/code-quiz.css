@@ -22,3 +22,7 @@
     height: 56px;
     font-size: 3rem;
 }
+
+.ace_gutter, .ace_chrome {
+    background: white !important;
+}

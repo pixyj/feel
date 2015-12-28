@@ -20,6 +20,7 @@ var CodeView = Backbone.View.extend({
         this.editor.setTheme("ace/theme/chrome");
         this.editor.getSession().setMode("ace/mode/python");
         this.editor.setValue(this.options.code || "");
+        this.editor.setShowPrintMargin(false);
         window.editor = this.editor;
         
         if(this.options.listenToInputChange) {
