@@ -13,3 +13,8 @@ __pycache__
 node_modules
 bundle.js
 
+client/vendor.js.map
+client/vendor.min.js
+client/yep.jsx
+client/dist/vendor.map.json
+client/dist/vendor.min.js
