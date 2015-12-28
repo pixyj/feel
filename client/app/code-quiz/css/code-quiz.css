@@ -8,7 +8,11 @@
     font-size: 1rem;
 }
 
-#code-quiz-submit-container {
+.code-quiz-container {
+    padding: 1rem;
+}
+
+.code-quiz-submit-container {
     margin-top: 1rem;
     margin-bottom: 1rem;
 }

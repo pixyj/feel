@@ -39,6 +39,10 @@ Store.prototype = {
         return this._codequiz.attributes.bootstrapCode;
     },
 
+    isAnswered: function() {
+        return this._attempt.attributes.result === true;
+    },
+
     cleanup: function() {
         this.off();
         this._codequiz.off();
@@ -63,7 +67,14 @@ Store.prototype = {
         var self = this;
         return this._attempt.save().then(function() {
             self._evaluationState = "EVALUATED";
-            self._attempt.attributes.id = null; //hack
+            if(self._attempt.attributes.result === true) {
+                self.trigger("answered");
+            }
+            else {
+                //hack so that Backbone a POST request in the next attempt
+                self._attempt.attributes.id = null; 
+            }
+            
         });
     },
 
@@ -93,7 +104,12 @@ var ResultDetailsComponent = React.createClass({
 var CodeSubmitComponent = React.createClass({
 
     getInitialState: function() {
-        return this.props.store.toJSON()
+        var attrs = this.props.store.toJSON();
+        if(this.props.isAnswered === true) {
+            attrs.evaluationState = "EVALUATED";
+            attrs.result = true;
+        }
+        return attrs;
     },
 
     componentWillMount: function() {
@@ -126,7 +142,7 @@ var CodeSubmitComponent = React.createClass({
             loading = <LoadingCircle />
         }
         return (
-            <div id="code-quiz-submit-container">
+            <div className="code-quiz-submit-container">
                 <div className="row">
                     <div className="col-xs-3">
                         <button className="btn btn-large waves-effect" 
@@ -159,6 +175,12 @@ var CodeSubmitComponent = React.createClass({
 
 var PageComponent = React.createClass({
 
+    getInitialState: function() {
+        return {
+            isAnswered: this.props.isAnswered || false
+        };
+    },
+
     componentWillMount: function() {
         this._codeContainerId = "code-container-{0}".format(utils.getUniqueId());
     },
@@ -173,11 +195,19 @@ var PageComponent = React.createClass({
         this.codeView = codeView;
 
         this.codeView.on("change", this.updateCode, this);
+        this.props.store.on("answered", this.setIsAnswered, this);
     },
 
     componentWillUnmount: function() {
         this.codeView.off("change", this.updateCode);
+        this.props.store.off("answered");
         this.codeView.remove();
+    },
+
+    setIsAnswered: function() {
+        this.setState({
+            isAnswered: true
+        })
     },
 
     getCode: function() {
@@ -190,11 +220,25 @@ var PageComponent = React.createClass({
 
     render: function() {
         var problemStatementDisplay = mdAndMathToHtml(this.props.store.getProblemStatement());
+        var answeredComponent = "";
+        // if(!this.state.isAnswered) {
+        //     answeredComponent = ""; 
+        // }
+        // else {
+        //     answeredComponent = "Answered"; 
+        // }
         return (
-            <div>
-                <MarkdownDisplayComponent display={problemStatementDisplay} />
+            <div className="code-quiz-container">
+                <MarkdownDisplayComponent   display={problemStatementDisplay} 
+                                            className="quiz-question-preview" />
+
                 <div id={this._codeContainerId}></div>
-                <CodeSubmitComponent store={this.props.store} parent={this} />
+
+                <CodeSubmitComponent    store={this.props.store} 
+                                        parent={this} 
+                                        isAnswered={this.props.isAnswered} />
+                                        
+                <hr />
             </div>
         );
     }
@@ -205,7 +249,8 @@ var ConceptSectionItemComponent = React.createClass({
     getInitialState: function() {
         return {
             isDataFetched: false,
-            store: null
+            store: null,
+            isAnswered: this.props.isAnswered
         }
     },
 
@@ -229,11 +274,13 @@ var ConceptSectionItemComponent = React.createClass({
 
     render: function() {
         var content;
+        var isAnswered;
         if(!this.state.isDataFetched) {
             content = <LoadingCircle />
         }
         else {
-            content = <PageComponent store={this.store} />
+            isAnswered = this.props.isAnswered || false;
+            content = <PageComponent store={this.store} isAnswered={isAnswered} />
         }
         return (
             <div>
@@ -249,7 +296,8 @@ var ConceptSectionComponent = React.createClass({
 
     _buildProps: function(item) {
         return {
-            id: item.id
+            id: item.id,
+            isAnswered: this.props.codeQuizAttemptStore.isAnswered(item.id)
         };
     },
 
@@ -262,7 +310,9 @@ var ConceptSectionComponent = React.createClass({
         });
 
         return (
-            <div> {list} </div>
+            <div className="row card"> 
+                {list} 
+            </div>
         );
     }
 });

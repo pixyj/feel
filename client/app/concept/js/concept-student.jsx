@@ -31,6 +31,8 @@ var StudentCourseConceptPageModel = models.StudentCourseConceptPageModel;
 var QuizAttemptStore = require("./../../quiz/js/models").QuizAttemptStore;
 var QuizAttemptCollection = require("./../../quiz/js/models").QuizAttemptCollection;
 
+var CodeQuizAttemptStore = require("./../../code-quiz/js/models").CodeQuizAttemptStore;
+
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
 var SectionComponentListMixin = components.SectionComponentListMixin;
@@ -87,7 +89,8 @@ var PageComponent = React.createClass({
         var sections = this.props.page.sections;
         var props = {
             page: this.props.page,
-            attemptStore: this.props.attemptStore
+            attemptStore: this.props.attemptStore,
+            codeQuizAttemptStore: this.props.codeQuizAttemptStore
         };
 
         var components = this.getComponentList(sections, STUDENT_SECTION_COMPONENTS_BY_TYPE, props);
@@ -102,14 +105,17 @@ var PageComponent = React.createClass({
 
 var app = {};
 
-var renderImpl = function(pageStore, attemptStore, element) {
+var renderImpl = function(pageStore, attemptStore, codeQuizAttemptStore, element) {
 
     var page = pageStore.toJSON();
     attemptStore.setSectionQuizzes(page.sectionQuizzes).initializeAttempts();
-    ReactDOM.render(<PageComponent page={page} attemptStore={attemptStore} />, element);
+    ReactDOM.render(<PageComponent  page={page} 
+                                    attemptStore={attemptStore} 
+                                    codeQuizAttemptStore={codeQuizAttemptStore}/>, element);
 
     app.pageStore = pageStore;
     app.attemptStore  = attemptStore;
+    app.codeQuizAttemptStore = codeQuizAttemptStore;
     app.element = element;
 
 };
@@ -119,7 +125,7 @@ var render = function(options, element) {
     var model = new StudentCourseConceptPageModel(options);
     
     model.fetch().then(function() {
-        ProgressBar.setProgress(0.8);
+        ProgressBar.setProgress(0.6);
         var pageModel = new StudentConceptPageModel(model.attributes.page)
         var pageStore = new PageStore({
             model: pageModel
@@ -149,12 +155,17 @@ var renderPreview = function(options, element) {
         })
     });
 
+    var codeQuizAttemptStore = new CodeQuizAttemptStore({
+        conceptId: options.id
+    });
+
     var one = pageStore.fetch();
     var two = attemptStore.fetch();
-    var promises = [one, two];
+    var three = codeQuizAttemptStore.fetch();
+    var promises = [one, two, three];
 
     $.when.apply($, promises).then(function() {
-        renderImpl(pageStore, attemptStore, element);
+        renderImpl(pageStore, attemptStore, codeQuizAttemptStore, element);
     });
 };
 
