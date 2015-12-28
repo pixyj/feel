@@ -228,16 +228,21 @@ var PageComponent = React.createClass({
         //     answeredComponent = "Answered"; 
         // }
         return (
-            <div className="code-quiz-container">
-                <MarkdownDisplayComponent   display={problemStatementDisplay} 
-                                            className="quiz-question-preview" />
+            <div className="student-quiz-container">
+                <div className="student-quiz-number">
+                    <p>{this.props.index + 1}.</p>
+                </div>
+                <div className="student-quiz-body">
+                    <MarkdownDisplayComponent   display={problemStatementDisplay} 
+                                                className="quiz-question-preview" />
 
-                <div id={this._codeContainerId}></div>
+                    <div id={this._codeContainerId}></div>
 
-                <CodeSubmitComponent    store={this.props.store} 
-                                        parent={this} 
-                                        isAnswered={this.props.isAnswered} />
-                                        
+                    <CodeSubmitComponent    store={this.props.store} 
+                                            parent={this} 
+                                            isAnswered={this.props.isAnswered} />
+                </div>
+                <div className="clearfix"> </div>                                        
                 <hr />
             </div>
         );
@@ -280,7 +285,9 @@ var ConceptSectionItemComponent = React.createClass({
         }
         else {
             isAnswered = this.props.isAnswered || false;
-            content = <PageComponent store={this.store} isAnswered={isAnswered} />
+            content = <PageComponent    store={this.store} 
+                                        isAnswered={isAnswered} 
+                                        index={this.props.index} />
         }
         return (
             <div>
@@ -294,10 +301,11 @@ var ConceptSectionComponent = React.createClass({
 
     mixins: [ListMixin],
 
-    _buildProps: function(item) {
+    _buildProps: function(item, index) {
         return {
             id: item.id,
-            isAnswered: this.props.codeQuizAttemptStore.isAnswered(item.id)
+            isAnswered: this.props.codeQuizAttemptStore.isAnswered(item.id),
+            index: index
         };
     },
 
@@ -310,7 +318,7 @@ var ConceptSectionComponent = React.createClass({
         });
 
         return (
-            <div className="row card"> 
+            <div className="quiz-student-section card"> 
                 {list} 
             </div>
         );
