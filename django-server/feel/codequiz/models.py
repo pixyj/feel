@@ -81,6 +81,12 @@ class CodeQuizAttempt(UUIDModel):
         self.save()
         return outputs
 
+
+    @classmethod
+    def get_user_attempts_in_quizzes(klass, user_key, quiz_ids):
+        return CodeQuizAttempt.objects.filter(user_key=user_key).filter(codequiz__in=quiz_ids).filter(state=2)
+
+
     def __str__(self):
         if self.user is None:
             user_print = self.user_key

@@ -16,8 +16,8 @@ from core.views import get_user_and_user_key
 
 from concept.models import Concept, ConceptSection
 from concept.serializers import ConceptSerializer, ConceptSectionSerializer
-from quiz.serializers import QuizAttemptSerializer;
-
+from quiz.serializers import QuizAttemptSerializer
+from codequiz.serializers import CodeQuizAttemptSerializer
 
 def get_concept_page(concept):
     serializer = ConceptSerializer(concept)
@@ -159,6 +159,10 @@ class ConceptDetailView(APIView):
 class StudentConceptPageView(APIView):
 
     def get(self, request, pk):
+        """
+        Custom Endpoint for the student concept page. Returns common data applicable 
+        for all students. 
+        """
         concept = get_object_or_404(Concept, pk=pk)
         page = concept.fetch_student_page()
         return Response(page)
@@ -179,7 +183,20 @@ class StudentQuizAttemptView(APIView):
 
     def get(self, request, pk):
         concept = get_object_or_404(Concept, pk=pk)
-
         attempts = get_quizattempts(request, concept)
         return Response(attempts)
 
+
+class StudentCodeQuizAttemptView(APIView):
+
+    def get(self, request, pk):
+        concept = get_object_or_404(Concept, pk=pk)
+        attempts = self._get_codequizattempts(request, concept)
+        return Response(attempts)
+
+
+    def _get_codequizattempts(self, request, concept):
+        _, user_key = get_user_and_user_key(request)
+        attempts = concept.get_user_codequizattempts(user_key)
+        serializer = CodeQuizAttemptSerializer(attempts, many=True)
+        return serializer.data

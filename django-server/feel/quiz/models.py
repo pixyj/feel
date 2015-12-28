@@ -86,9 +86,13 @@ class QuizUserAttemptManager(models.Manager):
         
         for attempt in attempts:
             choice_ids = [int(choice_id) for choice_id in attempt.choices.split(",")]
-            attempt.choices = [{"id": choice_id, "choice_display": choices_by_id[choice_id]} for choice_id in choice_ids]
-
+            attempt.choices = [
+            {
+                "id": choice_id, 
+                "choice_display": choices_by_id[choice_id]
+            } for choice_id in choice_ids]
         return attempts
+
 
     def get_user_attempts_in_quizzes(self, user_key, quiz_ids):
         return QuizAttempt.objects.filter(user_key=user_key).filter(quiz__in=quiz_ids)

@@ -9,5 +9,6 @@ urlpatterns = [
 
     url(r'^api/v1/student/concepts/(?P<pk>[0-9a-f\-]+)/$', views.StudentConceptPageView.as_view()),
     url(r'^api/v1/student/concepts/(?P<pk>[0-9a-f\-]+)/quizattempts/$', views.StudentQuizAttemptView.as_view()),
+    url(r'^api/v1/student/concepts/(?P<pk>[0-9a-f\-]+)/codequizattempts/$', views.StudentCodeQuizAttemptView.as_view()),
        
 ]

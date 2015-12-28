@@ -18,3 +18,15 @@ class CodeQuizSerializer(serializers.ModelSerializer):
         fields = ('id', 'problem_statement', 'bootstrap_code', 'time_limit', 'memory_limit', )
 
 
+class CodeQuizAttemptSerializer(object):
+
+    def __init__(self, collection, many=True):
+        self.data = []
+        for item in collection:
+            attrs = {
+                "quizId": item.codequiz.id,
+                "result": item.result,
+                "createdAt": item.created_at
+            }
+            self.data.append(attrs)
+

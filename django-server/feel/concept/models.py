@@ -10,7 +10,7 @@ from django.utils.text import slugify
 from core.models import TimestampedModel, UUIDModel
 from quiz.models import Quiz, QuizAttempt
 from quiz.serializers import QuizSerializer
-
+from codequiz.models import CodeQuizAttempt
 
 
 class Concept(TimestampedModel, UUIDModel):
@@ -63,6 +63,16 @@ class Concept(TimestampedModel, UUIDModel):
     def get_user_quizattempts(self, user_key):
         quiz_ids = self.get_quiz_ids()
         return QuizAttempt.objects.get_user_attempts_in_quizzes(user_key, quiz_ids)
+
+
+    def get_codequiz_ids(self):
+        sections = self.conceptsection_set.all()
+        return ConceptSection.get_codequiz_ids(sections)
+
+
+    def get_user_codequizattempts(self, user_key):
+        quiz_ids = self.get_codequiz_ids()
+        return CodeQuizAttempt.get_user_attempts_in_quizzes(user_key, quiz_ids)
 
 
     def get_student_progress(self, user_key):
@@ -151,7 +161,6 @@ class ConceptSection(TimestampedModel, UUIDModel):
         all_quiz_ids = []
         section_id_by_quiz_id = {}
         section_quizzes = defaultdict(list)
-        #import ipdb;ipdb.set_trace()
         for section in quiz_sections:
             for quiz in section.get_quiz_info():
                 quiz_id = quiz['id']
@@ -167,6 +176,16 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
         return section_quizzes
 
+
+    @classmethod
+    def get_codequiz_ids(klass, sections):
+        quiz_sections = sections.filter(type=klass.CODE_QUIZ).only('data')
+        all_quiz_ids = []
+        for section in quiz_sections:
+            data = section.data
+            quiz_ids = [quiz['id'] for quiz in data['quizzes']]
+            all_quiz_ids.extend(quiz_ids)
+        return all_quiz_ids
 
 
     class Meta:
