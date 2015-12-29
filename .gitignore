@@ -15,9 +15,14 @@ bundle.js
 
 client/vendor.js.map
 client/vendor.min.js
+
 client/yep.jsx
+
 client/dist/min
 client/dist/app.css
 client/dist/app.js
+client/dist/vendor.js
 client/dist/vendor.css
 client/dist/vendor.map.json
+
+index.html
