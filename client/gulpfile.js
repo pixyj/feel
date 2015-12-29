@@ -15,9 +15,6 @@ gulp.task('default', function() {
     console.log("nothing to do here");
 });
 
-//reactify --debug main.js -x jquery -x underscore -x backbone -x react -x react-dom -o dist/app.js
-
-
 gulp.task('minify-css', function() {
   return gulp.src('dist/*.css')
     .pipe(minifyCss())
