@@ -45,5 +45,5 @@ if __name__ == '__main__':
     replace_config_file()
     print("Placed config file at ", os.environ['NGINX_CONF_PATH'])
     reload_nginx()
-    print("Reloaded Nginx\n★★★ Done! ★★★")
+    print("Reloaded Nginx\n Done! ")
     
