@@ -6,3 +6,8 @@
 
 @import 'code';
 @import 'grid';
+
+//Compass does not compile without a css rule. Here's a dummy css rule :)
+._dummy-class {
+    position: relative;
+}

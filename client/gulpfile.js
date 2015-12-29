@@ -1,3 +1,5 @@
+var spawn = require('child_process').spawn;
+
 var gulp = require('gulp');
 
 var minify = require('gulp-minify');
@@ -11,32 +13,9 @@ var rename = require('gulp-rename');
 var browserify = require('browserify');
 var reactify = require('reactify');
 
-gulp.task('default', function() {
-    console.log("nothing to do here");
-});
-
-gulp.task('minify-css', function() {
-  return gulp.src('dist/*.css')
-    .pipe(minifyCss())
-    .pipe(rename({
-        'suffix': '.min'
-    }))
-    .pipe(gulp.dest('dist/min'));
-});
-
-gulp.task('minify-js', function() {
-  gulp.src("dist/*.js")
-    .pipe(minify().on('error', gutil.log))
-    .pipe(gulp.dest('dist/min'))
-});
-
-gulp.task('minify', function() {
-    gulp.start('minify-css', 'minify-js');
-});
-
-
-var spawn = require('child_process').spawn;
-
+/********************************************************************************
+*   Support functions
+*********************************************************************************/
 
 var execute_shell_script = function(scriptCommand, args) {
     args = args || [];
@@ -62,7 +41,7 @@ var execute_shell_script = function(scriptCommand, args) {
     child.on('close', function(code) {
         gutil.log("Exit code", code);
         if(code === 0) {
-            gutil.log("★★★ Done! ★★★");
+            gutil.log("★★★ ", scriptCommand, "  ★★★");
         }
         else {
 
@@ -71,6 +50,45 @@ var execute_shell_script = function(scriptCommand, args) {
     });
 }
 
+/********************************************************************************
+*   Minification tasks
+*********************************************************************************/
+
+gulp.task('minify-css', function() {
+  return gulp.src('dist/*.css')
+    .pipe(minifyCss())
+    .pipe(rename({
+        'suffix': '.min'
+    }))
+    .pipe(gulp.dest('dist/min'));
+});
+
+gulp.task('minify-js', function() {
+  gulp.src("dist/*.js")
+    .pipe(minify().on('error', gutil.log))
+    .pipe(gulp.dest('dist/min'))
+});
+
+gulp.task('minify', function() {
+    gulp.start('minify-css', 'minify-js');
+});
+
+/********************************************************************************
+*   Compass compile (SCSS to CSS) tasks
+*********************************************************************************/
+
+gulp.task('compass-compile-vendor', function() {
+    execute_shell_script('./compass-compile-app.sh');
+});
+
+gulp.task('compass-compile-app', function() {
+    execute_shell_script('./compass-compile-vendor.sh');
+});
+
+/********************************************************************************
+*   Browserify tasks
+*********************************************************************************/
+
 gulp.task('browserify-vendor', function() {
     execute_shell_script('./browserify-vendor.sh');
 });
@@ -78,4 +96,3 @@ gulp.task('browserify-vendor', function() {
 gulp.task('browserify-app', function() {
     execute_shell_script('./browserify-app.sh');
 });
-
