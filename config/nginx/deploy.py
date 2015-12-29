@@ -29,12 +29,12 @@ def populate_template_string(s):
 def create_temp_config_file():
     template_string = get_conf_template_file_string()
     file_string = populate_template_string(template_string)
-    with open("./_nginx.conf", "w") as f:
+    with open("./temp.nginx.conf", "w") as f:
         f.write(file_string)
 
 
 def replace_config_file():
-    command = "cp ./_nginx.conf {}".format(CONF['NGINX_CONF_PATH'])
+    command = "cp ./temp.nginx.conf {}".format(CONF['NGINX_CONF_PATH'])
     status = os.system(command)
     if status != 0:
         raise Exception("Nginx file not copied to . Hing: Use sudo", CONF['NGINX_CONF_PATH'])
