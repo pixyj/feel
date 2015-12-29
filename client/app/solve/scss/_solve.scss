@@ -1,0 +1,42 @@
+.problem-solving-question-and-solve-it-container {
+     
+}
+
+#problem-solving-steps-list {
+    font-size: 1.3em;
+}
+
+#problem-solving-guess-collection {
+    overflow: scroll;
+    height: 50%;
+}
+
+/*todo -> choose some material design color */ 
+#problem-solving-guess-collection-heading {
+    background-color: aqua;
+}
+
+.problem-solving-create-plan-btn {
+    margin-top: 20px;
+    background-color: inherit !important;
+    color: #121212 !important;
+}
+
+
+.problem-solving-input-and-submit {
+    margin-bottom: 20px;
+}
+
+.problem-solving-plan-heading {
+    font-size: 1.5em;
+    font-style: bolder; 
+    margin-right: 20px;
+}
+
+.problem-solving-plan-collection {
+    margin-top: 25px;
+}
+
+.problem-solving-single-plan-container {
+    margin-top: 20px;
+}

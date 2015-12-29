@@ -1,0 +1,14 @@
+body {
+    background: url("/app/retina_dust.png");
+}
+
+#top-progress-bar {
+    visibility: hidden;
+    margin: 0;
+}
+
+textarea {
+    resize: none;
+    background: white;
+    overflow: scroll;
+}

@@ -1,0 +1,98 @@
+/* MATRIX VIZ PAGE */
+
+#svg-container {
+    margin-top: 15px;
+}
+
+
+.matrix-shape-input {
+    border: 3px solid black;
+    cursor: pointer;
+}
+
+.matrix-shape-input:hover {
+    border: 3px solid orange;
+}
+
+.matrix-shape-input-selected {
+    background: linear-gradient(#00d2ff, #3a7bd5);
+}
+
+.matrix-shape-input-circle {
+    float: left;
+    border-radius: 50%;
+}
+
+.matrix-shape-input-rect {
+    float: right;
+}
+
+
+#matrix-input-table input {
+    width: 50%;
+}
+
+#matrix-input-table tbody {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+#matrix-input-table input:hover {
+    color: orange;
+}
+
+#matrix-input-table input {
+    font-size: 2em;
+}
+
+.matrix-input-table-border-div {
+    position: absolute;
+    width: 20%;
+    border-top: 1px solid black;
+}
+
+.matrix-speed-label {
+    width: 100%;
+}
+
+
+.matrix-speed-label:hover {
+    color: orange;
+}
+
+.matrix-input-shape {
+    cursor: pointer;
+}
+
+.matrix-input-shape:hover {
+    stroke: orange;
+}
+
+//Override materialize stuff
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+@media(max-width: 992px) {
+    [type="radio"]:not(:checked) + label, [type="radio"]:checked + label {
+        height: 40px;
+        line-height: 40px;
+        font-size: 2rem;
+        padding-left: 50px;
+    }
+
+    [type="radio"] + label:before, [type="radio"] + label:after {
+        height: 30px;
+        width: 30px;
+    }
+
+    #matrix-visualize-btn {
+        height: 60px;
+    }
+}
