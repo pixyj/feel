@@ -16,7 +16,9 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-minify-css": "^1.2.3",
-    "gulp-rename": "^1.2.2"
+    "gulp-rename": "^1.2.2",
+    "gulp-shell": "^0.5.1",
+    "reactify": "^1.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

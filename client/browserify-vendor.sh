@@ -1,0 +1,1 @@
+browserify vendor.js -d -p [minifyify --map dist/vendor.map.json --output dist/vendor.map.json] > dist/min/vendor-min.js
