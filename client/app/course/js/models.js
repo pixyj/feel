@@ -490,7 +490,7 @@ _.extend(StudentStore.prototype, Backbone.Events);
 
 
 module.exports = {
-    CreatorStore, CreatorStore,
+    CreatorStore: CreatorStore,
     StudentStore: StudentStore,
     PretestModel: PretestModel,
     StudentStates: StudentStates
