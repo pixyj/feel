@@ -41,8 +41,8 @@ ____
     cd code
     mkdir feel
     cd ~/
-    mkdir .feel-client
-    cd .feel-client
+    mkdir feel-client
+    cd feel-client
     mkdir dist
     cd ~/
 

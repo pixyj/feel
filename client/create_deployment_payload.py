@@ -1,6 +1,8 @@
 import argparse
 import os
 from config.nginx.config_and_reload import create_temp_config_file
+from create_index_file import create_index_file_from_template
+
 
 INPUT_ROOT_DIR = 'dist'
 INPUT_CHILD_DIRS = ['font', 'min']
@@ -12,7 +14,7 @@ def exec_command(command):
 
 
 def create_payload(commit, output_zip_dir):
-    parent_dir = "/tmp/dist-{}".format(commit)
+    parent_dir = "dist-{}".format(commit)
     try:
         os.mkdir(parent_dir)
     except FileExistsError:
@@ -29,16 +31,19 @@ def create_payload(commit, output_zip_dir):
     print("Creating nginx.conf and placing it in {}".format(parent_dir))
     create_temp_config_file(os.environ, "{}/nginx.conf".format(parent_dir))
 
-    zip_path = '{}/dist-{}.zip'.format(output_zip_dir, commit)
-    command = 'zip -r {} {}'.format(zip_path, parent_dir)
+    print("Creating prod-index.html and placing it as index.html")
+    create_index_file_from_template('prod', commit)
+    import ipdb; ipdb.set_trace()
+    command = "cp {} {}/index.html".format('prod-index.html', parent_dir)
+    exec_command(command)
+
+    #import ipdbipdb.set_trace()
+    dir_name = 'dist-{}'.format(commit)
+    command = 'zip -r {}/dist-{}.zip {}'.format(output_zip_dir, commit, dir_name)
     exec_command(command)
     command = 'rm -r {}'.format(parent_dir)
     exec_command(command)
 
-
-def copy_to_dropbox(zip_path):
-    command = "cp {} ~/Dropbox/Public/feel-client".format(zip_path)
-    exec_command(command)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

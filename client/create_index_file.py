@@ -5,7 +5,10 @@ from django.template import Template, Context
 from django.template.engine import Engine
 
 from django.conf import settings
-settings.configure(DEBUG=True)
+try:
+    settings.configure(DEBUG=True)
+except RuntimeError:
+    pass
 
 
 def create_index_file_from_template(mode, commit):
