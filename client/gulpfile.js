@@ -1,6 +1,8 @@
 var spawn = require('child_process').spawn;
 
 var gulp = require('gulp');
+var clean = require('gulp-clean');
+
 
 var minify = require('gulp-minify');
 var minifyCss = require('gulp-minify-css');
@@ -54,17 +56,18 @@ var execute_shell_script = function(scriptCommand, args) {
 *   Minification tasks
 *********************************************************************************/
 
+//todo -> Remove source file from destination. gulp-clean ain't working
 gulp.task('minify-css', function() {
   return gulp.src('dist/*.css')
     .pipe(minifyCss())
     .pipe(rename({
         'suffix': '-min'
     }))
-    .pipe(gulp.dest('dist/min'));
+    .pipe(gulp.dest('dist/min'))
 });
 
 gulp.task('minify-js', function() {
-  gulp.src("dist/*.js")
+    gulp.src('dist/*.js')
     .pipe(minify().on('error', gutil.log))
     .pipe(gulp.dest('dist/min'))
 });
