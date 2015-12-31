@@ -58,7 +58,7 @@ gulp.task('minify-css', function() {
   return gulp.src('dist/*.css')
     .pipe(minifyCss())
     .pipe(rename({
-        'suffix': '.min'
+        'suffix': '-min'
     }))
     .pipe(gulp.dest('dist/min'));
 });
