@@ -15,6 +15,7 @@ def create_index_file_from_template(mode):
             "APP_CSS_PREFIX": "app.min",
             "VENDOR_JS_PREFIX": "vendor-min",
             "APP_JS_PREFIX": "app-min",
+            "INDEX_FILE_NAME": "prod-index.html"
         }
     elif mode == "dev":
         options = {
@@ -23,17 +24,18 @@ def create_index_file_from_template(mode):
             "APP_CSS_PREFIX": "app",
             "VENDOR_JS_PREFIX": "vendor",
             "APP_JS_PREFIX": "app",
+            "INDEX_FILE_NAME": "index.html"
         }
     else:
         raise Exception("Invalid OPS_MODE, {} found".format(mode))
 
     with open("./index-template.html", "r") as f:
         template_string = f.read()
-
     template = Template(template_string, engine=Engine())
     context = Context(options)
     output_string = template.render(context)
-    with open('index.html', 'w') as f:
+
+    with open(options['INDEX_FILE_NAME'], 'w') as f:
         f.write(output_string)
 
 

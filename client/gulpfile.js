@@ -96,3 +96,26 @@ gulp.task('browserify-vendor', function() {
 gulp.task('browserify-app', function() {
     execute_shell_script('./browserify-app.sh');
 });
+
+
+/********************************************************************************
+*   Dev setup tasks
+*********************************************************************************/
+
+gulp.task('dev-setup', function() {
+    gulp.start('compass-compile-vendor', 'compass-compile-app', 'browserify-vendor', 'browserify-app');
+});
+
+/********************************************************************************
+*   Prod setup tasks
+*********************************************************************************/
+
+gulp.task('prod-minify', function() {
+    gulp.start('dev-setup', 'minify');
+});
+
+gulp.task('prod-create-index-file', function() {
+    gulp.start('')
+});
+
+

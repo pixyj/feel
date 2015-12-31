@@ -26,3 +26,4 @@ client/dist/vendor.css
 client/dist/vendor.map.json
 
 index.html
+prod-index.html
