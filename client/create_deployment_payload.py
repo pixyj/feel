@@ -33,7 +33,6 @@ def create_payload(commit, output_zip_dir):
 
     print("Creating prod-index.html and placing it as index.html")
     create_index_file_from_template('prod', commit)
-    import ipdb; ipdb.set_trace()
     command = "cp {} {}/index.html".format('prod-index.html', parent_dir)
     exec_command(command)
 
