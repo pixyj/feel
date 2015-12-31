@@ -40,6 +40,11 @@ ____
     mkdir code
     cd code
     mkdir feel
+    cd ~/
+    mkdir .feel-client
+    cd .feel-client
+    mkdir dist
+    cd ~/
 
 ##### 9.2 Generate public key and add it to bitbucket. 
     ssh-keygen -t rsa
