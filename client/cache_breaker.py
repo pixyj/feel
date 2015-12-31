@@ -16,6 +16,7 @@ def add_commit_sufix(commit_hash):
     """
     Workhorse function. Dependency: Minified files must be present. 
     There's no error check yet to check their existence
+    #todo -> As of now, vendor files and app files must be from same commit. Change this. 
     """
     global DIR
     parent_dir = DIR
