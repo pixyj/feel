@@ -37,6 +37,7 @@ def reload_nginx():
     status = exec_command("nginx -s reload")
     if status != 0:
         raise Exception("Nginx file not reloaded. Check syntax")
+        #todo -> rollback to previous nginx config
 
 
 if __name__ == '__main__':
