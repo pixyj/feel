@@ -12,6 +12,5 @@ window.commonmark = require("./app/vendor/commonmark/commonmark");
 
 require("./app/vendor/ace/ace");
 require("./app/vendor/ace/mode-python");
-require("./app/vendor/ace/theme-chrome");
 require("./app/vendor/materialize/js/bin/materialize");
 require("./app/vendor/katex/katex.min.js");

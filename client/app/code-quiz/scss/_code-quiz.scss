@@ -23,6 +23,8 @@
     font-size: 3rem;
 }
 
-.ace_gutter, .ace_chrome {
-    background: white !important;
+$ace-bg-color: #F0F8FF;
+
+.ace_gutter {
+    background: $ace-bg-color !important;
 }

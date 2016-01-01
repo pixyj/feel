@@ -17,7 +17,7 @@ var CodeView = Backbone.View.extend({
 
     render: function() {
         this.editor = ace.edit(this.domId);
-        this.editor.setTheme("ace/theme/chrome");
+        //this.editor.setTheme("ace/theme/chrome");
         this.editor.getSession().setMode("ace/mode/python");
         this.editor.setValue(this.options.code || "");
         this.editor.setShowPrintMargin(false);
