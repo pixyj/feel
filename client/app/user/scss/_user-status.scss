@@ -4,9 +4,11 @@
     cursor: pointer;
 }
 
+$username-height: 60px;
+
 .username-or-login-btn {
     text-align: center;
-    line-height: 60px;
+    line-height: $username-height;
 }
 
 @media(min-width: 992px) {
@@ -17,12 +19,12 @@
 
 #logout {
     position: absolute;
-    top: 60px;
+    top: $username-height;
     right: 0;
     width: 25%;
-    background: #AEAEAE;
-    height: 60px;
-    line-height: 60px;
+    background: rgba(3, 169, 244, 0.37);
+    height: $username-height;
+    line-height: $username-height;
     font-size: 1.2rem;
     text-align: center;
     z-index: 4;
@@ -54,11 +56,11 @@
     content: "X";
     position: fixed;
     right: 10px;
-    top: -5px;
+    top: 10px;
     cursor: pointer;
     z-index: 3;
     font-weight: bolder;
-    font-size: 2rem;
+    font-size: 1.2rem;
 }
 
 #login-form {
