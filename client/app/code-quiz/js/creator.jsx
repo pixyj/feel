@@ -319,7 +319,7 @@ var PageComponent = React.createClass({
 
     render: function() {
         return (
-            <div>
+            <div className="card card-padding">
                 <h5> Problem Statement </h5>
                 <ProblemStatement store={this.props.store} />  
                 <h5> Bootstrap Code </h5>
