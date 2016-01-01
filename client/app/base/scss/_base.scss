@@ -8,16 +8,51 @@
     text-align: center;
 }
 
+.md-input-and-preview {
+    padding: 1rem;
+    min-height: 200px;
+}
+
+//Copied heading values from bootstrap
+//Should we apply this globally? Maybe later. Don't want to break it until launch.
+.md-input-and-preview h1 {
+    font-size: 36px;
+}
+
+.md-input-and-preview h2 {
+    font-size: 30px;
+}
+
+.md-input-and-preview h3 {
+    font-size: 24px;
+}
+
+.md-input-and-preview h4 {
+    font-size: 18px;
+}
+
+.md-input-and-preview h5 {
+    font-size: 14px;
+}
+
+.md-input-and-preview h6 {
+    font-size: 12px;
+}
+
 .md-and-html-input {
-    height: 200px;
-    background: white;
-    overflow: scroll;
+    @extend .md-input-and-preview;
+
+    border-style: none; 
+    border-color: Transparent; 
+    outline: none;
+    overflow: auto;
+    background: #F0F8FF;
 }
 
 .md-preview-with-content {
-    height: 208px;
-    overflow-y: scroll;
-    padding: 0 0.5em 0.5em 0.5em;
+    @extend .md-input-and-preview;
+
+    overflow: auto;
 }
 
 .created-at {
