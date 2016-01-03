@@ -30,21 +30,26 @@ def create_payload(commit, output_zip_dir):
 
     print("Creating nginx.conf and placing it in {}".format(parent_dir))
     #todo Make this configurable. And remove your name, dude. 
-    os.environ['NGINX_ROOT'] = "/home/pramod/feel-client/{}".format(parent_dir)
-    create_temp_config_file(os.environ, "{}/nginx.conf".format(parent_dir))
-
+    conf = {
+        'NGINX_ROOT': "/home/pramod/feel-client",
+        'NGINX_LISTEN_PORT': '80',
+        'NGINX_INDEX_HTML_DIR': '/dist-{}'.format(commit),
+        'NGINX_DEV_MODE': False,
+        'COMMIT': commit
+    }
+    create_temp_config_file(conf, "{}/nginx.conf".format(parent_dir))
+    exit(0);
     print("Creating prod-index.html and placing it as index.html")
     create_index_file_from_template('prod', commit)
     command = "cp {} {}/index.html".format('prod-index.html', parent_dir)
     exec_command(command)
     command = "cp {} {}".format('dist/retina_dust.png', parent_dir)
     exec_command(command)
-    #import ipdbipdb.set_trace()
     dir_name = 'dist-{}'.format(commit)
     command = 'zip -r {}/dist-{}.zip {}'.format(output_zip_dir, commit, dir_name)
     exec_command(command)
-    command = 'rm -r {}'.format(parent_dir)
-    exec_command(command)
+    #command = 'rm -r {}'.format(parent_dir)
+    #exec_command(command)
 
 
 if __name__ == '__main__':

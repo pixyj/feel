@@ -15,6 +15,8 @@ var rename = require('gulp-rename');
 var browserify = require('browserify');
 var reactify = require('reactify');
 
+var argv = require("yargs").argv;
+
 /********************************************************************************
 *   Support functions
 *********************************************************************************/
@@ -50,7 +52,7 @@ var execute_shell_script = function(scriptCommand, args) {
             gutil.log(stderr);
         }
     });
-}
+};
 
 /********************************************************************************
 *   Minification tasks
@@ -105,20 +107,33 @@ gulp.task('browserify-app', function() {
 *   Dev setup tasks
 *********************************************************************************/
 
+//Convert scss to css, browserify javascript files and place in dist directory
 gulp.task('dev-setup', function() {
     gulp.start('compass-compile-vendor', 'compass-compile-app', 'browserify-vendor', 'browserify-app');
 });
 
 /********************************************************************************
-*   Prod setup tasks
+*   Prod deployment
 *********************************************************************************/
 
 gulp.task('prod-minify', function() {
     gulp.start('dev-setup', 'minify');
 });
 
-gulp.task('prod-create-index-file', function() {
-    gulp.start('')
+
+gulp.task('create-commit-suffix-files', function() {
+    execute_shell_script('./create-commit-suffix-files.sh');
 });
 
+gulp.task('prod-create-index-file', function() {
+    execute_shell_script('./create-prod-index-file.sh');
+});
+
+gulp.task('create-deployment-payload', function() {
+    execute_shell_script('./create-deployment-payload.sh');
+});
+
+gulp.task('create-client-distribution', function() {
+    gulp.start('prod-minify', 'create-commit-suffix-files', 'prod-create-index-file', 'create-deployment-payload');
+});
 

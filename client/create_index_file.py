@@ -14,9 +14,9 @@ except RuntimeError:
 def create_index_file_from_template(mode, commit):
     if mode == "prod":
         options = {
-            "DIST_DIR": "/dist/min",
-            "VENDOR_CSS_PREFIX": "vendor.min",
-            "APP_CSS_PREFIX": "app.min",
+            "DIST_DIR": "/dist-{}/min".format(commit),
+            "VENDOR_CSS_PREFIX": "vendor-min",
+            "APP_CSS_PREFIX": "app-min",
             "VENDOR_JS_PREFIX": "vendor-min",
             "APP_JS_PREFIX": "app-min",
             "INDEX_FILE_NAME": "prod-index.html",

@@ -1,0 +1,1 @@
+python create_index_file.py --mode=prod --commit=`git rev-parse HEAD`
