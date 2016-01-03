@@ -38,8 +38,8 @@ var Router = Backbone.Router.extend({
         "creator/code-quiz/:id(/)": "editCodeQuiz",
         "concept/:id(/)": "previewConcept",
         "code-quiz/:id(/)": "attemptCodeQuiz",
-        ":id(/)": "learnCourse",
-        ":courseSlug/:conceptSlug(/)": "learnCourseConcept",
+        "course/:id(/)": "learnCourse",
+        "course/:courseSlug/:conceptSlug(/)": "learnCourseConcept",
         "(/)": "home",
         "login(/)": "gotoLogin",
         "*path": "notFound"

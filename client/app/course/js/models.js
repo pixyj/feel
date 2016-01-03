@@ -34,7 +34,7 @@ var CourseModel = StreamSaveModel.extend({
 
     studentURL: function() {
         utils.assert(this.attributes.slug, "Slug not found");
-        return "/{0}/".format(this.attributes.slug);
+        return "/course/{0}/".format(this.attributes.slug);
     },
 
     creatorURL: function() {
