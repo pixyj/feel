@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+
 from django.db import transaction
 from django.db import IntegrityError
 from django.utils import timezone
@@ -59,7 +61,7 @@ class CourseDetailView(APIView):
         return Response(data)
 
 
-    @method_decorator(login_required)
+    @method_decorator(staff_member_required)
     def post(self, request):
 
         serializer = CourseSerializer(data=request.data)
@@ -74,7 +76,7 @@ class CourseDetailView(APIView):
         serializer = CourseSerializer(course)
         return Response(serializer.data, status.HTTP_201_CREATED)
 
-    @method_decorator(login_required)
+    @method_decorator(staff_member_required)
     def put(self, request, pk):
         course = get_course_or_404(pk)
         if course.created_by.id != request.user.id:
@@ -124,7 +126,7 @@ class ConceptView(APIView):
         return Response(serializer.data)
 
 
-    @method_decorator(login_required)
+    @method_decorator(staff_member_required)
     def post(self, request, course_id):
         course = get_course_or_404(course_id)
         if course.created_by.id != request.user.id:
@@ -170,7 +172,7 @@ class DependencyView(APIView):
         return Response(serialized_deps)
 
 
-    @method_decorator(login_required)
+    @method_decorator(staff_member_required)
     def post(self, request, course_id):
         course = get_course_or_404(course_id)
         if course.created_by.id != request.user.id:
