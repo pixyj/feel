@@ -12,6 +12,9 @@ from concept.models import Concept
 class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256)
     is_published = models.BooleanField(default=False)
+    intro = models.TextField(default="")
+    where_to_go_from_here = models.TextField(default="")
+
 
     @property
     def slug(self):
