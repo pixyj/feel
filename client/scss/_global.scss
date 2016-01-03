@@ -7,8 +7,25 @@ body {
     margin: 0;
 }
 
+#left {
+    float: left;
+    width: 25%;
+}
+
+#search-bar {
+    float: left;
+    width: 50%;
+    padding-right: 5%;
+}
+
+#top-navbar {
+    position: relative;
+}
+
+.card-padding {
+    padding: 1rem;
+}
+
 textarea {
-    resize: none;
-    background: white;
-    overflow: scroll;
+    outline: none;
 }
