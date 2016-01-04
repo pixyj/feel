@@ -1,7 +1,7 @@
-import os
+import getpass
 import argparse
 import inspect
-
+import os
 
 from django.template import Template, Context
 from django.template.engine import Engine
@@ -77,6 +77,7 @@ if __name__ == '__main__':
     CONF['NGINX_LISTEN_PORT'] = args['port']
     CONF['REPO_LOCATION'] = args['repo']
     CONF['NGINX_ROOT'] = "{}/client".format(args['repo'])
+    CONF['NGINX_DEV_MODE'] = True
     
     print("Parsed arguments", CONF)
     create_temp_config_file(CONF)
@@ -84,8 +85,13 @@ if __name__ == '__main__':
     if args['test']:
         print("In test mode, so we don't replace config file. Bye.")
         exit(0)
+    else:
+        if getpass.getuser() != 'root':
+            print("\nERROR: Must run as root to configure nginx")
+            exit(1)
     replace_config_file(CONF)
     print("Placed config file at ", os.environ['NGINX_CONF_PATH'])
+
     reload_nginx()
     print("Reloaded Nginx\n ** Done!  ** ")
     command = "rm {}".format(CONF['TEMP_PATH'])
