@@ -8,6 +8,13 @@ String.prototype.format = function() {
     return formatted;
 };
 
+var addTrailingSlash = function(fragment) {
+    if(fragment.slice(fragment.length-1) === "/") {
+        return fragment;
+    }
+    return fragment + "/";
+};
+
 //http://stackoverflow.com/a/6777470/817277
 var getUTCDate = function(now) {
     now = now || new Date();
@@ -41,6 +48,14 @@ var prettyDate = function(utcDate) {
     else {
         return dayDiff + " days ago";
     }
+};
+
+var capitalize = function(s) {
+    var length = s.length;
+    if(!length) {
+        return s
+    }
+    return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
 var getHumanizedTimeDiff = function(localDate) {
@@ -79,16 +94,10 @@ var assert = function(condition, message) {
     }
 };
 
-var addTrailingSlash = function(fragment) {
-    if(fragment.slice(fragment.length-1) === "/") {
-        return fragment;
-    }
-    return fragment + "/";
-};
-
 module.exports = {
     getUTCDate: getUTCDate,
     prettyDate: prettyDate,
+    capitalize: capitalize,
     getHumanizedTimeDiff: getHumanizedTimeDiff,
     getUniqueId: getUniqueId,
     inherit: inherit,

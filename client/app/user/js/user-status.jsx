@@ -1,15 +1,18 @@
 var React = require("lib").React;
 var ReactDOM = require("lib").ReactDOM;
 
+var Backbone = require("lib").Backbone;
+
 var LoginForm = React.createClass({
 
     render: function() {
         return (
             <div id="login-form">
-                <h4>Concept Coaster </h4>
                 <div>
                     <a href="/accounts/google/login/?process=login">
-                        <img src="/app/images/google-signin.png" alt="Sign in with Google" />
+                        <img id="google-signin-img" 
+                             src="/app/images/google-signin.png" 
+                             alt="Sign in with Google" />
                     </a>
                 </div>
             </div>
@@ -33,14 +36,14 @@ var UserStatusComponent = React.createClass({
         if(this.props.store.isAuthenticated()) {
             username = <div className="username-or-login-btn" 
                                 onClick={this.showLogout}>
-                                {this.state.username}
+                                {utils.capitalize(this.state.username)}
                         </div>
         }
         else {
             username = <div id="login-btn" 
                             className="username-or-login-btn"
                             onClick={this.showLoginForm}>
-                            <btn className="btn">Login</btn>
+                            <btn className="btn">Log In / Sign Up</btn>
                         </div>
         }
         var logout = "";
@@ -78,6 +81,7 @@ var UserStatusComponent = React.createClass({
         this.setState({
             showLoginForm: true
         });
+        localStorage.setItem("lastVisitedURL", Backbone.history.getFragment());
     },
 
     hideLoginForm: function() {
