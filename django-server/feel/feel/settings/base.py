@@ -96,6 +96,7 @@ STATIC_URL = '/static/'
 #All Auth Stuff
 # http://django-allauth.readthedocs.org/en/latest/installation.html
 
+LOGIN_REDIRECT_URL = "/just-signed-up/"
 
 AUTHENTICATION_BACKENDS = (
     
@@ -113,6 +114,8 @@ SOCIALACCOUNT_PROVIDERS = \
     { 'google':
         { 'SCOPE': ['profile', 'email'],
           'AUTH_PARAMS': { 'access_type': 'online' } }}
+
+
 
 ####################################################################################
 #DJANGO-REST-FRAMEWORK
