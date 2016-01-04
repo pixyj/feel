@@ -23,7 +23,7 @@ var MarkdownAndPreviewAttrs = {
     render: function() {
         var display = this.state.display;
 
-        var displayClassName = "";
+        var displayClassName = "md ";
         if(display) {
             displayClassName = "md-preview-with-content";
         }

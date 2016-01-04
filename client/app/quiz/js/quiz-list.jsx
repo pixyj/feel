@@ -21,9 +21,9 @@ var QuizSnippetComponent = React.createClass({
         var quiz = this.props.quiz;
         return (
             <div className="quiz-snippet collection-item"> 
-                <div
-                    dangerouslySetInnerHTML={{__html: quiz.questionDisplay}} 
-                    onClick={this.selectQuiz} />
+                <div    className="md"
+                        dangerouslySetInnerHTML={{__html: quiz.questionDisplay}} 
+                        onClick={this.selectQuiz} />
             </div>
         );
     }
@@ -38,8 +38,8 @@ var QuizSelectComponent = React.createClass({
             <div className="collection-item quiz-filter-question"
                  onClick={this.selectQuiz}> 
 
-                    <div
-                        dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} />
+                    <div    className="md"
+                            dangerouslySetInnerHTML={{__html: this.props.questionDisplay}} />
                     <p className="created-at">Created {createdAtDisplay} </p>
 
             </div>

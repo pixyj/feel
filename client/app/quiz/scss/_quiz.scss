@@ -139,22 +139,22 @@
 
 .student-quiz-number {
     float: left;
-    width: 4%;
+    width: 6%;
     font-size: 1.2em;
 }
 
 .student-quiz-body {
     float: right;
-    width: 96%;
+    width: 94%;
 }
 
 @media (max-width: $screen-md_min) {
 
     .student-quiz-number: {
-        width: 8%;
+        width: 14%;
     }
     .student-quiz-body {
-        width: 92%;
+        width: 86%;
     }
     
 }

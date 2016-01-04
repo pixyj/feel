@@ -1,7 +1,16 @@
+@import "md";
+
 .filter-and-select-item {
     cursor: pointer;
     padding-bottom: 1rem;
     padding-top: 1rem;
+}
+
+.filtered-item {
+    background: rgba(177,220,251,0.22);
+}
+.list-edit-item {
+    font-size: 0.8rem;
 }
 
 .md-and-html-heading {
@@ -13,34 +22,9 @@
     min-height: 200px;
 }
 
-//Copied heading values from bootstrap
-//Should we apply this globally? Maybe later. Don't want to break it until launch.
-.md-input-and-preview h1 {
-    font-size: 36px;
-}
-
-.md-input-and-preview h2 {
-    font-size: 30px;
-}
-
-.md-input-and-preview h3 {
-    font-size: 24px;
-}
-
-.md-input-and-preview h4 {
-    font-size: 18px;
-}
-
-.md-input-and-preview h5 {
-    font-size: 14px;
-}
-
-.md-input-and-preview h6 {
-    font-size: 12px;
-}
-
 .md-and-html-input {
     @extend .md-input-and-preview;
+    @extend .md;
 
     border-style: none; 
     border-color: Transparent; 

@@ -84,7 +84,7 @@ var ChoiceSingleCheckView = React.createClass({
         var selected = this.state.isSelected ? selectedClass : notSelectedClass;
         var enabled = this.props.disabled ? "" : "quiz-student-choice-enabled";
 
-        var classes = ['quiz-student-choice waves-effect', selected, enabled].join(" ");
+        var classes = ['md', 'quiz-student-choice waves-effect', selected, enabled].join(" ");
         
         return (
             <div dangerouslySetInnerHTML={{__html: html}} className={classes} onClick={this.toggleSelection} />
@@ -244,7 +244,7 @@ var QuizQuestionView = React.createClass({
         var html = this.props.questionDisplay || constants.QUESTION_PLACEHOLDER;
 
         return (
-            <div className="quiz-question-preview" dangerouslySetInnerHTML={{__html: html}}></div>
+            <div className="quiz-question-preview md" dangerouslySetInnerHTML={{__html: html}}></div>
         );
     }
 });
