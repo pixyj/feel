@@ -27,3 +27,5 @@ client/dist/vendor.map.json
 
 index.html
 prod-index.html
+
+static-root

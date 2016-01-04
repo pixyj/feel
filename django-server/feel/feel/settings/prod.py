@@ -18,3 +18,6 @@ DATABASES = {
         'PORT': os.environ['POSTGRES_PORT']
     }
 }
+
+
+STATIC_ROOT = "/home/pramod/feel-client/static-root"
