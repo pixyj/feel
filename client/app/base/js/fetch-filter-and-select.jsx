@@ -43,7 +43,8 @@ var FilterAndSelectMixin = {
             <div>
                 <input type="text"  onChange={this.handleInputChange} 
                                     onKeyUp={this.handleInputChange} 
-                                    value={this.state.inputValue} />
+                                    value={this.state.inputValue}
+                                    placeholder="Search" />
 
                 <div className="collection">
                     {components}
