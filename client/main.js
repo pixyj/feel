@@ -41,6 +41,7 @@ var Router = Backbone.Router.extend({
         "course/:id(/)": "learnCourse",
         "course/:courseSlug/:conceptSlug(/)": "learnCourseConcept",
         "(/)": "home",
+        "/just-signed-up(/)": "routeToLastVisitedURL",
         "login(/)": "gotoLogin",
         "*path": "notFound"
     },
@@ -123,6 +124,12 @@ var Router = Backbone.Router.extend({
     gotoLogin: function() {
         window.location.href = "/admin";
     },
+
+    routeToLastVisitedURL: function() {
+        url = localStorage.getItem("lastVisitedURL");
+        localStorage.removeItem("lastVisitedURL");
+        Backbone.history.navigate(url, {trigger: true}); 
+    },  
 
     createQuiz: function() {
         this.resetPage();
