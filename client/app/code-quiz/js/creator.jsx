@@ -224,12 +224,16 @@ var ItemComponent = React.createClass({
 
     render: function() {
         var problemStatement = mdAndMathToHtml(this.props.problemStatement);
+        var url = "/creator/code-quiz/{0}/".format(this.props.id);
         return (
-            <div>
-                <div dangerouslySetInnerHTML={{__html: problemStatement}} />
+            <div className="">
+                <div className="md" dangerouslySetInnerHTML={{__html: problemStatement}} />
                 <Ago action="Created" 
                      time={this.props.createdAt} /> 
+
+                <a href={url} className="list-edit-item">Edit</a>
             </div>
+
         );
     }
 });
@@ -292,7 +296,10 @@ var ConceptSectionComponent = React.createClass({
         return (
             <div className="row concept-creator-section card">
                 <h5> Selected Code-Quizzes </h5>
-                {listComponents}
+                <div className="collection">
+                    {listComponents}
+                </div>
+                <h5 className="code-quiz-creator-filter-heading"> Choose From </h5>
                 <FetchFilterAndSelectComponent 
                     url="/api/v1/codequizzes/"
                     ListItemComponent={ItemComponent} 
