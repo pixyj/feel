@@ -60,7 +60,8 @@ class Choice(TimestampedModel, UUIDModel):
 
     def __str__(self):
         status = "correct" if self.is_correct else "wrong"
-        return "{} is a {} choice to {} - Created by {}".format(self.choice_input, status, self.quiz, self.created_by)
+        return "{} is a {} choice to {} - Created by {}".format(self.choice_input, 
+            status, self.quiz, self.created_by)
 
 
 
@@ -103,9 +104,13 @@ class QuizUserAttemptManager(models.Manager):
         return self.get_user_attempts_in_quizzes(user_key, quiz_ids).filter(result=True).count()
 
 
+    def attribute_to_user(self, user, user_key):
+        return self.filter(user_key=user_key).update(user_key=user.id, user=user)
+
+
+
 #https://github.com/pramodliv1/conceptgrapher/blob/master/server/cg/quiz/models.py
 #The QuizAttempt model is inspired by the same model from my previous project
-
 SESSION_KEY_MAX_LENGTH = 40 #Equal to session_key max length
 
 class QuizAttempt(UUIDModel):
@@ -135,3 +140,12 @@ class QuizAttempt(UUIDModel):
             user_print = self.user
 
         return "{} - {} attempted {} - Result: {}".format(self.created_at, user_print, self.quiz, self.result)
+
+
+################################################################################
+#
+#       signal_receivers, placed at end of file to due to circular imports
+#
+################################################################################
+
+from . import signal_receivers
