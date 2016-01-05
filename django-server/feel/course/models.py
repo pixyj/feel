@@ -7,7 +7,6 @@ from django.core.exceptions import PermissionDenied
 from core.models import TimestampedModel, UUIDModel, SlugModel
 from concept.models import Concept
 
-from .signals import course_published
 
 class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256)
