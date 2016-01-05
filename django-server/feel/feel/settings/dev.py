@@ -24,3 +24,14 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+
+################################ DEBUG TOOLBAR #####################################
+
+INSTALLED_APPS += ('debug_toolbar', )
+
+DJANGO_DEBUB_TOOLBAR_TESTING = True
+
+if DJANGO_DEBUB_TOOLBAR_TESTING:
+    MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware', )\
+                    + MIDDLEWARE_CLASSES + ('core.middleware.JsonAsHtml', )
+
