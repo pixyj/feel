@@ -4,6 +4,7 @@ import uuid
 from collections import defaultdict
 
 from django.contrib.postgres.fields import JSONField
+from django.core.cache import cache
 from django.db import models
 from django.utils.text import slugify
 
@@ -17,9 +18,11 @@ class Concept(TimestampedModel, UUIDModel):
     name = models.TextField(blank=True)
     is_published = models.BooleanField(default=False)
 
+
     @property
     def slug(self):
         return slugify(self.name)
+
 
     @property
     def course_pretest_quiz(self):
@@ -39,15 +42,39 @@ class Concept(TimestampedModel, UUIDModel):
         serializer = QuizSerializer(quiz)
         return serializer.data
 
-    
-    def fetch_student_page(self):
-        sections = self.conceptsection_set.all()
-        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
-        serialized_concept = ConceptSerializer(self)
 
-        data = serialized_concept.data
-        data['section_quizzes'] = section_quizzes
+    @property
+    def _page_cache_key(self):
+        return "concept:{}:page".format(self.id)
+
+
+    @property
+    def page(self):
+        key = self._page_cache_key
+        data = cache.get(key)
+        if data is not None:
+            return data
+        serializer = ConceptSerializer(self)
+        data = serializer.data
         return data
+
+
+    def cache_page(self):
+        """
+        Cache concept and its sections, which are common to all students. 
+        As of now, the page is cached only when the course is published and 
+        evicted when the course is unpublished. 
+        Standalone concept pages are not cached as of now. 
+        """
+        key = self._page_cache_key
+        data = self.page
+        cache.set(key, data, timeout=None)
+        return data
+
+
+    def evict_cached_page(self):
+        key = self._page_cache_key
+        return cache.delete(key)
 
 
     def get_quiz_ids(self):
@@ -73,6 +100,18 @@ class Concept(TimestampedModel, UUIDModel):
     def get_user_codequizattempts(self, user_key):
         quiz_ids = self.get_codequiz_ids()
         return CodeQuizAttempt.get_user_attempts_in_quizzes(user_key, quiz_ids)
+
+
+
+    def fetch_student_page(self):
+        sections = self.conceptsection_set.all()
+        section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
+        serialized_concept = ConceptSerializer(self)
+
+        data = serialized_concept.data
+        data['section_quizzes'] = section_quizzes
+        return data
+
 
 
     def get_student_progress(self, user_key):

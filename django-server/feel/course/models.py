@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from core.models import TimestampedModel, UUIDModel, SlugModel
 from concept.models import Concept
 
-
+from .signals import course_published
 
 class Course(TimestampedModel, UUIDModel):
     name = models.CharField(max_length=256)
@@ -70,14 +70,23 @@ class Course(TimestampedModel, UUIDModel):
 
             courseslug = CourseSlug.objects.create(course=self, slug=slug)
             CourseSlug.objects.filter(course=self).exclude(slug=slug).delete()
-            [c.slugify() for c in self.courseconcept_set.select_related('concept').all()]
+            courseconcepts = [c for c in self.courseconcept_set.select_related('concept').all()]
+            for cc in courseconcepts:
+                cc.slugify()
             self.save()
+
+        for cc in courseconcepts:
+            cc.cache_page()
 
         return courseslug
 
 
     def unpublish(self):
         self.is_published = False
+        
+        for c in self.courseconcept_set.select_related('concept'):
+            c.concept.evict_cached_page()
+        
         with transaction.atomic():
             self.courseslug_set.all().delete()
             self.save()
@@ -127,6 +136,10 @@ class CourseConcept(TimestampedModel, UUIDModel):
         self.slug = self.concept.slug
         self.save()
         return self.slug
+
+
+    def cache_page(self):
+        self.concept.cache_page()
 
     def __str__(self):
         return "{} belonging to {}".format(self.concept, self.course)

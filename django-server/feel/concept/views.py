@@ -19,10 +19,6 @@ from concept.serializers import ConceptSerializer, ConceptSectionSerializer
 from quiz.serializers import QuizAttemptSerializer
 from codequiz.serializers import CodeQuizAttemptSerializer
 
-def get_concept_page(concept):
-    serializer = ConceptSerializer(concept)
-    data = serializer.data
-    return data
 
 
 class ConceptDetailView(APIView):
@@ -35,7 +31,7 @@ class ConceptDetailView(APIView):
         Get concept by concept_id
         """
         concept = get_object_or_404(Concept, pk=concept_id)
-        data = get_concept_page(concept)
+        data = concept.get_page()
         return Response(data)
 
 
