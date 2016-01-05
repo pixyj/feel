@@ -731,11 +731,37 @@ var GraphView = Backbone.View.extend({
             width: this.options.width,
             height: "1800"
         });
-        this.svg[0].innerHTML = TRIANGLE_MARKER;
+        var defs = this.getTriangleMarkerDefinition();
+        this.svg[0].appendChild(defs);
         this.$el.append(this.svg);
         this.allNodes = init(this.svg, graph, this.showProgress);
-        window.graphView = this;
+        window.graphView = this; //debugging
         return this;
+    },
+
+    getTriangleMarkerDefinition: function() {
+        var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        
+        var marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
+        var markerAttrs = {
+            "id": "Triangle",
+            "viewBox": "0 0 10 10",
+            "refX": "0",
+            "refY": "5",
+            "markerWidth": "5",
+            "markerHeight": "5",
+            "orient": "auto"
+        };
+        _.each(markerAttrs, function(value, key) {
+            marker.setAttribute(key, value);
+        });
+
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M0,0 L10,5 L0,10 z");
+        
+        marker.appendChild(path);
+        defs.appendChild(marker);
+        return defs
     },
 
     refresh: function(graph) {
