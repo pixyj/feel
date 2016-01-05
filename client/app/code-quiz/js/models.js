@@ -52,9 +52,14 @@ var AttemptCollection = Backbone.Collection.extend({
 
 var AttemptStore = function(options) {
     this._conceptId = options.conceptId;
-    this._attemptCollection = new AttemptCollection([], {
-        conceptId: options.conceptId
-    });
+    if(!options.attemptCollection) {
+        this._attemptCollection = new AttemptCollection([], {
+            conceptId: options.conceptId
+        });
+    }
+    else {
+        this._attemptCollection = options._attemptCollection;
+    }
     this._attempts = {};
 };
 
@@ -67,11 +72,15 @@ AttemptStore.prototype = {
     fetch: function() {
         var self = this;
         return this._attemptCollection.fetch().then(function() {
-            self._attemptCollection.each(function(model) {
-                var attrs = model.attributes;
-                self._attempts[attrs.quizId] = attrs;
-            });
+            self.initializeAttempts()
         });
+    },
+
+    initializeAttempts: function() {
+        this._attemptCollection.each(function(model) {
+            var attrs = model.attributes;
+            this._attempts[attrs.quizId] = attrs;
+        }, this);
     }
 };
 
@@ -82,5 +91,6 @@ AttemptStore.prototype.constructor = AttemptStore;
 module.exports = {
     CodeQuizModel: CodeQuizModel,
     CodeQuizAttemptModel: CodeQuizAttemptModel,
+    CodeQuizAttemptCollection: AttemptCollection,
     CodeQuizAttemptStore: AttemptStore
 };

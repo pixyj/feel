@@ -32,6 +32,7 @@ var QuizAttemptStore = require("./../../quiz/js/models").QuizAttemptStore;
 var QuizAttemptCollection = require("./../../quiz/js/models").QuizAttemptCollection;
 
 var CodeQuizAttemptStore = require("./../../code-quiz/js/models").CodeQuizAttemptStore;
+var CodeQuizAttemptCollection = require("./../../code-quiz/js/models").CodeQuizAttemptCollection;
 
 var components = require("./components.jsx");
 var SectionHeadingComponent = components.SectionHeadingComponent;
@@ -117,14 +118,17 @@ var renderImpl = function(pageStore, attemptStore, codeQuizAttemptStore, element
     app.attemptStore  = attemptStore;
     app.codeQuizAttemptStore = codeQuizAttemptStore;
     app.element = element;
-
+    ProgressBar.setProgress(1);
 };
 
 var render = function(options, element) {
     ProgressBar.setProgress(0.2);
+
     var model = new StudentCourseConceptPageModel(options);
+    var promises = [model.fetch()]; //I promise this, promise this, Check this hand cause I'm marvelous
     
-    model.fetch().then(function() {
+    //todo -> handle error case.
+    $.when.apply($, promises).then(function() {
         ProgressBar.setProgress(0.6);
         var pageModel = new StudentConceptPageModel(model.attributes.page)
         var pageStore = new PageStore({
@@ -136,15 +140,22 @@ var render = function(options, element) {
             attemptCollection: attemptCollection
         });
 
-        renderImpl(pageStore, attemptStore, element);
-        ProgressBar.setProgress(1);
+        ProgressBar.setProgress(0.8)
+        var conceptId = model.attributes.page.id;
+        var codeQuizAttemptStore = new CodeQuizAttemptStore({
+            conceptId: conceptId,
+            attemptCollection: new CodeQuizAttemptCollection(model.attributes.codequizattempts, {
+                conceptId: conceptId
+            })
+        });
+        renderImpl(pageStore, attemptStore, codeQuizAttemptStore, element);
 
     });
 };
 
 
 var renderPreview = function(options, element) {
-    
+
     var pageStore = new PageStore({
         model: new StudentConceptPageModel({id: options.id})
     });
@@ -164,7 +175,9 @@ var renderPreview = function(options, element) {
     var three = codeQuizAttemptStore.fetch();
     var promises = [one, two, three];
 
+    ProgressBar.setProgress(0.2);
     $.when.apply($, promises).then(function() {
+        ProgressBar.setProgress(0.8);
         renderImpl(pageStore, attemptStore, codeQuizAttemptStore, element);
     });
 };
