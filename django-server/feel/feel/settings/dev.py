@@ -27,11 +27,12 @@ DATABASES = {
 
 ################################ DEBUG TOOLBAR #####################################
 
-INSTALLED_APPS += ('debug_toolbar', )
 
-DJANGO_DEBUB_TOOLBAR_TESTING = True
+
+DJANGO_DEBUB_TOOLBAR_TESTING = False
 
 if DJANGO_DEBUB_TOOLBAR_TESTING:
+    INSTALLED_APPS += ('debug_toolbar', )
     MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware', )\
                     + MIDDLEWARE_CLASSES + ('core.middleware.JsonAsHtml', )
 
