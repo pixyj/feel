@@ -38,7 +38,6 @@ def create_payload(commit, output_zip_dir):
         'COMMIT': commit
     }
     create_temp_config_file(conf, "{}/nginx.conf".format(parent_dir))
-    exit(0);
     print("Creating prod-index.html and placing it as index.html")
     create_index_file_from_template('prod', commit)
     command = "cp {} {}/index.html".format('prod-index.html', parent_dir)
