@@ -179,12 +179,14 @@ def get_quizattempts(request, concept):
     return serialized_attempts
 
 
+
 class StudentQuizAttemptView(APIView):
 
     def get(self, request, pk):
         concept = get_object_or_404(Concept, pk=pk)
         attempts = get_quizattempts(request, concept)
         return Response(attempts)
+
 
 
 class StudentCodeQuizAttemptView(APIView):
@@ -200,3 +202,8 @@ class StudentCodeQuizAttemptView(APIView):
         attempts = concept.get_user_codequizattempts(user_key)
         serializer = CodeQuizAttemptSerializer(attempts, many=True)
         return serializer.data
+
+
+def get_codequizattempts(request, concept):
+    view = StudentCodeQuizAttemptView()
+    return view._get_codequizattempts(request, concept)

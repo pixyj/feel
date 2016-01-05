@@ -24,7 +24,7 @@ from course.serializers import CourseSerializer, CourseConceptSerializer
 from course.serializers import ConceptDependencySerializer
 
 from concept.models import Concept
-from concept.views import get_concept_page, get_quizattempts
+from concept.views import get_concept_page, get_quizattempts, get_codequizattempts
 from concept.serializers import ConceptSerializer
 
 
@@ -213,9 +213,11 @@ class StudentConceptView(APIView):
         concept = courseconcept.concept
         page = get_concept_page(concept)
         quizattempts = get_quizattempts(request, concept)
+        codequizattempts = get_codequizattempts(request, concept)
         return Response({
             "page": page,
-            "quizattempts": quizattempts
+            "quizattempts": quizattempts,
+            "codequizattempts": codequizattempts
         })
 
 
