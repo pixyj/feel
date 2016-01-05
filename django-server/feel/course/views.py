@@ -110,8 +110,7 @@ class CourseDetailView(APIView):
                 response['slug'] = courseslug.slug
             else:
                 response['slug'] = None
-
-
+                
         return Response(response, status.HTTP_200_OK)
 
 

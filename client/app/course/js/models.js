@@ -20,7 +20,10 @@ var CourseModel = StreamSaveModel.extend({
 
     defaults: {
         name: "",
-        isPublished: false
+        isPublished: false,
+        intro: "",
+        howToLearn: "",
+        whereToGoFromHere: ""
     },
 
     BASE_URL: "/api/v1/courses/",

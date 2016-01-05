@@ -6,7 +6,6 @@ from course.models import Course, CourseConcept, ConceptDependency
 
 
 
-
 class CourseConceptSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -37,8 +36,6 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'is_published', 'slug')
+        fields = ('id', 'name', 'is_published', 'slug', 
+                    'intro', 'how_to_learn', 'where_to_go_from_here')
         
-
-
-
