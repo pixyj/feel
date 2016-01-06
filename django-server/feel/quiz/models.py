@@ -15,8 +15,8 @@ QUIZ_TYPES = (
 
 class Quiz(TimestampedModel, UUIDModel):
 
-    question_input = models.TextField()
-    question_display = models.TextField()
+    question_input = models.TextField(blank=True)
+    question_display = models.TextField(blank=True)
     
     quiz_type = models.IntegerField(choices=QUIZ_TYPES)
 
@@ -36,7 +36,7 @@ class Quiz(TimestampedModel, UUIDModel):
 class ShortAnswer(TimestampedModel, UUIDModel):
 
     quiz = models.ForeignKey(Quiz)
-    answer = models.TextField()
+    answer = models.TextField(blank=True)
 
 
     class Meta:
@@ -51,8 +51,8 @@ class ShortAnswer(TimestampedModel, UUIDModel):
 class Choice(TimestampedModel, UUIDModel):
     
     quiz = models.ForeignKey(Quiz)
-    choice_input = models.TextField()
-    choice_display = models.TextField()
+    choice_input = models.TextField(blank=True)
+    choice_display = models.TextField(blank=True)
     is_correct = models.BooleanField()
 
     class Meta:
