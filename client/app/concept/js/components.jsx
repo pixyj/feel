@@ -128,7 +128,7 @@ var StudentMarkdownSectionComponent = React.createClass({
         var input = this.props.section.data.input;
         var display = md.mdAndMathToHtml(input);
         return (
-            <div className="row concept-student-section">
+            <div className="concept-student-section card">
                 <MarkdownDisplayComponent display={display} />
             </div>
         );
@@ -153,7 +153,7 @@ var StudentVideoSectionComponent = React.createClass({
         var url = this.props.section.data.url;
 
         return (
-            <div className="row concept-student-section">
+            <div className="concept-student-section card">
                 <VideoFrameComponent url={url} />
             </div>
         );
