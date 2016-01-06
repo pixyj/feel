@@ -31,7 +31,7 @@ class ConceptDetailView(APIView):
         Get concept by concept_id
         """
         concept = get_object_or_404(Concept, pk=concept_id)
-        data = concept.get_page()
+        data = concept.page
         return Response(data)
 
 
