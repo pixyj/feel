@@ -11,7 +11,7 @@ var LoginForm = React.createClass({
                 <div>
                     <a href="/accounts/google/login/?process=login">
                         <img id="google-signin-img" 
-                             src="/app/images/google-signin.png" 
+                             src="/dist/images/google-signin.png" 
                              alt="Sign in with Google" />
                     </a>
                 </div>

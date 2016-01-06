@@ -5,7 +5,7 @@ from create_index_file import create_index_file_from_template
 
 
 INPUT_ROOT_DIR = 'dist'
-INPUT_CHILD_DIRS = ['font', 'min']
+INPUT_CHILD_DIRS = ['font', 'min', 'images']
 
 
 def exec_command(command):
