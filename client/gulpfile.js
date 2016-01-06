@@ -134,6 +134,7 @@ gulp.task('create-deployment-payload', function() {
 });
 
 gulp.task('create-client-distribution', function() {
-    gulp.start('prod-minify', 'create-commit-suffix-files', 'prod-create-index-file', 'create-deployment-payload');
+    gulp.start('compass-compile-vendor', 'compass-compile-app', 'browserify-app', 'minify', 
+        'create-commit-suffix-files', 'prod-create-index-file', 'create-deployment-payload');
 });
 
