@@ -57,6 +57,21 @@ def place_config_file(commit):
         raise Exception(message.format(commit))
 
 
+def place_index_html_file(commit):
+    """
+    Move index.html from DIST_DIR/dist-{commit} to DIST_DIR/index.html"
+    """
+    dest_dir = os.path.expanduser(DIST_DIR)
+    command = "sudo mv dist-{commit}/index.html {dest_dir}".format(commit=commit, dest_dir=dest_dir)
+    status = exec_command(command)
+    if status != 0:
+        message = """
+        index.html not moved. 
+        Hint: Check if index.html exists in dist-{}.zip
+        """
+        raise Exception(message.format(commit))
+
+
 def test_nginx_conf():
     status = exec_command("sudo nginx -t")
     if status != 0:
@@ -109,6 +124,7 @@ if __name__ == '__main__':
     commit = args['commit']
 
     fetch(db_user_id, commit)
+    place_index_html_file(commit)
     place_config_file(commit)
     test_nginx_conf()
     reload_nginx()
