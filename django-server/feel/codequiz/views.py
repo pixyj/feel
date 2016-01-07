@@ -1,24 +1,17 @@
-import uuid
-import json
-
-from django.shortcuts import get_object_or_404
-from django.http import Http404, HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from django.db.utils import IntegrityError
-from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 
-from rest_framework.views  import APIView
-from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from core.views import get_user_and_user_key, get_audit_attrs
 
 from .models import CodeQuiz, CodeQuizAttempt
 from .serializers import CodeQuizSerializer
+
 
 class CodeQuizListAndPostView(APIView):
 
@@ -42,14 +35,17 @@ class CodeQuizListAndPostView(APIView):
 
     @method_decorator(login_required)
     def get(self, request):
+        """
+        Get all attempts by user
+        """
         user, _ = get_user_and_user_key(request)
         codequizzes = CodeQuiz.objects.filter(created_by=user)
 
-        #Um, django-rest-framework is unable to serialize for me. 
-        #todo -> debug later
-        data = [ 
+        # Um, django-rest-framework is unable to serialize for me.
+        # todo -> debug later
+        data = [
             {
-                "problem_statement": cq.problem_statement, 
+                "problem_statement": cq.problem_statement,
                 "id": str(cq.id),
                 "created_at": cq.created_at
             }
@@ -68,11 +64,10 @@ class CodeQuizGetAndPutView(APIView):
         serializer.data['test_cases'] = codequiz.test_cases
         return Response(response_data)
 
-
     @method_decorator(login_required)
     def put(self, request, pk):
         codequiz = get_object_or_404(CodeQuiz, id=pk)
-        
+
         user, _ = get_user_and_user_key(request)
         if user.id != codequiz.created_by.id:
             return Response({"nice": "try"}, status.HTTP_403_FORBIDDEN)
@@ -105,10 +100,12 @@ class CodeQuizAttemptView(APIView):
             attempt = CodeQuizAttempt.objects.create(**attrs)
             outputs = attempt.submit()
         except IntegrityError:
-            attempt = CodeQuizAttempt.objects.filter(user=user,
-                codequiz=codequiz, code=code).first()
+            attempt_objects = CodeQuizAttempt.objects
+            attempt_objects.filter(user=user,
+                                   codequiz=codequiz,
+                                   code=code).first()
             outputs = attempt.outputs
-        
+
         json_response = {
             'result': attempt.result,
             'id': attempt.id,
