@@ -47,8 +47,13 @@ def create_payload(commit, output_zip_dir):
     dir_name = 'dist-{}'.format(commit)
     command = 'zip -r {}/dist-{}.zip {}'.format(output_zip_dir, commit, dir_name)
     exec_command(command)
-    #command = 'rm -r {}'.format(parent_dir)
-    #exec_command(command)
+    cleanup_min_files()
+
+
+def cleanup_min_files():
+
+    command = "rm {}/min/*".format(INPUT_ROOT_DIR)
+    exec_command(command)
 
 
 if __name__ == '__main__':
