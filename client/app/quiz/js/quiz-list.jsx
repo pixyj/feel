@@ -24,6 +24,10 @@ var QuizSnippetComponent = React.createClass({
                 <div    className="md"
                         dangerouslySetInnerHTML={{__html: quiz.questionDisplay}} 
                         onClick={this.selectQuiz} />
+
+                <div className="list-edit-item">
+                    <a href={"/creator/quiz/{0}/".format(quiz.id)}>Edit</a>
+                </div>
             </div>
         );
     }

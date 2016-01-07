@@ -289,7 +289,7 @@ var QuizSectionComponent = React.createClass({
                 <SectionSaveStatusComponent store={this.props.store} />
                 <SectionRemoveItemComponent position={this.props.position} store={this.props.store} />
                 <SectionHeadingComponent sectionName={this.props.section.name} />
-                <div className="collection">
+                <div className="collection quiz-section-selected-collection">
                     {components}
                 </div>
 
