@@ -395,14 +395,16 @@ var QuizBox = React.createClass({
 
     render: function() {
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6 quiz-page-split-column quiz-creator-container">
-                        <QuizCreatorView store={this.props.store}/>
-                    </div>
-                    <div className="col-md-6 quiz-page-split-column quiz-student-container">
-                        <h4 className="quiz-creator-preview-heading">Preview</h4>
-                        <QuizPreview store={this.props.store} submitStore={this.props.submitStore} />
+            <div className="container card">
+                <div>
+                    <div className="row">
+                        <div className="col-md-6 quiz-page-split-column quiz-creator-container">
+                            <QuizCreatorView store={this.props.store}/>
+                        </div>
+                        <div className="col-md-6 quiz-page-split-column quiz-student-container">
+                            <h4 className="quiz-creator-preview-heading">Preview</h4>
+                            <QuizPreview store={this.props.store} submitStore={this.props.submitStore} />
+                        </div>
                     </div>
                 </div>
             </div>

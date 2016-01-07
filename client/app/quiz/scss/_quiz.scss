@@ -7,22 +7,13 @@
 }
 
 .quiz-page-split-column {
-    border-top: 3px dashed $base-border-color;
-    border-bottom: 3px dashed $base-border-color;
     padding-bottom: 0.75rem !important;
 }
 
-.quiz-creator-container {
-    border-left: 3px dashed $base-border-color;
-    border-right: 3px dashed $base-border-color;
-}
 
-.quiz-student-container {
-    border-right: 3px dashed $base-border-color;
-}
 
 .quiz-creator-question-input {
-    height: 200px;
+    min-height: 300px;
     overflow: scroll;
 }
 
