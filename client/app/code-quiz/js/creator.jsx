@@ -16,6 +16,7 @@ var CodeQuizModel = require("./models").CodeQuizModel;
 
 var FetchFilterAndSelectMixin = require("fetch-filter-and-select.jsx").FetchFilterAndSelectMixin;
 var Ago = require("ago.jsx").Ago;
+var SaveStatus = require("save-status.jsx").SaveStatus;
 
 var Store = function(options) {
     this.options = options;
@@ -24,7 +25,8 @@ var Store = function(options) {
     });
 
     if(options.id === null && options.updateURL) {
-        this._model.once("sync", this.updateURL, this)
+        this._model.once("sync", this.updateURL, this);
+        this._model.on("change:isSaved", this.triggerSaveStatusChange, this);
     }
 };
 
@@ -86,6 +88,14 @@ Store.prototype = {
         fragment = utils.addTrailingSlash(fragment);
         var url = "{0}{1}/".format(fragment, this._model.attributes.id);
         Backbone.history.navigate(url, {trigger: false});
+    },
+
+    isSaved: function() {
+        return this._model.isSaved()
+    },
+
+    triggerSaveStatusChange: function() {
+        this.trigger("change:isSaved", this.isSaved());
     },
 
     toJSON: function() {
@@ -169,7 +179,9 @@ var TestCaseList = React.createClass({
         return (
             <div>
                 <h5>Test Cases </h5>
-                {list}
+                <div className="container">
+                    {list}
+                </div>
                 <button className="btn waves-effect" 
                         onClick={this.addTestCase}>
                         Add Test Case 
@@ -327,7 +339,18 @@ var PageComponent = React.createClass({
     render: function() {
         return (
             <div className="card card-padding">
-                <h5> Problem Statement </h5>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-xs-10">
+                            <h5> Problem Statement </h5>
+                        </div>
+                        <div className="col-xs-2">
+                            <SaveStatus store={this.props.store} />
+                        </div>
+                    </div>
+
+                </div>
+
                 <ProblemStatement store={this.props.store} />  
                 <h5> Bootstrap Code </h5>
                 <div id="bootstrap-code"> </div>
