@@ -190,7 +190,7 @@ var QuizAnswerSubmitView = React.createClass({
 
 
         var feedback = this.getResultFeedback();
-        var feedbackClass = "quiz-result-feedback ";
+        var feedbackClass = "quiz-feedback ";
         if(result) {
             feedbackClass += "quiz-correct-result-feedback quiz-status-transition"
         }
@@ -199,11 +199,18 @@ var QuizAnswerSubmitView = React.createClass({
 
             <div>
                 {answerSubmitView}
-                <button  className="btn waves-effect waves-light btn-large" 
-                                                onClick={this.checkAnswer} disabled={result}>
-                                                Submit
-                                        </button>
-                <span className={feedbackClass}> {feedback} </span>
+                <div className="row">
+                    <div className="col-xs-5 col-md-3">
+                        <button className="btn waves-effect waves-light btn-large" 
+                                onClick={this.checkAnswer} 
+                                disabled={result}>
+                                Submit
+                        </button>
+                    </div>
+                    <div className="col-xs-7 col-md-9">
+                        <span className={feedbackClass}> {feedback} </span>
+                    </div>
+                </div>
             </div>
 
         );

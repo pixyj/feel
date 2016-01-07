@@ -144,14 +144,14 @@ var CodeSubmitComponent = React.createClass({
         return (
             <div className="code-quiz-submit-container">
                 <div className="row">
-                    <div className="col-xs-3">
+                    <div className="col-xs-5 col-md-3">
                         <button className="btn btn-large waves-effect" 
                                 onClick={this.submit} 
                                 disabled={!enabled}>
                                 Submit
                         </button>
                     </div>
-                    <div className="col-xs-9 quiz-feedback">
+                    <div className="col-xs-7 col-md-9 quiz-feedback">
                         {loading}
                         {result}
                     </div>
