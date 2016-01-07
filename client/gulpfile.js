@@ -120,7 +120,6 @@ gulp.task('prod-minify', function() {
     gulp.start('dev-setup', 'minify');
 });
 
-
 gulp.task('create-commit-suffix-files', function() {
     execute_shell_script('./create-commit-suffix-files.sh');
 });
@@ -133,6 +132,7 @@ gulp.task('create-deployment-payload', function() {
     execute_shell_script('./create-deployment-payload.sh');
 });
 
+//These tasks are run in parallel. Fix this. 
 gulp.task('create-client-distribution', function() {
     gulp.start('compass-compile-vendor', 'compass-compile-app', 'browserify-app', 'minify', 
         'create-commit-suffix-files', 'prod-create-index-file', 'create-deployment-payload');
