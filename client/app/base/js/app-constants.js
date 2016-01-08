@@ -1,6 +1,6 @@
 var QUIZ_FEEDBACK = {
-    CORRECT: "☺",
-    WRONG: "☹"
+    CORRECT: "😄",
+    WRONG: "😑"
 }
 
 module.exports = {
