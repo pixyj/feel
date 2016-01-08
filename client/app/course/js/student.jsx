@@ -424,7 +424,7 @@ var PretestComponent = React.createClass({
         });
     },
 
-    ALL_QUESTIONS_ANSWERED_MESSAGE: "Awesome! Select any concept you'd  like to review and start learning.",
+    ALL_QUESTIONS_ANSWERED_MESSAGE: "Awesome! Select any concept you'd like to review and start learning.",
 
     render: function() {
 
