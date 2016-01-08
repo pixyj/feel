@@ -1,24 +1,16 @@
-import uuid
-import json
-
 from django.shortcuts import get_object_or_404
-from django.http import Http404
-from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.utils import timezone
 
-from rest_framework.views  import APIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 
 from core.views import get_user_and_user_key
 
-from concept.models import Concept, ConceptSection
+from concept.models import Concept
 from concept.serializers import ConceptSerializer, ConceptSectionSerializer
 from quiz.serializers import QuizAttemptSerializer
 from codequiz.serializers import CodeQuizAttemptSerializer
-
 
 
 class ConceptDetailView(APIView):
@@ -34,7 +26,6 @@ class ConceptDetailView(APIView):
         data = concept.page
         return Response(data)
 
-
     def post(self, request, format=None):
         """
         Create new concept
@@ -48,15 +39,15 @@ class ConceptDetailView(APIView):
             2. Save Sections
         6. Return Response
         """
-        return self._save_concept_and_return_response(request, request.user, self._create_concept_object)
-
+        return self._save_concept_and_return_response(request, request.user, 
+                                                      self._create_concept_object)
 
     def _create_concept_object(self, concept_attrs, data):
         """
-        Used in _save_quiz_and_return_response during `POST` to create a `Quiz` instance. 
+        Used in _save_quiz_and_return_response
+        during `POST` to create a `Quiz` instance.
         """
         return Concept.objects.create(**concept_attrs)
-
 
     def put(self, request, concept_id, format=None):
         """
@@ -80,33 +71,35 @@ class ConceptDetailView(APIView):
             found = False
 
         if not found:
-            return Response({"concept_id_exists": True}, status=status.HTTP_400_BAD_REQUEST)
+            resp_status = status.HTTP_400_BAD_REQUEST
+            return Response({"concept_id_exists": True}, status=resp_status)
 
-        #Authorization
+        # Authorization
         elif concept_v1.created_by.id != request.user.id:
             return Response({"nice_try": True}, status=status.HTTP_403_FORBIDDEN)
 
-        return self._save_concept_and_return_response(request, concept_v1.created_by, self._get_existing_concept_object)
-
+        get_concept_method = self._get_existing_concept_object
+        return self._save_concept_and_return_response(request, concept_v1.created_by,
+                                                      get_concept_method)
 
     def _get_existing_concept_object(self, concept_attrs, data):
         """
-        Used in _save_concept_and_return_response during `PUT` to get a `Concept` object.
+        Used in _save_concept_and_return_response 
+        during `PUT` to get a `Concept` object.
         """
         concept = Concept.objects.get(pk=data['id'])
         for field, value in concept_attrs.items():
             setattr(concept, field, value)
         concept.save()
         return concept
-        
 
     def _save_concept_and_return_response(self, request, created_by, get_concept_instance):
         """
-        Workhorse private method that saves data from request (either `POST` or `PUT`) into the database and returns
+        Workhorse private method that saves data from request 
+        (either `POST` or `PUT`) into the database and returns
         appopriate HttpResponse
         """
-        #import ipdb; ipdb.set_trace()
-        data=request.data
+        data = request.data
         serializer = ConceptSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -118,7 +111,6 @@ class ConceptDetailView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             section_serializers.append(serializer)
-
 
         concept_fields = ['name', 'is_published']
         concept_attrs = {}
@@ -132,11 +124,11 @@ class ConceptDetailView(APIView):
         concept_attrs.update(audit_attrs)
         with transaction.atomic():
             concept = get_concept_instance(concept_attrs, data)
-            
+
             concept.conceptsection_set.all().delete()
             for position, serializer in enumerate(section_serializers):
                 section_attrs = request.data['sections'][position]
-                section_data =  section_attrs['data']
+                section_data = section_attrs['data']
                 section_type = section_attrs['type']
                 section_attrs = {
                     'concept_id': concept.id,
@@ -146,10 +138,8 @@ class ConceptDetailView(APIView):
                 }
                 section_attrs.update(audit_attrs)
                 serializer.create(section_attrs)
-                
-                
-        return Response({"id": concept.id})
 
+        return Response({"id": concept.id})
 
 
 class StudentConceptPageView(APIView):
@@ -175,7 +165,6 @@ def get_quizattempts(request, concept):
     return serialized_attempts
 
 
-
 class StudentQuizAttemptView(APIView):
 
     def get(self, request, pk):
@@ -184,14 +173,12 @@ class StudentQuizAttemptView(APIView):
         return Response(attempts)
 
 
-
 class StudentCodeQuizAttemptView(APIView):
 
     def get(self, request, pk):
         concept = get_object_or_404(Concept, pk=pk)
         attempts = self._get_codequizattempts(request, concept)
         return Response(attempts)
-
 
     def _get_codequizattempts(self, request, concept):
         _, user_key = get_user_and_user_key(request)

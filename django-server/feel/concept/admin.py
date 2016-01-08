@@ -10,6 +10,6 @@ class ConceptSectionInline(admin.StackedInline):
 
 class ConceptAdmin(admin.ModelAdmin):
     inlines = [ConceptSectionInline]
-    
+
 
 admin.site.register(Concept, ConceptAdmin)

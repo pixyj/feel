@@ -3,12 +3,10 @@ from rest_framework import serializers
 from concept.models import Concept, ConceptSection
 
 
-
 class ConceptSectionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return ConceptSection.objects.create(**validated_data)
-
 
     class Meta:
         model = ConceptSection
@@ -22,7 +20,3 @@ class ConceptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Concept
         fields = ('id', 'name', 'sections', 'is_published', 'slug', )
-        
-
-
-
