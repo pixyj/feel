@@ -33,6 +33,10 @@
     padding-bottom: 1rem;
 }
 
+.quiz-question-preview pre {
+    margin-top: 1rem;
+}
+
 .md-preview-with-content {
     margin-top: -0.5em; 
 }
@@ -66,6 +70,7 @@
 .quiz-creator-add-choice {
     margin-bottom: 15px;
 }
+
 .quiz-creator-remove-choice {
     font-size: 2em;
     cursor: pointer;
@@ -148,8 +153,10 @@
     .student-quiz-number: {
         width: 14%;
     }
+
     .student-quiz-body {
         width: 86%;
+        padding-left: 1rem;
     }
     
 }
@@ -161,6 +168,7 @@
 .student-quiz-attempt-status {
     margin-right: 2rem;
     font-size: 2rem;
+    font-weight: bold;
 }
 
 @media (max-width: $screen-md_min) {
