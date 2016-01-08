@@ -6,21 +6,14 @@ var RadioInput = React.createClass({
 
     render: function() {
 
-        var selectedClass = this.props.selected ? "radio-box-selected" : "";
-        var boxClassName = "col-xs-1 radio-box {0}".format(selectedClass);
-
-        var wavesEffect = this.props.selected ? "waves-effect": "";
-        var displayClass = "col-xs-11 {0}".format(wavesEffect);
-
+        var className = "radio-item ";
+        if(this.props.selected) {
+            className += "radio-item selected waves-effect";
+        }
         return (
 
-            <div className="row radio-item" onClick={this.toggleSelection}>
-                <div className={boxClassName}>
-                </div>
-                <div className={displayClass}>
+            <div className="radio-item" onClick={this.toggleSelection}>
                     {this.props.item.display}
-                </div>
-
             </div>
         );
     },
@@ -66,15 +59,9 @@ var RadioGroup = React.createClass({
         var hideClass = this.state.hide ? "radio-group-hide" : "";
         var className = "radio-group {0} {1}".format(hideClass, this.props.className || "");
 
-        var heading = "";
-        if(this.props.heading) {
-            heading = <h4>{this.props.heading}</h4>
-        }
-
         return (
             <div className={className} 
                  id={this.props.id || ""}>
-                 {heading}
                  {inputs}
             </div>
         );
@@ -102,7 +89,7 @@ var RadioGroup = React.createClass({
         var self = this;
         this._timer = setTimeout(function() {
             self.props.onChange.call(self.props.parent, currentKey);
-        }, 700); //700 is the waves-effect timeout. 
+        }, 50); //50 is the waves-effect timeout. 
         
     }
 
