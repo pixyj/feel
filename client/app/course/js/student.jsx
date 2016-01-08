@@ -190,6 +190,10 @@ Store.prototype = {
         return this._pretest.startLearningAtConcept;
     },
 
+    getNextPretestConcept: function() {
+        return this._orderedConcepts[this._pretestState.currentConceptIndex];
+    },
+
     getNextPretestQuizAndHighlightConcept: function() {
         var concept = this._orderedConcepts[this._pretestState.currentConceptIndex];
         
@@ -314,7 +318,7 @@ var SELF_SKILL_ESTIMATION_LEVELS = [
     },
     {
         value: 2,
-        display: "I've studied these topics, but I'm a bit rusty.",
+        display: "I'm aware of these topics, but I'm a bit rusty.",
         ComponentClass: QuizOrBrowseComponent,
         props: {
             quizStartPoint: 0.5
@@ -336,14 +340,13 @@ var SelfSkillEstimationComponent = React.createClass({
         return STUDENT_SKILL_ESTIMATION_LEVELS[level].ComponentClass;
     },
 
-    HEADING: "Which of these describes you best",
+    HEADING: "Which of these describes you best?",
 
     render: function() {
         
         var levels =  SELF_SKILL_ESTIMATION_LEVELS;
         var hideOnSelection = true;
         var radioGroup = <RadioGroup 
-                            heading={this.HEADING}
                             items={levels} 
                             onChange={this.onSkillEstimated} 
                             parent={this} 
@@ -351,6 +354,7 @@ var SelfSkillEstimationComponent = React.createClass({
 
         return (
             <div>
+                <h5 text-align="center"> {this.HEADING} </h5>
                 {radioGroup}
             </div>
         );
@@ -392,8 +396,8 @@ var PretestComponent = React.createClass({
             self.showNextPretestQuiz();
         });
 
-        this.props.store.on("add:attempt", this.showNextBtn, this);
         this.props.store.on("complete:pretest", this.updateIsPretestCompleted, this);
+        this.props.store.on("add:attempt", this.showNextBtn, this);
     },
 
     componentWillUnmount: function() {
@@ -406,7 +410,12 @@ var PretestComponent = React.createClass({
     showNextBtn: function() {
         this.setState({
             showNextBtn: true
-        })
+        });
+
+        var self = this;
+        this._nextButtonTimer = setTimeout(function() {
+            self.showNextPretestQuiz();
+        }, 2000);
     },
 
     updateQuiz: function(quiz) {
@@ -417,11 +426,17 @@ var PretestComponent = React.createClass({
 
     updateIsPretestCompleted: function(pretestStateAttrs) {
         this._pretestStateAttrs = pretestStateAttrs;
-
         this.setState({
-            isPretestCompleted: true,
             showNextBtn: false
         });
+        var self = this;
+        this._pretestButtonTimer = setTimeout(function() {
+            self.setState({
+                isPretestCompleted: true,
+                showNextBtn: false,
+                quiz: null
+            });
+        }, 2000);
     },
 
     ALL_QUESTIONS_ANSWERED_MESSAGE: "Awesome! Select any concept you'd like to review and start learning.",
@@ -439,9 +454,6 @@ var PretestComponent = React.createClass({
                                             store={this.props.store} />
             }
         }
-        else {
-
-        };
 
         var quizComponent = "";
         if(this.state.quiz !== null) {
@@ -451,19 +463,29 @@ var PretestComponent = React.createClass({
 
         }
         var nextBtn = ""; 
+        var nextConcept;
+        var nextBtnString = "";
         if(this.state.showNextBtn) {
-            nextBtn = <button className="btn" onClick={this.showNextPretestQuiz}>Next</button>
+            nextConcept = this.props.store.getNextPretestConcept();
+            if(nextConcept) {
+                nextBtn = <h5>Next up, a question on 
+                                <b> {nextConcept.name}</b>
+                          </h5>
+            }
         }
         return (
             <div>
+                {startLearningAtComponent}
                 {quizComponent}
                 {nextBtn}
-                {startLearningAtComponent}
             </div>
         );
     },
 
     showNextPretestQuiz: function() {
+        if(this._nextButtonTimer) {
+            clearTimeout(this._nextButtonTimer);
+        }
         var quiz = this.props.store.getNextPretestQuizAndHighlightConcept();
 
         this.setState({
@@ -545,12 +567,12 @@ var PageComponent = React.createClass({
         return (
             <div>
                 <h3> Welcome to {this.props.store.getCourseName()}  </h3>
-                <div className="row"> 
-                    <div className="col-xs-5 col-md-6" ref="graphContainer">
+                <div className="row">
+                    <div className="col-xs-12 col-md-6" ref="graphContainer">
                     </div>
-                    <div className="col-xs-7 col-md-6">
+                    <div className="col-xs-12 col-md-6">
                         {stateComponent}
-                    </div>
+                    </div> 
                 </div>
             </div>
         );

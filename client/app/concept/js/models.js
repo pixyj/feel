@@ -42,6 +42,16 @@ var StudentCourseConceptPageModel = Backbone.Model.extend({
         var attrs = this.attributes;
         return "/api/v1/courses/{0}/concepts/{1}/".format(attrs.courseSlug,
             attrs.conceptSlug);
+    },
+
+    // todo -> move all enums into a single module. 
+    COURSE_PRETEST_SECTION_TYPE: 0,
+
+    parse: function(resp) {
+        resp.page.sections = _.filter(resp.page.sections, function(section) {
+            return section.type !== this.COURSE_PRETEST_SECTION_TYPE;
+        }, this);
+        return resp;
     }
 
 });
