@@ -159,22 +159,29 @@
 }
 
 .student-quiz-attempt-status {
-    padding: 1rem;
     margin-right: 2rem;
-    font-size: 1.3rem;
+    font-size: 2rem;
+}
+
+@media (max-width: $screen-md_min) {
+
+    .student-quiz-number > p {
+        margin-bottom: 1rem;
+    }
+    .student-quiz-attempt-status {
+        font-size: 1.3rem;
+        margin-top: 1.3rem;
+    }
 
 }
+
 
 .student-quiz-not-correct-status {
     color: rgba(0, 0, 0, 0.2);
-    background-color: #FFFFFF;
 }
 
 .student-quiz-correct-status {
-    
-    background-color: #5cb85c;
-    color: rgb(255, 255, 255);
-
+    color: #5cb85c;
 }
 
 .student-quiz-attempt-list {

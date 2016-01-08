@@ -276,50 +276,6 @@ var QuizPreview = React.createClass({
 
 });
 
-var StudentSingleQuizView = React.createClass({
-
-    getInitialState: function() {
-        var result = this.props.attemptStore.getAttempt(this.props.quiz.id).result;
-        console.log("Quiz: ", this.props.quiz.id, "Result: ", result);
-        return {
-            result: result
-        }
-    },
-
-
-    render: function() {
-
-        var submitStore = {};
-        // hack - getInitialState is called only once per component. 
-        //Since the same component is used to show different quizzes by the parent, 
-        //we have a problem where the state is not updated. Hence, this hack. 
-        //We should move the state to the parent. #todo
-        
-        var result = this.getInitialState().result;  
-        return (
-            <div>
-                <div className="student-quiz-container">
-                    <div className="student-quiz-number">
-                        <p>{this.props.number}.</p>
-                    </div>
-                    <div className="student-quiz-body">
-                        <QuizQuestionView 
-                            questionDisplay={this.props.quiz.questionDisplay} 
-                            ref="questionView" />
-                        <QuizAnswerSubmitView 
-                            store={this.props.quiz} 
-                            attemptStore={this.props.attemptStore}
-                            parent={this} 
-                            result={result} />
-                    </div>
-                    <div className="clearfix"> </div>
-                </div>
-                <hr className="student-quiz-end-line" />
-            </div>
-        );  
-    }
-
-});
 
 var StudentSingleQuizAttemptComponent = React.createClass({
 
@@ -357,13 +313,75 @@ var StudentSingleQuizAttemptComponent = React.createClass({
     }
 });
 
+
+var StudentSingleQuizView = React.createClass({
+
+    getInitialState: function() {
+        var result = this.props.attemptStore.getAttempt(this.props.quiz.id).result;
+        console.log("Quiz: ", this.props.quiz.id, "Result: ", result);
+        return {
+            result: result
+        }
+    },
+
+
+    render: function() {
+
+        var submitStore = {};
+        // hack - getInitialState is called only once per component. 
+        //Since the same component is used to show different quizzes by the parent, 
+        //we have a problem where the state is not updated. Hence, this hack. 
+        //We should move the state to the parent. #todo
+        
+        var result = this.getInitialState().result;  
+        var attempt = "";
+        if(result) {
+            attempt = <StudentSingleQuizAttemptComponent 
+                            attemptStore={this.props.attemptStore}
+                            quiz={this.props.quiz} />
+        }
+        return (
+            <div>
+                <div className="student-quiz-container">
+                    
+                    <div className="student-quiz-number">
+                        <p>{this.props.number}.</p>
+                        {attempt}
+                    </div>
+
+                    <div className="student-quiz-body">
+                        <QuizQuestionView 
+                            questionDisplay={this.props.quiz.questionDisplay} 
+                            ref="questionView" />
+                        <QuizAnswerSubmitView 
+                            store={this.props.quiz} 
+                            attemptStore={this.props.attemptStore}
+                            parent={this} 
+                            result={result} />
+                    </div>
+                    
+                    <div className="clearfix"> </div>
+
+                </div>
+                <hr className="student-quiz-end-line" />
+            </div>
+        );  
+    }
+
+});
+
+
 var StudentQuizAttemptListComponent = React.createClass({
 
     render: function() {
         var quizzes = this.props.section.data.quizzes;
+        var length = quizzes.length;
+        
+        if(length <= 1) {
+            return <div></div>
+        }
 
         var components = [];
-        var length = quizzes.length;
         for(var i = 0; i < length; i++) {
             var attempt = <StudentSingleQuizAttemptComponent 
                                 attemptStore={this.props.attemptStore}
