@@ -722,13 +722,34 @@ var GraphView = Backbone.View.extend({
         this.options = options;
         this.showProgress = options.showProgress || false;
         this.activeNode = null;
+        this.graph = null;
+        this.listenToWindowResize();
+    },
+
+    listenToWindowResize: function() {
+        this.refreshOnWindowResize = _.debounce(this.refreshOnWindowResize, 300);
+        this.refreshOnWindowResize = _.bind(this.refreshOnWindowResize, this);
+        $(window).resize(this.refreshOnWindowResize);
+    },
+
+    stopListeningToWindowResize: function() {
+        $(window).off('resize', this.refreshOnWindowResize);
+    },
+
+    refreshOnWindowResize: function() {
+        if(this.graph === null) {
+            return;
+        }
+        this.$el.empty();
+        this.render(this.graph);
     },
 
     render: function(graph) {
+        this.graph = graph;
         this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         this.svg = $(this.svg);
         this.svg.attr({
-            width: this.options.width,
+            width: this.$el.parent().width(),
             height: "1800"
         });
         var defs = this.getTriangleMarkerDefinition();
@@ -784,6 +805,11 @@ var GraphView = Backbone.View.extend({
             this.activeNode = null;
         }
         return this;
+    },
+
+    remove: function() {
+        this.stopListeningToWindowResize();
+        Backbone.View.prototype.remove.call(this);
     }
 
 });
