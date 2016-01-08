@@ -43,6 +43,7 @@ var Router = Backbone.Router.extend({
         "(/)": "home",
         "just-signed-up(/)": "routeToLastVisitedURL",
         "login(/)": "gotoLogin",
+        "logged-out(/)": "showLoggedOut",
         "*path": "notFound"
     },
 
@@ -123,6 +124,16 @@ var Router = Backbone.Router.extend({
 
     gotoLogin: function() {
         window.location.href = "/admin";
+    },
+
+    showLoggedOut: function() {
+        this.resetPage();
+        var h5 = $("<h5>").html("You are logged out. Have a nice day!").css({
+            "margin-top": "3%",
+            "text-align": "center"
+        });
+        $(this.pageElement).append(h5);
+        this.currentComponent = this;
     },
 
     routeToLastVisitedURL: function() {

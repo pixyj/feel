@@ -133,7 +133,7 @@ Store.prototype = {
 
     logout: function() {
         return this._user.logout().then(function() {
-            Backbone.history.navigate("/", {trigger: true});
+            Backbone.history.navigate("logged-out/", {trigger: true});
         });
     }
 };
