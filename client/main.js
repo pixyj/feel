@@ -178,13 +178,9 @@ var Router = Backbone.Router.extend({
     },
 
     home: function() {
-
         this.resetPage();
-        var message = "Home page not designed";
-        this.pageElement.innerHTML = message;
-
-        this.currentComponent = this;
-        
+        this.currentComponent = null;
+        Backbone.history.navigate("course/python-tutorial", {trigger: true});
     },
 
     notFound: function() {
