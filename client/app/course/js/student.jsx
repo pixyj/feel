@@ -423,7 +423,7 @@ var PretestComponent = React.createClass({
         if(this.props.store.isLastQuestionAnswered()) {
             return;
         }
-        
+
         console.debug("in showNextBtn", attempt);
         var self = this;
         setTimeout(function() {
@@ -493,7 +493,10 @@ var PretestComponent = React.createClass({
         var startLearningAtComponent = "";
         if(this.state.isPretestCompleted) {
             if(this._pretestStateAttrs.hasAnsweredAllQuizzes) {
-                startLearningAtComponent = <h5>{this.ALL_QUESTIONS_ANSWERED_MESSAGE}</h5>
+                startLearningAtComponent = 
+                    <h5 id="course-all-questions-answered">
+                        {this.ALL_QUESTIONS_ANSWERED_MESSAGE}
+                    </h5>
             }
             else {
                 startLearningAtComponent = <StartLearningAtComponent 

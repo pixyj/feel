@@ -334,19 +334,18 @@ var StudentSingleQuizView = React.createClass({
         //We should move the state to the parent. #todo
         
         var result = this.getInitialState().result;  
-        var attempt = "";
-        if(result) {
-            attempt = <StudentSingleQuizAttemptComponent 
-                            attemptStore={this.props.attemptStore}
-                            quiz={this.props.quiz} />
+
+        //number is optional. For example, it's not needed in the course pretest. 
+        var number = "";
+        if(this.props.number) {
+            number = this.props.number + ".";
         }
         return (
             <div>
                 <div className="student-quiz-container">
                     
                     <div className="student-quiz-number">
-                        <p>{this.props.number}.</p>
-                        {attempt}
+                        <p>{number}</p>
                     </div>
 
                     <div className="student-quiz-body">
