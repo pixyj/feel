@@ -1,6 +1,14 @@
 console.log("hi there");
 
+// move to 
 
+var inc = function(obj, key) {
+    if(obj[key] === undefined) {
+        obj[key] = 0;
+    }
+    obj[key] += 1;
+    return obj[key];
+};
 
 var View = Backbone.View.extend({
 
@@ -16,7 +24,11 @@ var View = Backbone.View.extend({
 
     initialize: function(options) {
         this.graph = options.graph;
+
+        //for performance reasons, these values are calculated
+        //during calculating traffic. 
         this._elementsById = {};
+        this._levelByNodeId = {};
     },
 
     highlightNode: function(id) {
@@ -30,7 +42,10 @@ var View = Backbone.View.extend({
     render: function() {
         var width = this.$el.width();
         console.log("width: ", width);
-        this.renderNodesAtAllLevels(this.graph.levels, width);
+        var nodeElementsById = this.renderNodesAtAllLevels(this.graph.levels, width);
+        console.log(nodeElementsById);
+        var traffic = this.computeInfoRequiredToRenderEdges();
+        this.renderEdges(nodeElementsById, traffic);
         return this;
     },
 
@@ -38,27 +53,30 @@ var View = Backbone.View.extend({
 
         var cumulativeHeight = 0;
         var depth = levels.length;
+        var elements = {};
         for(var i = 0; i < depth; i++) {
             var attrs = {
                 nodes: levels[i],
-                depth: i,
+                level: i,
                 totalWidth: totalWidth,
                 topPosition: cumulativeHeight
             };
             var result = this.renderLevelNodes(attrs);
             cumulativeHeight += result.height + this.LEVEL_GAP;
+            _.extendOwn(elements, result.elements);
         }
+        return elements;
     },
 
     renderLevelNodes: function(attrs) {
         
         var nodes = attrs.nodes;
-        var depth = attrs.depth;
+        var level = attrs.level;
         var width = attrs.totalWidth;
         var topPosition = attrs.topPosition;
 
         var result = {
-            elements: [],
+            elements: {},
             height: 0
         }
 
@@ -75,20 +93,25 @@ var View = Backbone.View.extend({
         var maxHeight = 0;
         for(var i = 0; i < length; i++) {
             
-            var elAndHeight = this.renderNode({
-                node: nodes[i],
+            var node = nodes[i];
+            var elAndAttrs = this.renderNode({
+                node: node,
                 topPosition: attrs.topPosition,
                 leftPosition: currentLeftPosition,
                 width: nodeWidth
             });
 
-            elements.push(elAndHeight.el);
-            var maxHeight = _.max([elAndHeight.height, maxHeight]);
+            //caching this now so that we can use it to calculate traffic. 
+            this._levelByNodeId[node.id] = level;
+
+            elements[node.id] = elAndAttrs;
+            var maxHeight = _.max([elAndAttrs.height, maxHeight]);
             currentLeftPosition += nodeWidth + gutterWidth;
         }
 
-        _.each(elements, function(el) {
-            el.height(maxHeight);
+        _.each(elements, function(elAndAttrs) {
+            elAndAttrs.el.height(maxHeight);
+            elAndAttrs.height = maxHeight;
         });
 
         result.height = maxHeight;
@@ -104,23 +127,144 @@ var View = Backbone.View.extend({
             top: attrs.topPosition,
             left: attrs.leftPosition,
             position: 'absolute'
-        }).addClass("card").append(name);
+        }).addClass("card graph-node").append(name);
 
         this.$el.append(el);
         this._elementsById[node.id] = el;
 
         return {
             el: el,
-            height: el.height()
+            height: el.height(),
+            width: attrs.width,
+            top: attrs.topPosition,
+            left: attrs.leftPosition,
+            id: node.id
         };
     },
 
-    calculateLevelGapAndGutterTraffic: function() {
-        this.calculateLevelGapTraffic();
+    computeInfoRequiredToRenderEdges: function() {
+        return this.getTrafficInfo();
     },
 
-    calculateLevelGapTraffic: function() {
+    getTrafficInfo: function() {
         var trafficByLevelGap = {};
+        var gutterTrafficByLevel = {};
+        var edgesDrawnThroughLevelGap = {};
+        var edgesDrawnThroughGutter = {};
+
+        var inboundEdgesByNodeId = {};
+        var outboundEdgesByNodeId = {};
+        var inboundNodeEdgesDrawn = {};
+        var outboundNodeEdgesDrawn = {};
+
+
+
+        _.each(this.graph.edges, function(edge) {
+            var startLevel = this._levelByNodeId[edge.from];
+            var endLevel = this._levelByNodeId[edge.to];
+
+            inc(outboundEdgesByNodeId, edge.from);
+            inc(inboundEdgesByNodeId, edge.to);
+            outboundNodeEdgesDrawn[edge.from] = 0;
+            inboundNodeEdgesDrawn[edge.to] = 0;
+
+            for(var i = startLevel; i < endLevel; i++) {
+                var fromLevel = i;
+                var toLevel = i + 1;
+                var key = this.getLevelGapKey(fromLevel, toLevel);
+                inc(trafficByLevelGap, key);
+                if(toLevel !== endLevel) {
+                    inc(gutterTrafficByLevel, toLevel);
+                }
+            }
+
+        }, this);
+
+        _.each(trafficByLevelGap, function(value, key) {
+            edgesDrawnThroughLevelGap[key] = 0;
+        });
+        _.each(gutterTrafficByLevel, function(value, key) {
+            edgesDrawnThroughGutter[key] = 0;
+        });
+
+        return {
+            inboundEdgesByNodeId: inboundEdgesByNodeId,
+            outboundEdgesByNodeId: outboundEdgesByNodeId,
+            inboundNodeEdgesDrawn: inboundNodeEdgesDrawn,
+            outboundNodeEdgesDrawn: outboundNodeEdgesDrawn,
+            trafficByLevelGap: trafficByLevelGap,
+            edgesDrawnThroughLevelGap: edgesDrawnThroughLevelGap,
+            gutterTrafficByLevel: gutterTrafficByLevel,
+            edgesDrawnThroughGutter: edgesDrawnThroughGutter
+        };
+    },
+
+    getLevelGapKey: function(startLevel, endLevel) {
+        return startLevel + "->" + endLevel;
+    },
+
+    //http://stackoverflow.com/questions/20107645/minimizing-number-of-crossings-in-a-bipartite-graph
+    renderEdges: function(nodeElements, traffic) {
+
+        var outboundEdgesByNodeId = traffic.outboundEdgesByNodeId;
+        var inboundEdgesByNodeId = traffic.inboundEdgesByNodeId;
+        var outboundNodeEdgesDrawn = traffic.outboundNodeEdgesDrawn;
+        var inboundNodeEdgesDrawn = traffic.inboundNodeEdgesDrawn;
+
+
+        _.each(this.graph.edges, function(edge) {
+            var startNode = nodeElements[edge.from];
+            var endNode = nodeElements[edge.to];
+
+            var startId = startNode.id;
+            var endId = endNode.id;
+
+            var startPoint = this.getStartPoint(startNode, outboundEdgesByNodeId, outboundNodeEdgesDrawn);
+            var endPoint = this.getEndPoint(endNode, inboundEdgesByNodeId, inboundNodeEdgesDrawn);
+            
+
+            this.drawPoint(startPoint, edge);
+            this.drawPoint(endPoint, edge);
+        }, this);
+    },
+
+    getStartPoint: function(node, edgesById, edgesDrawn) {
+        var point =  this.getPoint(node, edgesById, edgesDrawn);
+        point.y += node.height;
+        return point;
+    },
+
+    getEndPoint: function(node, edgesById, edgesDrawn) {
+        return this.getPoint(node, edgesById, edgesDrawn);
+    },
+
+    getPoint: function(node, edgesById, edgesDrawn) {
+        var id = node.id;
+        var width = node.width;
+        
+        var total = edgesById[id];
+        var drawn = edgesDrawn[id];
+        inc(edgesDrawn, id);
+
+        var pieces = width / (total + 1);
+        var x = node.left + (drawn + 1) * pieces;
+
+        var y = node.top;
+
+        return {
+            x: x,
+            y: y
+        }
+    },
+
+    drawPoint: function(point, edge) {
+        console.debug("Point", point, "Edge", edge);
+        div = $("<div>").css({
+            top: point.y,
+            left: point.x,
+            position: 'absolute'
+        }).addClass("graph-line");
+        this.$el.append(div);
     }
 
 });
@@ -178,82 +322,82 @@ g = {
         ]
     ],
 
-    adjacencyHash: {
+    // adjacencyHash: {
 
-        1: {
-            starts: {
-                2: 2,
-                3: 3,
-                4: 4
-            },
-            ends: {
+    //     1: {
+    //         starts: {
+    //             2: 2,
+    //             3: 3,
+    //             4: 4
+    //         },
+    //         ends: {
 
-            }
-        },
+    //         }
+    //     },
 
-        2: {
-            starts: {
-                7: 2
-            },
-            ends: {
-                1: 1
-            }
-        },
+    //     2: {
+    //         starts: {
+    //             7: 2
+    //         },
+    //         ends: {
+    //             1: 1
+    //         }
+    //     },
 
-        3: {
-            starts: {
-                5: 5
-            },
-            ends: {
-                1: 1
-            }
-        },
+    //     3: {
+    //         starts: {
+    //             5: 5
+    //         },
+    //         ends: {
+    //             1: 1
+    //         }
+    //     },
 
-        4: {
-            starts: {
-                6: 6
-            },
-            ends: {
-                1: 1
-            }
-        },
+    //     4: {
+    //         starts: {
+    //             6: 6
+    //         },
+    //         ends: {
+    //             1: 1
+    //         }
+    //     },
 
-        5: {
-            starts: {
-                7: 7
-            },
-            ends: {
-                3: 3
-            }
-        },
+    //     5: {
+    //         starts: {
+    //             7: 7
+    //         },
+    //         ends: {
+    //             3: 3
+    //         }
+    //     },
 
-        6: {
-            starts: {
-                8: 8
-            },
-            ends: {
-                4: 4
-            }
-        },
+    //     6: {
+    //         starts: {
+    //             8: 8
+    //         },
+    //         ends: {
+    //             4: 4
+    //         }
+    //     },
 
-        7: {
-            starts: {
+    //     7: {
+    //         starts: {
                 
-            },
-            ends: {
-                4: 4,
-            }
-        },
+    //         },
+    //         ends: {
+    //             4: 4,
+    //         }
+    //     },
 
-        8: {
-            starts: {
+    //     8: {
+    //         starts: {
                 
-            },
-            ends: {
-                6: 6,
-            }
-        }
-    },
+    //         },
+    //         ends: {
+    //             6: 6,
+    //         }
+    //     }
+    // },
 
     edges: [
         {
@@ -267,10 +411,6 @@ g = {
         {
             from: 1,
             to: 4
-        },
-        {
-            from: 2,
-            to: 7
         },
         {
             from: 3,
@@ -287,6 +427,18 @@ g = {
         {
             from: 6,
             to: 8
+        },
+        {
+            from: 2,
+            to: 7
+        },
+        {
+            from: 3,
+            to: 8
+        },
+        {
+            from: 1,
+            to: 6
         }
     ]
 };
