@@ -153,6 +153,10 @@ Store.prototype = {
         this.on("add:attempt", this._updatePretestState, this);
     },
 
+    isLastQuestionAnswered: function() {
+        return this._pretestState.currentConceptIndex === this._orderedConcepts.length - 1;
+    },
+
     _updatePretestState: function(attempt) {
         if(attempt.result) {
             if(this._pretestState.currentConceptIndex === this._orderedConcepts.length - 1) {
@@ -233,7 +237,8 @@ var StartLearningAtMixin = {
             <div>
                 <h5>You can start learning at <a href={this._url}> {concept.name}</a>
                 </h5>
-                <button className="btn btn-large" 
+                <button className="btn btn-large"
+                        id="course-start-learning-btn" 
                         onClick={this.routeToConcept}>
                         Start Learning! 
                 </button>
@@ -382,7 +387,8 @@ var PretestComponent = React.createClass({
         return {
             quiz: null,
             showNextBtn: false,
-            isPretestCompleted: false
+            isPretestCompleted: false,
+            countdown: null
         };
 
     },
@@ -407,16 +413,58 @@ var PretestComponent = React.createClass({
 
     },
 
-    showNextBtn: function() {
-        this.setState({
-            showNextBtn: true
-        });
+    // todo -> This code can be improved. The logic has to be moved to the store
+    // and the view can remain 'dumb'. But I'm under a deadline and this works.
+    showNextBtn: function(attempt) {
+        if(!attempt.result) {
+            return;
+        }
 
+        if(this.props.store.isLastQuestionAnswered()) {
+            return;
+        }
+        
+        console.debug("in showNextBtn", attempt);
         var self = this;
-        this._nextButtonTimer = setTimeout(function() {
-            self.showNextPretestQuiz();
+        setTimeout(function() {
+            self.setState({
+                showNextBtn: true,
+                quiz: null
+            });
+            self._scrollToTop();
+            self._showNextPretestAfterTimeout();
+            //hack
+            self.props.parent.highlightConcept(self.props.store.getNextPretestConcept());
         }, 2000);
     },
+
+    _scrollToTop: function() {
+        height = $("#user-status").height() + $("h3").height();
+        $(window).scrollTop(height);
+    },
+
+    _showNextPretestAfterTimeout: function() {
+        this._setCountdown(3);
+    },
+
+    _setCountdown: function(countdown) {
+        var self = this;
+
+        if(countdown === 0) {
+            this.showNextPretestQuiz();
+            return;
+        }
+
+        this.setState({
+            countdown: countdown
+        });
+        var self = this;
+        setTimeout(function() {
+            self._setCountdown(countdown - 1);
+        }, 1000);
+    },
+
+
 
     updateQuiz: function(quiz) {
         this.setState({
@@ -425,10 +473,8 @@ var PretestComponent = React.createClass({
     },
 
     updateIsPretestCompleted: function(pretestStateAttrs) {
+        console.debug("in updateIsPretestCompleted");
         this._pretestStateAttrs = pretestStateAttrs;
-        this.setState({
-            showNextBtn: false
-        });
         var self = this;
         this._pretestButtonTimer = setTimeout(function() {
             self.setState({
@@ -436,6 +482,7 @@ var PretestComponent = React.createClass({
                 showNextBtn: false,
                 quiz: null
             });
+            self._scrollToTop();
         }, 2000);
     },
 
@@ -468,16 +515,22 @@ var PretestComponent = React.createClass({
         if(this.state.showNextBtn) {
             nextConcept = this.props.store.getNextPretestConcept();
             if(nextConcept) {
-                nextBtn = <h5>Next up, a question on 
+                nextBtn = <h5 id="course-pretest-next-concept-heading">Correct! Next up, a question on 
                                 <b> {nextConcept.name}</b>
                           </h5>
             }
         }
+        var countdown = "";
+        if(this.state.countdown) {
+            countdown = <h4 id="course-pretest-countdown">{this.state.countdown}</h4>
+        }
         return (
-            <div>
+            <div id="course-pretest-container">
                 {startLearningAtComponent}
-                {quizComponent}
                 {nextBtn}
+                {countdown}
+                {quizComponent}
+
             </div>
         );
     },
@@ -490,6 +543,7 @@ var PretestComponent = React.createClass({
 
         this.setState({
             showNextBtn: false,
+            countdown: null,
             quiz: quiz
         });
     }
@@ -562,7 +616,8 @@ var PageComponent = React.createClass({
 
         var StateComponentClass = StudentStateComponents[this.state.state];
         var stateComponent = <StateComponentClass 
-                                store={this.props.store} />
+                                store={this.props.store} 
+                                parent={this} />
 
         return (
             <div>

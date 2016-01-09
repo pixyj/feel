@@ -1,3 +1,5 @@
+@import 'base/scss/base-variables';
+
 .radio-item {
     cursor: pointer;
     vertical-align: middle;
@@ -18,4 +20,25 @@
 .radio-item-selected {
     color: white;
     background: #9C27B0;
+}
+
+#course-pretest-container {
+    position: relative;
+    min-height: (600px - $username-height);
+}
+
+#course-pretest-next-concept-heading {
+    padding-left: 2rem;
+    padding-top: 2rem;
+}
+
+#course-pretest-countdown {
+    padding-top: 5rem;
+    padding-left: 2rem;
+    font-size: 5rem;
+    text-align: center;
+}
+
+#course-start-learning-btn {
+    margin-top: 2rem;
 }
