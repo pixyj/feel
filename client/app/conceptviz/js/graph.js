@@ -1,6 +1,6 @@
 console.log("hi there");
 
-// move to 
+// move to utils.js
 
 var inc = function(obj, key) {
     if(obj[key] === undefined) {
@@ -10,6 +10,27 @@ var inc = function(obj, key) {
     return obj[key];
 };
 
+var createSvgEl = function(type, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", type);
+    attrs = attrs || {};
+    _.each(attrs, function(value, key) {
+        el.setAttribute(key, value);
+    });
+    return el;
+};
+
+var TRIANGLE_MARKER =   '<defs> '                                   +
+                            '<marker id="Triangle" '                +
+                                    'viewBox="0 0 10 10" '          +
+                                    'refX="0" refY="5" '            +
+                                    'markerWidth="5" '              +
+                                    'markerHeight="5" '             +
+                                    'orient="auto"> '               +
+                                '<path d="M0,0 L10,5 L0,10 z" /> '  +
+                            '</marker> '                            +
+                        '</defs> '                                  ;
+
+
 var View = Backbone.View.extend({
 
     el: "#graph",
@@ -18,17 +39,20 @@ var View = Backbone.View.extend({
 
     MINIMUM_NODE_HEIGHT: 60,
 
-    LEVEL_PADDING: 20,
+    LEVEL_PADDING: 0,
 
     LEVEL_GUTTER_WIDTH_FRACTION: 0.4,
+
+    LINE_STROKE_WIDTH: 3,
 
     initialize: function(options) {
         this.graph = options.graph;
 
         //for performance reasons, these values are calculated
-        //during calculating traffic. 
+        //when calculating traffic. 
         this._elementsById = {};
         this._levelByNodeId = {};
+        this._paths = {};
     },
 
     highlightNode: function(id) {
@@ -40,20 +64,26 @@ var View = Backbone.View.extend({
     },
 
     render: function() {
+
+        this.$nodes =$("<div>");
+        this.$el.append(this.$nodes)
         var width = this.$el.width();
         console.log("width: ", width);
-        var nodeElementsById = this.renderNodesAtAllLevels(this.graph.levels, width);
-        console.log(nodeElementsById);
+        var nodeElementsAndGutters = this.renderNodesAtAllLevels(this.graph.levels, width);
+        console.log(nodeElementsAndGutters);
         var traffic = this.computeInfoRequiredToRenderEdges();
-        this.renderEdges(nodeElementsById, traffic);
+
+        this.initializeSvg();
+        this.renderEdges(nodeElementsAndGutters, traffic);
         return this;
     },
 
     renderNodesAtAllLevels: function(levels, totalWidth) {
 
-        var cumulativeHeight = 0;
+        var cumulativeHeight = this.LEVEL_PADDING;
         var depth = levels.length;
         var elements = {};
+        var gutters = [];
         for(var i = 0; i < depth; i++) {
             var attrs = {
                 nodes: levels[i],
@@ -61,14 +91,26 @@ var View = Backbone.View.extend({
                 totalWidth: totalWidth,
                 topPosition: cumulativeHeight
             };
-            var result = this.renderLevelNodes(attrs);
+            var result = this.renderLevelNodesAndGutters(attrs);
             cumulativeHeight += result.height + this.LEVEL_GAP;
+            
             _.extendOwn(elements, result.elements);
+            gutters.push(result.gutters); 
         }
-        return elements;
+
+
+        this.$height = (cumulativeHeight - this.LEVEL_GAP + this.LEVEL_PADDING);
+        this.$el.css({
+            height: this.$height
+        });
+
+        return {
+            elements: elements,
+            gutters: gutters
+        };
     },
 
-    renderLevelNodes: function(attrs) {
+    renderLevelNodesAndGutters: function(attrs) {
         
         var nodes = attrs.nodes;
         var level = attrs.level;
@@ -77,8 +119,9 @@ var View = Backbone.View.extend({
 
         var result = {
             elements: {},
-            height: 0
-        }
+            height: 0,
+            gutters: []
+        };
 
         var length = nodes.length;
         
@@ -86,8 +129,9 @@ var View = Backbone.View.extend({
         var allNodesWidth = (width - 2*this.LEVEL_PADDING) * payloadFraction;
         var allGuttersWidth = (width -2*this.LEVEL_PADDING) * this.LEVEL_GUTTER_WIDTH_FRACTION;
         
-        var nodeWidth = Math.floor(allNodesWidth / length);
-        var gutterWidth = Math.floor(allGuttersWidth / (length + 1));
+        var gutterLength = length + 1;
+        var nodeWidth = allNodesWidth / length;
+        var gutterWidth = allGuttersWidth / (gutterLength);
         var currentLeftPosition = this.LEVEL_PADDING + gutterWidth;
         var elements = result.elements;
         var maxHeight = 0;
@@ -109,11 +153,28 @@ var View = Backbone.View.extend({
             currentLeftPosition += nodeWidth + gutterWidth;
         }
 
+        var gutters = result.gutters;
+        for(var j = 0; j < gutterLength; j++) {
+            var gutter = {
+                leftPosition: (nodeWidth + gutterWidth) * j,
+                topPosition: attrs.topPosition,
+                width: gutterWidth,
+                height: maxHeight
+            };
+            gutters.push(gutter); 
+            // var div = $("<div>").css({
+            //     left: gutter.leftPosition,
+            //     top: gutter.topPosition,
+            //     width: gutterWidth,
+            //     height: maxHeight
+            // }).addClass("graph-node gutter card");
+            // this.$nodes.append(div);
+        }
+
         _.each(elements, function(elAndAttrs) {
             elAndAttrs.el.height(maxHeight);
             elAndAttrs.height = maxHeight;
         });
-
         result.height = maxHeight;
         return result;
     },
@@ -127,9 +188,9 @@ var View = Backbone.View.extend({
             top: attrs.topPosition,
             left: attrs.leftPosition,
             position: 'absolute'
-        }).addClass("card graph-node").append(name);
+        }).addClass("graph-node card").append(name);
 
-        this.$el.append(el);
+        this.$nodes.append(el);
         this._elementsById[node.id] = el;
 
         return {
@@ -203,14 +264,34 @@ var View = Backbone.View.extend({
         return startLevel + "->" + endLevel;
     },
 
+    getEdgeKey: function(edge) {
+        return edge.from + "->" + edge.to;
+    },
+
+    initializeSvg: function() {
+        var svgContainer = $("<div>").attr("id", "graph-svg-container");
+        this.svg = createSvgEl("svg", {
+            height: this.$height,
+            width: this.$el.width()
+        });
+        this.$el.append(svgContainer);
+        svgContainer[0].appendChild(this.svg);
+    },
+
     //http://stackoverflow.com/questions/20107645/minimizing-number-of-crossings-in-a-bipartite-graph
-    renderEdges: function(nodeElements, traffic) {
+    //Not using any appromixation algorithms for minimizing edge crossings as of now. 
+    renderEdges: function(nodeElementsAndGutters, traffic) {
+
+        var nodeElements = nodeElementsAndGutters.elements;
+        var gutters = nodeElementsAndGutters.gutters;
 
         var outboundEdgesByNodeId = traffic.outboundEdgesByNodeId;
         var inboundEdgesByNodeId = traffic.inboundEdgesByNodeId;
         var outboundNodeEdgesDrawn = traffic.outboundNodeEdgesDrawn;
         var inboundNodeEdgesDrawn = traffic.inboundNodeEdgesDrawn;
 
+        var trafficByLevelGap = traffic.trafficByLevelGap;
+        var edgesDrawnThroughLevelGap = traffic.edgesDrawnThroughLevelGap;
 
         _.each(this.graph.edges, function(edge) {
             var startNode = nodeElements[edge.from];
@@ -221,11 +302,122 @@ var View = Backbone.View.extend({
 
             var startPoint = this.getStartPoint(startNode, outboundEdgesByNodeId, outboundNodeEdgesDrawn);
             var endPoint = this.getEndPoint(endNode, inboundEdgesByNodeId, inboundNodeEdgesDrawn);
-            
 
-            this.drawPoint(startPoint, edge);
-            this.drawPoint(endPoint, edge);
+            var startLevel = this._levelByNodeId[startNode.id];
+            var endLevel = this._levelByNodeId[endNode.id];
+            if(endLevel - startLevel === 1) {
+                var key = this.getLevelGapKey(startLevel, endLevel);
+
+                var path = this.getSingleHopPath({
+                    startPoint: startPoint,
+                    endPoint: endPoint,
+                    levelTraffic: trafficByLevelGap,
+                    edgesDrawn: edgesDrawnThroughLevelGap,
+                    key: key
+                });
+            }
+            else {
+                var path = this.getMultiHopPath({
+                    startPoint: startPoint,
+                    endPoint: endPoint,
+                    startLevel: startLevel,
+                    endLevel: endLevel,
+                    levelTraffic: trafficByLevelGap,
+                    levelEdgesDrawn: edgesDrawnThroughLevelGap,
+                    gutterTraffic: traffic.gutterTrafficByLevel,
+                    gutterEdgesDrawn: traffic.edgesDrawnThroughGutter,
+                    gutters: gutters
+                });
+            }
+            this.drawPath(path);
+            //this._paths[this.getEdgeKey(edge)] = path;
         }, this);
+    },
+
+    getMultiHopPath: function(attrs) {
+        console.log(attrs);
+
+        var path = [];
+
+        var gutters = attrs.gutters;
+        var startLevel = attrs.startLevel;
+        var endLevel = attrs.endLevel;
+        var gutterTraffic = attrs.gutterTraffic;
+        var gutterEdgesDrawn = attrs.gutterEdgesDrawn;
+
+
+        var currentPoint = attrs.startPoint;
+        var currentLevel = startLevel;
+        for(var nextLevel = startLevel + 1; nextLevel < endLevel; nextLevel++) {
+            var nextLevelTraffic = gutterTraffic[nextLevel];
+            var gutterCount = gutters[nextLevel].length;
+            var drawnEdges = gutterEdgesDrawn[nextLevel];
+            var chosenGutterIndex = (drawnEdges % nextLevelTraffic ) % gutterCount;
+
+            var chosenGutter = gutters[nextLevel][chosenGutterIndex];
+            chosenGutter.drawnEdges = chosenGutter.drawnEdges || 0;
+
+
+            var minimumGutterTraffic = Math.floor(nextLevelTraffic / gutterCount);
+            var chosenGutterTraffic = minimumGutterTraffic;
+            var extraEdges = nextLevelTraffic - minimumGutterTraffic * gutterCount; 
+            if(chosenGutterIndex < extraEdges) {
+                chosenGutterTraffic += 1;
+            }
+            var pieces = chosenGutter.width / (chosenGutterTraffic + 1)
+            var xOffset = (chosenGutter.drawnEdges + 1) * pieces;
+            var nextLevelPoint = {
+                x: chosenGutter.leftPosition + xOffset,
+                y: chosenGutter.topPosition + chosenGutter.height
+            }
+            
+            var key = this.getLevelGapKey(currentLevel, nextLevel);
+            var singleHopPath = this.getSingleHopPath({
+                startPoint: currentPoint,
+                endPoint: nextLevelPoint,
+                levelTraffic: attrs.levelTraffic,
+                edgesDrawn: attrs.levelEdgesDrawn,
+                key: key
+            });
+            path = path.concat(singleHopPath);
+
+            inc(gutterEdgesDrawn, nextLevel);
+            inc(chosenGutter, drawnEdges);
+            currentLevel = nextLevel;
+            currentPoint = nextLevelPoint;
+        }
+        var key = this.getLevelGapKey(currentLevel, endLevel);
+        var lastPath = this.getSingleHopPath({
+            startPoint: currentPoint,
+            endPoint: attrs.endPoint,
+            levelTraffic: attrs.levelTraffic,
+            edgesDrawn: attrs.levelEdgesDrawn,
+            key: key
+        });
+        path = path.concat(lastPath);
+        console.log(path);
+        return path;
+        //phew
+    },
+
+    getSingleHopPath: function(attrs) {
+        var key = attrs.key;
+        var startPoint = attrs.startPoint;
+        var endPoint = attrs.endPoint;
+
+        var totalPaths = attrs.levelTraffic[key];
+        var drawnPaths = attrs.edgesDrawn[key];
+        inc(attrs.edgesDrawn, key);
+
+        var verticalPieces = this.LEVEL_GAP / (totalPaths + 1);
+        var y = startPoint.y + verticalPieces * (drawnPaths + 1);
+
+        return [
+            startPoint, 
+            {x: startPoint.x, y: y}, 
+            {x: endPoint.x, y: y}, 
+            endPoint
+        ];
     },
 
     getStartPoint: function(node, edgesById, edgesDrawn) {
@@ -264,7 +456,30 @@ var View = Backbone.View.extend({
             left: point.x,
             position: 'absolute'
         }).addClass("graph-line");
-        this.$el.append(div);
+        this.$nodes.append(div);
+    },
+
+    drawLine: function(start, end) {
+
+
+        var line = createSvgEl("line", {
+            x1: start.x,
+            y1: start.y,
+            x2: end.x,
+            y2: end.y,
+            stroke: "black",
+            "stroke-width": this.LINE_STROKE_WIDTH
+        });
+        this.svg.appendChild(line);
+    },
+
+    drawPath: function(path) {
+        var length = path.length - 1;
+        for(var i = 0; i < length; i++) {
+            var start = path[i];
+            var end = path[i+1];
+            this.drawLine(start, end);
+        }
     }
 
 });
@@ -322,84 +537,27 @@ g = {
         ]
     ],
 
-    // adjacencyHash: {
-
-    //     1: {
-    //         starts: {
-    //             2: 2,
-    //             3: 3,
-    //             4: 4
-    //         },
-    //         ends: {
-
-    //         }
-    //     },
-
-    //     2: {
-    //         starts: {
-    //             7: 2
-    //         },
-    //         ends: {
-    //             1: 1
-    //         }
-    //     },
-
-    //     3: {
-    //         starts: {
-    //             5: 5
-    //         },
-    //         ends: {
-    //             1: 1
-    //         }
-    //     },
-
-    //     4: {
-    //         starts: {
-    //             6: 6
-    //         },
-    //         ends: {
-    //             1: 1
-    //         }
-    //     },
-
-    //     5: {
-    //         starts: {
-    //             7: 7
-    //         },
-    //         ends: {
-    //             3: 3
-    //         }
-    //     },
-
-    //     6: {
-    //         starts: {
-    //             8: 8
-    //         },
-    //         ends: {
-    //             4: 4
-    //         }
-    //     },
-
-    //     7: {
-    //         starts: {
-                
-    //         },
-    //         ends: {
-    //             4: 4,
-    //         }
-    //     },
-
-    //     8: {
-    //         starts: {
-                
-    //         },
-    //         ends: {
-    //             6: 6,
-    //         }
-    //     }
-    // },
-
     edges: [
+        {
+            from: 1,
+            to: 7
+        },
+        {
+            from: 2,
+            to: 8
+        },
+        {
+            from: 3,
+            to: 5
+        },
+        {
+            from: 3,
+            to: 8
+        },
+
+    ],
+
+    edges2: [
         {
             from: 1,
             to: 2
