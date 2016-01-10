@@ -19,18 +19,6 @@ var createSvgEl = function(type, attrs) {
     return el;
 };
 
-var TRIANGLE_MARKER =   '<defs> '                                   +
-                            '<marker id="Triangle" '                +
-                                    'viewBox="0 0 10 10" '          +
-                                    'refX="0" refY="5" '            +
-                                    'markerWidth="5" '              +
-                                    'markerHeight="5" '             +
-                                    'orient="auto"> '               +
-                                '<path d="M0,0 L10,5 L0,10 z" /> '  +
-                            '</marker> '                            +
-                        '</defs> '                                  ;
-
-
 var View = Backbone.View.extend({
 
     el: "#graph",
@@ -268,14 +256,42 @@ var View = Backbone.View.extend({
         return edge.from + "->" + edge.to;
     },
 
+    getTriangleMarkerDefinition: function() {
+        var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        
+        var marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
+        var markerAttrs = {
+            "id": "Triangle",
+            "viewBox": "0 0 10 10",
+            "refX": "0",
+            "refY": "5",
+            "markerWidth": "5",
+            "markerHeight": "5",
+            "orient": "auto"
+        };
+        _.each(markerAttrs, function(value, key) {
+            marker.setAttribute(key, value);
+        });
+
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M0,0 L10,5 L0,10 z");
+        
+        marker.appendChild(path);
+        defs.appendChild(marker);
+        return defs
+    },
+
     initializeSvg: function() {
         var svgContainer = $("<div>").attr("id", "graph-svg-container");
         this.svg = createSvgEl("svg", {
             height: this.$height,
             width: this.$el.width()
         });
+        var defs = this.getTriangleMarkerDefinition();
+        this.svg.appendChild(defs);
         this.$el.append(svgContainer);
         svgContainer[0].appendChild(this.svg);
+
     },
 
     //http://stackoverflow.com/questions/20107645/minimizing-number-of-crossings-in-a-bipartite-graph
@@ -409,7 +425,7 @@ var View = Backbone.View.extend({
         var drawnPaths = attrs.edgesDrawn[key];
         inc(attrs.edgesDrawn, key);
 
-        var verticalPieces = this.LEVEL_GAP / (totalPaths + 1);
+        var verticalPieces = this.LEVEL_GAP*0.95 / (totalPaths + 1);
         var y = startPoint.y + verticalPieces * (drawnPaths + 1);
 
         return [
@@ -459,9 +475,11 @@ var View = Backbone.View.extend({
         this.$nodes.append(div);
     },
 
-    drawLine: function(start, end, color) {
+    drawLine: function(start, end, color, isLast) {
 
-        
+        if(isLast) {
+            end.y -= 13;
+        }
 
         var line = createSvgEl("line", {
             x1: start.x,
@@ -471,6 +489,9 @@ var View = Backbone.View.extend({
             stroke: color,
             "stroke-width": this.LINE_STROKE_WIDTH
         });
+        if(isLast) {
+            line.setAttribute("marker-end", "url(#Triangle)");
+        }
         this.svg.appendChild(line);
         
     },
@@ -483,7 +504,10 @@ var View = Backbone.View.extend({
         for(var i = 0; i < length; i++) {
             var start = path[i];
             var end = path[i+1];
-            this.drawLine(start, end, this.getLineColor(this._drawnCount));
+            this.drawLine(start, 
+                          end, 
+                          this.getLineColor(this._drawnCount),
+                          i === (length - 1));
         }
 
         this._drawnCount += 1;
