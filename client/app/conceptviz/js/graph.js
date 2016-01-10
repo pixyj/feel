@@ -41,14 +41,71 @@ var View = Backbone.View.extend({
         this._elementsById = {};
         this._levelByNodeId = {};
         this._paths = {};
+
+        this._activeNodeElement = null;
     },
 
     highlightNode: function(id) {
-
+        if(this._activeNodeElement) {
+            this._activeNodeElement.removeClass("concept-box-active");
+        }
+        this._activeNodeElement = this._elementsById[id];
+        this._activeNodeElement.addClass("concept-box-active");
+        return this;
     },
 
-    traverse: function(from, two, time) {
+    traverse: function(from, to, time) {
 
+        var path = this._paths[this.getEdgeKey({
+            from: from,
+            to: to
+        })];
+        console.log(path);
+
+        var length = path.length;
+
+
+        var startPoint = path[0];
+        var allDivs = [];
+        for(var i = 1; i < (path.length); i++) {
+            var endPoint = path[i];
+            var div = $("<div>").addClass("graph-ball").css({
+                left: startPoint.x,
+                top: startPoint.y,
+                "visibility": "hidden"
+            });
+            this.$el.append(div);
+
+            allDivs.push(div);
+            this.translateBall(div, allDivs, startPoint, endPoint, i);
+            startPoint = endPoint;
+        }
+    },
+
+    translateBall: function(div, allDivs, startPoint, endPoint, index) {
+
+        var direction;
+        var diff;
+        if(startPoint.x === endPoint.x) {
+            direction = "Y";
+            diff = endPoint.y - startPoint.y;
+        }
+        else {
+            direction = "X";
+            diff = endPoint.x - startPoint.x;
+        }
+        setTimeout(function() {
+            div.css({
+                visibility: "visible",
+                transform: "translate" + direction + "(" + diff + "px)"
+            });
+            console.debug("index", index);
+            if(index > 1) {
+                allDivs[index-2].css({
+                    visibility: "hidden"
+                });
+            }
+        }, (index+1) * 500);
     },
 
     render: function() {
@@ -346,7 +403,7 @@ var View = Backbone.View.extend({
                 });
             }
             this.drawPath(path);
-            //this._paths[this.getEdgeKey(edge)] = path;
+            this._paths[this.getEdgeKey(edge)] = path;
         }, this);
     },
 
