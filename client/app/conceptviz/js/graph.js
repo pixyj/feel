@@ -459,27 +459,51 @@ var View = Backbone.View.extend({
         this.$nodes.append(div);
     },
 
-    drawLine: function(start, end) {
+    drawLine: function(start, end, color) {
 
+        
 
         var line = createSvgEl("line", {
             x1: start.x,
             y1: start.y,
             x2: end.x,
             y2: end.y,
-            stroke: "black",
+            stroke: color,
             "stroke-width": this.LINE_STROKE_WIDTH
         });
         this.svg.appendChild(line);
+        
     },
 
     drawPath: function(path) {
+
+        this._drawnCount = this._drawnCount || 1;
+
         var length = path.length - 1;
         for(var i = 0; i < length; i++) {
             var start = path[i];
             var end = path[i+1];
-            this.drawLine(start, end);
+            this.drawLine(start, end, this.getLineColor(this._drawnCount));
         }
+
+        this._drawnCount += 1;
+    },
+
+    getLineColor: function(drawnCount) {
+        //http://stackoverflow.com/a/57805/817277. Thank you.
+        var whiteHex = parseInt("FFFFFF", 16);
+        var max = Math.floor(whiteHex / 3);
+        var decimalStroke = Math.floor(max / (drawnCount + 1));
+
+        var strokeString = decimalStroke.toString(16);
+        if(strokeString.length < 6) {
+            for(var k = 0; k < (6 - strokeString.length); k++) {
+                var c = Math.random().toString().charAt(3)
+                strokeString += c; //some arbitrary blue component; 
+            }
+        }
+        var stroke = "#" + strokeString;
+        return stroke;
     }
 
 });
@@ -538,26 +562,6 @@ g = {
     ],
 
     edges: [
-        {
-            from: 1,
-            to: 7
-        },
-        {
-            from: 2,
-            to: 8
-        },
-        {
-            from: 3,
-            to: 5
-        },
-        {
-            from: 3,
-            to: 8
-        },
-
-    ],
-
-    edges2: [
         {
             from: 1,
             to: 2
