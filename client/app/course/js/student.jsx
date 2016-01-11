@@ -19,7 +19,7 @@ var QuizAttemptCollection = quizModels.QuizAttemptCollection;
 
 var StudentSingleQuizView = require("./../../quiz/js/quiz-student-view.jsx").StudentSingleQuizView;
 
-var connected = require("./../../conceptviz/js/connected");
+var GraphView = require("./../../conceptviz/js/graph").GraphView;
 
 var ProgressBar = require("top-progress-bar");
 
@@ -638,17 +638,18 @@ var PageComponent = React.createClass({
 
     renderGraph: function() {
         var graphContainer = $(ReactDOM.findDOMNode(this.refs.graphContainer));
-        this.graphView = connected.render({
-            width: graphContainer.width(),
-            showProgress: true
+        this.graphView = new GraphView({
+            parent: graphContainer,
+            showProgress: true,
+            graph: this.props.store.getGraph()
         });
         graphContainer.append(this.graphView.$el);
-        this.graphView.render(this.props.store.getGraph());
+        this.graphView.render();
         return this;
     },
 
     highlightConcept: function(concept) {
-        this.graphView.highlightNode(concept.id);
+        this.graphView.activateNode(concept.id);
     }
 
 });

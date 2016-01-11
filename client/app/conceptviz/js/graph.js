@@ -1,7 +1,8 @@
-console.log("hi there");
+var $ = require("lib").$;
+var _ = require("lib")._;
+var Backbone = require("lib").Backbone;
 
 // move to utils.js
-
 var inc = function(obj, key) {
     if(obj[key] === undefined) {
         obj[key] = 0;
@@ -21,8 +22,6 @@ var createSvgEl = function(type, attrs) {
 
 var View = Backbone.View.extend({
 
-    el: "#graph",
-
     LEVEL_GAP: 80,
 
     MINIMUM_NODE_HEIGHT: 60,
@@ -35,14 +34,20 @@ var View = Backbone.View.extend({
 
     initialize: function(options) {
         this.graph = options.graph;
+        this.parent = options.parent;
+        this.reset();
+    },
 
-        //for performance reasons, these values are calculated
+    reset: function() {
+        //for performance reasons, these structures are calculated
         //when calculating traffic. 
         this._elementsById = {};
         this._levelByNodeId = {};
+
         this._paths = {};
 
         this._activeNodeElement = null;
+
     },
 
     activateNode: function(id, removePreviouslyActiveNode) {
@@ -85,7 +90,7 @@ var View = Backbone.View.extend({
             }
             else {
                 top -= 5;
-                
+
             }
             var div = $("<div>").addClass("graph-ball").css({
                 left: left,
@@ -128,6 +133,14 @@ var View = Backbone.View.extend({
 
     render: function() {
 
+        if(!this.graph.levels.length) {
+            return;
+        }
+        
+        this.$el.attr("id", "graph").css({
+            width: this.$el.parent().width()
+        });
+
         this.$nodes =$("<div>");
         this.$el.append(this.$nodes)
         var width = this.$el.width();
@@ -140,6 +153,16 @@ var View = Backbone.View.extend({
         this.renderEdges(nodeElementsAndGutters, traffic);
         return this;
     },
+
+    refresh: function(graph) {
+        this.$el.empty();
+        this.reset();
+        this.graph = graph;
+        this.render();
+        return this;
+    },
+
+
 
     renderNodesAtAllLevels: function(levels, totalWidth) {
 
@@ -225,6 +248,7 @@ var View = Backbone.View.extend({
                 height: maxHeight
             };
             gutters.push(gutter); 
+            // debugging
             // var div = $("<div>").css({
             //     left: gutter.leftPosition,
             //     top: gutter.topPosition,
@@ -607,107 +631,6 @@ var View = Backbone.View.extend({
 
 });
 
-
-g = {
-    levels: [
-        [
-            {
-                id: 1,
-                name: "One",
-            }
-        ],
-        [
-            {
-                id: 2,
-                name: "Two",
-            },
-            {
-                id: 3,
-                name: "Three",
-            },
-            {
-                id: 4,
-                name: "Four",
-            }
-        ],
-        [
-            {
-                id: 5,
-                name: "Five",
-            },
-            {
-                id: 6,
-                name: "Guiness Book of world records broken by Messi",
-            }
-        ],
-        [
-            {
-                id: 7,
-                name: "Seven",
-            },
-            {
-                id: 8,
-                name: "Eight",
-            }
-            // {
-            //     id: 9,
-            //     name: "Reader's Digest Book of Facts",
-            // },
-            // {
-            //     id: 10,
-            //     name: "Ten",
-            // }
-        ]
-    ],
-
-    edges: [
-        {
-            from: 1,
-            to: 2
-        },
-        {
-            from: 1,
-            to: 3
-        },
-        {
-            from: 1,
-            to: 4
-        },
-        {
-            from: 3,
-            to: 5
-        },
-        {
-            from: 4,
-            to: 6
-        },
-        {
-            from: 5,
-            to: 7
-        },
-        {
-            from: 6,
-            to: 8
-        },
-        {
-            from: 2,
-            to: 7
-        },
-        {
-            from: 3,
-            to: 8
-        },
-        {
-            from: 1,
-            to: 6
-        }
-    ]
-};
-var init = function() {
-    window.view = new View({
-        graph: g
-    });
-    window.view.render();
-};  
-
-$(document).ready(init);
+module.exports = {
+    GraphView: View
+}

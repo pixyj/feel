@@ -6,12 +6,10 @@ var Backbone = require("lib").Backbone;
 
 var utils = require("utils");
 
-var connected = require("./../../conceptviz/js/connected");
-
 var DAG = require("./../../conceptviz/js/DAG").DAG;
+var GraphView = require("./../../conceptviz/js/graph").GraphView;
 
 var Store = require("./models").CreatorStore;
-
 
 /********************************************************************************
 *   React Components
@@ -554,11 +552,12 @@ var PageView = Backbone.View.extend({
     },
 
     addGraphView: function() {
-        this.graphView = connected.render({
-            width: this.graphContainer.width()
+        this.graphView = new GraphView({
+            parent: this.graphContainer,
+            graph: this.store.getGraph()
         });
         this.graphContainer.append(this.graphView.$el);
-        this.graphView.render(this.store.getGraph());
+        this.graphView.render();
         return this;
     },
 
@@ -615,6 +614,4 @@ var unmount = function() {
 module.exports = {
     render: render,
     unmount: unmount
-}
-
-window.connected = connected;
+};
