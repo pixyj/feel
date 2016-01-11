@@ -46,7 +46,7 @@ class CodeQuizAttempt(UUIDModel):
     user_key = models.CharField(max_length=SESSION_KEY_MAX_LENGTH, db_index=True)
 
     state = models.IntegerField(choices=EVALUATION_STATE, default=0)
-    code = models.TextField()
+    code = models.TextField(db_index=True)
     result = models.BooleanField(default=False)
     response = JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)

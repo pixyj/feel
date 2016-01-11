@@ -63,7 +63,8 @@ Store.prototype = {
 
     submit: function() {
         this._evaluationState = "EVALUATING";
-
+        this._attempt.attributes.code = $.trim(this._attempt.attributes.code);
+        
         var self = this;
         return this._attempt.save().then(function() {
             self._evaluationState = "EVALUATED";
