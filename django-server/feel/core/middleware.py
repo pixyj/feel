@@ -24,7 +24,7 @@ class JsonAsHtml(object):
         if 'api' not in request.path:
             return response
         
-        title = "JSON as HTML Middleware for: %s" % request.get_full_path()
-        response.content = "<html><head><title>%s</title></head><body>%s</body></html>" % (title, response.content)
+        title = "JSON as HTML Middleware for: {}".format(request.get_full_path())
+        response.content = "<html><head><title>{}</title></head><body><pre><code>{}</code></pre></body></html>".format(title, response.content)
         response['Content-Type'] = 'text/html'
         return response
