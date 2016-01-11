@@ -24,6 +24,10 @@ textarea {
     box-shadow: none;
 }
 
+.invisible {
+    visibility: hidden;
+}
+
 @media (max-width: $screen-md_min) {
     #home-url {
         text-align: center;
