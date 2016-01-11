@@ -55,6 +55,9 @@ var Store = function(options) {
     this._initializeStoreAPIs(this._student, this.studentAPIs);
     this._initializeStoreAPIs(this._attempt, this.attemptAPIs);
     this._initializeStoreAPIs(this._pretest, this.pretestAPIs);
+
+    //#todo -> Change to this._channel.on
+    this.on("add:attempt", this._updatePretestState, this);
 };
 
 Store.prototype = {
@@ -153,23 +156,19 @@ Store.prototype = {
             hasAnsweredAllQuizzes: false,
             previousAttemptResult: null
         };
-
-        //#todo -> Change to this._channel.on
-        this.on("add:attempt", this._updatePretestState, this);
-    },
-
-    isLastQuestionAnswered: function() {
-        return this._pretestState.currentConceptIndex === this._orderedConcepts.length - 1;
     },
 
     _updatePretestState: function(attempt) {
+        console.log("in _updatePretestState");
         if(attempt.result) {
             if(this._pretestState.currentConceptIndex === this._orderedConcepts.length - 1) {
                 this._pretestState.hasAnsweredAllQuizzes = true;
+                this.off("add:attempt");
                 this.trigger("complete:pretest", this._pretestState);
             }
             else if(this._pretestState.previousAttemptResult === false) {
-                this._pretestState.startLearningAtConcept = this._orderedConcepts[this._pretest.currentConceptIndex];
+                this._pretestState.startLearningAtConcept = this._orderedConcepts[this._pretestState.currentConceptIndex + 1];
+                this.off("add:attempt");
                 this.trigger("complete:pretest", this._pretestState);
             }
             else {
@@ -180,12 +179,14 @@ Store.prototype = {
         else {
             if(this._pretestState.currentConceptIndex === 0) {
                 this._pretestState.startLearningAtConcept = this._orderedConcepts[0];
+                this.off("add:attempt");
                 this.trigger("complete:pretest", this._pretestState);
             }
             else if(this._pretestState.previousAttemptResult === true) {
                 var currentConceptIndex = this._pretestState.currentConceptIndex;
                 var startLearningAtConceptIndex = currentConceptIndex;
                 this._pretestState.startLearningAtConcept = this._orderedConcepts[startLearningAtConceptIndex];
+                this.off("add:attempt");
                 this.trigger("complete:pretest", this._pretestState);
             }
             else {
@@ -196,7 +197,7 @@ Store.prototype = {
     },
 
     getPretestCompletionConcept: function() {
-        return this._pretest.startLearningAtConcept;
+        return this._pretestState.startLearningAtConcept;
     },
 
     getNextPretestConcept: function() {
@@ -217,7 +218,7 @@ Store.prototype = {
     },
 
     cleanup: function() {
-        //todo
+        this.off();
     }
 
 };
@@ -421,17 +422,16 @@ var PretestComponent = React.createClass({
     // todo -> This code can be improved. The logic has to be moved to the store
     // and the view can remain 'dumb'. But I'm under a deadline and this works.
     showNextBtn: function(attempt) {
-        if(!attempt.result) {
-            return;
-        }
-
-        if(this.props.store.isLastQuestionAnswered()) {
-            return;
-        }
 
         console.debug("in showNextBtn", attempt);
         var self = this;
-        setTimeout(function() {
+        this._nextQuizTimer = setTimeout(function() {
+
+            //hack. The timer should be cleared in 
+            //_updatePretestState. But it isn't 
+            if(self.state.isPretestCompleted) {
+                return;
+            }
             self.setState({
                 showNextBtn: true,
                 quiz: null
@@ -449,6 +449,9 @@ var PretestComponent = React.createClass({
     },
 
     _showNextPretestAfterTimeout: function() {
+        if(this.state.isPretestCompleted) {
+            return;
+        }
         this._setCountdown(3);
     },
 
@@ -469,8 +472,6 @@ var PretestComponent = React.createClass({
         }, 1000);
     },
 
-
-
     updateQuiz: function(quiz) {
         this.setState({
             quiz: quiz
@@ -480,12 +481,14 @@ var PretestComponent = React.createClass({
     updateIsPretestCompleted: function(pretestStateAttrs) {
         console.debug("in updateIsPretestCompleted");
         this._pretestStateAttrs = pretestStateAttrs;
+        clearTimeout(this._nextQuizTimer);
         var self = this;
         this._pretestButtonTimer = setTimeout(function() {
             self.setState({
                 isPretestCompleted: true,
                 showNextBtn: false,
-                quiz: null
+                quiz: null,
+                countdown: null
             });
             self._scrollToTop();
         }, 2000);
@@ -514,7 +517,8 @@ var PretestComponent = React.createClass({
         if(this.state.quiz !== null) {
             quizComponent = <StudentSingleQuizView 
                                 quiz={this.state.quiz} 
-                                attemptStore={this.props.store.getAttemptStore()} />
+                                attemptStore={this.props.store.getAttemptStore()} 
+                                isCoursePretestQuiz={true} />
 
         }
         var nextBtn = ""; 
