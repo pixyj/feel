@@ -45,12 +45,20 @@ var View = Backbone.View.extend({
         this._activeNodeElement = null;
     },
 
-    highlightNode: function(id) {
-        if(this._activeNodeElement) {
+    activateNode: function(id, removePreviouslyActiveNode) {
+
+        removePreviouslyActiveNode = removePreviouslyActiveNode || true;
+        if(removePreviouslyActiveNode && this._activeNodeElement) {
             this._activeNodeElement.removeClass("concept-box-active");
         }
+
         this._activeNodeElement = this._elementsById[id];
         this._activeNodeElement.addClass("concept-box-active");
+        return this;
+    },
+
+    deactivateNode: function(id) {
+        this._elementsById[id].removeClass("concept-box-active");
         return this;
     },
 
@@ -69,9 +77,19 @@ var View = Backbone.View.extend({
         var allDivs = [];
         for(var i = 1; i < (path.length); i++) {
             var endPoint = path[i];
+            var left = startPoint.x;
+            var top = startPoint.y;
+            if(startPoint.x === endPoint.x) {
+                left -= 5;
+                top -= 2;
+            }
+            else {
+                top -= 5;
+                
+            }
             var div = $("<div>").addClass("graph-ball").css({
-                left: startPoint.x,
-                top: startPoint.y,
+                left: left,
+                top: top,
                 "visibility": "hidden"
             });
             this.$el.append(div);
