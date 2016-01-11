@@ -194,22 +194,13 @@ class QuizAttemptView(APIView):
             "result": data['result'],
             "answer": data['answer'],
             "choices": ','.join((str(choice_id) for choice_id in data['choices'])),
-            "attempt_number": data['attempt_number'],
-
             "user": user,
             "user_key": user_key,
-
             "created_at": timezone.now()
         }
-        
-        try:
-            attempt = QuizAttempt.objects.create(**attrs)
-        except IntegrityError:
-            return Response("Attempt Number not unique", status.HTTP_400_BAD_REQUEST)
-
+        attempt = QuizAttempt.objects.create(**attrs)
         data['id'] = attempt.id
         return Response(request.data, status.HTTP_201_CREATED)
-
 
     def get(self, request, quiz_id, format=None):
         user, user_key = get_user_and_user_key(request)
@@ -218,5 +209,4 @@ class QuizAttemptView(APIView):
         for a in attempts:
             serializer = serializers.QuizAttemptSerializer(a)
             serialized_attempts.append(serializer.data)
-
         return Response(serialized_attempts)

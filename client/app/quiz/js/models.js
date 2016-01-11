@@ -143,7 +143,20 @@ var QuizAttemptCollection = Backbone.Collection.extend({
                 latestAttempts[attempt.quizId] = attempt;
             }
             else {
-                if(previous.attemptNumber < attempt.attemptNumber) {
+
+                //High level overview. 
+                //attemptNumber field is now removed to simplify 
+                //logic, and support multiple sessions from same user
+                //On the flipside, we have to rely on the database's 
+                //created-at time and may lose out info on whether 
+                //student answered a question on the first attempt. 
+
+                //Comment specific to below block of code. 
+                //Replace an attempt only if it is incorrect. 
+                //We want to prioritize correct attempts so that 
+                //corresponding UI component is disabled  
+                //and an 'answered-correctly' message is shown. 
+                if(!previous.result) {
                     latestAttempts[attempt.quizId] = attempt;
                 }
             }
@@ -167,22 +180,10 @@ var QuizAttemptStore = function(options) {
 
 QuizAttemptStore.prototype = {
 
-    //attemptNumber is set on the client. Should we move it to the server? #todo
     addAttempt: function(attempt) {
         console.log("Adding attempt: ", attempt);
-
-        var existingAttempt = this.attempts[attempt.quizId];
-        var attemptNumber;
-        if(existingAttempt) {
-            attemptNumber = existingAttempt.attemptNumber + 1;
-        }
-        else {
-            attemptNumber = 1;
-        }
-        attempt.attemptNumber = attemptNumber;
-
         this.attempts[attempt.quizId] = attempt;
-        
+
         this._channel.trigger("add:attempt", attempt);
         
         var model = this.attemptCollection.add(attempt);

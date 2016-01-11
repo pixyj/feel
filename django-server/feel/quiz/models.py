@@ -120,7 +120,6 @@ class QuizAttempt(UUIDModel):
     #user_key = user_id if user is logged-in else session_key
     user_key = models.CharField(max_length=SESSION_KEY_MAX_LENGTH, db_index=True)
 
-    attempt_number = models.IntegerField()
     result = models.BooleanField()
 
     answer = models.TextField(blank=True)
@@ -129,9 +128,6 @@ class QuizAttempt(UUIDModel):
     created_at = models.DateTimeField(db_index=True)
 
     objects = QuizUserAttemptManager()
-
-    class Meta:
-        unique_together = ("quiz", "user_key", "attempt_number", )
 
     def __str__(self):
         if self.user is None:
