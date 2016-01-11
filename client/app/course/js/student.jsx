@@ -142,9 +142,14 @@ Store.prototype = {
         var conceptsInLevels = this.getGraph().levels;
         this._orderedConcepts = _.flatten(conceptsInLevels);
 
+        var selfEstimationLevel = this.getSkillEstimationLevel();
+        var fractionEstimated = SELF_SKILL_ESTIMATION_LEVELS[selfEstimationLevel].props.quizStartPoint;
+        var length = this._orderedConcepts.length;
+        var initialConceptIndex = Math.floor(length * fractionEstimated);
+
         this._pretestState = {
             startLearningAtConcept: null,
-            currentConceptIndex: 1,
+            currentConceptIndex: initialConceptIndex,
             hasAnsweredAllQuizzes: false,
             previousAttemptResult: null
         };
@@ -518,7 +523,7 @@ var PretestComponent = React.createClass({
         if(this.state.showNextBtn) {
             nextConcept = this.props.store.getNextPretestConcept();
             if(nextConcept) {
-                nextBtn = <h5 id="course-pretest-next-concept-heading">Correct! Next up, a question on 
+                nextBtn = <h5 id="course-pretest-next-concept-heading">Next up, a question on 
                                 <b> {nextConcept.name}</b>
                           </h5>
             }
