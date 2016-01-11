@@ -7,6 +7,8 @@ var utils = require("utils");
 
 var ListMixin = require("list-mixin.jsx").ListMixin;
 
+var SubmitThrottleMixin = require("submit-throttle.jsx").SubmitThrottleMixin;
+
 var ShortAnswerSubmitView = React.createClass({
 
     getInitialState: function() {
@@ -60,6 +62,10 @@ var ShortAnswerSubmitView = React.createClass({
             answer: this.state.guess,
             choices: []
         };
+    },
+
+    reset: function() {
+
     }
 });
 
@@ -100,6 +106,12 @@ var ChoiceSingleCheckView = React.createClass({
         });
     },
 
+    reset: function() {
+        this.setState({
+            isSelected: false
+        });
+    },
+
     checkAnswer: function(isCorrect) {
         return this.props.choice.isCorrect === this.state.isSelected;
     }
@@ -134,7 +146,7 @@ var MCQSubmitView = React.createClass({
         var wrongFound = false; 
 
         var i, length = this.props.store.choices.length;
-        //#todo -> make the domId thingy DRY. 
+        //#todo -> make the domId thingy and looping DRY. 
         for(i = 0; i < length; i++) {
             var domId = "quiz-preview-checkbox-" + i;
             var view = this.refs[domId];
@@ -160,16 +172,23 @@ var MCQSubmitView = React.createClass({
             }
 
         }
-
-
         return {
             answer: "",
             choices: selectedChoices.join(", ")
         };
+    },
+
+    reset: function() {
+        var i, length = this.props.store.choices.length;
+        for(i = 0; i < length; i++) {
+            var domId = "quiz-preview-checkbox-" + i;
+            var view = this.refs[domId];
+            view.reset();
+        }
     }
 });
 
-var QuizAnswerSubmitView = React.createClass({
+var QuizAnswerSubmitMixin = {
 
     render: function() {
         var answerSubmitView;
@@ -194,6 +213,18 @@ var QuizAnswerSubmitView = React.createClass({
         if(result) {
             feedbackClass += "quiz-correct-result-feedback quiz-status-transition"
         }
+        else if(result === false) {
+            feedbackClass += "quiz-incorrect-result-feedback"
+        }
+
+        var submitDisabledMessage = "";
+        if(this.IS_SUBMIT_THROTTLER_MIXED_IN) {
+            submitDisabledMessage = this.getSubmitDisabledMessageComponent({
+                className: "quiz-submit-disabled-message"
+            });
+        }
+
+        var isSubmitDisabled = this.isSubmitDisabled();
 
         return (
 
@@ -203,7 +234,7 @@ var QuizAnswerSubmitView = React.createClass({
                     <div className="col-xs-5 col-md-3">
                         <button className="btn waves-effect waves-light btn-large" 
                                 onClick={this.checkAnswer} 
-                                disabled={result}>
+                                disabled={isSubmitDisabled}>
                                 Submit
                         </button>
                     </div>
@@ -211,6 +242,7 @@ var QuizAnswerSubmitView = React.createClass({
                         <span className={feedbackClass}> {feedback} </span>
                     </div>
                 </div>
+                { submitDisabledMessage }
             </div>
 
         );
@@ -232,6 +264,10 @@ var QuizAnswerSubmitView = React.createClass({
             result: result
         });
 
+        if(this.onAnswerSubmitted && _.isFunction(this.onAnswerSubmitted)) {
+            this.onAnswerSubmitted.call(this, result);
+        }
+
     },
 
     getResultFeedback: function() {
@@ -242,6 +278,42 @@ var QuizAnswerSubmitView = React.createClass({
         }[this.props.result];
     }
 
+};
+
+var QuizAnswerSubmitView = React.createClass({
+
+    mixins: [SubmitThrottleMixin, QuizAnswerSubmitMixin],
+
+    IS_SUBMIT_THROTTLER_MIXED_IN: true,
+
+    componentWillUnmount: function() {
+        this.cleanupThrottler();
+    },
+
+    getInitialState: function() {
+        return this.initThrottler();
+    },
+
+    isSubmitDisabled: function() {
+        return this.props.result || this.state.submitDisabled;
+    },
+
+    onAnswerSubmitted: function(result) {
+        if(!result) {
+            this.disableSubmit();
+            this.refs.answerSubmitView.reset();
+        }
+    }
+
+});
+
+var CoursePretestQuizAnswerSubmitView = React.createClass({
+    
+    mixins: [QuizAnswerSubmitMixin],
+
+    isSubmitDisabled: function() {
+        return this.props.result !== null;
+    }
 });
 
 var QuizQuestionView = React.createClass({
@@ -324,6 +396,15 @@ var StudentSingleQuizView = React.createClass({
         }
     },
 
+    getQuizAnswerSubmitComponent: function(options) {
+        if(this.props.isCoursePretestQuiz) {
+            return <CoursePretestQuizAnswerSubmitView {...options} />
+        }
+        else {
+            return <QuizAnswerSubmitView {...options} />
+        }
+    },
+
 
     render: function() {
 
@@ -340,6 +421,14 @@ var StudentSingleQuizView = React.createClass({
         if(this.props.number) {
             number = this.props.number + ".";
         }
+        
+        var answerSubmitView = this.getQuizAnswerSubmitComponent({
+            store: this.props.quiz,
+            attemptStore: this.props.attemptStore,
+            parent: this,
+            result: result
+        });
+
         return (
             <div>
                 <div className="student-quiz-container">
@@ -352,11 +441,7 @@ var StudentSingleQuizView = React.createClass({
                         <QuizQuestionView 
                             questionDisplay={this.props.quiz.questionDisplay} 
                             ref="questionView" />
-                        <QuizAnswerSubmitView 
-                            store={this.props.quiz} 
-                            attemptStore={this.props.attemptStore}
-                            parent={this} 
-                            result={result} />
+                        {answerSubmitView}
                     </div>
                     
                     <div className="clearfix"> </div>
