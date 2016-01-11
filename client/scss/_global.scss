@@ -20,6 +20,10 @@ textarea {
     color: rgb(33, 150, 243);
 }
 
+.btn {
+    box-shadow: none;
+}
+
 @media (max-width: $screen-md_min) {
     #home-url {
         text-align: center;
