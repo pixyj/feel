@@ -22,7 +22,7 @@ body {
 }
 
 #home-url img {
-    height: 3rem;
+    height: $top-bar-height;
 }
 
 @media (max-width: $screen-md_min) {
