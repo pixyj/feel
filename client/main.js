@@ -230,7 +230,7 @@ var triggerResize = function() {
     Backbone.trigger("window:resize");
 };
 
-triggerResize = _.throttle(triggerResize, 1000);
+triggerResize = _.debounce(triggerResize, 500);
 
 var listenToResize = function() {
     $(window).resize(triggerResize);
