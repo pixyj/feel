@@ -1,4 +1,6 @@
 @import "mixins/transition";
+@import 'base/scss/base-variables';
+
 
 #page-container {
     margin-left: 3%;
@@ -95,11 +97,11 @@
 }
 
 .quiz-student-choice-enabled:hover {
-    background-color: #F3E5F5;
+    background-color: $brand-color-lite-hover;
 }
 
 .quiz-student-choice-selected {
-    background-color: #9C27B0 !important;
+    background-color: $brand-color-lite !important;
     color: white;
 }
 

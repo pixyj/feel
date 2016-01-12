@@ -1,3 +1,5 @@
+@import 'base/scss/base-variables';
+
 .chapters-and-concepts-heading {
     text-align: center;
 }
@@ -26,7 +28,7 @@
 
 .concept-box-active {
     color: white;
-    background: #9C27B0 !important; 
+    background: $brand-color-lite !important; 
     transition: 0.5s ease;
 }
 
