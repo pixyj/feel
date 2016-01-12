@@ -105,7 +105,7 @@ class CodeQuizAttemptView(APIView):
                 else:
                     attrs['result'] = identical_attempt.result
                     attrs['response'] = identical_attempt.response
-                    attrs['state'] = 2
+                    attrs['state'] = 3
                     attempt = CodeQuizAttempt.objects.create(**attrs)
 
             else:
