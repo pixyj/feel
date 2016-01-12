@@ -128,7 +128,7 @@ var Router = Backbone.Router.extend({
 
     showLoggedOut: function() {
         this.resetPage();
-        var url = "https://youtu.be/uCg2BoKiuOM?t=80"
+        var url = "https://youtu.be/uCg2BoKiuOM?t=84"
         var a = $("<a>").html("Have a nice day!").attr("href", url);
         var h5 = $("<h5>").html("You are logged out. ").append(a).css({
             "margin-top": "3%",
