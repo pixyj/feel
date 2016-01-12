@@ -21,6 +21,10 @@ body {
     font-size: 2.5rem;
 }
 
+#home-url img {
+    height: 3rem;
+}
+
 @media (max-width: $screen-md_min) {
     #breadcrumbs {
         text-align: center;
