@@ -145,6 +145,17 @@ Store.prototype = {
         var conceptsInLevels = this.getGraph().levels;
         this._orderedConcepts = _.flatten(conceptsInLevels);
 
+        this._levelIndexByConceptId = {};
+        var depth = conceptsInLevels.length;
+        for(var i = 0; i < depth; i++) {
+            var level = conceptsInLevels[i];
+            var levelLength = level.length;
+            for(var j = 0; j < levelLength; j++) {
+                var concept = level[j];
+                this._levelIndexByConceptId[concept.id] = i;
+            }
+        }
+
         var selfEstimationLevel = this.getSkillEstimationLevel();
         var fractionEstimated = SELF_SKILL_ESTIMATION_LEVELS[selfEstimationLevel].props.quizStartPoint;
         var length = this._orderedConcepts.length;
@@ -202,6 +213,15 @@ Store.prototype = {
 
     getNextPretestConcept: function() {
         return this._orderedConcepts[this._pretestState.currentConceptIndex];
+    },
+
+    getLevelIndexByConceptId: function(id) {
+        return this._levelIndexByConceptId[id];
+    },
+
+    getCurrentLevelIndex: function() {
+        var concept = this.getNextPretestConcept();
+        return this.getLevelIndexByConceptId(concept.id);
     },
 
     getNextPretestQuizAndHighlightConcept: function() {
@@ -392,7 +412,7 @@ var PretestComponent = React.createClass({
         
         return {
             quiz: null,
-            showNextBtn: false,
+            showNextQuiz: false,
             isPretestCompleted: false,
             countdown: null
         };
@@ -409,21 +429,27 @@ var PretestComponent = React.createClass({
         });
 
         this.props.store.on("complete:pretest", this.updateIsPretestCompleted, this);
-        this.props.store.on("add:attempt", this.showNextBtn, this);
+        this.props.store.on("add:attempt", this.showNextQuiz, this);
+
+        
+    },
+
+    componentDidMount: function() {
+        this.props.parent.startShowTwoLevelsMode();
     },
 
     componentWillUnmount: function() {
         
-        this.props.store.off("add:attempt", this.showNextBtn, this);
+        this.props.store.off("add:attempt", this.showNextQuiz, this);
         this.props.store.off("complete:pretest", this.updateIsPretestCompleted);
 
     },
 
     // todo -> This code can be improved. The logic has to be moved to the store
     // and the view can remain 'dumb'. But I'm under a deadline and this works.
-    showNextBtn: function(attempt) {
+    showNextQuiz: function(attempt) {
 
-        console.debug("in showNextBtn", attempt);
+        console.debug("in showNextQuiz", attempt);
         var self = this;
         this._nextQuizTimer = setTimeout(function() {
 
@@ -433,13 +459,12 @@ var PretestComponent = React.createClass({
                 return;
             }
             self.setState({
-                showNextBtn: true,
+                showNextQuiz: true,
                 quiz: null
             });
             self._scrollToTop();
             self._showNextPretestAfterTimeout();
-            //hack
-            self.props.parent.highlightConcept(self.props.store.getNextPretestConcept());
+           
         }, 2000);
     },
 
@@ -486,11 +511,12 @@ var PretestComponent = React.createClass({
         this._pretestButtonTimer = setTimeout(function() {
             self.setState({
                 isPretestCompleted: true,
-                showNextBtn: false,
+                showNextQuiz: false,
                 quiz: null,
                 countdown: null
             });
             self._scrollToTop();
+            self.props.parent.endShowTwoLevelsMode();
         }, 2000);
     },
 
@@ -524,7 +550,7 @@ var PretestComponent = React.createClass({
         var nextBtn = ""; 
         var nextConcept;
         var nextBtnString = "";
-        if(this.state.showNextBtn) {
+        if(this.state.showNextQuiz) {
             nextConcept = this.props.store.getNextPretestConcept();
             if(nextConcept) {
                 nextBtn = <h5 id="course-pretest-next-concept-heading">Next up, a question on 
@@ -554,10 +580,17 @@ var PretestComponent = React.createClass({
         var quiz = this.props.store.getNextPretestQuizAndHighlightConcept();
 
         this.setState({
-            showNextBtn: false,
+            showNextQuiz: false,
             countdown: null,
             quiz: quiz
         });
+
+        var scrollLevelIndex = this.props.store.getCurrentLevelIndex();
+        if(scrollLevelIndex !== 0) {
+            scrollLevelIndex -= 1;
+        }
+        this.props.parent.scrollToLevel(scrollLevelIndex);
+        this.props.parent.highlightConcept(this.props.store.getNextPretestConcept());
     }
 });
 
@@ -659,6 +692,18 @@ var PageComponent = React.createClass({
 
     highlightConcept: function(concept) {
         this.graphView.activateNode(concept.id);
+    },
+
+    startShowTwoLevelsMode: function() {
+        this.graphView.startShowTwoLevelsMode();
+    },
+
+    scrollToLevel: function(index) {
+        this.graphView.scrollToLevel(index);
+    },
+
+    endShowTwoLevelsMode: function() {
+        this.graphView.endShowTwoLevelsMode();
     }
 
 });

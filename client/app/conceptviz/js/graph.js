@@ -36,6 +36,8 @@ var View = Backbone.View.extend({
         this.graph = options.graph;
         this.parent = options.parent;
         this.reset();
+
+        window.g = this;
     },
 
     reset: function() {
@@ -48,6 +50,15 @@ var View = Backbone.View.extend({
 
         this._activeNodeElement = null;
 
+        this._resetTimers();
+
+    },
+
+    _resetTimers: function() {
+        _.each(this.timers, function(timer) {
+            clearTimeout(timer);
+        })
+        this._timers = [];
     },
 
     activateNode: function(id, removePreviouslyActiveNode) {
@@ -67,7 +78,10 @@ var View = Backbone.View.extend({
         return this;
     },
 
-    traverse: function(from, to, time) {
+    animateNodeTraversal: function(from, to) {
+
+        this.$el.remove(".graph-ball");
+        this._resetTimers();
 
         var path = this._paths[this.getEdgeKey({
             from: from,
@@ -76,8 +90,6 @@ var View = Backbone.View.extend({
         console.log(path);
 
         var length = path.length;
-
-
         var startPoint = path[0];
         var allDivs = [];
         for(var i = 1; i < (path.length); i++) {
@@ -117,7 +129,7 @@ var View = Backbone.View.extend({
             direction = "X";
             diff = endPoint.x - startPoint.x;
         }
-        setTimeout(function() {
+        var timer = setTimeout(function() {
             div.css({
                 visibility: "visible",
                 transform: "translate" + direction + "(" + diff + "px)"
@@ -129,6 +141,7 @@ var View = Backbone.View.extend({
                 });
             }
         }, (index+1) * 500);
+        this._timers.push(timer);
     },
 
     render: function() {
@@ -162,7 +175,43 @@ var View = Backbone.View.extend({
         return this;
     },
 
+    startShowTwoLevelsMode: function() {
+        var maxTwoLevelHeight = 0;
 
+        var depth = this.graph.levels.length;
+        for(var i = 0; i < depth - 1; i++) {
+            var first = this._levelHeights[i];
+            var second = this._levelHeights[i+1];
+            var height = second + first + this.LEVEL_GAP;
+            maxTwoLevelHeight = _.max([height, maxTwoLevelHeight]);
+        }
+        this._twoLevelModeHeight = maxTwoLevelHeight;
+
+        this.$el.css({
+            height: this._twoLevelModeHeight,
+            overflow: 'scroll'
+        });
+    },
+
+    scrollToLevel: function(index) {
+        var levelsUptoIndex = this._levelHeights.slice(0, index);
+        var levelHeights = _.reduce(levelsUptoIndex, function(a, b) {return a + b;});
+        var gapHeight = index * this.LEVEL_GAP;
+        var topPosition = levelHeights + gapHeight;
+
+        this.$el.animate({
+            scrollTop: topPosition
+        }, 500);
+        //this.$el.scrollTop(topPosition);
+        return this;
+    },
+
+    endShowTwoLevelsMode: function() {
+        this.$el.css({
+            height: this.$height + this.LEVEL_GAP / 4,
+            overflow: 'auto'
+        });
+    },
 
     renderNodesAtAllLevels: function(levels, totalWidth) {
 
@@ -170,7 +219,12 @@ var View = Backbone.View.extend({
         var depth = levels.length;
         var elements = {};
         var gutters = [];
+
+        this._levelHeights = [];
+
         for(var i = 0; i < depth; i++) {
+            
+
             var attrs = {
                 nodes: levels[i],
                 level: i,
@@ -179,7 +233,7 @@ var View = Backbone.View.extend({
             };
             var result = this.renderLevelNodesAndGutters(attrs);
             cumulativeHeight += result.height + this.LEVEL_GAP;
-            
+            this._levelHeights[i] = result.height;
             _.extendOwn(elements, result.elements);
             gutters.push(result.gutters); 
         }
