@@ -1,10 +1,37 @@
+@import 'base/scss/base-variables';
+
+/************************ Page level rules ****************************************/
+
 body {
     background: url("/dist/retina_dust.png");
 }
 
+
+/************************ TOP BAR ************************************************/
+
 #top-progress-bar {
     visibility: hidden;
     margin: 0;
+}
+
+#home-url {
+    color: #7C2C3B;
+    height: $top-bar-height;
+    line-height: $top-bar-height;
+    font-size: 2.5rem;
+}
+
+@media (max-width: $screen-md_min) {
+    #breadcrumbs {
+        text-align: center;
+    }
+}
+
+/************************ Override Materialize ***********************************/
+
+#search-bar input {
+    margin: 0;
+    font-size: 1.2rem;
 }
 
 .card-padding {
@@ -22,14 +49,14 @@ textarea {
 
 .btn {
     box-shadow: none;
+    background-color: $call-to-action-color;
 }
 
+.btn:hover {
+    background-color: $call-to-action-color;
+}
+
+/************************ Utils **************************************************/
 .invisible {
     visibility: hidden;
-}
-
-@media (max-width: $screen-md_min) {
-    #home-url {
-        text-align: center;
-    }
 }

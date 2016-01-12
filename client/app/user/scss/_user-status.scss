@@ -6,7 +6,7 @@
 
 .username-or-login-btn {
     text-align: center;
-    line-height: $username-height;
+    line-height: $top-bar-height;
 }
 
 @media(min-width: 992px) {
@@ -21,14 +21,14 @@
 
 #logout {
     position: absolute;
-    top: $username-height;
+    top: $top-bar-height;
     right: 0;
     width: 100%;
-    background: rgb(3, 169, 244);
+    background: $call-to-action-color;
     color: white;
-    height: $username-height;
-    line-height: $username-height;
-    font-size: 1rem;
+    height: $top-bar-height;
+    line-height: $top-bar-height;
+    font-size: 1.2rem;
     text-align: center;
     z-index: 4;
 }
