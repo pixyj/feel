@@ -226,6 +226,16 @@ var Router = Backbone.Router.extend({
 
 });
 
+var triggerResize = function() {
+    Backbone.trigger("window:resize");
+};
+
+triggerResize = _.throttle(triggerResize, 1000);
+
+var listenToResize = function() {
+    $(window).resize(triggerResize);
+};
+
 var init = function() {
 
 
@@ -237,6 +247,8 @@ var init = function() {
         console.log(userModel.toJSON());
 
     });
+
+    listenToResize();
 
 };
 

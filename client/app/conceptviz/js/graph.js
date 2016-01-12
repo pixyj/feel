@@ -170,7 +170,14 @@ var View = Backbone.View.extend({
 
         this.initializeSvg();
         this.renderEdges(nodeElementsAndGutters, traffic);
+
+        this.listenTo(Backbone, "window:resize", this.renderOnResize);
+
         return this;
+    },
+
+    renderOnResize: function() {
+        this.refresh(this.graph);
     },
 
     refresh: function(graph) {
@@ -199,7 +206,7 @@ var View = Backbone.View.extend({
         });
     },
 
-    scrollToLevel: function(index) {
+    scrollToLevel: function(index, time) {
         var levelsUptoIndex = this._levelHeights.slice(0, index);
         var levelHeights = _.reduce(levelsUptoIndex, function(a, b) {return a + b;});
         var gapHeight = index * this.LEVEL_GAP;
@@ -207,9 +214,7 @@ var View = Backbone.View.extend({
 
         this.$el.animate({
             scrollTop: topPosition
-        }, 500);
-        //this.$el.scrollTop(topPosition);
-        return this;
+        }, time);
     },
 
     endShowTwoLevelsMode: function() {
