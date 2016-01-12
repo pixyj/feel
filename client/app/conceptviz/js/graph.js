@@ -61,15 +61,21 @@ var View = Backbone.View.extend({
         this._timers = [];
     },
 
-    activateNode: function(id, removePreviouslyActiveNode) {
+    activateNode: function(id, options) {
 
-        removePreviouslyActiveNode = removePreviouslyActiveNode || true;
-        if(removePreviouslyActiveNode && this._activeNodeElement) {
+        removePrevious = options.removePrevious || true;
+        if(removePrevious && this._activeNodeElement) {
             this._activeNodeElement.removeClass("concept-box-active");
         }
 
         this._activeNodeElement = this._elementsById[id];
-        this._activeNodeElement.addClass("concept-box-active");
+        var delay = options.delay || 0;
+
+        var self = this;
+        setTimeout(function() {
+            self._activeNodeElement.addClass("concept-box-active");
+        }, delay);
+        
         return this;
     },
 

@@ -469,8 +469,10 @@ var PretestComponent = React.createClass({
     },
 
     _scrollToTop: function() {
-        height = $("#user-status").height() + $("h3").height();
-        $(window).scrollTop(height);
+        this.$pretest = this.$pretest || $("#course-pretest-container");
+        this.$pretest.animate({
+            scrollTop: 0
+        }, 500);
     },
 
     _showNextPretestAfterTimeout: function() {
@@ -691,11 +693,21 @@ var PageComponent = React.createClass({
     },
 
     highlightConcept: function(concept) {
-        this.graphView.activateNode(concept.id);
+        this.graphView.activateNode(concept.id, {
+            delay: 500,
+            removePrevious: true
+        });
     },
 
     startShowTwoLevelsMode: function() {
-        this.graphView.startShowTwoLevelsMode();
+        if(this.graphView) {
+            this.graphView.startShowTwoLevelsMode();
+        }
+        
+        var self = this;
+        setTimeout(function() {
+            self.graphView.startShowTwoLevelsMode();
+        }, 500);
     },
 
     scrollToLevel: function(index) {
