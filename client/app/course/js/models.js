@@ -16,6 +16,8 @@ var DAG = require("./../../conceptviz/js/DAG").DAG;
 *
 *********************************************************************************/
 
+//localStorage.clear();
+
 var CourseModel = StreamSaveModel.extend({
 
     defaults: {
@@ -353,14 +355,20 @@ var ProgressModel = Backbone.Model.extend({
 
     parse: function(response) {
         _.each(response, function(attrs, id) {
-            attrs.progress = this.calculateProgress(attrs.answered, attrs.total);
+            attrs.progress = this.calculateProgress(attrs);
         }, this);
         return response;
     },
 
-    calculateProgress: function(answered, total) {
+    calculateProgress: function(attrs) {
+        var total = 0;
+        var answered = 0;
+        _.each(attrs, function(progress, exerciseType) {
+            total += progress.total;
+            answered += progress.answered;
+        });
         if(total === 0) {
-            return 1;
+            return 0;
         }
         return answered / total;
     }

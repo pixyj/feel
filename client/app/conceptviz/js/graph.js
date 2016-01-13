@@ -334,13 +334,15 @@ var View = Backbone.View.extend({
     renderNode: function(attrs) {
 
         var node = attrs.node;
-        var name = $("<h5 class='center'>").html(node.name);
+        var name = $("<span>").html(node.name).addClass("graph-node-title");
         var el = $("<div>").css({
             width: attrs.width,
             top: attrs.topPosition,
             left: attrs.leftPosition,
             position: 'absolute'
         }).addClass("graph-node card").append(name);
+
+        this._showProgress(el, node.progress);
 
         this.$nodes.append(el);
         this._elementsById[node.id] = el;
@@ -353,6 +355,22 @@ var View = Backbone.View.extend({
             left: attrs.leftPosition,
             id: node.id
         };
+    },
+
+    _showProgress: function(el, progress) {
+        if(!progress) {
+            return;
+        }
+        var background = $("<div>").addClass("graph-node-progress").css({
+            width: progress * 100 + "%"
+        });
+        el.find(".graph-node-title").addClass("graph-node-attempted-title");
+        el.append(background);
+        if(progress === 1) {
+            var done = $("<span>").addClass("graph-node-done-span").html("🏆");
+            el.append(done);
+        }
+
     },
 
     computeInfoRequiredToRenderEdges: function() {

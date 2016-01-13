@@ -1,54 +1,5 @@
 @import 'base/scss/base-variables';
 
-.chapters-and-concepts-heading {
-    text-align: center;
-}
-
-.chapter-container h3 {
-    text-align: center;
-    padding: 0.4em;
-    font-size: 1.6em;
-}
-
-.concept-box {
-    background: white;
-    //copied from materialize
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-    //Reset position: relative set by `card` class. 
-    position: static; 
-}
-
-.concept-box-even {
-    color: #4A148C;
-}
-
-.concept-box-odd {
-    color: #4cae4c;
-}
-
-.concept-box-active {
-    color: white;
-    background: $brand-color-lite !important; 
-    transition: 0.5s ease;
-}
-
-.concept-text {
-    font-weight: 500;
-    color: white;
-    font-size: 1.5em;
-}
-
-.concept-name-svg {
-    padding: 0.3em;
-}
-
-.concept-box h5 {
-    text-align: center;
-    font-size: 1.5em;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
 #graph {
     margin: 2rem;
     position: relative;
@@ -62,6 +13,57 @@
 
 .graph-node {
     margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    z-index: 1;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+
+.graph-node-active {
+    color: white;
+    background: $brand-color-lite !important; 
+    transition: 0.5s ease;
+}
+
+.graph-node-attempted-title {
+    color: white;
+    font-weight: bolder;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background: rgba(255,165,0,0.7);
+    border-radius: 10%;
+}
+
+.graph-node-done-span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 2rem;
+}
+
+.graph-node-progress {
+    background: linear-gradient(
+        to bottom right,
+        rgba(124,44,59,0.5) 25%, transparent 25%,
+        transparent 50%, rgba(124,44,59,0.5) 50%,
+        rgba(124,44,59,0.5) 75%, transparent 75%,
+        transparent
+    );
+    background-size: 2pc 2pc;
+    background-color: $call-to-action-color;
+    color: #F7C240;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: inherit;
+    z-index: -1;
 }
 
 .gutter {
@@ -70,7 +72,6 @@
 }
 
 .graph-ball {
-    
     height: 10px;
     width: 10px;
     background: blue;
