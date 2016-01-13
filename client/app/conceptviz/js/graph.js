@@ -334,13 +334,17 @@ var View = Backbone.View.extend({
     renderNode: function(attrs) {
 
         var node = attrs.node;
-        var name = $("<span>").html(node.name).addClass("graph-node-title");
+       
+        var a = $("<a>").attr("href", node.url);
+        var title = $("<span>").html(node.name).addClass("graph-node-title");
+        a.append(title);
+
         var el = $("<div>").css({
             width: attrs.width,
             top: attrs.topPosition,
             left: attrs.leftPosition,
             position: 'absolute'
-        }).addClass("graph-node card").append(name);
+        }).addClass("graph-node card").append(a);
 
         this._showProgress(el, node.progress);
 
