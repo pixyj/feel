@@ -51,6 +51,13 @@ class CodeQuizAttempt(UUIDModel):
     response = JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @classmethod
+    def get_answered_codequiz_count_in(cls, user_key, ids):
+        return CodeQuizAttempt.objects.filter(pk__in=ids, 
+                                              user_key=user_key, 
+                                              result=True)\
+                                        .count()
+
     @property
     def outputs(self):
         return [output.strip() for output in self.response['result']['stdout']]

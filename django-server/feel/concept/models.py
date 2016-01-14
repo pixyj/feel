@@ -98,12 +98,31 @@ class Concept(TimestampedModel, UUIDModel):
         data['section_quizzes'] = section_quizzes
         return data
 
+    # Should we remove the codequiz table and create a generic 
+    # json table for all kinds of quizzes? 
     def get_student_progress(self, user_key):
+        quiz = self.get_student_quiz_progress(user_key)
+        codequiz = self.get_student_codequiz_progress(user_key)
+        return {
+            "quiz": quiz,
+            "codequiz": codequiz
+        }
+
+    def get_student_quiz_progress(self, user_key):
         quiz_ids = self.get_quiz_ids()
         count = QuizAttempt.objects.get_answered_quiz_count_in(user_key, quiz_ids)
         return {
             "answered": count,
             "total": len(quiz_ids)
+        }
+
+    def get_student_codequiz_progress(self, user_key):
+        ids = self.get_codequiz_ids()
+        # todo -> Use a manager instead. 
+        count = CodeQuizAttempt.get_answered_codequiz_count_in(user_key, ids)
+        return {
+            "answered": count,
+            "total": len(ids)
         }
 
     def __str__(self):
@@ -165,8 +184,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
     def is_quiz_section(self):
         section_type = self.type
-        quiz_types = [self.COURSE_PRETEST, self.PREREQ_QUIZ,
-                      self.QUIZ, self.EXIT_QUIZ]
+        quiz_types = [self.QUIZ, self.EXIT_QUIZ]
         return section_type in quiz_types
 
     @classmethod
