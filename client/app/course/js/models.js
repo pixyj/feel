@@ -10,6 +10,8 @@ var NotFoundMixin = require("not-found-mixin").NotFoundMixin;
 
 var DAG = require("./../../conceptviz/js/DAG").DAG;
 
+//localStorage.clear();
+
 /********************************************************************************
 *  Creator Models:
 *
@@ -286,7 +288,8 @@ CreatorStore.prototype = {
     getGraph: function() {
         return {
             levels: this.dag.sort(),
-            edges: this.dag.getEdges()
+            edges: this.dag.getEdges(),
+            nodes: this.dag.getNodes()
         };
     },
 

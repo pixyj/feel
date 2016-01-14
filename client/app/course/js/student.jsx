@@ -122,6 +122,28 @@ Store.prototype = {
         return graph;
     },
 
+    getPrereqsAndConceptSubgraph: function(id) {
+        var nodes = this._creator.getGraph().nodes;
+        var selectedNode = nodes[id];
+        var prereqIds = _.keys(selectedNode.ends);
+
+        var subgraph = {
+            levels: [[], []],
+            edges: []
+        };
+        
+        _.each(prereqIds, function(prereqId) {
+            subgraph.edges.push({
+                from: prereqId,
+                to: id
+            });
+            subgraph.levels[0].push(nodes[prereqId].node);
+        });
+        subgraph.levels[1].push(selectedNode.node);
+
+        return subgraph;
+    },
+
     getAttemptStore: function() {
         return this._attempt;
     },
@@ -260,7 +282,7 @@ var StartLearningAtMixin = {
         this._url = this.props.store.getConceptURL(concept.slug);
 
         return (
-            <div>
+            <div id="course-start-learning-at-container" className={this.props.className}>
                 <h5>You can start learning at <a href={this._url}> {concept.name}</a>
                 </h5>
                 <button className="btn btn-large"
@@ -312,7 +334,7 @@ var QuizOrBrowseComponent = React.createClass({
     render: function() {
 
         return (
-            <div>
+            <div className={this.props.className}>
                 <h5>You can take a short test to get started at the right concept for you
                         OR you can select any concept on the graph </h5> 
                 <button className="btn btn-large" onClick={this.startQuiz}> Start Quiz </button>
@@ -384,7 +406,7 @@ var SelfSkillEstimationComponent = React.createClass({
                             hideOnSelection={hideOnSelection} />
 
         return (
-            <div>
+            <div className={this.props.className}>
                 <h5 text-align="center"> {this.HEADING} </h5>
                 {radioGroup}
             </div>
@@ -400,12 +422,8 @@ var SelfSkillEstimationComponent = React.createClass({
     }
 });
 
-// else {
-//     var props = STUDENT_SKILL_ESTIMATION_LEVELS[this.state.level].props;
-//     props.store = this.props.store;
-//     var ComponentClass = this.getLevelComponentClass(this.state.level);
-//     levelComponent = <ComponentClass {...props} />
-// }
+ALL_QUESTIONS_ANSWERED_MESSAGE: "Awesome! Select any concept you'd like to review and start learning.";
+
 var PretestComponent = React.createClass({
 
     getInitialState: function() {
@@ -430,18 +448,19 @@ var PretestComponent = React.createClass({
 
         this.props.store.on("complete:pretest", this.updateIsPretestCompleted, this);
         this.props.store.on("add:attempt", this.showNextQuiz, this);
-
+        window.s = this;
         
     },
 
     componentDidMount: function() {
-        this.props.parent.startShowTwoLevelsMode();
+        this.renderGraph();
     },
 
     componentWillUnmount: function() {
         
         this.props.store.off("add:attempt", this.showNextQuiz, this);
         this.props.store.off("complete:pretest", this.updateIsPretestCompleted);
+        this.graphView.remove();
 
     },
 
@@ -462,47 +481,55 @@ var PretestComponent = React.createClass({
                 showNextQuiz: true,
                 quiz: null
             });
-            self._scrollToTop();
+            
             self._showNextPretestAfterTimeout();
            
         }, 2000);
-    },
-
-    _scrollToTop: function() {
-        this.$pretest = this.$pretest || $("#course-pretest-container");
-        this.$pretest.animate({
-            scrollTop: 0
-        }, 500);
     },
 
     _showNextPretestAfterTimeout: function() {
         if(this.state.isPretestCompleted) {
             return;
         }
-        this._setCountdown(3);
-    },
-
-    _setCountdown: function(countdown) {
-        var self = this;
-
-        if(countdown === 0) {
-            this.showNextPretestQuiz();
-            return;
-        }
-
-        this.setState({
-            countdown: countdown
-        });
-        var self = this;
-        setTimeout(function() {
-            self._setCountdown(countdown - 1);
-        }, 1000);
+        this.showNextPretestQuiz();
     },
 
     updateQuiz: function(quiz) {
         this.setState({
             quiz: quiz
         });
+    },
+
+    _scrollToTop: function() {
+        this.$pretest = this.$pretest || $("#course-pretest-container");
+        this.$documentBody = this.$documentBody || $(document.body);
+        this.$documentBody.animate({
+            scrollTop: this.$pretest.offset().top
+        }, 500);
+    },
+
+    showNextPretestQuiz: function() {
+        if(this._nextButtonTimer) {
+            clearTimeout(this._nextButtonTimer);
+        }
+        var quiz = this.props.store.getNextPretestQuizAndHighlightConcept();
+
+        this.setState({
+            showNextQuiz: false,
+            countdown: null,
+            quiz: quiz
+        });
+
+        var concept = this.props.store.getNextPretestConcept()
+        this.props.parent.highlightConcept(concept);
+
+        var subgraph = this.props.store.getPrereqsAndConceptSubgraph(concept.id);
+        console.info("subgraph", subgraph);
+        this.graphView.refresh(subgraph);
+        this.graphView.activateNode(concept.id, {
+            removePrevious: true
+        });
+        this._scrollToTop();
     },
 
     updateIsPretestCompleted: function(pretestStateAttrs) {
@@ -517,12 +544,8 @@ var PretestComponent = React.createClass({
                 quiz: null,
                 countdown: null
             });
-            self._scrollToTop();
-            self.props.parent.endShowTwoLevelsMode();
         }, 2000);
     },
-
-    ALL_QUESTIONS_ANSWERED_MESSAGE: "Awesome! Select any concept you'd like to review and start learning.",
 
     render: function() {
 
@@ -531,7 +554,7 @@ var PretestComponent = React.createClass({
             if(this._pretestStateAttrs.hasAnsweredAllQuizzes) {
                 startLearningAtComponent = 
                     <h5 id="course-all-questions-answered">
-                        {this.ALL_QUESTIONS_ANSWERED_MESSAGE}
+                        {ALL_QUESTIONS_ANSWERED_MESSAGE}
                     </h5>
             }
             else {
@@ -565,34 +588,29 @@ var PretestComponent = React.createClass({
             countdown = <h4 id="course-pretest-countdown">{this.state.countdown}</h4>
         }
         return (
-            <div id="course-pretest-container">
-                {startLearningAtComponent}
-                {nextBtn}
-                {countdown}
-                {quizComponent}
-
+            <div id="course-pretest-container" className={this.props.className}>
+                <div className="row">
+                    <div className="col-xs-8">
+                        {startLearningAtComponent}
+                        {nextBtn}
+                        {quizComponent}
+                    </div>
+                    <div className="col-xs-4" ref="graphContainer">
+                    </div>
+                </div>
             </div>
         );
     },
 
-    showNextPretestQuiz: function() {
-        if(this._nextButtonTimer) {
-            clearTimeout(this._nextButtonTimer);
-        }
-        var quiz = this.props.store.getNextPretestQuizAndHighlightConcept();
-
-        this.setState({
-            showNextQuiz: false,
-            countdown: null,
-            quiz: quiz
+    renderGraph: function() {
+        var graphContainer = $(ReactDOM.findDOMNode(this.refs.graphContainer));
+        this.graphView = new GraphView({
+            parent: graphContainer,
+            graph: {levels: [], edges: []}
         });
-
-        var scrollLevelIndex = this.props.store.getCurrentLevelIndex();
-        if(scrollLevelIndex !== 0) {
-            scrollLevelIndex -= 1;
-        }
-        this.props.parent.scrollToLevel(scrollLevelIndex);
-        this.props.parent.highlightConcept(this.props.store.getNextPretestConcept());
+        graphContainer.append(this.graphView.$el);
+        this.graphView.render();
+        return this;
     }
 });
 
@@ -664,15 +682,15 @@ var PageComponent = React.createClass({
         var StateComponentClass = StudentStateComponents[this.state.state];
         var stateComponent = <StateComponentClass 
                                 store={this.props.store} 
-                                parent={this} />
+                                parent={this} 
+                                className="course-homepage-state-component" />
 
         return (
             <div>
-                <h3> Welcome to {this.props.store.getCourseName()}  </h3>
                 <div className="row">
-                    <div className="col-xs-12 col-md-6" ref="graphContainer">
+                    <div className="col-xs-12" ref="graphContainer">
                     </div>
-                    <div className="col-xs-12 col-md-6">
+                    <div className="col-xs-12" ref="stateComponent">
                         {stateComponent}
                     </div> 
                 </div>
@@ -694,28 +712,8 @@ var PageComponent = React.createClass({
 
     highlightConcept: function(concept) {
         this.graphView.activateNode(concept.id, {
-            delay: 500,
             removePrevious: true
         });
-    },
-
-    startShowTwoLevelsMode: function() {
-        if(this.graphView) {
-            this.graphView.startShowTwoLevelsMode();
-        }
-        
-        var self = this;
-        setTimeout(function() {
-            self.graphView.startShowTwoLevelsMode();
-        }, 500);
-    },
-
-    scrollToLevel: function(index) {
-        this.graphView.scrollToLevel(index);
-    },
-
-    endShowTwoLevelsMode: function() {
-        this.graphView.endShowTwoLevelsMode();
     }
 
 });

@@ -14,6 +14,10 @@ DAG.prototype = {
         };
     },
 
+    getNodes: function() {
+        return this.nodes
+    },      
+
     addEdge: function(from, to) {
         //console.log("Adding edge from ", from, "to", to);
         this.nodes[from].starts[to] = to;

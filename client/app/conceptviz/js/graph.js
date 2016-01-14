@@ -32,6 +32,10 @@ var View = Backbone.View.extend({
 
     LINE_STROKE_WIDTH: 3,
 
+    events: {
+        'click .graph-node': 'routeToNodeUrl' 
+    },
+
     initialize: function(options) {
         this.graph = options.graph;
         this.parent = options.parent;
@@ -65,89 +69,16 @@ var View = Backbone.View.extend({
 
         removePrevious = options.removePrevious || true;
         if(removePrevious && this._activeNodeElement) {
-            this._activeNodeElement.removeClass("concept-box-active");
+            this._activeNodeElement.removeClass("graph-node-active");
         }
 
         this._activeNodeElement = this._elementsById[id];
-        var delay = options.delay || 0;
-
-        var self = this;
-        setTimeout(function() {
-            self._activeNodeElement.addClass("concept-box-active");
-        }, delay);
-        
-        return this;
+        this._activeNodeElement.addClass("graph-node-active");
     },
 
     deactivateNode: function(id) {
-        this._elementsById[id].removeClass("concept-box-active");
+        this._elementsById[id].removeClass("graph-node-active");
         return this;
-    },
-
-    animateNodeTraversal: function(from, to) {
-
-        this.$el.remove(".graph-ball");
-        this._resetTimers();
-
-        var path = this._paths[this.getEdgeKey({
-            from: from,
-            to: to
-        })];
-        console.log(path);
-
-        var length = path.length;
-        var startPoint = path[0];
-        var allDivs = [];
-        for(var i = 1; i < (path.length); i++) {
-            var endPoint = path[i];
-            var left = startPoint.x;
-            var top = startPoint.y;
-            if(startPoint.x === endPoint.x) {
-                left -= 5;
-                top -= 2;
-            }
-            else {
-                top -= 5;
-
-            }
-            var div = $("<div>").addClass("graph-ball").css({
-                left: left,
-                top: top,
-                "visibility": "hidden"
-            });
-            this.$el.append(div);
-
-            allDivs.push(div);
-            this.translateBall(div, allDivs, startPoint, endPoint, i);
-            startPoint = endPoint;
-        }
-    },
-
-    translateBall: function(div, allDivs, startPoint, endPoint, index) {
-
-        var direction;
-        var diff;
-        if(startPoint.x === endPoint.x) {
-            direction = "Y";
-            diff = endPoint.y - startPoint.y;
-        }
-        else {
-            direction = "X";
-            diff = endPoint.x - startPoint.x;
-        }
-        var timer = setTimeout(function() {
-            div.css({
-                visibility: "visible",
-                transform: "translate" + direction + "(" + diff + "px)"
-            });
-            console.debug("index", index);
-            if(index > 1) {
-                allDivs[index-2].css({
-                    visibility: "hidden"
-                });
-            }
-        }, (index+1) * 500);
-        this._timers.push(timer);
     },
 
     render: function() {
@@ -186,42 +117,6 @@ var View = Backbone.View.extend({
         this.graph = graph;
         this.render();
         return this;
-    },
-
-    startShowTwoLevelsMode: function() {
-        var maxTwoLevelHeight = 0;
-
-        var depth = this.graph.levels.length;
-        for(var i = 0; i < depth - 1; i++) {
-            var first = this._levelHeights[i];
-            var second = this._levelHeights[i+1];
-            var height = second + first + this.LEVEL_GAP;
-            maxTwoLevelHeight = _.max([height, maxTwoLevelHeight]);
-        }
-        this._twoLevelModeHeight = maxTwoLevelHeight;
-
-        this.$el.css({
-            height: this._twoLevelModeHeight,
-            overflow: 'scroll'
-        });
-    },
-
-    scrollToLevel: function(index, time) {
-        var levelsUptoIndex = this._levelHeights.slice(0, index);
-        var levelHeights = _.reduce(levelsUptoIndex, function(a, b) {return a + b;});
-        var gapHeight = index * this.LEVEL_GAP;
-        var topPosition = levelHeights + gapHeight;
-
-        this.$el.animate({
-            scrollTop: topPosition
-        }, time);
-    },
-
-    endShowTwoLevelsMode: function() {
-        this.$el.css({
-            height: this.$height + this.LEVEL_GAP / 4,
-            overflow: 'auto'
-        });
     },
 
     renderNodesAtAllLevels: function(levels, totalWidth) {
@@ -335,16 +230,20 @@ var View = Backbone.View.extend({
 
         var node = attrs.node;
        
-        var a = $("<a>").attr("href", node.url);
+        //var a = $("<a>").attr("href", node.url);
+        // we can't do "open link in new tab :("
         var title = $("<span>").html(node.name).addClass("graph-node-title");
-        a.append(title);
-
+        
         var el = $("<div>").css({
             width: attrs.width,
             top: attrs.topPosition,
             left: attrs.leftPosition,
-            position: 'absolute'
-        }).addClass("graph-node card").append(a);
+            position: 'absolute',
+            cursor: 'pointer'
+        }).attr({
+            "data-url": node.url
+        }).addClass("graph-node card").append(title);
+            
 
         this._showProgress(el, node.progress);
 
@@ -375,6 +274,11 @@ var View = Backbone.View.extend({
             el.append(done);
         }
 
+    },
+
+    routeToNodeUrl: function(evt) {
+        var url = $(evt.target).attr("data-url");
+        Backbone.history.navigate(url, {trigger: true});
     },
 
     computeInfoRequiredToRenderEdges: function() {
