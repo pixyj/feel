@@ -590,12 +590,12 @@ var PretestComponent = React.createClass({
         return (
             <div id="course-pretest-container" className={this.props.className}>
                 <div className="row">
-                    <div className="col-xs-8">
+                    <div className="col-xs-6 col-md-7">
                         {startLearningAtComponent}
                         {nextBtn}
                         {quizComponent}
                     </div>
-                    <div className="col-xs-4" ref="graphContainer">
+                    <div className="col-xs-6 col-md-5" ref="graphContainer">
                     </div>
                 </div>
             </div>
