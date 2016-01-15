@@ -102,21 +102,27 @@ class CodeQuizAttemptView(APIView):
                 if identical_attempt.user_key == user_key:
                     attempt = identical_attempt
                     outputs = attempt.outputs
+                    state = attempt.state
                 else:
                     attrs['result'] = identical_attempt.result
                     attrs['response'] = identical_attempt.response
                     attrs['state'] = 3
                     attempt = CodeQuizAttempt.objects.create(**attrs)
+                    outputs = None
+                    state = attempt.state
 
             else:
                 attempt = CodeQuizAttempt.objects.create(**attrs)
-                attempt.submit()
+                outputs = None
+                state = 1
+                attempt.async_submit()
         except IntegrityError:
             attempt = identical_attempt
 
         json_response = {
             'result': attempt.result,
             'id': attempt.id,
-            'outputs': attempt.outputs
+            'outputs': outputs,
+            'state': attempt.state
         }
         return Response(json_response, status.HTTP_201_CREATED)

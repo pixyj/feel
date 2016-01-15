@@ -1,5 +1,9 @@
+from __future__ import print_function
+
 import json
+import redis
 import requests
+
 
 from django.conf import settings
 from django.db import models
@@ -8,6 +12,10 @@ from django.contrib.postgres.fields import JSONField
 
 from core.models import TimestampedModel, UUIDModel
 
+from . import conf
+
+REDIS_EVALUATE_CODE_CHANNEL = conf.REDIS_EVALUATE_CODE_CHANNEL
+redis_client = redis.Redis()
 
 class CodeQuiz(TimestampedModel, UUIDModel):
     problem_statement = models.TextField(default="", blank=True)
@@ -36,7 +44,6 @@ EVALUATION_STATE = (
     (3, 'EVALUATION_FAILED'),
 )
 SESSION_KEY_MAX_LENGTH = 40  # Equal to session_key max length
-SUBMIT_URL = 'http://api.hackerrank.com/checker/submission.json'
 
 
 class CodeQuizAttempt(UUIDModel):
@@ -51,6 +58,8 @@ class CodeQuizAttempt(UUIDModel):
     response = JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    SUBMIT_URL = 'http://api.hackerrank.com/checker/submission.json'
+
     @classmethod
     def get_answered_codequiz_count_in(cls, user_key, ids):
         return CodeQuizAttempt.objects.filter(pk__in=ids, 
@@ -62,7 +71,18 @@ class CodeQuizAttempt(UUIDModel):
     def outputs(self):
         return [output.strip() for output in self.response['result']['stdout']]
 
+    def async_submit(self):
+        message = json.dumps({"id": str(self.id)})
+        redis_client.publish(REDIS_EVALUATE_CODE_CHANNEL, message)
+
     def submit(self):
+        session = requests.Session()
+        payload = self.create_payload()
+        http_response = session.post(self.SUBMIT_URL, data=payload)
+        
+        return self.parse_response(http_response)
+
+    def create_payload(self):
         assert(self.state in [0, 3])
         payload = {
             'source': self.code,
@@ -72,10 +92,11 @@ class CodeQuizAttempt(UUIDModel):
             'format': 'json',
             'wait': 'true'
         }
-        session = requests.Session()
-        http_response = session.post(SUBMIT_URL, data=payload)
-        response = http_response.json()
-        self.response = response
+        return payload
+
+    def parse_response(self, http_response):
+        data = http_response.json()
+        self.response = data
         outputs = None
         if http_response.status_code == 200:
             self.state = 2
