@@ -72,6 +72,8 @@ class CodeQuizAttempt(UUIDModel):
         return [output.strip() for output in self.response['result']['stdout']]
 
     def async_submit(self):
+        self.state = 1
+        self.save()
         message = json.dumps({"id": str(self.id)})
         redis_client.publish(REDIS_EVALUATE_CODE_CHANNEL, message)
 
@@ -83,7 +85,7 @@ class CodeQuizAttempt(UUIDModel):
         return self.parse_response(http_response)
 
     def create_payload(self):
-        assert(self.state in [0, 3])
+        assert(self.state in [0, 1, 3])
         payload = {
             'source': self.code,
             'lang': '30',  # HackerRank code for Python 3

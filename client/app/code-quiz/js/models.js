@@ -1,6 +1,10 @@
 var _ = require("lib")._;
 var Backbone = require("lib").Backbone;
 var StreamSaveModel = require("models").StreamSaveModel;
+var $ = require("lib").$;
+var utils = require("utils");
+
+var EVALUATION_STATES = require("app-constants").CODEQUIZ_EVALUATION_STATES;
 
 var CodeQuizModel = StreamSaveModel.extend({
 
@@ -35,8 +39,56 @@ var CodeQuizAttemptModel = Backbone.Model.extend({
     },
 
     url: function() {
-        return "/api/v1/codequizattempts/{0}/".format(this.attributes.codequizId);
+        if(this.isNew()) {
+            return "/api/v1/codequizattempts/{0}/".format(this.attributes.codequizId);
+        }
+        else {
+            return "/api/v1/codequizattempts/{0}/".format(this.attributes.id);
+        }
+    },
+
+    save: function() {
+
+        var promise = $.Deferred();
+
+        var self = this;
+        Backbone.Model.prototype.save.call(this).then(function() {
+            self.onResponseReceived(promise);
+        });
+
+        return promise;
+    },
+
+    onResponseReceived: function(promise) {
+        var state = this.attributes.state;
+        if(EVALUATION_STATES[state] === "EVALUATED") {
+            promise.resolve();
+
+            //reset for next attempt
+            delete self.attributes.id;
+            delete self.attributes.state;
+
+        }
+        else if(EVALUATION_STATES[state] == "EVALUATING") {
+            this.pollAttemptResult(promise);
+        }
+        else {
+            utils.assert(False, "Invalid codequiz evaluation state");
+        }
+    },
+
+    POLL_INTERVAL: 3 * 1000,
+
+    pollAttemptResult: function(promise) {
+
+        var self = this;
+        setTimeout(function() {
+            self.fetch().then(function() {
+                self.onResponseReceived(promise);
+            });
+        }, this.POLL_INTERVAL);
     }
+
 });
 
 var AttemptCollection = Backbone.Collection.extend({

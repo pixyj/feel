@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from core.views import get_user_and_user_key, get_audit_attrs
 
 from .models import CodeQuiz, CodeQuizAttempt
-from .serializers import CodeQuizSerializer
+from .serializers import CodeQuizSerializer, CodeQuizAttemptSerializer
 
 
 class CodeQuizListAndPostView(APIView):
@@ -86,6 +86,12 @@ class CodeQuizGetAndPutView(APIView):
 
 class CodeQuizAttemptView(APIView):
 
+    def get(self, request, pk):
+        attempt = get_object_or_404(CodeQuizAttempt, id=pk)
+        serializer = CodeQuizAttemptSerializer([attempt])
+        data = serializer.data[0]
+        return Response(data)
+
     def post(self, request, pk):
         codequiz = get_object_or_404(CodeQuiz, id=pk)
         user, user_key = get_user_and_user_key(request)
@@ -123,6 +129,6 @@ class CodeQuizAttemptView(APIView):
             'result': attempt.result,
             'id': attempt.id,
             'outputs': outputs,
-            'state': attempt.state
+            'state': state
         }
         return Response(json_response, status.HTTP_201_CREATED)

@@ -28,6 +28,7 @@ class CodeQuizAttemptSerializer(object):
             attrs = {
                 "quizId": item.codequiz.id,
                 "result": item.result,
-                "createdAt": item.created_at
+                "createdAt": item.created_at,
+                "state": item.state
             }
             self.data.append(attrs)
