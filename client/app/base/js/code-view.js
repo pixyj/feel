@@ -17,10 +17,11 @@ var CodeView = Backbone.View.extend({
 
     render: function() {
         this.editor = ace.edit(this.domId);
-        //this.editor.setTheme("ace/theme/chrome");
+        this.editor.$blockScrolling = Infinity;
         this.editor.getSession().setMode("ace/mode/python");
         this.editor.setValue(this.options.code || "");
         this.editor.setShowPrintMargin(false);
+
         window.editor = this.editor;
         
         if(this.options.listenToInputChange) {
