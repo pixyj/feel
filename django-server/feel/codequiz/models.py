@@ -122,6 +122,3 @@ class CodeQuizAttempt(UUIDModel):
         s = "{} - {} attempted {} - Result: {}"
         return s.format(self.created_at, user_print, self.codequiz,
                         self.result)
-
-    class Meta:
-        unique_together = ("codequiz", "user_key", "code", )
