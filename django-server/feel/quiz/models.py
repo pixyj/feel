@@ -23,7 +23,7 @@ class Quiz(TimestampedModel, UUIDModel):
     #tags = TaggableManager(blank=True)
 
     @classmethod
-    def get_detailed_quizzes_in(klass, ids):
+    def get_detailed_quizzes_in(cls, ids):
         return Quiz.objects.filter(pk__in=ids).prefetch_related('shortanswer_set').prefetch_related('choice_set')
 
 

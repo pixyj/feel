@@ -351,8 +351,12 @@ var QuizSectionComponent = React.createClass({
             showQuizFilter: false
         });
 
+        var quizIds = _.map(uniqueQuizzes, function(q) {
+            return q.id;
+        });
+
         this.props.store.saveSectionDataAt({
-            quizzes: quizzes
+            quizIds: quizIds
         }, this.props.position);
     }
 

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from concept.models import Concept, ConceptSection
+from quiz.serializers import QuizSerializer
+from quiz.models import Quiz
 
 
 class ConceptSectionSerializer(serializers.ModelSerializer):
@@ -8,9 +10,23 @@ class ConceptSectionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return ConceptSection.objects.create(**validated_data)
 
+    def to_representation(self, instance):
+        """
+        Only quiz_ids are stored originally in concept sections
+        Fetch quiz details from the quiz_ids
+        """
+        ret = super(ConceptSectionSerializer, self).to_representation(instance)
+        if 'quiz_ids' in ret['data']:
+            quiz_ids = ret['data']['quiz_ids']
+            quiz_models = Quiz.get_detailed_quizzes_in(quiz_ids)
+            quizzes = QuizSerializer(quiz_models, many=True).data
+            del ret['data']['quiz_ids']
+            ret['data']['quizzes'] = quizzes
+        return ret
+
     class Meta:
         model = ConceptSection
-        fields = ('id', 'type', 'data', )
+        fields = ('id', 'type', 'data')
 
 
 class ConceptSerializer(serializers.ModelSerializer):

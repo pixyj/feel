@@ -183,8 +183,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
     def get_quiz_info(self):
         data = self.data
-        quizzes = data['quizzes']
-        return quizzes
+        return data['quiz_ids']
 
     def __str__(self):
         s = "{} - Section {} at position {}"
@@ -209,8 +208,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
         section_id_by_quiz_id = {}
         section_quizzes = defaultdict(list)
         for section in quiz_sections:
-            for quiz in section.get_quiz_info():
-                quiz_id = quiz['id']
+            for quiz_id in section.get_quiz_info():
                 all_quiz_ids.append(quiz_id)
                 section_id_by_quiz_id[quiz_id] = section.id
 
@@ -228,7 +226,7 @@ class ConceptSection(TimestampedModel, UUIDModel):
         all_quiz_ids = []
         for section in quiz_sections:
             data = section.data
-            quiz_ids = [quiz['id'] for quiz in data['quizzes']]
+            quiz_ids = data['quiz_ids']
             all_quiz_ids.extend(quiz_ids)
         return all_quiz_ids
 
