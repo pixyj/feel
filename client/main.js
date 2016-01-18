@@ -36,6 +36,7 @@ var Router = Backbone.Router.extend({
         "creator/quiz/:id(/)": "editQuiz",
         "creator/code-quiz(/)": "createCodeQuiz",
         "creator/code-quiz/:id(/)": "editCodeQuiz",
+        "creators/concepts(/)": "listCreatorConcepts",
         "concept/:id(/)": "previewConcept",
         "code-quiz/:id(/)": "attemptCodeQuiz",
         "course/:id(/)": "learnCourse",
@@ -63,6 +64,12 @@ var Router = Backbone.Router.extend({
         this.resetPage();
         Concept.Creator.render({id: id}, this.pageElement);
         this.currentComponent = Concept.Creator;
+    },
+
+    listCreatorConcepts: function() {
+        this.resetPage();
+        Concept.CreatorList.render({}, this.pageElement);
+        this.currentComponent = Concept.CreatorList;
     },
 
     createCourse: function() {
