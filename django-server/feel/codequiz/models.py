@@ -69,7 +69,14 @@ class CodeQuizAttempt(UUIDModel):
 
     @property
     def outputs(self):
-        return [output.strip() for output in self.response['result']['stdout']]
+
+        stdouts = self.response['result']['stdout']
+        if stdouts is None:
+            outputs = [""] * len(self.codequiz.input_list)
+        else:
+            outputs = [output.strip() for output in stdouts]
+        return outputs
+        
 
     def async_submit(self):
         self.state = 1
