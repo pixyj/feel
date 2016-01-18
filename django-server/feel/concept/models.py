@@ -125,6 +125,14 @@ class Concept(TimestampedModel, UUIDModel):
             "total": len(ids)
         }
 
+    @classmethod
+    def get_concepts_created_by_user(self, user):
+        fields = ('name', 'id', 'created_at', 'last_modified_at', )
+        concepts = Concept.objects.filter(created_by=user)\
+                                  .only(*fields)\
+                                  .order_by('-created_at')
+        return ConceptHeadingSerializer(concepts, many=True)
+
     def __str__(self):
         s = "{} created by {} - Published? {}"
         return s.format(self.name, self.created_by, self.is_published)
@@ -229,4 +237,4 @@ class ConceptSection(TimestampedModel, UUIDModel):
 
 
 # Avoid circular import
-from concept.serializers import ConceptSerializer
+from concept.serializers import ConceptSerializer, ConceptHeadingSerializer

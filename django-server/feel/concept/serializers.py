@@ -20,3 +20,10 @@ class ConceptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Concept
         fields = ('id', 'name', 'sections', 'is_published', 'slug', )
+
+
+class ConceptHeadingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Concept
+        fields = ('id', 'name', 'created_at', 'last_modified_at', )

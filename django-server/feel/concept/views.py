@@ -1,5 +1,7 @@
-from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,6 +13,14 @@ from concept.models import Concept
 from concept.serializers import ConceptSerializer, ConceptSectionSerializer
 from quiz.serializers import QuizAttemptSerializer
 from codequiz.serializers import CodeQuizAttemptSerializer
+
+
+class ConceptCreatorListView(APIView):
+
+    @method_decorator(staff_member_required)
+    def get(self, request):
+        concepts = Concept.get_concepts_created_by_user(user=request.user)
+        return Response(concepts.data)
 
 
 class ConceptDetailView(APIView):
