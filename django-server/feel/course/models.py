@@ -73,9 +73,9 @@ class Course(TimestampedModel, UUIDModel):
             for cc in courseconcepts:
                 cc.slugify()
             self.save()
-
-        for cc in courseconcepts:
-            cc.cache_page()
+        
+        # for cc in courseconcepts:
+        #     cc.cache_page()
 
         return courseslug
 
