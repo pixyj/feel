@@ -19,5 +19,7 @@ DATABASES = {
     }
 }
 
+CONN_MAX_AGE = 60
+
 
 STATIC_ROOT = "/home/pramod/feel-client/static-root"
