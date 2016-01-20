@@ -1,0 +1,2 @@
+uwsgi --chdir=/home/pramod/code/feel/django-server/feel --module=feel.wsgi:application --env DJANGO_SETTINGS_MODULE=feel.settings.prod --master --pidfile=/tmp/feel-server.pid --http-socket=127.0.0.1:8000 --processes=3 --harakiri=120 --max-requests=5000 --vacuum --home=/home/pramod/.virtualenvs/feel --daemonize=/home/pramod/feel-server/logs/feel.log --buffer-size=32768 --stats /tmp/feel-server-stats.socket
+
