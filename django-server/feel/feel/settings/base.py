@@ -92,7 +92,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-####################################################################################
+###############################################################################
 #All Auth Stuff
 # http://django-allauth.readthedocs.org/en/latest/installation.html
 
@@ -117,7 +117,7 @@ SOCIALACCOUNT_PROVIDERS = \
 
 
 
-####################################################################################
+###############################################################################
 #DJANGO-REST-FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -130,12 +130,12 @@ REST_FRAMEWORK = {
 }
 
 
-####################################################################################
+###############################################################################
 #HACKERRANK
 
 HACKERRANK_API_KEY = os.environ['HACKERRANK_API_KEY']
 
-####################################################################################
+###############################################################################
 import raven
 
 RAVEN_CONFIG = {
@@ -145,25 +145,20 @@ RAVEN_CONFIG = {
     #'release': raven.fetch_git_sha(os.path.dirname(__file__)),
 }
 
-####################################################################################
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'redis_cache.RedisCache',
-#         'LOCATION': [
-#             'localhost:6379'
-#         ],
+###############################################################################
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': [
+            'localhost:6379'
+        ],
 
-#         'OPTIONS': {
-#             'PARSER_CLASS': 'redis.connection.HiredisParser',
-#             'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
-#             'CONNECTION_POOL_CLASS_KWARGS': {
-#                 'max_connections': 50,
-#                 'timeout': 20,
-#             },
-#             'MAX_CONNECTIONS': 1000,
-#             'PICKLE_VERSION': -1,
-#         },
-#     },
-# }
-
-
+        'OPTIONS': {
+            'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
+            'CONNECTION_POOL_CLASS_KWARGS': {
+                'max_connections': 50,
+                'timeout': 20,
+            },
+        },
+    },
+}
