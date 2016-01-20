@@ -6,7 +6,8 @@ ALLOWED_HOSTS = ['localhost', 'conceptcoaster.com']
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
-# Database
+##############################################################################
+
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
@@ -19,10 +20,18 @@ DATABASES = {
     }
 }
 
-CONN_MAX_AGE = 60
-
+###############################################################################
 
 STATIC_ROOT = "/home/pramod/feel-client/static-root"
+
+###############################################################################
+
+# DB Connections 
+CONN_MAX_AGE = 60
+
+###############################################################################
+
+# OPBEAT 
 
 INSTALLED_APPS += (
     'opbeat.contrib.django',
