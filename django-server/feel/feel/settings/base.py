@@ -15,6 +15,14 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+MY_APPS = (
+    'core',
+    'quiz',
+    'concept',
+    'course',
+    'codequiz',
+)
+
 # Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -34,12 +42,7 @@ INSTALLED_APPS = (
 
     'rest_framework',
 
-    'core',
-    'quiz',
-    'concept',
-    'course',
-    'codequiz',
-)
+) + MY_APPS
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -162,3 +165,43 @@ CACHES = {
         },
     },
 }
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'feel.log',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['file'],
+            'propagate': True,
+            'level':'INFO',
+        },
+    }
+}
+
+APP_LOGGING = {
+    'handlers': ['file'],
+    'level': 'INFO',
+}
+
+for app in MY_APPS:
+    LOGGING['loggers'][app] = APP_LOGGING
+
+
