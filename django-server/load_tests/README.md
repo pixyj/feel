@@ -1,6 +1,6 @@
 ### Run some basic load testing using Locust. 
 
-As of now, the test creates several clients according to the values entered in the WEB interface. For each client, the test: 
+As of now, the test creates several clients according to the values entered in the Web interface. For each client, the test: 
 
 1. Creates an anonymous user session.
 2. Makes a get request for a concept page. 
