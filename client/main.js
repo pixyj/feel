@@ -36,7 +36,7 @@ var Router = Backbone.Router.extend({
         "creator/quiz/:id(/)": "editQuiz",
         "creator/code-quiz(/)": "createCodeQuiz",
         "creator/code-quiz/:id(/)": "editCodeQuiz",
-        "creators/concepts(/)": "listCreatorConcepts",
+        "creator/concepts(/)": "listCreatorConcepts",
         "concept/:id(/)": "previewConcept",
         "code-quiz/:id(/)": "attemptCodeQuiz",
         "course/:id(/)": "learnCourse",
