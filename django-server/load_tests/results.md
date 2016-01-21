@@ -2,17 +2,16 @@
 
 ### Summary: 
 
-So far, the bottleneck is theapp Server tier. 
+So far, the bottleneck is the app-server tier. 
 
 #### Setup:
 
-Run all the processes (Nginx, uWSGI, Postgres, Redis) on a tiny 512MB Digital Ocean droplet. 
+* Run all the processes (Nginx, uWSGI, Postgres, Redis) on a tiny 512MB Digital Ocean droplet. 
+* Use 3 uWSGI worker processes. (Change this did not help)
 
 #### Results: 
 
-The bottleneck so far is the app server tier. 
-
-The server handles 35-40 requests per second with 300 concurrent users and maxes out the CPU at this level( memory usage at 90%). The median HTTP response time is around 1.5 seconds. At around 400 concurrent users, the site stops being usable. Nginx and Postgres seem fine. At around 100,000 quiz attempts in the DB, inserts take 7.8 ms per request. 
+uWSGI handles 35-40 requests per second with 300 concurrent users and maxes out the CPU at this level( memory usage at 90%). The median HTTP response time is around 1.5 seconds. At around 400 concurrent users, the site stops being usable. Nginx and Postgres seem fine. At around 100,000 quiz attempts in the DB, inserts take 7.8 ms per request. 
 
 Serving static resources using Nginx is also fine. It is able to handle 4000 concurrent users before I run out of file descriptors. 
 
@@ -28,7 +27,7 @@ Serving static resources using Nginx is also fine. It is able to handle 4000 con
 
 * Use a bigger server, repeat the tests and see how much you can handle by throwing more RAM. 
 
-* Set up retries on the client for idempotent requests. The client must be able to handle the server becoming unavailable for a few seconds(as it did during the load tests)
+* Set up retries on the client for idempotent requests. The client must be able to handle the server becoming unavailable for a few seconds (as it did during the load tests).
 
 * Monitor all tiers, not just django. 
 
@@ -42,6 +41,6 @@ Serving static resources using Nginx is also fine. It is able to handle 4000 con
  
 #### Random thoughts: 
 
-* Damn, Python is slow. I'm tempted to learn Elixir! But it will be a few months before I become as productive.
+* Damn, Python is slow. I'm tempted to learn Elixir! But it will be a few months (years?) before I become as productive as I'm with Python.
 
 * Should I switch to MySQL because it has better tooling and more hosting options? The only PostgreSQL-specific thing I'm using is `JSONField` from `django.contrib.postgres`. 
