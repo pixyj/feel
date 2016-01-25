@@ -482,8 +482,11 @@ QuizStore.prototype = {
     },
 
     fetch: function() {
-        this._model.once("sync", this.onFetched, this);
-        return this._model.fetch();
+        
+        var self = this;
+        return this._model.fetch().then(function() {
+            self.onFetched();
+        });
     },
 
     onFetched: function() {
