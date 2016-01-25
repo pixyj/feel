@@ -48,12 +48,18 @@ class ShortAnswer(TimestampedModel, UUIDModel):
             self.quiz, self.created_by)
 
 
+class ChoiceManager(models.Manager):
+    def get_queryset(self):
+        return super(ChoiceManager, self).get_queryset().order_by('created_at')
+
 class Choice(TimestampedModel, UUIDModel):
     
     quiz = models.ForeignKey(Quiz)
     choice_input = models.TextField(blank=True)
     choice_display = models.TextField(blank=True)
     is_correct = models.BooleanField()
+
+    objects = ChoiceManager()
 
     class Meta:
         unique_together = ('quiz', 'choice_input')
