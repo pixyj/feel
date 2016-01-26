@@ -194,6 +194,14 @@ class ConceptSection(TimestampedModel, UUIDModel):
         quiz_types = [self.QUIZ, self.EXIT_QUIZ]
         return section_type in quiz_types
 
+    def has_quizzes(self):
+        return self.type in [self.QUIZ, self.EXIT_QUIZ, 
+                             self.COURSE_PRETEST, 
+                             self.PREREQ_QUIZ, self.EXIT_QUIZ]
+
+    def has_codequizzes(self):
+        return self.type in [self.CODE_QUIZ]
+
     @classmethod
     def get_quiz_sections(klass, sections):
         for section in sections:

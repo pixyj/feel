@@ -4,6 +4,8 @@ from concept.models import Concept, ConceptSection
 from quiz.serializers import QuizSerializer
 from quiz.models import Quiz
 
+from codequiz.models import CodeQuiz
+from codequiz.serializers import CodeQuizSerializer
 
 class ConceptSectionSerializer(serializers.ModelSerializer):
 
@@ -16,10 +18,16 @@ class ConceptSectionSerializer(serializers.ModelSerializer):
         Fetch quiz details from the quiz_ids
         """
         ret = super(ConceptSectionSerializer, self).to_representation(instance)
-        if 'quiz_ids' in ret['data']:
+        if instance.has_quizzes():
             quiz_ids = ret['data']['quiz_ids']
             quiz_models = Quiz.get_detailed_quizzes_in(quiz_ids)
             quizzes = QuizSerializer(quiz_models, many=True).data
+            del ret['data']['quiz_ids']
+            ret['data']['quizzes'] = quizzes
+        elif instance.has_codequizzes():
+            quiz_ids = ret['data']['quiz_ids']
+            models = CodeQuiz.objects.filter(pk__in=quiz_ids)
+            quizzes = CodeQuizSerializer(models, many=True).data
             del ret['data']['quiz_ids']
             ret['data']['quizzes'] = quizzes
         return ret

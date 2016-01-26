@@ -139,6 +139,11 @@ class ConceptDetailView(APIView):
             for position, serializer in enumerate(section_serializers):
                 section_attrs = request.data['sections'][position]
                 section_data = section_attrs['data']
+                if 'quizzes' in section_data:
+                    quizzes = section_data['quizzes']
+                    quiz_ids = set((quiz['id'] for quiz in quizzes))
+                    section_data['quiz_ids'] = quiz_ids
+                    del section_data['quizzes']
                 section_type = section_attrs['type']
                 section_attrs = {
                     'concept_id': concept.id,
