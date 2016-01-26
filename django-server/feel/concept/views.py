@@ -142,6 +142,7 @@ class ConceptDetailView(APIView):
                 if 'quizzes' in section_data:
                     quizzes = section_data['quizzes']
                     quiz_ids = set((quiz['id'] for quiz in quizzes))
+                    quiz_ids = list(quiz_ids)
                     section_data['quiz_ids'] = quiz_ids
                     del section_data['quizzes']
                 section_type = section_attrs['type']
