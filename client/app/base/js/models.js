@@ -91,7 +91,7 @@ var StreamSaveModel = Backbone.Model.extend({
 
 
 MAX_RETRIES = 2;
-BACKOFF_PER_RETRY = 1000; 
+BACKOFF_PER_RETRY = 2000; 
 
 var originalFetch = Backbone.Model.prototype.fetch; 
 
@@ -113,6 +113,7 @@ fetchWithRetries = function() {
             return;
         }
 
+        //todo -> implement clearTimeout during cleanup
         setTimeout(function() {
             fetchWithRetries.call(self);
         }, self._retries * 1000);
