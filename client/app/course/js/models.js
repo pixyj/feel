@@ -69,7 +69,7 @@ var ConceptModel = Backbone.Model.extend({
 
 var ConceptCollection = Backbone.Collection.extend({
 
-    initialize: function(options) {
+    initialize: function(models, options) {
         this.course = options.course;
         this.dag = options.dag;
     },
@@ -106,6 +106,35 @@ var DependencyCollection = Backbone.Collection.extend({
         return "{0}dependencies/".format(this.course.url());
     },
 
+    // 10 minutes
+    CACHE_TIMEOUT: 10*60*1000,
+
+    fetch: function() {
+
+        var options = options || {force: true};
+        var cachedItem = localStorage.getItem(this.getCacheKey());
+        if(!cachedItem || options.force) {
+            return Backbone.Collection.prototype.fetch.apply(this, arguments);
+        }
+        else {
+            console.info("Cache Hit: {0}".format(this.getCacheKey()));
+            cachedItem = JSON.parse(cachedItem);
+            var cachedTime = new Date(cachedItem.time);
+            var now = new Date();
+            if(now - cachedTime < this.CACHE_TIMEOUT) {
+                this.add(cachedItem.deps);
+                this.initializeDAG();
+                var promise = $.Deferred();
+                promise.resolve();
+                return promise;
+            }
+        }
+    },
+
+    getCacheKey: function() {
+        return "course:{0}:dependencies".format(this.course.attributes.id);
+    },
+
     //from is a keyword in Python, so I'm using start and end on the server
     //todo -> change client code to start and end as well. 
     parse: function(response) {
@@ -117,13 +146,22 @@ var DependencyCollection = Backbone.Collection.extend({
                 to: d.end
             });
         });
+        var cachedItem = {
+            deps: deps,
+            time: new Date().getTime()
+        };
+        localStorage.setItem(this.getCacheKey(), JSON.stringify(cachedItem));
         return deps;
     },
     
     initializeDAG: function() {
+        if(this._isInitialized) {
+            return;
+        }
         _.each(this.toJSON(), function(dep) {
             this.dag.addEdge(dep.from, dep.to);
         }, this);
+        this._isInitialized = true;
     }
 });
 
@@ -154,9 +192,11 @@ var CreatorStore = function(options) {
 
     this.dag = new DAG({});
 
-
     this._course = new CourseModel(options);
-    this._concepts = new ConceptCollection({course: this._course, dag: this.dag});
+    this._concepts = new ConceptCollection([], {
+        course: this._course, 
+        dag: this.dag
+    });
     this._dependencies = new DependencyCollection({course: this._course, dag: this.dag});
 
     if(this._course.isNew()) {
@@ -507,5 +547,8 @@ module.exports = {
     CreatorStore: CreatorStore,
     StudentStore: StudentStore,
     PretestModel: PretestModel,
-    StudentStates: StudentStates
+    StudentStates: StudentStates,
+    CourseModel: CourseModel,
+    ConceptCollection: ConceptCollection,
+    DependencyCollection: DependencyCollection
 };

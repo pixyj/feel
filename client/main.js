@@ -94,11 +94,11 @@ var Router = Backbone.Router.extend({
 
     learnCourseConcept: function(courseSlug, conceptSlug) {
         this.resetPage();
-        Concept.Student.render({
+        Course.CourseConcept.render({
             courseSlug: courseSlug, 
             conceptSlug: conceptSlug
         }, this.pageElement);
-        this.currentComponent = Concept.Student;
+        this.currentComponent = Course.CourseConcept;
     },
 
     createCodeQuiz: function() {
