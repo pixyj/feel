@@ -93,51 +93,54 @@ var StreamSaveModel = Backbone.Model.extend({
 MAX_RETRIES = 2;
 BACKOFF_PER_RETRY = 2000; 
 
-var originalFetch = Backbone.Model.prototype.fetch; 
+fetchWithRetries = function(originalFetchFn) {
+    return function() {
+        var self = this;
 
-fetchWithRetries = function() {
-    var self = this;
+        if(_.isUndefined(self._retries)) {
+            self._retries = 0;
+            self._fetchPromise = $.Deferred();
+        }
 
-    if(_.isUndefined(self._retries)) {
-        self._retries = 0;
-        self._fetchPromise = $.Deferred();
-    }
+        var onError = function(model, response) {
+            self._retries += 1;
+            if(self._retries > MAX_RETRIES || response.status === 404) {
+                var promise = self._fetchPromise;
+                delete self._retries;
+                delete self._fetchPromise;
+                promise.reject();
+                return;
+            }
 
-    var onError = function(model, response) {
-        self._retries += 1;
-        if(self._retries > MAX_RETRIES || response.status === 404) {
+            //todo -> implement clearTimeout during cleanup
+            setTimeout(function() {
+                fetchWithRetries.call(self);
+            }, self._retries * 1000);
+        }
+        var onSuccess = function() {
             var promise = self._fetchPromise;
             delete self._retries;
             delete self._fetchPromise;
-            promise.reject();
-            return;
+            promise.resolve();
+
         }
 
-        //todo -> implement clearTimeout during cleanup
-        setTimeout(function() {
-            fetchWithRetries.call(self);
-        }, self._retries * 1000);
+        // Usually, I don't pass any arguments to fetch, 
+        // so as of now, I'm ignoring original arguments
+        // todo -> Fix it. 
+        originalFetchFn.call(this, {
+            success: onSuccess,
+            error: onError
+        });
+        return self._fetchPromise;
     }
-    var onSuccess = function() {
-        var promise = self._fetchPromise;
-        delete self._retries;
-        delete self._fetchPromise;
-        promise.resolve();
+}
 
-    }
+var modelFetchFn = Backbone.Model.prototype.fetch; 
+var collectionFetchFn = Backbone.Collection.prototype.fetch;
 
-    // Usually, I don't pass any arguments to fetch, 
-    // so as of now, I'm ignoring original arguments
-    // todo -> Fix it. 
-    originalFetch.call(this, {
-        success: onSuccess,
-        error: onError
-    });
-    return self._fetchPromise;
-}   
-
-Backbone.Model.prototype.fetch = Backbone.Collection.prototype.fetch = fetchWithRetries; 
-
+Backbone.Model.prototype.fetch = fetchWithRetries(modelFetchFn)
+Backbone.Collection.prototype.fetch = fetchWithRetries(collectionFetchFn); 
 
 module.exports = {
     UserModel: UserModel,
