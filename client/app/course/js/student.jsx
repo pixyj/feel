@@ -314,6 +314,13 @@ var StartLearningAtMixin = {
         );
     },
 
+    componentDidMount: function() {
+        var el = $("#course-start-learning-at-container");
+        $(document.body).animate({
+            scrollTop: el.offset().top - 20
+        }, 500);
+    },
+
     routeToConcept: function() {
         Backbone.history.navigate(this._url, {trigger: true});
     }
@@ -564,6 +571,7 @@ var PretestComponent = React.createClass({
                 quiz: null,
                 countdown: null
             });
+            self.graphView.remove();
         }, 2000);
     },
 
