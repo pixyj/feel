@@ -240,15 +240,21 @@ var View = Backbone.View.extend({
             left: attrs.leftPosition,
             position: 'absolute',
             cursor: 'pointer'
-        }).attr({
-            "data-url": node.url
         }).addClass("graph-node card").append(title);
-            
+
 
         this._showProgress(el, node.progress);
 
         this.$nodes.append(el);
         this._elementsById[node.id] = el;
+
+        // User might click on any child element. So set data-url to all the children
+        // and the graph-node element itself
+        var urlAttrs = {
+            "data-url": node.url
+        }
+        el.attr(urlAttrs);
+        el.children().attr(urlAttrs);
 
         return {
             el: el,
