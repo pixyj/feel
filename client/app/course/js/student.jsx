@@ -618,7 +618,7 @@ var DashboardComponent = React.createClass({
 
     render: function() {
         return (
-            <h4>This is your dashboard </h4>
+            <h4 className="center" id="course-student-dashboard">Pick a concept and start learning!</h4>
         );
     }
 
