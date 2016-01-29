@@ -133,6 +133,18 @@ class Concept(TimestampedModel, UUIDModel):
                                   .order_by('-created_at')
         return ConceptHeadingSerializer(concepts, many=True)
 
+    @property
+    def concept_name_index_data(self):
+        serialized_data = ConceptHeadingSerializer(self).data
+        return dict(serialized_data)
+
+    @property
+    def concept_text_content_index_data(self):
+        sections = self.conceptsection_set.filter(type=ConceptSection.MARKDOWN)
+        attrs = self.concept_name_index_data
+        attrs['text'] = '\n'.join((section.data['input'] for section in sections))
+        return attrs
+    
     def __str__(self):
         s = "{} created by {} - Published? {}"
         return s.format(self.name, self.created_by, self.is_published)

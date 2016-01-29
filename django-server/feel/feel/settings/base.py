@@ -166,7 +166,7 @@ CACHES = {
     },
 }
 
-
+################################################################################
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -204,4 +204,8 @@ APP_LOGGING = {
 for app in MY_APPS:
     LOGGING['loggers'][app] = APP_LOGGING
 
-
+###############################################################################
+ALGOLIA = {
+    "APP_ID": os.environ['ALGOLIA_APP_ID'],
+    "SECRET_KEY": os.environ['ALGOLIA_SECRET_KEY']
+}

@@ -50,4 +50,4 @@ class ConceptHeadingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Concept
-        fields = ('id', 'name', 'created_at', 'last_modified_at', )
+        fields = ('id', 'name', 'created_at', 'last_modified_at', 'slug', )

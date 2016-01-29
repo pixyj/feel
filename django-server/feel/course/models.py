@@ -1,3 +1,4 @@
+import itertools
 import uuid
 
 from django.db import models, transaction
@@ -5,8 +6,8 @@ from django.utils.text import slugify
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 
-
 from core.models import TimestampedModel, UUIDModel, SlugModel
+from core import search 
 from concept.models import Concept
 
 
@@ -71,11 +72,9 @@ class Course(TimestampedModel, UUIDModel):
     def evict_attr_from_cache(self, cache_key):
         return cache.delete(cache_key)
 
-
     @property
     def url(self):
-        return "/course/{}/"(slugify(self.name))
-
+        return "/course/{}/".format(slugify(self.name))
 
     def get_student_progress(self, user_key):
         concept_progress = {}
@@ -84,7 +83,6 @@ class Course(TimestampedModel, UUIDModel):
             concept = cc.concept
             concept_progress[str(concept.id)] = concept.get_student_progress(user_key)
         return concept_progress
-
 
     def publish_and_slugify(self):
         self.is_published = True
@@ -105,7 +103,6 @@ class Course(TimestampedModel, UUIDModel):
                 cc.slugify()
             self.save()
         return courseslug
-
 
     def unpublish(self):
         self.is_published = False
@@ -134,6 +131,38 @@ class Course(TimestampedModel, UUIDModel):
         courseconcept = CourseConcept.objects.create(course=self,concept=concept)
         return concept
 
+    def create_and_load_search_indices(self):
+        self._create_and_load_concept_name_index()
+        self._create_and_load_concept_text_content_index()
+        self._create_and_load_quiz_index()
+
+    def delete_search_indices(self):
+        index_names = ["concept_names", "concept_text", "concept_quizzes"]
+        return [search.delete_index(name) for name in index_names]
+
+    def _map_concepts_to_index(self, index_name, map_func):
+        concept_ids = [cc.concept_id for cc in self.courseconcept_set.all()]
+        concepts = Concept.objects.filter(pk__in=concept_ids)
+        objects = [map_func(concept) for concept in concepts]
+        search.add_objects_to_index(index_name, objects)
+        return objects
+
+    def _create_and_load_concept_name_index(self):
+        def map_func(concept):
+            obj = concept.concept_name_index_data
+            obj['url'] = "{}{}/".format(self.url, obj['slug'])
+            return obj
+        self._map_concepts_to_index("concept_names", map_func)
+
+    def _create_and_load_concept_text_content_index(self):
+        def map_func(concept):
+            obj = concept.concept_text_content_index_data
+            obj['url'] = "{}{}/".format(self.url, obj['slug'])
+            return obj
+        self._map_concepts_to_index("concept_text", map_func)
+
+    def _create_and_load_quiz_index(self):
+        pass
 
     def __str__(self):
         return "{} created by {} - Published? {}".format(self.name, self.created_by, self.is_published)
@@ -142,6 +171,10 @@ class Course(TimestampedModel, UUIDModel):
 class CourseSlug(SlugModel):
     #use one-to-one instead
     course = models.ForeignKey(Course)
+
+    @property
+    def url(self):
+        return "/course/{}/".format(self.slug)
 
     def __str__(self):
         return "{} - {}".format(self.course, self.slug)
