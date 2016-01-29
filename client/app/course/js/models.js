@@ -388,8 +388,8 @@ var ProgressModel = Backbone.Model.extend({
         var keys = Object.keys(this.attributes);
         var length = keys.length;
         for(var i = 0; i < length; i++) {
-            var progress = this.attributes[keys[i]];
-            if(progress.answered > 0) {
+            var progressAttrs = this.attributes[keys[i]];
+            if(progressAttrs.progress > 0) {
                 return false;
             }
         }
