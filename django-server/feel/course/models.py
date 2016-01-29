@@ -73,24 +73,25 @@ class Course(TimestampedModel, UUIDModel):
             for cc in courseconcepts:
                 cc.slugify()
             self.save()
-        
-        # for cc in courseconcepts:
-        #     cc.cache_page()
-
         return courseslug
 
 
     def unpublish(self):
         self.is_published = False
-        
-        for c in self.courseconcept_set.select_related('concept'):
-            c.concept.evict_cached_page()
-        
+        self.evict_content_from_cache()
         with transaction.atomic():
             self.courseslug_set.all().delete()
             self.save()
             self.courseconcept_set.all().update(slug="")
 
+    def cache_content(self):
+        courseconcepts = [c for c in self.courseconcept_set.select_related('concept').all()]
+        for cc in courseconcepts:
+            cc.cache_page()
+
+    def evict_content_from_cache(self):
+        for c in self.courseconcept_set.select_related('concept'):
+            c.concept.evict_cached_page()
 
     def add_concept(self, name):
         concept = Concept.objects.create(created_by=self.created_by,\
