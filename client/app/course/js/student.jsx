@@ -615,7 +615,11 @@ var PretestComponent = React.createClass({
         if(this.state.countdown) {
             countdown = <h4 id="course-pretest-countdown">{this.state.countdown}</h4>
         }
-        var here = "You're here";
+        var hereComponent = "";
+        var hereMessage = "You're here";
+        if(!this.state.isPretestCompleted) {
+            hereComponent = <h5 className="center">{hereMessage}</h5>
+        }
         return (
             <div id="course-pretest-container" className={this.props.className}>
                 <div className="row">
@@ -625,7 +629,7 @@ var PretestComponent = React.createClass({
                         {quizComponent}
                     </div>
                     <div className="col-xs-6 col-md-5">
-                        <h5 className="center">{here}</h5>
+                        {hereComponent}
                         <div ref="graphContainer">
                         </div>
                     </div>
