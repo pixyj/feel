@@ -1,11 +1,10 @@
 @import 'base/scss/base-variables';
 
-#graph {
-    margin: 2rem;
+.graph {
     position: relative;
 }
 
-#graph-svg-container {
+.graph-svg-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -50,6 +49,13 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     font-size: 2rem;
+}
+
+@media(min-width: 992px) {
+    .graph-node-done-span {
+        padding-left: 0.1rem;
+        padding-right: 0.1rem;
+    }
 }
 
 .graph-node-progress {

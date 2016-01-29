@@ -87,7 +87,7 @@ var View = Backbone.View.extend({
             return;
         }
         
-        this.$el.attr("id", "graph").css({
+        this.$el.attr("class", "graph").css({
             width: this.$el.parent().width()
         });
 
@@ -372,7 +372,7 @@ var View = Backbone.View.extend({
     },
 
     initializeSvg: function() {
-        var svgContainer = $("<div>").attr("id", "graph-svg-container");
+        var svgContainer = $("<div>").attr("class", "graph-svg-container");
         this.svg = createSvgEl("svg", {
             height: this.$height,
             width: this.$el.width()
