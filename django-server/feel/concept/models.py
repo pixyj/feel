@@ -30,7 +30,7 @@ class Concept(TimestampedModel, UUIDModel):
         if not quiz_ids:
             return None
 
-        quiz_id = quiz_ids[0]['id']
+        quiz_id = quiz_ids[0]
         quiz = Quiz.get_detailed_quizzes_in([quiz_id]).first()
         if not quiz:
             # todo -> log error here
