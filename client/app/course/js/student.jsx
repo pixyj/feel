@@ -572,6 +572,7 @@ var PretestComponent = React.createClass({
                 countdown: null
             });
             self.graphView.remove();
+            self.props.parent.deactivateCurrentConcept();
         }, 2000);
     },
 
@@ -776,6 +777,10 @@ var PageComponent = React.createClass({
         this.graphView.activateNode(concept.id, {
             removePrevious: true
         });
+    },
+
+    deactivateCurrentConcept: function() {
+        this.graphView.deactivateCurrentNode();
     }
 
 });

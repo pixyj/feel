@@ -81,6 +81,13 @@ var View = Backbone.View.extend({
         return this;
     },
 
+    deactivateCurrentNode: function() {
+        if(this._activeNodeElement) {
+            this._activeNodeElement.removeClass("graph-node-active");
+            this._activeNodeElement = null;
+        }
+    },
+
     render: function() {
 
         if(!this.graph.levels.length) {
