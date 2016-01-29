@@ -33,6 +33,10 @@ body {
 
 /************************ Override Materialize ***********************************/
 
+.progress .determinate {
+    background-color: $brand-color;    
+}
+
 #search-bar input {
     margin: 0;
     font-size: 1.2rem;
