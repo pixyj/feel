@@ -134,9 +134,12 @@ var UpNextComponent = React.createClass({
             else {
                 content = <div className="center card">
                               <h4><a href={props.upNextConceptURL}>
-                                    Up Next: <span id="up-next-concept-name">
-                                                {props.upNextConceptName}
-                                              </span>
+                                    <span id="course-concept-up-next">
+                                        Up Next:
+                                    </span>
+                                    <span>
+                                        {props.upNextConceptName}
+                                    </span>
                                    </a>
                               </h4>
                           </div>
