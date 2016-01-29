@@ -2,7 +2,9 @@ import uuid
 
 from django.db import models, transaction
 from django.utils.text import slugify
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
+
 
 from core.models import TimestampedModel, UUIDModel, SlugModel
 from concept.models import Concept
@@ -27,19 +29,48 @@ class Course(TimestampedModel, UUIDModel):
     def concepts(self):
         return CourseConcept.courseconcepts.items(self)
 
-
     @property
-    def dependencies(self):
+    def _dependencies(self):
         dependencies = [dep for dep in self.conceptdependency_set.only('start', 'end').all()]
         return dependencies
 
     @property
-    def pretest_quizzes(self):
+    def _dependencies_cache_key(self):
+        return "course:{id}:dependencies".format(id=self.id)
+
+    @property
+    def dependencies(self):
+        return self.get_cacheable_attr('_dependencies', self._dependencies_cache_key)
+    
+    @property
+    def _pretest_quizzes(self):
         concepts = [cc.concept for cc in self.concepts]
         quiz_by_concept_id = {}
         for concept in concepts:
             quiz_by_concept_id[str(concept.id)] = concept.course_pretest_quiz
         return quiz_by_concept_id
+
+    @property
+    def _pretest_cache_key(self):
+        return "course:{id}:quizzes".format(id=self.id)
+
+    @property
+    def pretest_quizzes(self):
+        return self.get_cacheable_attr(self, '_pretest_quizzes', self._pretest_cache_key)
+
+    def get_cacheable_attr(self, attr, cache_key):
+        #import ipdb; ipdb.set_trace()
+        cached_attr = cache.get(cache_key)
+        if cached_attr is not None:
+            return cached_attr
+        return getattr(self, attr)
+
+    def cache_attr(self, attr, cache_key):
+        return cache.set(cache_key, getattr(self, attr))
+
+    def evict_attr_from_cache(self, cache_key):
+        return cache.delete(cache_key)
+
 
     @property
     def url(self):
@@ -88,10 +119,14 @@ class Course(TimestampedModel, UUIDModel):
         courseconcepts = [c for c in self.courseconcept_set.select_related('concept').all()]
         for cc in courseconcepts:
             cc.cache_page()
+        self.cache_attr('_pretest_quizzes', self._pretest_cache_key)
+        self.cache_attr('_dependencies', self._dependencies_cache_key)
 
     def evict_content_from_cache(self):
         for c in self.courseconcept_set.select_related('concept'):
             c.concept.evict_cached_page()
+        self.evict_attr_from_cache(self._pretest_cache_key)
+        self.evict_attr_from_cache(self._dependencies_cache_key)
 
     def add_concept(self, name):
         concept = Concept.objects.create(created_by=self.created_by,\
