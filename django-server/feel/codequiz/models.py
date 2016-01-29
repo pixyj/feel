@@ -29,6 +29,12 @@ class CodeQuiz(TimestampedModel, UUIDModel):
         inputs = [test_case['input'].strip() for test_case in self.test_cases]
         return json.dumps(inputs)
 
+    # To provide same API as quiz.models.Quiz  
+    @property
+    def question_input(self):
+        return self.problem_statement
+    
+
     @property
     def output_list(self):
         return [test_case['output'].strip() for test_case in self.test_cases]

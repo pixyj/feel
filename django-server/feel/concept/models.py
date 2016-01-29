@@ -1,3 +1,4 @@
+import itertools
 from collections import defaultdict
 
 from django.contrib.postgres.fields import JSONField
@@ -8,7 +9,7 @@ from django.utils.text import slugify
 from core.models import TimestampedModel, UUIDModel
 from quiz.models import Quiz, QuizAttempt
 from quiz.serializers import QuizSerializer
-from codequiz.models import CodeQuizAttempt
+from codequiz.models import CodeQuiz, CodeQuizAttempt
 
 
 class Concept(TimestampedModel, UUIDModel):
@@ -133,18 +134,43 @@ class Concept(TimestampedModel, UUIDModel):
                                   .order_by('-created_at')
         return ConceptHeadingSerializer(concepts, many=True)
 
+    # SEARCH INDEX APIs
     @property
-    def concept_name_index_data(self):
+    def name_index_data(self):
         serialized_data = ConceptHeadingSerializer(self).data
         return dict(serialized_data)
 
     @property
-    def concept_text_content_index_data(self):
+    def text_content_index_data(self):
         sections = self.conceptsection_set.filter(type=ConceptSection.MARKDOWN)
         attrs = self.concept_name_index_data
         attrs['text'] = '\n'.join((section.data['input'] for section in sections))
         return attrs
-    
+
+    @property
+    def quiz_index_data(self):
+        quiz_section_types = [ConceptSection.QUIZ, ConceptSection.EXIT_QUIZ,
+                         ConceptSection.PREREQ_QUIZ]
+        code_quiz_section_type = [ConceptSection.CODE_QUIZ]
+
+        def get_quiz_inputs(self, Model, section_types):
+            sections = self.conceptsection_set.filter(type__in=section_types)
+            section_quiz_ids = [section.data['quiz_ids'] for section in sections]
+            quiz_ids = itertools.chain(*section_quiz_ids)
+            queryset = Model.objects.filter(pk__in=quiz_ids)
+            return [(model.pk, model.question_input, ) for model in queryset]
+
+        quiz_inputs = get_quiz_inputs(self, Quiz, quiz_section_types)
+        codequiz_inputs = get_quiz_inputs(self, CodeQuiz, code_quiz_section_type)
+        all_quiz_inputs = quiz_inputs + codequiz_inputs
+        objects = []
+        for pk, question_input in all_quiz_inputs:
+            obj = self.name_index_data
+            obj['quiz_id'] = pk
+            obj['question_input'] = question_input
+            objects.append(obj)
+        return objects
+        
     def __str__(self):
         s = "{} created by {} - Published? {}"
         return s.format(self.name, self.created_by, self.is_published)

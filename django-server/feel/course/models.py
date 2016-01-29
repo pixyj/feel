@@ -7,7 +7,8 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 
 from core.models import TimestampedModel, UUIDModel, SlugModel
-from core import search 
+from core import search
+
 from concept.models import Concept
 
 
@@ -17,7 +18,6 @@ class Course(TimestampedModel, UUIDModel):
     intro = models.TextField(default="", blank=True)
     how_to_learn = models.TextField(default="", blank=True)
     where_to_go_from_here = models.TextField(default="", blank=True)
-
 
     @property
     def slug(self):
@@ -149,20 +149,27 @@ class Course(TimestampedModel, UUIDModel):
 
     def _create_and_load_concept_name_index(self):
         def map_func(concept):
-            obj = concept.concept_name_index_data
+            obj = concept.name_index_data
             obj['url'] = "{}{}/".format(self.url, obj['slug'])
             return obj
         self._map_concepts_to_index("concept_names", map_func)
 
     def _create_and_load_concept_text_content_index(self):
         def map_func(concept):
-            obj = concept.concept_text_content_index_data
+            obj = concept.text_content_index_data
             obj['url'] = "{}{}/".format(self.url, obj['slug'])
             return obj
         self._map_concepts_to_index("concept_text", map_func)
 
     def _create_and_load_quiz_index(self):
-        pass
+        concept_ids = [cc.concept_id for cc in self.courseconcept_set.all()]
+        concepts = Concept.objects.filter(pk__in=concept_ids)
+        concept_quizzes = [concept.quiz_index_data for concept in concepts]
+        objects = list(itertools.chain(*concept_quizzes))
+        for obj in objects:
+            obj['url'] = "{}{}/?quiz-id={}".format(self.url, obj['slug'], obj['quiz_id'])
+        search.add_objects_to_index("concept_quizzes", objects)
+        return objects
 
     def __str__(self):
         return "{} created by {} - Published? {}".format(self.name, self.created_by, self.is_published)
@@ -194,17 +201,14 @@ class CourseConcept(TimestampedModel, UUIDModel):
 
     courseconcepts = CourseConceptManager()
 
-
     @property
     def url(self):
         return "{}{}/".format(self.course.url, slugify(self.concept.name))
-
 
     def slugify(self):
         self.slug = self.concept.slug
         self.save()
         return self.slug
-
 
     def cache_page(self):
         self.concept.cache_page()
@@ -212,10 +216,8 @@ class CourseConcept(TimestampedModel, UUIDModel):
     def __str__(self):
         return "{} belonging to {}".format(self.concept, self.course)
 
-
     class Meta:
         unique_together = ("course", "concept", )
-
 
 
 class ConceptDependency(TimestampedModel, UUIDModel):
@@ -225,7 +227,6 @@ class ConceptDependency(TimestampedModel, UUIDModel):
 
     def __str__(self):
         return "{} -> {} in {}".format(self.start, self.end, self. course)
-
 
     class Meta:
         unique_together = ('course', 'start', 'end', )
