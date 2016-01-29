@@ -259,6 +259,26 @@ Store.prototype = {
 
     },
 
+    getUpNextConcept: function() {
+        var conceptsInLevels = this.getGraph().levels;
+        orderedConcepts = _.flatten(conceptsInLevels);
+        var length = orderedConcepts.length;
+
+        var allConceptsProgress = this._student.getProgress();
+
+        for(var i = length - 1; i >= 0; i--) {
+            var concept = orderedConcepts[i];
+            var progress = allConceptsProgress[concept.id].progress;
+            if(progress === 1) {
+                break;
+            }
+        }
+        if(i === length - 1) {
+            return null;
+        }
+        return orderedConcepts[i+1];
+    },
+
     cleanup: function() {
         this.off();
     }
@@ -614,12 +634,38 @@ var PretestComponent = React.createClass({
     }
 });
 
+
 var DashboardComponent = React.createClass({
 
     render: function() {
+        var upNextConcept = this.props.store.getUpNextConcept();
+        if(!upNextConcept) {
+            return (
+                <div className={this.props.className}>
+                    <h4 className="center" 
+                           id="course-student-dashboard">
+                           Pick a concept and start learning!
+                    </h4>
+                </div>
+            );
+        }
+
+        var url = this.props.store.getConceptURL(upNextConcept.slug);
+        var name = upNextConcept.name;
         return (
-            <h4 className="center" id="course-student-dashboard">Pick a concept and start learning!</h4>
+            <div className="center card" id="course-student-dashboard">
+                  <h4><a href={url}>
+                        <span id="course-concept-up-next">
+                            Up Next:
+                        </span>
+                        <span>
+                            {name}
+                        </span>
+                       </a>
+                  </h4>
+            </div>
         );
+
     }
 
 });
