@@ -56,7 +56,7 @@ class Course(TimestampedModel, UUIDModel):
 
     @property
     def pretest_quizzes(self):
-        return self.get_cacheable_attr(self, '_pretest_quizzes', self._pretest_cache_key)
+        return self.get_cacheable_attr('_pretest_quizzes', self._pretest_cache_key)
 
     def get_cacheable_attr(self, attr, cache_key):
         #import ipdb; ipdb.set_trace()
