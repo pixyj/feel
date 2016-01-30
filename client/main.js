@@ -3,7 +3,6 @@ var Backbone = require("lib").Backbone;
 var _ = require("lib")._;
 
 var Utils = require("./app/base/js/utils");
-var md = require("./app/base/js/md");
 var models = require("models");
 var UserModel = models.UserModel;
 
@@ -14,6 +13,9 @@ var Quiz = require("./app/quiz/js/api");
 var Concept = require("./app/concept/js/api");
 var Course = require("./app/course/js/api");
 var CodeQuiz = require("./app/code-quiz/js/api");
+
+var SearchModel = require("./app/search/js/models").SearchModel;
+var Search = require("./app/search/js/search.jsx");
 
 require("csrf");
 
@@ -189,7 +191,7 @@ var Router = Backbone.Router.extend({
     home: function() {
         this.resetPage();
         this.currentComponent = null;
-        Backbone.history.navigate("course/python-tutorial", {trigger: true});
+        Backbone.history.navigate("course/one/", {trigger: true});
     },
 
     notFound: function() {
@@ -216,8 +218,8 @@ var Router = Backbone.Router.extend({
 
         if(callback) {
             callback.apply(this, args);
-            var frag = utils.addTrailingSlash(Backbone.history.getFragment());
-            Backbone.history.navigate(frag, {trigger: false});
+            //var frag = utils.addTrailingSlash(Backbone.history.getFragment());
+            //Backbone.history.navigate(frag, {trigger: false});
         }
     },
 
@@ -226,7 +228,6 @@ var Router = Backbone.Router.extend({
         var matched = _.filter(this.authRequiredRoutes, function(r) {
             return frag.indexOf(r) !== -1;
         });
-
         return matched.length > 0;
     }
 
@@ -240,14 +241,21 @@ var triggerResize = function() {
 triggerResize = _.debounce(triggerResize, 500);
 
 var listenToResize = function() {
-    $(window).resize(triggerResize);
+    //$(window).resize(triggerResize);
 };
 
 var init = function() {
 
-
     var userModel = new UserModel();
     userModel.fetch().then(function() {
+
+        var searchModel = new SearchModel(userModel.toJSON().ALGOLIA);
+        window.s = searchModel;
+        Search.render(searchModel, {
+            searchBar: document.getElementById("search-bar"),
+            searchHits: document.getElementById("search-hits-container")
+        });
+
         UserStatus.render(userModel, document.getElementById("user-status"));
         var router = new Router({userModel: userModel});
         Backbone.history.start({pushState: true});
@@ -259,6 +267,5 @@ var init = function() {
 
 };
 
+// 3 -> 2 -> 1: 🔥
 $(document).ready(init);
-
-

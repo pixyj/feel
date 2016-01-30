@@ -1,0 +1,16 @@
+@import 'base/scss/base-variables';
+
+#search-hits-container {
+    position: relative;
+}
+
+#search-hits {
+    width: 100%;
+    z-index: 5;
+}
+
+.search-index-name {
+    color: $brand-color;
+    font-weight: bold;
+    padding-right: 1rem;
+}
