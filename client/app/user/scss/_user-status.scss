@@ -5,13 +5,19 @@
 }
 
 .username-or-login-btn {
-    text-align: right;
     line-height: $top-bar-height;
+    font-size: 1.2rem;
 }
 
 @media(min-width: 992px) {
     .username-or-login-btn {
-        font-size: 1.2rem;
+        text-align: right;
+    }
+}
+
+@media(max-width: 992px) {
+    .username-or-login-btn {
+        text-align: center;
     }
 }
 
