@@ -143,7 +143,7 @@ class Concept(TimestampedModel, UUIDModel):
     @property
     def text_content_index_data(self):
         sections = self.conceptsection_set.filter(type=ConceptSection.MARKDOWN)
-        attrs = self.concept_name_index_data
+        attrs = self.name_index_data
         attrs['text'] = '\n'.join((section.data['input'] for section in sections))
         return attrs
 
