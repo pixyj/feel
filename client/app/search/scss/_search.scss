@@ -25,7 +25,9 @@
 
 @media(max-width: 992px) {
     #search-overlay {
-        top: $top-bar-height*3 + 1rem;
+        // Each item in top-bar occupies full row.
+        // And there are 3 items. 
+        top: $top-bar-height*3 + 1rem;  
     }
 }
 
