@@ -207,5 +207,6 @@ for app in MY_APPS:
 ###############################################################################
 ALGOLIA = {
     "APP_ID": os.environ['ALGOLIA_APP_ID'],
-    "SECRET_KEY": os.environ['ALGOLIA_SECRET_KEY']
+    "SECRET_KEY": os.environ['ALGOLIA_SECRET_KEY'],
+    'CLIENT_API_KEY': os.environ['ALGOLIA_CLIENT_API_KEY']
 }
