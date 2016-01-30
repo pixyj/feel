@@ -18,24 +18,25 @@ from rest_framework.permissions import IsAuthenticated
 class UserDetail(APIView):
 
     def get(self, request, format=None):
-        data = {}
+        algolia = {
+            "API_KEY": settings.ALGOLIA['CLIENT_API_KEY'],
+            "APP_ID": settings.ALGOLIA['APP_ID']
+        }
+        data = {"ALGOLIA": algolia}
+
         user = request.user
         if request.user.is_anonymous():
-            data = {"is_anonymous": True, "username": ""}
+            data.update({"is_anonymous": True, "username": ""})
             csrftoken = csrf.get_token(request)
             session = request.session
             if session.session_key is None:
                 session.create()
         else:
-            data = {
+            data.update({
                 "is_anonymous": False, 
                 "id": user.id, 
                 "username": user.username,
-                "ALGOLIA": {
-                    "API_KEY": settings.ALGOLIA['CLIENT_API_KEY'],
-                    "APP_ID": settings.ALGOLIA['APP_ID']
-                }
-            }
+            })
         return Response(data)
 
 
