@@ -165,7 +165,7 @@ var PageComponent = React.createClass({
     componentDidMount: function() {
         ConceptStudent.render(this.props, this.refs.mainContent);
         this._graphRenderTimer = function(self) {
-            setTimeout(function() {
+            return setTimeout(function() {
                 self.setState({
                     isConceptStudentRendered: true
                 });

@@ -11,6 +11,24 @@
     z-index: 5;
 }
 
+#search-overlay {
+    position: fixed;
+    top: $top-bar-height + 1rem;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    display: block;
+    z-index: 4;
+    background-color: rgba(255,255,255,0.97);
+}
+
+@media(max-width: 992px) {
+    #search-overlay {
+        top: $top-bar-height*3 + 1rem;
+    }
+}
+
 .search-index-name {
     color: $brand-color;
     font-weight: bold;

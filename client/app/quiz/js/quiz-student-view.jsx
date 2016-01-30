@@ -430,7 +430,7 @@ var StudentSingleQuizView = React.createClass({
         });
 
         return (
-            <div>
+            <div id={"quiz-" + this.props.quiz.id}>
                 <div className="student-quiz-container">
                     
                     <div className="student-quiz-number">

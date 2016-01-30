@@ -104,6 +104,20 @@ var PageComponent = React.createClass({
     }
 });
 
+var scrollToQuiz = function() {
+    var quizId = $.QueryString['quiz-id'];
+    if(!quizId) {
+        return;
+    }
+    var quizEl = $("#quiz-{0}".format(quizId));
+    if(!quizEl.length) {
+        return;
+    }
+    $(document.body).animate({
+        scrollTop: quizEl.offset().top - 50
+    }, 500);
+};
+
 var app = {};
 
 var renderImpl = function(pageStore, attemptStore, codeQuizAttemptStore, element) {
@@ -119,6 +133,8 @@ var renderImpl = function(pageStore, attemptStore, codeQuizAttemptStore, element
     app.codeQuizAttemptStore = codeQuizAttemptStore;
     app.element = element;
     ProgressBar.setProgress(1);
+
+    scrollToQuiz();
 };
 
 var render = function(options, element) {

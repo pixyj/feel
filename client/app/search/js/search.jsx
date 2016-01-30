@@ -18,6 +18,21 @@ var SearchBar = React.createClass({
         };
     },
 
+    componentDidMount: function() {
+        this.props.model.on("linkClicked", this.reset, this);
+        this.props.model.on("searchCancelled", this.reset, this);
+    },
+
+    componentWillUnmount: function() {
+        this.props.model.off("linkClicked", this.reset);
+        this.props.model.off("searchCancelled", this.reset, this);
+    },
+
+    reset: function() {
+        this.setState(this.getInitialState());
+        this.props.model.trigger("change:hits", []);
+    },
+
     render: function() {
         return (
             <div>
@@ -25,8 +40,7 @@ var SearchBar = React.createClass({
                        placeholder="search" 
                        value={this.state.query}
                        onKeyUp={this.setQueryAndSearch} 
-                       onChange={this.setQueryAndSearch} 
-                       onBlur={this.onBlur} />
+                       onChange={this.setQueryAndSearch} />
             </div>
 
         );
@@ -60,14 +74,6 @@ var SearchBar = React.createClass({
         this.props.model.search(query, this.updateHits, this);
     },
 
-    onBlur: function() {
-        this.setState({
-            query: "",
-            hits: []
-        });
-        this.props.model.trigger("change:hits", []);
-    }
-
 });
 
 var SearchHitItem = React.createClass({
@@ -76,8 +82,8 @@ var SearchHitItem = React.createClass({
         var snippet = mdAndMathToHtml(this.props.snippet);
         var heading = this.getHeading();
         return (
-            <div className="collection-item">
-                <a href={this.props.url}>
+            <div className="collection-item hand-of-god" onClick={this.onClick}>
+                <a href={this.props.url} onClick={this.onClick}>
                     <span className="search-index-name">{heading}:</span>
                     <div className="search-hit-snippet" 
                          dangerouslySetInnerHTML={{__html: snippet}} />
@@ -98,6 +104,13 @@ var SearchHitItem = React.createClass({
         }
         // utils.assert(false);
         return "";
+    },
+
+    onClick: function(evt) {
+        console.log("clicked search hit");
+        evt.preventDefault();
+        Backbone.history.navigate(this.props.url, {trigger: true});
+        this.props.model.trigger("linkClicked");
     }
 
 
@@ -123,6 +136,7 @@ var SearchHits = React.createClass({
     },
 
     _buildProps: function(obj) {
+        obj.model = this.props.model;
         return obj;
     },
 
@@ -139,17 +153,25 @@ var SearchHits = React.createClass({
         });
 
         return (
-            <div id="search-hits" className="collection">
-                {list}
+            <div>
+                <div id="search-hits" className="collection">
+                    {list}
+                </div>
+                <div id="search-overlay" onClick={this.cancelSearch}>
+                </div>
             </div>
         );
     },
 
     updateHits: function(hits) {
-        console.info("updateHits", hits);
+        //console.info("updateHits", hits);
         this.setState({
             hits: hits
         });
+    },
+
+    cancelSearch: function() {
+        this.props.model.trigger("searchCancelled");
     }
 });
 
