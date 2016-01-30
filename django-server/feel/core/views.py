@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.middleware import csrf
 from django.shortcuts import render
 
+from django.conf import settings
+
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
@@ -25,7 +27,15 @@ class UserDetail(APIView):
             if session.session_key is None:
                 session.create()
         else:
-            data = {"is_anonymous": False, "id": user.id, "username": user.username}
+            data = {
+                "is_anonymous": False, 
+                "id": user.id, 
+                "username": user.username,
+                "ALGOLIA": {
+                    "API_KEY": settings.ALGOLIA['CLIENT_API_KEY'],
+                    "APP_ID": settings.ALGOLIA['APP_ID']
+                }
+            }
         return Response(data)
 
 
