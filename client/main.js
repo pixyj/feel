@@ -32,6 +32,8 @@ var Router = Backbone.Router.extend({
     routes: {
         "creator/concept(/)": "createConcept",
         "creator/concept/:id(/)": "editConcept",
+        "creator/concept/concept/:id/change/": "editConcept",
+        "creator/markdown-sections(/)": "viewMarkdownSections",
         "creator/course(/)": "createCourse",
         "creator/course/:id(/)": "editCourse",
         "creator/quiz(/)": "createQuiz",
@@ -72,6 +74,12 @@ var Router = Backbone.Router.extend({
         this.resetPage();
         Concept.CreatorList.render({}, this.pageElement);
         this.currentComponent = Concept.CreatorList;
+    },
+
+    viewMarkdownSections: function() {
+        this.resetPage();
+        Concept.CreatorMarkdown.render({}, this.pageElement);
+        this.currentComponent = Concept.CreatorMarkdown;
     },
 
     createCourse: function() {

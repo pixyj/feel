@@ -9,7 +9,7 @@ from rest_framework import status
 
 from core.views import get_user_and_user_key
 
-from concept.models import Concept
+from concept.models import Concept, ConceptSection
 from concept.serializers import ConceptSerializer, ConceptSectionSerializer
 from quiz.serializers import QuizAttemptSerializer
 from codequiz.serializers import CodeQuizAttemptSerializer
@@ -158,6 +158,19 @@ class ConceptDetailView(APIView):
         return Response({"id": concept.id})
 
 
+class CreatorMarkdownSectionListView(APIView):
+
+    @method_decorator(staff_member_required)
+    def get(self, request):
+        sections = ConceptSection.objects.filter(type=ConceptSection.MARKDOWN)
+        serialized_sections = []
+        for section in sections:
+            data = dict(ConceptSectionSerializer(section).data)
+            data['concept_id'] = section.concept_id
+            serialized_sections.append(data)
+        return Response(serialized_sections)
+
+
 class StudentConceptPageView(APIView):
 
     def get(self, request, pk):
@@ -206,3 +219,5 @@ class StudentCodeQuizAttemptView(APIView):
 def get_codequizattempts(request, concept):
     view = StudentCodeQuizAttemptView()
     return view._get_codequizattempts(request, concept)
+
+
