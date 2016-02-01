@@ -73,6 +73,7 @@ var QuizModel = StreamSaveModel.extend({
             if(attrs.choices[attrs.choices.length-1].choiceInput === "") {
                 attrs.choices = attrs.choices.slice(0, attrs.choices.length-1);
             }
+            attrs.choices = this._getUniqueChoices(attrs.choices);
         }
         if(attrs.answers.length) {
             if(attrs.answers[attrs.answers.length-1].answer === "") {
@@ -80,6 +81,22 @@ var QuizModel = StreamSaveModel.extend({
             }
         }
         return attrs;
+    },
+
+    _getUniqueChoices: function(choices) {
+
+        var choiceInputs = {};
+        var length = choices.length;
+        uniqueChoices = [];
+        for(var i = 0; i < length; i++) {
+            var choice = choices[i];
+            if(choiceInputs[choice.choiceInput]) {
+                continue;
+            }
+            choiceInputs[choice.choiceInput] = true;
+            uniqueChoices.push(choice);
+        }
+        return uniqueChoices;
     },
 
     url: function() {
