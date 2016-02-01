@@ -22,7 +22,8 @@ var ShortAnswerSubmitView = React.createClass({
         return (
             <div className="input-field">
                 <input type="text" 
-                       onChange={this.updateGuess} 
+                       onChange={this.updateGuess}
+                       onKeyUp={this.checkAnswerOnEnterKeyTyped} 
                        className="quiz-student-short-answer-input"
                        value={this.state.guess || ""} 
                        id={id} 
@@ -32,12 +33,17 @@ var ShortAnswerSubmitView = React.createClass({
         );
     },
 
+    checkAnswerOnEnterKeyTyped: function(evt) {
+        if(evt.keyCode === 13) {
+            this.props.parent.checkAnswer();
+        }
+    },
+
     updateGuess: function(evt) {
         var guess = evt.target.value || "";
         this.setState({
             guess: guess
         });
-
     },
 
     checkAnswer: function() {
@@ -198,7 +204,8 @@ var QuizAnswerSubmitMixin = {
             answerSubmitView = <ShortAnswerSubmitView 
                                     ref="answerSubmitView" 
                                     store={this.props.store} 
-                                    disabled={result} />
+                                    disabled={result} 
+                                    parent={this} />
         }
         else {
             answerSubmitView = <MCQSubmitView  
@@ -234,7 +241,7 @@ var QuizAnswerSubmitMixin = {
                     <div className="col-xs-5 col-md-3">
                         <button className="btn waves-effect waves-light btn-large" 
                                 onClick={this.checkAnswer} 
-                                disabled={isSubmitDisabled}>
+                                disabled={isSubmitDisabled} >
                                 Submit
                         </button>
                     </div>
@@ -250,6 +257,10 @@ var QuizAnswerSubmitMixin = {
 
     //todo -> rename function. It does more that what its name suggests (Submits answer to guessCollection)
     checkAnswer: function() {
+
+        if(this.isSubmitDisabled()) {
+            return;
+        }
         
         var result = this.refs.answerSubmitView.checkAnswer();
 
