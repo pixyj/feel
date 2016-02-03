@@ -112,6 +112,19 @@ class Course(TimestampedModel, UUIDModel):
             self.save()
             self.courseconcept_set.all().update(slug="")
 
+    def migrate_concepts_to_course(self, concepts):
+        for concept in concepts:
+            attrs = {
+                "created_at": concept.created_at,
+                "created_by": concept.created_by,
+                "last_modified_at": concept.last_modified_at,
+                "last_modified_by" :concept.last_modified_by,
+                "concept": concept,
+                "course": self,
+                "slug": concept.slug
+            }
+            CourseConcept.objects.create(**attrs)
+
     def cache_content(self):
         courseconcepts = [c for c in self.courseconcept_set.select_related('concept').all()]
         for cc in courseconcepts:
