@@ -226,8 +226,8 @@ var Router = Backbone.Router.extend({
 
         if(callback) {
             callback.apply(this, args);
-            //var frag = utils.addTrailingSlash(Backbone.history.getFragment());
-            //Backbone.history.navigate(frag, {trigger: false});
+            var frag = utils.addTrailingSlash(Backbone.history.getFragment());
+            Backbone.history.navigate(frag, {trigger: false});
         }
     },
 
