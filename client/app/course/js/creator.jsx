@@ -495,7 +495,7 @@ var PageView = Backbone.View.extend({
         var middle = $("<div>").addClass("col-md-3");
         this.dependencyContainer = middle;
 
-        var right = $("<div>").addClass("col-md-6");
+        var right = $("<div>").addClass("col-md-12");
 
         this.graphContainer = right;
 
@@ -554,7 +554,7 @@ var PageView = Backbone.View.extend({
     addGraphView: function() {
         this.graphView = new GraphView({
             parent: this.graphContainer,
-            graph: this.store.getGraph()
+            graph: this.store.getLinkedNodesAndEdges()
         });
         this.graphContainer.append(this.graphView.$el);
         this.graphView.render();

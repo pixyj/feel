@@ -81,11 +81,11 @@ var ConceptCollection = Backbone.Collection.extend({
     },
 
     parse: function(concepts) {
-        _.each(concepts, function(c) {
-            this.dag.addNode(c);
-        }, this);
-
         return concepts;
+    },
+
+    getNodeById: function(id) {
+        return this.findWhere({id: id}).toJSON();
     }
 });
 
@@ -110,11 +110,11 @@ var DependencyCollection = Backbone.Collection.extend({
     CACHE_TIMEOUT: 10*60*1000,
 
     fetch: function() {
-
+        return Backbone.Collection.prototype.fetch.apply(this, arguments);
         var options = options || {force: true};
         var cachedItem = localStorage.getItem(this.getCacheKey());
         if(!cachedItem || options.force) {
-            return Backbone.Collection.prototype.fetch.apply(this, arguments);
+            
         }
         else {
             console.info("Cache Hit: {0}".format(this.getCacheKey()));
@@ -143,7 +143,8 @@ var DependencyCollection = Backbone.Collection.extend({
         _.each(response, function(d) {
             deps.push({
                 from: d.start,
-                to: d.end
+                to: d.end,
+                description: d.description
             });
         });
         var cachedItem = {
@@ -162,6 +163,12 @@ var DependencyCollection = Backbone.Collection.extend({
             this.dag.addEdge(dep.from, dep.to);
         }, this);
         this._isInitialized = true;
+    },
+
+    getPrereqIds: function(id) {
+        return _.map(this.filter({to: id}), function(model) {
+            return model.attributes.from
+        });
     }
 });
 
@@ -276,6 +283,8 @@ CreatorStore.prototype = {
 
     addDependency: function(from, to) {
 
+        this._addMissingNodesToDAG([from, to]);
+
         var edge = {
             from: from,
             to: to
@@ -298,7 +307,7 @@ CreatorStore.prototype = {
                 levels: nodesByLevel,
                 edges: edges
             }
-            self.trigger("add:dependency", graph, edge);
+            self.trigger("add:dependency", self.getLinkedNodesAndEdges(), edge);
         };
 
         if(model.isNew()) {
@@ -309,6 +318,14 @@ CreatorStore.prototype = {
         }
         
         return true;
+    },
+
+    _addMissingNodesToDAG: function(nodeIds) {
+        _.each(nodeIds, function(id) {
+            if(!this.dag.doesNodeExist(id)) {
+                this.dag.addNode(this._concepts.getNodeById(id));
+            }
+        }, this);
     },
 
     getRootConcept: function() {
@@ -326,10 +343,67 @@ CreatorStore.prototype = {
     },
 
     getGraph: function() {
+        var dag = new DAG({});
+
+        var nodesById = {};
+        _.each(this._concepts.toJSON(), function(node) {
+            dag.addNode(node);
+            nodesById[node.id] = node;
+        });
+
+        _.each(this._dependencies.toJSON(), function(dep) {
+            dag.addEdge(dep.from, dep.to);
+        }, this);
+
         return {
-            levels: this.dag.sort(),
-            edges: this.dag.getEdges(),
-            nodes: this.dag.getNodes()
+            levels: dag.sort(),
+            edges: this._dependencies.toJSON(),
+            nodes: nodesById
+        };
+    },
+
+    getLinkedNodesAndEdges: function() {
+        var graph = this.getGraph()
+        console.debug(graph);
+        var linkedNodes = {};
+        _.each(graph.edges, function(edge) {
+            linkedNodes[edge.from] = true;
+            linkedNodes[edge.to] = true;
+        });
+
+        _.each(graph.levels, function(levelNodes, index) {
+            var filteredLevel = _.filter(levelNodes, function(node) {
+                return linkedNodes[node.id] === true;
+            });
+            graph.levels[index] = filteredLevel;
+        });
+        graph.nodes = _.filter(graph.nodes, function(node) {
+            return linkedNodes[node.id] === true;
+        });
+        console.debug("graph", graph);
+        return graph;
+    },
+
+    getConceptAndPrereqsSubgraph: function(id) {
+        var concept = this._concepts.findWhere({id: id}).toJSON();
+        var prereqIds = this._dependencies.getPrereqIds(id);
+
+        var prereqs = [];
+        var edges = [];
+        _.each(this._concepts.models, function(model) {
+            if(_.contains(prereqIds, model.attributes.id)) {
+                prereqs.push(model.toJSON());
+                edges.push({
+                    from: model.attributes.id,
+                    to: id
+                });
+            }
+
+        });
+        var levels = [prereqs, [concept]];
+        return {
+            levels: levels, 
+            edges: edges
         };
     },
 
@@ -348,6 +422,10 @@ CreatorStore.prototype = {
         var self = this;
         var fetchedPromise = $.when.apply($, promises);
         fetchedPromise.then(function() {
+            var nodes = self.getLinkedNodesAndEdges().nodes;
+            _.each(nodes, function(node) {
+                self.dag.addNode(node);
+            });
             self._dependencies.initializeDAG();
             self.setRoute(true);
         });

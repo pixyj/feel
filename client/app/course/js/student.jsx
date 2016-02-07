@@ -77,7 +77,8 @@ Store.prototype = {
     creatorAPIs: {
         'getCourseName': 'getName',
         'getRootConcept': 'getRootConcept',
-        'getConceptURL': 'getConceptURL'
+        'getConceptURL': 'getConceptURL',
+        'getConceptAndPrereqsSubgraph': 'getConceptAndPrereqsSubgraph'
     },
 
     studentAPIs: {
@@ -120,28 +121,6 @@ Store.prototype = {
             }
         }
         return graph;
-    },
-
-    getPrereqsAndConceptSubgraph: function(id) {
-        var nodes = this._creator.getGraph().nodes;
-        var selectedNode = nodes[id];
-        var prereqIds = _.keys(selectedNode.ends);
-
-        var subgraph = {
-            levels: [[], []],
-            edges: []
-        };
-        
-        _.each(prereqIds, function(prereqId) {
-            subgraph.edges.push({
-                from: prereqId,
-                to: id
-            });
-            subgraph.levels[0].push(nodes[prereqId].node);
-        });
-        subgraph.levels[1].push(selectedNode.node);
-
-        return subgraph;
     },
 
     getAttemptStore: function() {
@@ -247,7 +226,9 @@ Store.prototype = {
     },
 
     getNextPretestQuizAndHighlightConcept: function() {
-        var concept = this._orderedConcepts[this._pretestState.currentConceptIndex];
+        var conceptsInLevels = this.getGraph().levels;
+        orderedConcepts = _.flatten(conceptsInLevels);
+        var concept = orderedConcepts[this._pretestState.currentConceptIndex];
         
         quiz = this._pretest.getConceptQuiz(concept.id);
         utils.assert(quiz, "/{0}/{1}/ does not have a PRETEST Quiz".format(
@@ -550,7 +531,7 @@ var PretestComponent = React.createClass({
         var concept = this.props.store.getNextPretestConcept()
         this.props.parent.highlightConcept(concept);
 
-        var subgraph = this.props.store.getPrereqsAndConceptSubgraph(concept.id);
+        var subgraph = this.props.store.getConceptAndPrereqsSubgraph(concept.id);
         console.info("subgraph", subgraph);
         this.graphView.refresh(subgraph);
         this.graphView.activateNode(concept.id, {
@@ -598,7 +579,8 @@ var PretestComponent = React.createClass({
             quizComponent = <StudentSingleQuizView 
                                 quiz={this.state.quiz} 
                                 attemptStore={this.props.store.getAttemptStore()} 
-                                isCoursePretestQuiz={true} />
+                                isCoursePretestQuiz={true} 
+                                showHorizontalLine={false}/>
 
         }
         var nextBtn = ""; 
@@ -617,7 +599,7 @@ var PretestComponent = React.createClass({
             countdown = <h4 id="course-pretest-countdown">{this.state.countdown}</h4>
         }
         var hereComponent = "";
-        var hereMessage = "You're here";
+        var hereMessage = "";
         if(!this.state.isPretestCompleted) {
             hereComponent = <h5 className="center">{hereMessage}</h5>
         }
@@ -746,7 +728,7 @@ var PageComponent = React.createClass({
         var stateComponent = <StateComponentClass 
                                 store={this.props.store} 
                                 parent={this} 
-                                className="course-homepage-state-component" />
+                                className="course-homepage-state-component card" />
 
         return (
             <div>

@@ -54,12 +54,17 @@ var GraphStore = Backbone.Model.extend({
 
     _setupDataStructuresAfterModelsAreFetched: function() {
 
-        this._dependencies.initializeDAG();
-        var nodesInLevels = this._dag.sort();
-        var sortedConcepts = _.flatten(nodesInLevels);
+        var dag = new DAG({});
+        _.each(this._concepts.toJSON(), function(concept) {
+            dag.addNode(concept);
+        });
+        _.each(this._dependencies.toJSON(), function(edge) {
+            dag.addEdge(edge.from, edge.to);
+        });
+        var orderedConcepts = _.flatten(dag.sort());
 
-        for(var i = 0, length = sortedConcepts.length; i < length; i++) {
-            var concept = sortedConcepts[i];
+        for(var i = 0, length = orderedConcepts.length; i < length; i++) {
+            var concept = orderedConcepts[i];
             if(concept.slug === this.options.conceptSlug) {
                 break;
             }
@@ -70,7 +75,7 @@ var GraphStore = Backbone.Model.extend({
             this._isLastConcept = true;
         }
         else {
-            var upNext = sortedConcepts[i+1];
+            var upNext = orderedConcepts[i+1];
             this._isLastConcept = false;
             this._upNextConceptName = upNext.name;
             this._upNextConceptURL = "{0}{1}/".format(this._courseURL, upNext.slug);
@@ -126,10 +131,12 @@ var UpNextComponent = React.createClass({
         else {
             var props = this.props.store.toJSON();
             if(props.isLastConcept) {
-                content = <h5>
-                            {this.END_OF_TUTORIAL_MESSAGE} <br/>
-                            Go to your <a href={props.courseURL}>dashboard</a> and study a concept you may have not completed yet. 
-                          </h5>
+                content =   <div className="center card">
+                                <h5>
+                                {this.END_OF_TUTORIAL_MESSAGE} <br/> <br/>
+                                Go to your <a href={props.courseURL}>dashboard</a> and study a concept you may have not completed yet. 
+                                </h5>
+                            </div>
             }
             else {
                 content = <div className="center card">
