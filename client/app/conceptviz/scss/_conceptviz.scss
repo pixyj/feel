@@ -17,6 +17,7 @@
     z-index: 1;
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
+    word-wrap: break-word;
 }
 
 .graph-node-active {
@@ -49,6 +50,7 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     font-size: 2rem;
+    word-wrap: initial;
 }
 
 @media(max-width: 992px) {
