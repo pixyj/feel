@@ -21,9 +21,17 @@ class ConceptSectionSerializer(serializers.ModelSerializer):
         if instance.has_quizzes():
             quiz_ids = ret['data']['quiz_ids']
             quiz_models = Quiz.get_detailed_quizzes_in(quiz_ids)
-            quizzes = QuizSerializer(quiz_models, many=True).data
+            quiz_list = QuizSerializer(quiz_models, many=True).data
+
+            quiz_dict = {}
+            for quiz in quiz_list:
+                quiz_dict[quiz['id']] = quiz
+            ordered_quizzes = []
+            for quiz_id in quiz_ids:
+                ordered_quizzes.append(quiz_dict[quiz_id])
+
             del ret['data']['quiz_ids']
-            ret['data']['quizzes'] = quizzes
+            ret['data']['quizzes'] = ordered_quizzes
         elif instance.has_codequizzes():
             quiz_ids = ret['data']['quiz_ids']
             models = CodeQuiz.objects.filter(pk__in=quiz_ids)
