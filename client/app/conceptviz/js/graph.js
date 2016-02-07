@@ -584,10 +584,24 @@ var View = Backbone.View.extend({
             end.y -= 13;
         }
 
+        var x1 = start.x;
+        var x2 = end.x;
+        if( (start.y === end.y) && !isLast ) {
+
+            if(start.x < end.x) {
+                x1 -= 1;
+                x2 += 1;
+            }
+            else if(start.x > end.x) {
+                x1 += 1;
+                x2 -= 1;
+            }
+        }
+
         var line = createSvgEl("line", {
-            x1: start.x,
+            x1: x1,
             y1: start.y,
-            x2: end.x,
+            x2: x2,
             y2: end.y,
             stroke: color,
             "stroke-width": this.LINE_STROKE_WIDTH
