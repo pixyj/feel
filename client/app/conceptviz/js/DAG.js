@@ -14,6 +14,10 @@ DAG.prototype = {
         };
     },
 
+    doesNodeExist: function(id) {
+        return !_.isUndefined(this.nodes[id]);
+    },
+
     getNodes: function() {
         return this.nodes
     },      
@@ -34,58 +38,60 @@ DAG.prototype = {
     //https://class.coursera.org/algo/lecture/52
     sort: function() {
         var levels = {};
-        var nodes = JSON.parse(JSON.stringify(this.nodes));
+        var nodes = this.nodes; 
 
         var keys = Object.keys(nodes);
         var length = keys.length;
         var iterations = 0;
+        var currentLevel = 0;
+        var nodesByLevel = [];
+
         while(length) {
             iterations += 1;
             if(iterations === 100) {
                 throw new Error("Max Iterations exceeded Error");
             }
-            var sinkKeys = [];
+            var sourceKeys = [];
             for(var i = 0; i < length; i++) {
                 var key = keys[i];
                 var node = nodes[keys[i]];
-                var startKeys = Object.keys(node.starts);
-                if(startKeys.length === 0) {
-                    sinkKeys.push(key);
+                var endKeys = Object.keys(node.ends);
+                if(endKeys.length === 0) {
+                    sourceKeys.push(key);
                 }
             }
-            var sinkLength = sinkKeys.length;
-            if(sinkLength === 0) {
+            var sourceLength = sourceKeys.length;
+            if(sourceLength === 0) {
                 throw new Error("Cycle deteced");
             }
-            for(var j = 0; j < sinkLength; j++) {
-                var key = sinkKeys[j];
+            var levelNodes = [];
+            for(var j = 0; j < sourceLength; j++) {
+                var key = sourceKeys[j];
                 var node = nodes[key];
-                this._addNodeToLevel(levels, node, length-1);
-                var otherKeys = Object.keys(node.ends);
+                levelNodes.push(node.node);
+                var otherKeys = Object.keys(node.starts);
                 var otherLength = otherKeys.length;
                 for(var k = 0; k < otherLength; k++) {
-                    delete nodes[otherKeys[k]].starts[key];
+                    delete nodes[otherKeys[k]].ends[key];
                 }
                 delete nodes[key];
             }
+            nodesByLevel.push(levelNodes);
+            currentLevel += 1;
             keys = Object.keys(nodes);
             length = keys.length;
-            
 
         }
-        var levelKeys = Object.keys(levels);
-        levelKeys.sort();
-        var nodesByLevel = [];
-        var levelLength = levelKeys.length;
-        for(var i = 0; i < levelLength; i++) {
-            var key = levelKeys[i];
-            var levelNodes = levels[key];
-            _.each(levelNodes, function(node) {
-                node.parity = (i % 2 === 0) ? "even" : "odd";
-            });
-            nodesByLevel.push(levelNodes);
-        }
         return nodesByLevel;
+    },
+
+    _addNodeToLevel: function(nodesByLevel, node, nodeLevel) {
+
+        var levelNodes = nodesByLevel[nodeLevel];
+        if(!levelNodes) {
+            levelNodes = nodesByLevel[nodeLevel] = [];
+        }
+        levelNodes.push(node.node);
     },
 
     getEdges: function() {
@@ -104,15 +110,6 @@ DAG.prototype = {
             }
         }, this);
         return edges;
-    },
-
-    _addNodeToLevel: function(nodesByLevel, node, nodeLevel) {
-
-        var levelNodes = nodesByLevel[nodeLevel];
-        if(!levelNodes) {
-            levelNodes = nodesByLevel[nodeLevel] = [];
-        }
-        levelNodes.push(node.node);
     }
 };
 
