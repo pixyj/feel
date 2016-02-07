@@ -199,7 +199,7 @@ var Router = Backbone.Router.extend({
     home: function() {
         this.resetPage();
         this.currentComponent = null;
-        Backbone.history.navigate("course/one/", {trigger: true});
+        Backbone.history.navigate("course/python-tutorial/", {trigger: true});
     },
 
     notFound: function() {
