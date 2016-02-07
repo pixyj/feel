@@ -166,7 +166,8 @@ class DependencyView(APIView):
         for dep in deps:
             serialized_deps.append({
                 "start": concept_ids[dep.start_id],
-                "end": concept_ids[dep.end_id]
+                "end": concept_ids[dep.end_id],
+                "description": dep.description
             })
         return Response(serialized_deps)
 

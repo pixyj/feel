@@ -5,7 +5,6 @@ from core.serializers import set_model_attrs
 from course.models import Course, CourseConcept, ConceptDependency
 
 
-
 class CourseConceptSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -16,12 +15,12 @@ class CourseConceptSerializer(serializers.ModelSerializer):
         fields = ('concept', )
 
 
-
 class ConceptDependencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConceptDependency
-        fields = ('start', 'end', )
+        fields = ('start', 'end', 'description', )
+
 
 class CourseSerializer(serializers.ModelSerializer):
 

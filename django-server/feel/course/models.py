@@ -238,8 +238,13 @@ class ConceptDependency(TimestampedModel, UUIDModel):
     start = models.ForeignKey(CourseConcept, related_name="start_set")
     end = models.ForeignKey(CourseConcept, related_name="end_set")
 
+    @property
+    def description(self):
+        return str(self)
+    
+
     def __str__(self):
-        return "{} -> {} in {}".format(self.start, self.end, self. course)
+        return "{} -> {}".format(self.start.concept.name, self.end.concept.name)
 
     class Meta:
         unique_together = ('course', 'start', 'end', )
