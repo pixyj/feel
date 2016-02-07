@@ -440,6 +440,14 @@ var StudentSingleQuizView = React.createClass({
             result: result
         });
 
+        var hr;
+        if(this.props.showHorizontalLine === false) {
+            hr = "";
+        }
+        else {
+            hr = <hr className="student-quiz-end-line" />
+        }
+
         return (
             <div id={"quiz-" + this.props.quiz.id}>
                 <div className="student-quiz-container">
@@ -458,7 +466,7 @@ var StudentSingleQuizView = React.createClass({
                     <div className="clearfix"> </div>
 
                 </div>
-                <hr className="student-quiz-end-line" />
+                {hr}
             </div>
         );  
     }
