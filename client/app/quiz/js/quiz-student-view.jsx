@@ -233,6 +233,20 @@ var QuizAnswerSubmitMixin = {
 
         var isSubmitDisabled = this.isSubmitDisabled();
 
+        var secondaryBtn = "";
+
+        if(isSubmitDisabled || !this.props.showSkipBtn) {
+            secondaryBtn = "";
+        }
+        else {
+            secondaryBtn = <button className="btn waves-effect waves-light btn-large btn-secondary"
+                                   disabled={isSubmitDisabled} 
+                                   onClick={this.onSkipBtnClicked} >
+                                    No idea
+                            </button>
+        }
+
+
         return (
 
             <div>
@@ -245,8 +259,11 @@ var QuizAnswerSubmitMixin = {
                                 Submit
                         </button>
                     </div>
-                    <div className="col-xs-7 col-md-9">
+                    <div className="col-xs-4 col-md-5">
                         <span className={feedbackClass}> {feedback} </span>
+                    </div>
+                    <div className="col-xs-3 col-md-4">
+                        {secondaryBtn}
                     </div>
                 </div>
                 { submitDisabledMessage }
@@ -287,6 +304,10 @@ var QuizAnswerSubmitMixin = {
             true: constants.CORRECT_FEEDBACK,
             null: ""
         }[this.props.result];
+    },
+
+    onSkipBtnClicked: function() {
+        this.props.onSkipBtnClicked();
     }
 
 };
@@ -436,6 +457,8 @@ var StudentSingleQuizView = React.createClass({
         var answerSubmitView = this.getQuizAnswerSubmitComponent({
             store: this.props.quiz,
             attemptStore: this.props.attemptStore,
+            showSkipBtn: this.props.showSkipBtn,
+            onSkipBtnClicked: this.props.onSkipBtnClicked,
             parent: this,
             result: result
         });

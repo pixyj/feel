@@ -173,6 +173,10 @@ Store.prototype = {
         };
     },
 
+    addIncorrectMockAttempt: function(attempt) {
+        this._updatePretestState(attempt);
+    },
+
     _updatePretestState: function(attempt) {
         console.log("in _updatePretestState");
         if(attempt.result) {
@@ -477,7 +481,9 @@ var PretestComponent = React.createClass({
 
     // todo -> This code can be improved. The logic has to be moved to the store
     // and the view can remain 'dumb'. But I'm under a deadline and this works.
-    showNextQuiz: function(attempt) {
+    showNextQuiz: function(attempt, timeout) {
+
+        var timeout = timeout || 2000;
 
         console.debug("in showNextQuiz", attempt);
         var self = this;
@@ -495,7 +501,7 @@ var PretestComponent = React.createClass({
             
             self._showNextPretestAfterTimeout();
            
-        }, 2000);
+        }, timeout);
     },
 
     _showNextPretestAfterTimeout: function() {
@@ -560,6 +566,14 @@ var PretestComponent = React.createClass({
         }, 2000);
     },
 
+    onSkipBtnClicked: function() {
+        var attempt = {
+            result: false
+        };
+        this.props.store.addIncorrectMockAttempt(attempt);
+        this.showNextQuiz(attempt, 200);
+    },
+
     render: function() {
 
         var startLearningAtComponent = "";
@@ -583,7 +597,9 @@ var PretestComponent = React.createClass({
                                 quiz={this.state.quiz} 
                                 attemptStore={this.props.store.getAttemptStore()} 
                                 isCoursePretestQuiz={true} 
-                                showHorizontalLine={false}/>
+                                showHorizontalLine={false} 
+                                showSkipBtn={true} 
+                                onSkipBtnClicked={this.onSkipBtnClicked} />
 
         }
         var nextBtn = ""; 
