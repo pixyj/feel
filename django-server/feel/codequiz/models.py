@@ -68,7 +68,7 @@ class CodeQuizAttempt(UUIDModel):
 
     @classmethod
     def get_answered_codequiz_count_in(cls, user_key, ids):
-        return CodeQuizAttempt.objects.filter(pk__in=ids, 
+        return CodeQuizAttempt.objects.filter(codequiz_id__in=ids, 
                                               user_key=user_key, 
                                               result=True)\
                                         .count()
