@@ -23,6 +23,13 @@ var Store = function(options) {
     this._codequiz = new CodeQuizModel({
         id: options.id
     });
+    if(options.codequiz) {
+        this._codequiz.set(options.codequiz);
+        this._isCodeQuizFetched = true;
+    }
+    else {
+        this._isCodeQuizFetched = false;
+    }
     this._attempt = new CodeQuizAttemptModel({
         codequizId: options.id
     });
@@ -50,6 +57,12 @@ Store.prototype = {
     },
 
     fetch: function() {
+        if(this._isCodeQuizFetched) {
+            var promise = $.Deferred();
+            promise.resolve();
+            return promise;
+        }
+        
         return this._codequiz.fetch();
     },
 
@@ -262,7 +275,8 @@ var ConceptSectionItemComponent = React.createClass({
 
     componentWillMount: function() {
         this.store = new Store({
-            id: this.props.id
+            id: this.props.id,
+            codequiz: this.props.codequiz
         });
 
         var self = this;
@@ -306,7 +320,8 @@ var ConceptSectionComponent = React.createClass({
         return {
             id: item.id,
             isAnswered: this.props.codeQuizAttemptStore.isAnswered(item.id),
-            index: index
+            index: index,
+            codequiz: item
         };
     },
 
