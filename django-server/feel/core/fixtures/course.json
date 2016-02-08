@@ -1,0 +1,537 @@
+[{
+    "model": "course.course",
+    "pk": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+    "fields": {
+        "created_at": "2016-02-04T17:15:24.794Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-07T14:59:58.361Z",
+        "last_modified_by": 1,
+        "name": "Python Tutorial",
+        "is_published": true,
+        "intro": "Welcome! This course complements [The Python tutorial](https://docs.python.org/3/tutorial/) at [https://www.python.org/](https://www.python.org/) with quizzes, coding exercises and additional information. \r\n\r\n**How it works**\r\n\r\n1. Study a section from the official tutorial and try out examples on your interpreter. \r\n2. Answer quizzes to test your understanding and write some code to get the hang of the concept. \r\n3. Move on to the next concept.",
+        "how_to_learn": "",
+        "where_to_go_from_here": "Congratulations on completing the tutorial. It's time to use Python in your next project, where the real learning begins. \r\n\r\nThis is not a comprehensive course and there are many more features in Python. But you're now equipped with the knowledge to learn advanced concepts as and when you need them. \r\n\r\nTo dive deeper: \r\n\r\n* Read the source code of your favourite packages. \r\n* Watch [Pycon](https://www.youtube.com/results?search_query=pycon) talks. \r\n* Read Python related  on your favourite social networks.  \r\n* Consider using Python in your projects and spend more time with it!"
+    }
+}, {
+    "model": "course.courseslug",
+    "pk": "python-tutorial",
+    "fields": {
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "01b602d9-7a7c-4d0d-bed3-4dc2986184d4",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.895Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.826Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
+        "slug": "lists-2"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "025659d2-93ae-484d-b393-7a5231414466",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.948Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.851Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "c780e56b-6b79-44cd-af33-bd875ed38112",
+        "slug": "dictionaries"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "24673b51-3985-4d74-bb94-e06176831e44",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.979Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.848Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "3ac28d20-a055-4e7c-a310-6bbe36dcda78",
+        "slug": "programming-1"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "36397369-9d0e-4c47-95d3-8a1201a6e3e7",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.959Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.842Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "0703c3e8-d419-402c-a0e5-2f236d5d633a",
+        "slug": "defining-functions-1"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "3a7d5c69-ae91-4972-8dd9-bdd111c8ca23",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.915Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.830Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "bea61d83-1350-4280-96fb-b4ab58bbe32b",
+        "slug": "errors-and-exceptions"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "40cb1b84-235f-457c-ac7f-1337dabf56af",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.975Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.858Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "d2744284-c13f-4792-aff1-11d2b0f0b8e3",
+        "slug": "if-statement"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "4965d207-edab-4cff-a5e2-9638f8245363",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.951Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.828Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "6d9276ef-7e0a-40d7-8228-c68e0875e248",
+        "slug": "sets"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "50ec221e-d052-49ff-b68b-3db88b81c63a",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.920Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.834Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
+        "slug": "magic-methods-and-protocols"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "5a82ad07-4ea9-403e-8467-5993484b4148",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.983Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.870Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "46dbe7fc-da6a-4c1c-a84a-2685e695ab4f",
+        "slug": "lists-1"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "afd0b83a-7b29-4f0d-b7a9-d65ca35f8580",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.907Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.861Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "1d8c2487-49fe-4c48-804d-f3ace231347e",
+        "slug": "virtualenvs-and-pip"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "b61954b0-a874-43ae-9370-9e1e4aa50e1d",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.929Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.859Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "e1b3c1d1-363c-46d1-9d58-2e030e6a5828",
+        "slug": "io-and-string-formatting"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "ba699660-ba0c-4961-9b12-35ace8a66952",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.964Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.840Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "27bb0b2a-c4e6-499c-8239-4da760ea3a82",
+        "slug": "break-and-continue"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "ba8ad6a5-f61d-4d5f-a4bc-c8c748d939af",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.911Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.836Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
+        "slug": "introduction"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "cbe56b4f-3519-47f5-94ea-8389b2a8f39b",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.970Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.852Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "56c612ee-3358-40ff-859e-54428b8fbb5e",
+        "slug": "for-and-range"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "d1635411-57fd-43bc-993e-7876d6ccfeb7",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.955Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.838Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
+        "slug": "tuples"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "d305a4ab-b2ad-489e-8fea-c14345e5911b",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.926Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.857Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "404537c7-ef6c-481b-9417-2f145db12043",
+        "slug": "classes"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "dad106ad-1551-4451-9f61-c0837f042215",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.901Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.854Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "eff52ace-8547-40e8-9760-e8c1f7dddae4",
+        "slug": "del-statement"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "db8632a1-35c0-47bd-bd5b-d699285d61df",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.986Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.855Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "5a74604b-b2c4-4c04-b12b-62ca37cb7dd1",
+        "slug": "strings"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "e9827e0b-74a5-4d27-8ec5-c8e014eaf5d7",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.940Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.872Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "cc673e7e-8f42-427a-9070-2f45e9375288",
+        "slug": "modules"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "f7bbdbf6-0129-4cd9-bfdd-396433cd2088",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.934Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.866Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "b94eb158-7ad6-464e-a4bf-6a3948612dba",
+        "slug": "packages"
+    }
+}, {
+    "model": "course.courseconcept",
+    "pk": "fc36acd6-75c9-4d20-95c9-635b4adda5e0",
+    "fields": {
+        "created_at": "2016-02-03T08:38:22.944Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:15:24.844Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "slug": "defining-functions-2"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "202c90a5-5291-423b-85d2-98621ad5a719",
+    "fields": {
+        "created_at": "2016-02-04T08:32:55.991Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:32:55.991Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "025659d2-93ae-484d-b393-7a5231414466",
+        "end": "dad106ad-1551-4451-9f61-c0837f042215"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "26faf6ee-6d40-499d-8571-9e5fa7bc73d7",
+    "fields": {
+        "created_at": "2016-02-04T09:12:15.923Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:12:15.923Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "d305a4ab-b2ad-489e-8fea-c14345e5911b",
+        "end": "50ec221e-d052-49ff-b68b-3db88b81c63a"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "303a3abb-d691-4cdc-ba57-a099d89a3bba",
+    "fields": {
+        "created_at": "2016-02-04T09:10:52.332Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:10:52.332Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "fc36acd6-75c9-4d20-95c9-635b4adda5e0",
+        "end": "e9827e0b-74a5-4d27-8ec5-c8e014eaf5d7"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "3b4137b0-9965-45b9-8030-5bf72bb2b9e8",
+    "fields": {
+        "created_at": "2016-02-04T08:32:13.491Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:32:13.491Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "cbe56b4f-3519-47f5-94ea-8389b2a8f39b",
+        "end": "025659d2-93ae-484d-b393-7a5231414466"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "43d27020-3982-44c5-8e5f-83538bd6c250",
+    "fields": {
+        "created_at": "2016-02-04T09:07:01.873Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:07:01.873Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "36397369-9d0e-4c47-95d3-8a1201a6e3e7",
+        "end": "fc36acd6-75c9-4d20-95c9-635b4adda5e0"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "4934aa1b-b120-4315-821f-c417adc493d2",
+    "fields": {
+        "created_at": "2016-02-04T08:30:00.116Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:30:00.116Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "ba699660-ba0c-4961-9b12-35ace8a66952",
+        "end": "36397369-9d0e-4c47-95d3-8a1201a6e3e7"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "49b7125d-95a3-4e10-a8e1-5fe205210aa9",
+    "fields": {
+        "created_at": "2016-02-04T09:11:53.904Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:11:53.904Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "f7bbdbf6-0129-4cd9-bfdd-396433cd2088",
+        "end": "d305a4ab-b2ad-489e-8fea-c14345e5911b"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "52e59775-dce4-46c0-a682-2a684152aa15",
+    "fields": {
+        "created_at": "2016-02-03T16:37:12.958Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T16:37:12.958Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "24673b51-3985-4d74-bb94-e06176831e44",
+        "end": "40cb1b84-235f-457c-ac7f-1337dabf56af"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "65fc311d-2538-4c7a-8a35-db81cecd8871",
+    "fields": {
+        "created_at": "2016-02-04T09:10:24.402Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:10:24.402Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "fc36acd6-75c9-4d20-95c9-635b4adda5e0",
+        "end": "b61954b0-a874-43ae-9370-9e1e4aa50e1d"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "7a5b1597-a4d2-4602-990d-75f35dd3a770",
+    "fields": {
+        "created_at": "2016-02-04T08:29:22.514Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:29:22.514Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "cbe56b4f-3519-47f5-94ea-8389b2a8f39b",
+        "end": "ba699660-ba0c-4961-9b12-35ace8a66952"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "814a8742-a7d0-414f-9d61-67f781d423d5",
+    "fields": {
+        "created_at": "2016-02-04T08:29:01.689Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:29:01.689Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "40cb1b84-235f-457c-ac7f-1337dabf56af",
+        "end": "ba699660-ba0c-4961-9b12-35ace8a66952"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "988d45f0-25ea-4168-ad6a-498e7c4e37f8",
+    "fields": {
+        "created_at": "2016-02-04T08:28:46.563Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:28:46.563Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "24673b51-3985-4d74-bb94-e06176831e44",
+        "end": "cbe56b4f-3519-47f5-94ea-8389b2a8f39b"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "9ac915e6-89f9-4621-a9aa-f6dd689658cd",
+    "fields": {
+        "created_at": "2016-02-03T16:36:26.230Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T16:36:26.230Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "5a82ad07-4ea9-403e-8467-5993484b4148",
+        "end": "24673b51-3985-4d74-bb94-e06176831e44"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "a16bbb29-853a-4656-b715-2e0adadb0bdb",
+    "fields": {
+        "created_at": "2016-02-03T16:33:46.456Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T16:33:46.456Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "db8632a1-35c0-47bd-bd5b-d699285d61df",
+        "end": "5a82ad07-4ea9-403e-8467-5993484b4148"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "a17f7ed4-f5bb-46f1-adc4-0e859f80b7ab",
+    "fields": {
+        "created_at": "2016-02-04T17:14:28.763Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T17:14:28.763Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "01b602d9-7a7c-4d0d-bed3-4dc2986184d4",
+        "end": "d1635411-57fd-43bc-993e-7876d6ccfeb7"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "a5cc3a65-fc82-4679-bc52-c6d6bb2f13ae",
+    "fields": {
+        "created_at": "2016-02-04T09:09:04.045Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:09:04.045Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "01b602d9-7a7c-4d0d-bed3-4dc2986184d4",
+        "end": "4965d207-edab-4cff-a5e2-9638f8245363"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "a5d7425b-63b5-4ab0-9f23-1b9425399f75",
+    "fields": {
+        "created_at": "2016-02-04T09:11:10.785Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:11:10.786Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "f7bbdbf6-0129-4cd9-bfdd-396433cd2088",
+        "end": "afd0b83a-7b29-4f0d-b7a9-d65ca35f8580"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "c56381a3-f092-4f17-83e7-0a4337ced431",
+    "fields": {
+        "created_at": "2016-02-04T09:12:03.117Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:12:03.117Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "d305a4ab-b2ad-489e-8fea-c14345e5911b",
+        "end": "3a7d5c69-ae91-4972-8dd9-bdd111c8ca23"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "d51035f3-2e88-4be4-b5d9-0239234db51a",
+    "fields": {
+        "created_at": "2016-02-03T16:32:35.013Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T16:32:35.013Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "ba8ad6a5-f61d-4d5f-a4bc-c8c748d939af",
+        "end": "db8632a1-35c0-47bd-bd5b-d699285d61df"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "d6cc14af-583d-41e0-ae10-d1a1fa0c0f7e",
+    "fields": {
+        "created_at": "2016-02-04T09:09:40.096Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:09:40.096Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "d1635411-57fd-43bc-993e-7876d6ccfeb7",
+        "end": "fc36acd6-75c9-4d20-95c9-635b4adda5e0"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "f7008a5b-c658-4da3-bf4b-f55d62d815f4",
+    "fields": {
+        "created_at": "2016-02-04T09:10:59.066Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T09:10:59.066Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "e9827e0b-74a5-4d27-8ec5-c8e014eaf5d7",
+        "end": "f7bbdbf6-0129-4cd9-bfdd-396433cd2088"
+    }
+}, {
+    "model": "course.conceptdependency",
+    "pk": "fbb85804-851d-4d67-97f9-263328c22609",
+    "fields": {
+        "created_at": "2016-02-04T08:54:15.431Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-04T08:54:15.431Z",
+        "last_modified_by": 1,
+        "course": "bb41271b-03dc-42a3-9f3b-74b009f0f8b2",
+        "start": "cbe56b4f-3519-47f5-94ea-8389b2a8f39b",
+        "end": "01b602d9-7a7c-4d0d-bed3-4dc2986184d4"
+    }
+}]

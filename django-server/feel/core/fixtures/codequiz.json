@@ -1,0 +1,229 @@
+[{
+    "model": "codequiz.codequiz",
+    "pk": "06c05954-76bc-4fa5-b435-a7e888429a9f",
+    "fields": {
+        "created_at": "2016-01-16T13:34:14.295Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T06:59:39.966Z",
+        "last_modified_by": 1,
+        "problem_statement": "Define a function named `square` that accepts a single argument (which is guaranteed to be an integer) and returns its square.",
+        "bootstrap_code": "# Your function named \"square\" here\r\n\r\n\r\n\r\n\r\n# You don't have to worry about this part of the code. \r\n# Here, we accept a string as a command line argument, \r\n# convert it from a string to an integer, \r\n# call the square function and print its result. \r\nif __name__ == \"__main__\":\r\n    str_num = input()\r\n    num = int(str_num)\r\n    print(square(num))",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "-1",
+            "output": "1"
+        }, {
+            "input": "0",
+            "output": "0"
+        }, {
+            "input": "1",
+            "output": "1"
+        }, {
+            "input": "2",
+            "output": "4"
+        }, {
+            "input": "32",
+            "output": "1024"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "09febd95-27fd-489a-b346-f42a5fcd3839",
+    "fields": {
+        "created_at": "2016-01-31T08:26:37.051Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T08:26:37.051Z",
+        "last_modified_by": 1,
+        "problem_statement": "Implement a function, `args_sum` that accepts an arbitrary number of integers as input and computes their sum.\n\nHint: Similar to the `concat` function in [the tutorial](https://docs.python.org/3/tutorial/controlflow.html#arbitrary-argument-lists).",
+        "bootstrap_code": "def args_sum(*args):\n    \"\"\"\n    Example: \n    >>> args_sum(1, 2, 3) \n    >>> 6\n    \"\"\"\n    # Your code here\n    \n\n# As usual, this part of the code is used check\n# if your function passes a test case. \nif __name__ == \"__main__\":\n    comma_separated_numbers = input()\n    numbers = (int(s) for s in comma_separated_numbers.split(\",\"))\n    result = args_sum(*numbers)\n    print(result)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1,2,3,4,5,6,7,8,9,10\n",
+            "output": "55\n"
+        }, {
+            "input": "1,2,3,4,5,6,7,8,9,-10\n",
+            "output": "35"
+        }, {
+            "input": "0",
+            "output": "0\n"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "17f2e583-c4b7-4cb3-9d86-ec41a915798b",
+    "fields": {
+        "created_at": "2016-02-08T08:53:04.872Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-08T08:53:04.873Z",
+        "last_modified_by": 1,
+        "problem_statement": "Use string indexing to print everything but the last character of the variable,  `x`.",
+        "bootstrap_code": "x = \"one two three four\"\r\n\r\n# Assign your output expression to a variable named \"result\". \r\nresult = \r\n\r\n\r\n\r\n# This is the test code. Don't modify! \r\n# Here, \"result\" is printed using the print function. \r\nprint(result)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1",
+            "output": "one two three fou"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "209b3589-0ce0-4524-93e8-dbf770dea332",
+    "fields": {
+        "created_at": "2016-01-31T02:59:12.579Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:59:12.581Z",
+        "last_modified_by": 1,
+        "problem_statement": "Format the first `n` natural numbers and their squares into a string in the `csv` format. \n\nImplement the body of the function `number_and_squares_csv`. For example, when `n` is 5, the function must return [this value](https://gist.githubusercontent.com/pixyj/e99abee50a50f21eb4d3/raw/46b9763652d19531ce0575dc53eb78e290ed58f9/numbers_and_squares.csv).\n\nUse '\\n' to separate lines. There must be no '\\n' character at the end of the string.",
+        "bootstrap_code": "def numbers_and_squares(n):\n    # Your code here\n\n\n\n# Test code. Touch me not!\nif __name__ == \"__main__\":\n    import sys\n    items = []\n    n_string = input()\n    n = int(n_string)\n    result = numbers_and_squares(n)\n    print(result)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "10\n",
+            "output": "1,1\n2,4\n3,9\n4,16\n5,25\n6,36\n7,49\n8,64\n9,81\n10,100"
+        }, {
+            "input": "1",
+            "output": "1,1"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "2d6fbed5-83cb-4e0a-9f98-3050b7bb1ce8",
+    "fields": {
+        "created_at": "2016-01-16T08:18:35.019Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T08:18:35.020Z",
+        "last_modified_by": 1,
+        "problem_statement": "Print all the 2-digit prime numbers. (Each prime number must be printed in its own line)",
+        "bootstrap_code": "",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1",
+            "output": "11\n13\n17\n19\n23\n29\n31\n37\n41\n43\n47\n53\n59\n61\n67\n71\n73\n79\n83\n89\n97"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "3a232ee5-2c4b-46f9-aed0-df2ecf333e63",
+    "fields": {
+        "created_at": "2016-01-26T09:09:04.782Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T09:09:04.782Z",
+        "last_modified_by": 1,
+        "problem_statement": "Use a magic method to compare cost of fruits. \n\nIn the `Fruit` class below, each fruit has a price and quantity. Two fruits are considered equal if they cost the same amount. The cost is calculated by the formula: `price * quantity`. \n\nYour task is to implement a magic method so that the `Fruit` class supports the equality operator and returns the correct boolean value based on the formula. \n\nFor example: \n```\noranges = Fruit('orange', price=10, quantity=10)\napples = Fruit('apple', price=20, quantity=5)\nbananas = Fruit('banana', price = 5, quantity=10)\n\noranges == apples # Must evaluate to True   \napples == oranges # Must evaluate to True\nbananas == oranges # Must evaluate to False\n```",
+        "bootstrap_code": "class Fruit():\n    def __init__(self, name, price, quantity):\n        self.name = name\n        self.price = price\n        self.quantity = quantity\n        \n    # Your code here. \n    # Implement an appropriate magic method (And other support methods if you need them) \n    # which checks if the cost of two fruits are equal.\n    # Use Google if you want to. The magic method and its usage is \n    # not explained in this course.     \n\n\n# Test code begins now. You don't have to worry about the following code. \nif __name__ == \"__main__\":\n    import sys\n    items = []\n    for line in sys.stdin:\n        name, price, quantity = line.strip().split(\",\")\n        price = int(price)\n        quantity = int(quantity)\n        item = Fruit(name, price, quantity)\n        items.append(item)\n    \n    # Compare each item with another. This is an O(n^2) operation. But our \n    # test cases are small enough. \n    outputs = []\n    for i, one in enumerate(items):\n        for j, two in enumerate(items):\n            result = 1 if one == two else 0\n            outputs.append(str(result))\n    output_string = \"\\n\".join(outputs)\n    print(output_string)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "orange,10,10\napple,20,5\ngrapes,20,20\nstrawberry,100,4",
+            "output": "1\n1\n0\n0\n1\n1\n0\n0\n0\n0\n1\n1\n0\n0\n1\n1"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "5515aa37-b63b-4e44-afee-df2bcd54b0e6",
+    "fields": {
+        "created_at": "2016-01-31T08:30:52.502Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T08:30:52.502Z",
+        "last_modified_by": 1,
+        "problem_statement": "Modify the `args_sum` function so that it accepts an optional, boolean, keyword argument named `absolute`. If `absolute` is `True`, then `args_sum` must return the absolute value of the sum of `*args`. If `absolute` is not specified, then return the sum without performing any conversion. \n\nNote: Don't convert individual arguments to their absolute values. Convert only the final result to its absolute value.",
+        "bootstrap_code": "def args_sum(*args, **kwargs):\n    \"\"\"\n    Example: \n    >>> args_sum(1, 2, 3) \n    >>> 6\n    >>> args_sum(1, 2, -100, absolute=True)\n    >>> 97\n    \"\"\"\n    # Your code here\n    \n\n# As usual, this part of the code is used check\n# if your function passes a test case. \nif __name__ == \"__main__\":\n    comma_separated_numbers = input()\n    numbers = (int(s) for s in comma_separated_numbers.split(\",\"))\n    result = args_sum(*numbers, absolute=True)\n    print(result)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1,2,3,4,5,6,7,8,9,-10",
+            "output": ""
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "7849fb94-ff2c-4503-8277-8123c468b2de",
+    "fields": {
+        "created_at": "2016-01-25T18:13:58.222Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T18:13:58.222Z",
+        "last_modified_by": 1,
+        "problem_statement": "Write a function to find the number of occurrences of each word in the input list.",
+        "bootstrap_code": "def word_count(word_list):\n    # Your code here\n    # Must return a dictionary\n\n\n\n# You don't have to worry about the below code\nif __name__ == \"__main__\":\n\n    import sys\n    words = [line.strip() for line in sys.stdin]\n    print(words)\n    result = word_count(words)\n    sorted_keys = sorted(result.keys())\n    for key in sorted_keys:\n        print(\"{}:{}\".format(key, result[key]))",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "one\ntwo\nthree\none\ntwo\n",
+            "output": "one:2\nthree:1\ntwo:2\n"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "80d6115d-2c65-422b-9c84-43c0278cafe7",
+    "fields": {
+        "created_at": "2016-01-15T15:52:03.278Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T15:52:03.278Z",
+        "last_modified_by": 1,
+        "problem_statement": "Print the absolute value of `x`. Python has a built-in `abs `function. But let's implement it ourselves to practise the `if` statement.",
+        "bootstrap_code": "if __name__ == \"__main__\":  # We'll learn what this line means later. \n    import sys              # and this line too.     \n    x = int(sys.argv[1])    # Input value, x \n    # Your code here\n    # Maintain the same indentation level in your code.",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1",
+            "output": "1"
+        }, {
+            "input": "0",
+            "output": "0"
+        }, {
+            "input": "-1",
+            "output": "1"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "a3c1d447-d23e-47dd-a2cd-6e0bbab9783f",
+    "fields": {
+        "created_at": "2016-01-16T06:49:05.927Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T06:49:05.927Z",
+        "last_modified_by": 1,
+        "problem_statement": "Calculate the sum of squares of first 50 integers and store the result in a variable named `result`, using `for` and `range`.",
+        "bootstrap_code": "# Your code here\n\n# This must be the last line in your code. \nprint(result)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1",
+            "output": "42925"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "a812af6f-c5f3-411c-8813-b4a5101a256b",
+    "fields": {
+        "created_at": "2016-01-16T06:48:58.500Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T06:48:58.501Z",
+        "last_modified_by": 1,
+        "problem_statement": "Calculate the sum of squares of first 50 integers and store the result in a variable named `result`.  \n\nYou can use a `while` loop to accomplish the task. But we'll learn better ways to calculate sums soon.",
+        "bootstrap_code": "# Your code here\n\n# This must be the last line in your code. \nprint(result)",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": [{
+            "input": "1",
+            "output": "42925"
+        }]
+    }
+}, {
+    "model": "codequiz.codequiz",
+    "pk": "c249153b-5c03-4f23-a8c1-84df5286fdb0",
+    "fields": {
+        "created_at": "2016-01-30T16:03:44.314Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-30T16:03:44.314Z",
+        "last_modified_by": 1,
+        "problem_statement": "Use requests to make an API call to StackOverflow: \n\nIf you've been following along, you would have installed the requests library now.",
+        "bootstrap_code": "",
+        "time_limit": 5000,
+        "memory_limit": 262144,
+        "test_cases": []
+    }
+}]

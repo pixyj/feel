@@ -1,0 +1,2562 @@
+[{
+    "model": "quiz.quiz",
+    "pk": "029a01d6-37d8-494f-8341-bc285bff6ea2",
+    "fields": {
+        "created_at": "2016-01-17T12:53:10.689Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T04:04:12.646Z",
+        "last_modified_by": 1,
+        "question_input": "What is printed on the terminal now? \n\n`A.py`: \n```\ndef hello():\n    print(\"hello\")\n```\n`B.py`: \n```\nimport A\n\n\ndef hello():\n    print(\"world\")\n\n\nA.hello = hello\n\n\nif __name__ == \"__main__\":\n    hello()\n```\n$ `python B.py` ",
+        "question_display": "<p>What is printed on the terminal now?</p>\n<p><code>A.py</code>:</p>\n<pre><code>def hello():\n    print(&quot;hello&quot;)\n</code></pre>\n<p><code>B.py</code>:</p>\n<pre><code>import A\n\n\ndef hello():\n    print(&quot;world&quot;)\n\n\nA.hello = hello\n\n\nif __name__ == &quot;__main__&quot;:\n    hello()\n</code></pre>\n<p>$ <code>python B.py</code></p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "0ecb214a-916d-4a39-bd75-721ce02a3805",
+    "fields": {
+        "created_at": "2016-02-02T07:21:15.199Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:27:25.529Z",
+        "last_modified_by": 1,
+        "question_input": "You've created a package named `spam` and added it to `sys.path`. `spam` contains a module named `hello`,  i.e. the directory structure of `spam` is: \n```\nspam/\n     __init__.py \n     hello.py\n```\n\n`hello.py` contains a function named `world`: \n```\ndef world():\n    return \"Hello, world\"\n\n```\nWhich of the following are valid `import` statements. Select all that apply. ",
+        "question_display": "<p>You've created a package named <code>spam</code> and added it to <code>sys.path</code>. <code>spam</code> contains a module named <code>hello</code>,  i.e. the directory structure of <code>spam</code> is:</p>\n<pre><code>spam/\n     __init__.py \n     hello.py\n</code></pre>\n<p><code>hello.py</code> contains a function named <code>world</code>:</p>\n<pre><code>def world():\n    return &quot;Hello, world&quot;\n\n</code></pre>\n<p>Which of the following are valid <code>import</code> statements. Select all that apply.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "1dff1129-bbed-4913-b494-ab47ed8de378",
+    "fields": {
+        "created_at": "2016-02-03T06:31:26.892Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:39:48.850Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = [1, 2, 3, 4, 5]\ndel a[2:4]\n```\nWhat is `a` after the above code is executed?",
+        "question_display": "<pre><code>a = [1, 2, 3, 4, 5]\ndel a[2:4]\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "20ad3b57-f281-4770-b2c3-16895e9a0da2",
+    "fields": {
+        "created_at": "2016-01-26T13:55:20.620Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T06:53:14.519Z",
+        "last_modified_by": 1,
+        "question_input": "```\ny = 0xeeeeeeeeeeeeeeee\nx = 0xffffffffffffffffffffffff\nz = x + y\n```\n`x` and `y` are integers in the hexadecimal format.What is `z`? \n\n\n",
+        "question_display": "<pre><code>y = 0xeeeeeeeeeeeeeeee\nx = 0xffffffffffffffffffffffff\nz = x + y\n</code></pre>\n<p><code>x</code> and <code>y</code> are integers in the hexadecimal format.What is <code>z</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "24509f5f-e65b-4b64-8656-327391f7a2de",
+    "fields": {
+        "created_at": "2016-01-18T11:59:04.105Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T03:03:47.490Z",
+        "last_modified_by": 1,
+        "question_input": "It's considered good practice to use the `with` keyword when working with files. Let's say you execute the following code in the interpreter. \n```\nf = open(\"numbers.txt\", \"a\")  # opens file in append mode\nf.write(\"1\")\n```\n\nThen, you open another instance of the interpreter in the same directory without stopping the previous one and execute the following code: \n```\nf = open(\"numbers.txt\", \"a\")\nf.write(\"2\")\nf.close()\n```\nWhat are the contents of the file  \"numbers.txt\". ",
+        "question_display": "<p>It's considered good practice to use the <code>with</code> keyword when working with files. Let's say you execute the following code in the interpreter.</p>\n<pre><code>f = open(&quot;numbers.txt&quot;, &quot;a&quot;)  # opens file in append mode\nf.write(&quot;1&quot;)\n</code></pre>\n<p>Then, you open another instance of the interpreter in the same directory without stopping the previous one and execute the following code:</p>\n<pre><code>f = open(&quot;numbers.txt&quot;, &quot;a&quot;)\nf.write(&quot;2&quot;)\nf.close()\n</code></pre>\n<p>What are the contents of the file  &quot;numbers.txt&quot;.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "2a824be1-03a6-4b99-9daf-10b9917715a5",
+    "fields": {
+        "created_at": "2016-01-31T02:16:35.493Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:56:57.953Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = \"{spam} and {eggs}\".format(spam=\"spam\", eggs=\"eggs\", bacon=\"bacon\")\n```\nWhat is `a`? ",
+        "question_display": "<pre><code>a = &quot;{spam} and {eggs}&quot;.format(spam=&quot;spam&quot;, eggs=&quot;eggs&quot;, bacon=&quot;bacon&quot;)\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "3421aaf5-1058-413e-b4e5-a8db8d169034",
+    "fields": {
+        "created_at": "2016-02-03T06:38:11.682Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:38:12.678Z",
+        "last_modified_by": 1,
+        "question_input": "",
+        "question_display": "",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "34b02d69-4aca-4974-a6fd-77ecf51a7074",
+    "fields": {
+        "created_at": "2016-01-17T14:11:15.733Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:15:37.456Z",
+        "last_modified_by": 1,
+        "question_input": "Any module belonging to a directory in `sys.path` can be imported using the \n\n`from package import module` \n\nsyntax in Python 3. ",
+        "question_display": "<p>Any module belonging to a directory in <code>sys.path</code> can be imported using the</p>\n<p><code>from package import module</code></p>\n<p>syntax in Python 3.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "3a283ba5-9bba-4c2b-838a-f40bc7add829",
+    "fields": {
+        "created_at": "2016-01-16T13:42:14.011Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T13:47:12.439Z",
+        "last_modified_by": 1,
+        "question_input": "```\na, b, c = [1, 2, 3]\n```\nWhat are `a`, `b` and `c`? ",
+        "question_display": "<pre><code>a, b, c = [1, 2, 3]\n</code></pre>\n<p>What are <code>a</code>, <code>b</code> and <code>c</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "3e82c50a-f42c-4588-acb4-3f820ae6bc62",
+    "fields": {
+        "created_at": "2016-02-02T13:11:30.787Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:38:01.758Z",
+        "last_modified_by": 1,
+        "question_input": "```\nfor i in range(10):\n    print(i)\n\na = i\n```\nWhat is `a` after the above code is executed? ",
+        "question_display": "<pre><code>for i in range(10):\n    print(i)\n\na = i\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "46cea2a7-5ec5-4fd4-b125-60b378f191e8",
+    "fields": {
+        "created_at": "2016-02-03T06:41:17.337Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:15.311Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = [1, 2, 3, 4, 5]\ndel a[-1]\n```\nWhat is `a` after the above code is executed?",
+        "question_display": "<pre><code>a = [1, 2, 3, 4, 5]\ndel a[-1]\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "474cc026-5bd3-4e0a-b0f4-2d24bd4f95f5",
+    "fields": {
+        "created_at": "2016-01-31T02:04:17.177Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:05:58.858Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = \"{} and {}\".format(\"spam\", \"eggs\")\n```\nWhat is `a`? (Don't enclose the answer in quotes) ",
+        "question_display": "<pre><code>a = &quot;{} and {}&quot;.format(&quot;spam&quot;, &quot;eggs&quot;)\n</code></pre>\n<p>What is <code>a</code>? (Don't enclose the answer in quotes)</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "4adad563-eb5a-4141-bd1b-e12e7c782731",
+    "fields": {
+        "created_at": "2016-01-17T12:46:10.394Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:52:40.721Z",
+        "last_modified_by": 1,
+        "question_input": "Let's say you have a module named `A` ( a file named A.py) , which contains the following code\n```\ndef hello():\n    print(\"hello\")\n```\nAnd you have another module `B` in the same directory which contains the following code: \n```\nimport A\ndef hello():\n    print(\"world\")\n\nif __name__ == \"__main__\":\n    hello()\n```\nWhen you invoke `B` on the command-line using the command, `python B.py` what is printed on the terminal? ",
+        "question_display": "<p>Let's say you have a module named <code>A</code> ( a file named A.py) , which contains the following code</p>\n<pre><code>def hello():\n    print(&quot;hello&quot;)\n</code></pre>\n<p>And you have another module <code>B</code> in the same directory which contains the following code:</p>\n<pre><code>import A\ndef hello():\n    print(&quot;world&quot;)\n\nif __name__ == &quot;__main__&quot;:\n    hello()\n</code></pre>\n<p>When you invoke <code>B</code> on the command-line using the command, <code>python B.py</code> what is printed on the terminal?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "4bd54721-05df-4f35-9f99-ab1869a7d635",
+    "fields": {
+        "created_at": "2016-01-16T15:59:27.379Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:01:42.640Z",
+        "last_modified_by": 1,
+        "question_input": "The `items` method returns all the items of the dictionary __________",
+        "question_display": "<p>The <code>items</code> method returns all the items of the dictionary __________</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "4c66a15a-d9c9-4af5-8c19-6105f494b274",
+    "fields": {
+        "created_at": "2016-02-02T13:01:26.221Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:06:04.555Z",
+        "last_modified_by": 1,
+        "question_input": "```\ni = 0\nj = 0\nwhile i < 10:\n    while j < 5:\n        j += 1\n        if (i + j) > 8:\n            break\n    i += 1\n    if i >= 8:\n        continue\n   \n```\nWhat is `i` after the above code is executed? ",
+        "question_display": "<pre><code>i = 0\nj = 0\nwhile i &lt; 10:\n    while j &lt; 5:\n        j += 1\n        if (i + j) &gt; 8:\n            break\n    i += 1\n    if i &gt;= 8:\n        continue\n   \n</code></pre>\n<p>What is <code>i</code> after the above code is executed?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "500018e7-c5e5-4e71-909b-ffe852ce490d",
+    "fields": {
+        "created_at": "2016-01-17T12:57:38.626Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:59:49.167Z",
+        "last_modified_by": 1,
+        "question_input": "And finally:  \n\n`A.py`: \n```\ndef hello():\n    print(\"hello\")\n```\n`B.py`: \n```\nimport A\n\n\ndef hello():\n    print(\"world\")\n\nif __name__ == \"__main__\":\n    A.hello() \n    hello()\n```\n$ `python B.py` ",
+        "question_display": "<p>And finally:</p>\n<p><code>A.py</code>:</p>\n<pre><code>def hello():\n    print(&quot;hello&quot;)\n</code></pre>\n<p><code>B.py</code>:</p>\n<pre><code>import A\n\n\ndef hello():\n    print(&quot;world&quot;)\n\nif __name__ == &quot;__main__&quot;:\n    A.hello() \n    hello()\n</code></pre>\n<p>$ <code>python B.py</code></p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36",
+    "fields": {
+        "created_at": "2016-01-15T07:12:00.562Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:13:43.961Z",
+        "last_modified_by": 1,
+        "question_input": "Which of these are valid literal strings?",
+        "question_display": "<p>Which of these are valid literal strings?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "55c9a523-da11-444f-baf7-f5ae12caf9e9",
+    "fields": {
+        "created_at": "2016-01-16T06:30:04.298Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T06:31:04.025Z",
+        "last_modified_by": 1,
+        "question_input": "",
+        "question_display": "",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "5ddc89a0-7d75-487c-b6dc-eee1828cee7e",
+    "fields": {
+        "created_at": "2016-01-15T07:15:54.425Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:16:04.787Z",
+        "last_modified_by": 1,
+        "question_input": "    y = \"\ud83d\ude03\ud83d\udc4a\"  #Two UTF-8 characters\n\nWhat is `len(y)`? \n",
+        "question_display": "<pre><code>y = &quot;\ud83d\ude03\ud83d\udc4a&quot;  #Two UTF-8 characters\n</code></pre>\n<p>What is <code>len(y)</code>?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "62586230-e2bd-458c-9dbf-2515abd36e69",
+    "fields": {
+        "created_at": "2016-01-25T12:49:30.077Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T16:20:23.960Z",
+        "last_modified_by": 1,
+        "question_input": "The `__len__` magic method can return any object. ",
+        "question_display": "<p>The <code>__len__</code> magic method can return any object.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "695a3aab-fb7e-4257-9ac3-c967ef93e003",
+    "fields": {
+        "created_at": "2016-02-03T06:38:20.210Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:28.905Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = [1, 2, 3, 4, 5]\ndel a[2:100]\n```\nWhat is `a` after the above code is executed?",
+        "question_display": "<pre><code>a = [1, 2, 3, 4, 5]\ndel a[2:100]\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "6dd0ddf4-3228-4fc5-a152-8c0ec0d27add",
+    "fields": {
+        "created_at": "2016-01-18T11:54:17.821Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-18T11:58:07.304Z",
+        "last_modified_by": 1,
+        "question_input": "What is `result` after the following code snippet is executed? \n\n```\ninput_dict = {x: \"spam\", y: \"eggs\"}\nresult = \"{x} and {y}\".format(**input_dict)\n```\nIt's not necessary to include quotes in the answer. ",
+        "question_display": "<p>What is <code>result</code> after the following code snippet is executed?</p>\n<pre><code>input_dict = {x: &quot;spam&quot;, y: &quot;eggs&quot;}\nresult = &quot;{x} and {y}&quot;.format(**input_dict)\n</code></pre>\n<p>It's not necessary to include quotes in the answer.</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "7040b9c1-f7ec-4d2d-9dac-9b556bd39798",
+    "fields": {
+        "created_at": "2016-01-15T07:09:35.078Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:10:37.405Z",
+        "last_modified_by": 1,
+        "question_input": "After the above code is executed,  `z` refers to the string ________ . ",
+        "question_display": "<p>After the above code is executed,  <code>z</code> refers to the string ________ .</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "754a0a80-1004-4503-ac9f-b740da5625a0",
+    "fields": {
+        "created_at": "2016-01-31T02:20:10.841Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:20:21.160Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = {\"spam\": \"spam\", \"eggs\": \"eggs\", \"bacon\": \"bacon\"}\na = \"{spam} and {eggs}\".format(**x)\n```\nWhat is `a`? ",
+        "question_display": "<pre><code>x = {&quot;spam&quot;: &quot;spam&quot;, &quot;eggs&quot;: &quot;eggs&quot;, &quot;bacon&quot;: &quot;bacon&quot;}\na = &quot;{spam} and {eggs}&quot;.format(**x)\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "78ca9871-3292-4973-8e77-1ae629deaebe",
+    "fields": {
+        "created_at": "2016-01-31T02:13:55.239Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:14:56.059Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = \"{spam} and {eggs}\".format(spam=\"spam\", eggs=\"eggs\")\n```\nWhat is `a`? ",
+        "question_display": "<pre><code>a = &quot;{spam} and {eggs}&quot;.format(spam=&quot;spam&quot;, eggs=&quot;eggs&quot;)\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "7d7ff4e2-dead-4d91-a7f5-5878c58278bc",
+    "fields": {
+        "created_at": "2016-01-26T14:07:56.297Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:10:46.439Z",
+        "last_modified_by": 1,
+        "question_input": "```\nclass Hello():\n    def say_hello():\n        return \"hello\"\n\nh = Hello()\nmessage = h.say_hello()\n```\nWhat is `message`?",
+        "question_display": "<pre><code>class Hello():\n    def say_hello():\n        return &quot;hello&quot;\n\nh = Hello()\nmessage = h.say_hello()\n</code></pre>\n<p>What is <code>message</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "857ac00f-eb46-488c-9ddc-54bf6c19e82e",
+    "fields": {
+        "created_at": "2016-01-15T07:16:46.972Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:17:04.710Z",
+        "last_modified_by": 1,
+        "question_input": "    x = \"abcd\"\n    a = x[-2:]\n\nWhat is `a`? (Don't surround the string with quotes in the answer) ",
+        "question_display": "<pre><code>x = &quot;abcd&quot;\na = x[-2:]\n</code></pre>\n<p>What is <code>a</code>? (Don't surround the string with quotes in the answer)</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "86eb9ad5-990d-4995-9258-f4c2934dd573",
+    "fields": {
+        "created_at": "2016-01-16T16:01:58.855Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:08:30.006Z",
+        "last_modified_by": 1,
+        "question_input": "Accessing an item of a dictionary is ___________",
+        "question_display": "<p>Accessing an item of a dictionary is ___________</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "8beebdf0-fe91-4c31-9592-bb8b0e8fa7ea",
+    "fields": {
+        "created_at": "2016-02-01T14:25:13.022Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T14:30:29.777Z",
+        "last_modified_by": 1,
+        "question_input": "I know how to create a class with a custom `__len__` magic method. I'm aware of protocols too. ",
+        "question_display": "<p>I know how to create a class with a custom <code>__len__</code> magic method. I'm aware of protocols too.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "9066d1e9-9cad-40af-a35d-8e1b3f0cfb5a",
+    "fields": {
+        "created_at": "2016-02-02T13:41:39.662Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:42:53.322Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = 1\ny = 10\nif x > y:\n    x = y\nelse:\n    y = x + 1\n```\nWhat is `y` after the above code is executed? ",
+        "question_display": "<pre><code>x = 1\ny = 10\nif x &gt; y:\n    x = y\nelse:\n    y = x + 1\n</code></pre>\n<p>What is <code>y</code> after the above code is executed?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "93377948-61fa-4caa-ab92-c58a20e4fb44",
+    "fields": {
+        "created_at": "2016-01-16T14:21:53.001Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T14:24:13.199Z",
+        "last_modified_by": 1,
+        "question_input": "What is the length of `fruit_set` after the below code-snippet is executed? \n```\nfruit_list = ['orange', 'banana', 'banana', 'mango']\nfruit_set = set()\n\nfor fruit in fruit_list:\n    fruit_set.add(fruit)\n```",
+        "question_display": "<p>What is the length of <code>fruit_set</code> after the below code-snippet is executed?</p>\n<pre><code>fruit_list = ['orange', 'banana', 'banana', 'mango']\nfruit_set = set()\n\nfor fruit in fruit_list:\n    fruit_set.add(fruit)\n</code></pre>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "936be787-4c49-4b7e-b08a-70d0306cc2db",
+    "fields": {
+        "created_at": "2016-01-26T14:11:39.615Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:21:07.445Z",
+        "last_modified_by": 1,
+        "question_input": "```\nclass Hello():\n    def say_hello(self):\n        return \"hello\"\n\nh = Hello()\nmessage = h.say_hello()\n```\n\nWhat is `message`? ",
+        "question_display": "<pre><code>class Hello():\n    def say_hello(self):\n        return &quot;hello&quot;\n\nh = Hello()\nmessage = h.say_hello()\n</code></pre>\n<p>What is <code>message</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "94d1bac4-3fca-4027-9618-4bebdf10ac93",
+    "fields": {
+        "created_at": "2016-01-31T02:09:36.484Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:14:53.387Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = {\"spam\": \"spam\", \"eggs\": \"eggs\"}\na = \"{spam} and {eggs}\".format(x)\n```\nWhat is `a`? ",
+        "question_display": "<pre><code>x = {&quot;spam&quot;: &quot;spam&quot;, &quot;eggs&quot;: &quot;eggs&quot;}\na = &quot;{spam} and {eggs}&quot;.format(x)\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "97e43317-856e-40a4-9687-ee088f64fc18",
+    "fields": {
+        "created_at": "2016-01-31T02:09:22.997Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:09:23.995Z",
+        "last_modified_by": 1,
+        "question_input": "",
+        "question_display": "",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "9a13e761-0f5e-4de5-946c-586e1ef00d7e",
+    "fields": {
+        "created_at": "2016-02-01T13:41:42.285Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:56:01.919Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = {\"spam\": 1, \"eggs\": 2}\n\ntry:\n    x['spam'] = 3\nexcept KeyError:\n    x['spam'] = 4\nelse:\n    x['spam'] = 5\nfinally:\n    x['eggs'] = 6\n```\nWhat are `x['spam']` and `x['eggs']`? ",
+        "question_display": "<pre><code>x = {&quot;spam&quot;: 1, &quot;eggs&quot;: 2}\n\ntry:\n    x['spam'] = 3\nexcept KeyError:\n    x['spam'] = 4\nelse:\n    x['spam'] = 5\nfinally:\n    x['eggs'] = 6\n</code></pre>\n<p>What are <code>x['spam']</code> and <code>x['eggs']</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "9c49f3c0-e646-4a65-9802-6a2042478b36",
+    "fields": {
+        "created_at": "2016-02-03T08:17:28.639Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T08:18:01.561Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = [1, 2, 3 ,4, 4]\na = x.count(4)\n```\nWhat is `a` after the above code is executed? \n\n",
+        "question_display": "<pre><code>x = [1, 2, 3 ,4, 4]\na = x.count(4)\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "9f6b755e-cbaf-41d8-9a22-d6887679e784",
+    "fields": {
+        "created_at": "2016-02-03T06:42:25.791Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:43:48.160Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = (1, 2, 3, 4, )\ndel a[0]\n```\nWhat is `a` after the above code is executed?",
+        "question_display": "<pre><code>a = (1, 2, 3, 4, )\ndel a[0]\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "a5b07bde-9c86-4155-97d8-567638461c98",
+    "fields": {
+        "created_at": "2016-01-15T07:15:01.889Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:15:16.826Z",
+        "last_modified_by": 1,
+        "question_input": "    x = \"a b c d\"\n    a = x[0:100]\n\nWhat is `a`? ",
+        "question_display": "<pre><code>x = &quot;a b c d&quot;\na = x[0:100]\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "af2bcff0-585f-4fc4-9542-b2e206aa514f",
+    "fields": {
+        "created_at": "2016-02-02T07:43:37.776Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:46:57.804Z",
+        "last_modified_by": 1,
+        "question_input": "```\ndef embolden(func, **kwargs):\n    func_output = func(**kwargs) \n    return \"<b>{}</b>\".format(func_output)\n\ndef full_name(first_name, last_name):\n    format_string = \"{first_name} {last_name}\"\n    return format_string.format(**locals())\n\nx = embolden(full_name, first_name=\"Spam\", last_name=\"Eggs\")\n```\nWhat is `x` after the above code snippet is executed? \n(Don't enclose x within `quotes`)",
+        "question_display": "<pre><code>def embolden(func, **kwargs):\n    func_output = func(**kwargs) \n    return &quot;&lt;b&gt;{}&lt;/b&gt;&quot;.format(func_output)\n\ndef full_name(first_name, last_name):\n    format_string = &quot;{first_name} {last_name}&quot;\n    return format_string.format(**locals())\n\nx = embolden(full_name, first_name=&quot;Spam&quot;, last_name=&quot;Eggs&quot;)\n</code></pre>\n<p>What is <code>x</code> after the above code snippet is executed?\n(Don't enclose x within <code>quotes</code>)</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "b5e26951-41c5-42a6-acf3-bef22f7b51e5",
+    "fields": {
+        "created_at": "2016-02-01T13:29:53.143Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-08T07:27:11.122Z",
+        "last_modified_by": 1,
+        "question_input": "What is `y` after the following code is executed. \n```\nx = 1\ny = x\nx = 2\n```",
+        "question_display": "<p>What is <code>y</code> after the following code is executed.</p>\n<pre><code>x = 1\ny = x\nx = 2\n</code></pre>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "b62c6faf-8688-410a-b4ea-ca65a518bddb",
+    "fields": {
+        "created_at": "2016-02-02T14:12:10.613Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T14:14:02.664Z",
+        "last_modified_by": 1,
+        "question_input": "```\nresult = 1\nn = 5\ni = 2\nwhile i <= 5:\n    result *= i\n    i += 1\n```\nWhat is `result` after the above code is executed. ",
+        "question_display": "<pre><code>result = 1\nn = 5\ni = 2\nwhile i &lt;= 5:\n    result *= i\n    i += 1\n</code></pre>\n<p>What is <code>result</code> after the above code is executed.</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "bb961af3-d303-4576-bb88-25eab435ed34",
+    "fields": {
+        "created_at": "2016-02-02T07:50:36.671Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.030Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = {}\nfor i in range(100):\n    x[i] = i * i\n\ny = x.get(100)\n```\nWhich of the following statements are true after the above code is executed. Select all that apply. ",
+        "question_display": "<pre><code>x = {}\nfor i in range(100):\n    x[i] = i * i\n\ny = x.get(100)\n</code></pre>\n<p>Which of the following statements are true after the above code is executed. Select all that apply.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "bd318ded-9600-405e-a7f6-672d9bee3d53",
+    "fields": {
+        "created_at": "2016-02-01T13:00:52.289Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:02:31.981Z",
+        "last_modified_by": 1,
+        "question_input": "System-wide packages are included by default when working under a `virtualenv`. ",
+        "question_display": "<p>System-wide packages are included by default when working under a <code>virtualenv</code>.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "be923b41-727e-4fbc-a341-15af62c91952",
+    "fields": {
+        "created_at": "2016-01-16T13:45:50.562Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T13:46:49.688Z",
+        "last_modified_by": 1,
+        "question_input": "```\na, b = [1, 2, 3]\n```\nWhat are `a`, and `b`? ",
+        "question_display": "<pre><code>a, b = [1, 2, 3]\n</code></pre>\n<p>What are <code>a</code>, and <code>b</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "c50cdc81-0377-4a15-a471-747a396b006d",
+    "fields": {
+        "created_at": "2016-02-03T06:40:10.800Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:40:47.106Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = [1, 2, 3, 4, 5]\ndel a[10]\n```\nWhat is `a` after the above code is executed?",
+        "question_display": "<pre><code>a = [1, 2, 3, 4, 5]\ndel a[10]\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
+    "fields": {
+        "created_at": "2016-01-31T02:08:00.917Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:12:05.245Z",
+        "last_modified_by": 1,
+        "question_input": "```\na = \"{spam} and {eggs}\".format(\"spam\", \"eggs\")\n```\nWhat is `a`?",
+        "question_display": "<pre><code>a = &quot;{spam} and {eggs}&quot;.format(&quot;spam&quot;, &quot;eggs&quot;)\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "d082fee0-d2e9-491f-bacb-b61ca48f76e8",
+    "fields": {
+        "created_at": "2016-01-15T07:14:26.366Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:14:35.073Z",
+        "last_modified_by": 1,
+        "question_input": "In Python, There is a `character` data-type for single-character strings.",
+        "question_display": "<p>In Python, There is a <code>character</code> data-type for single-character strings.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "d7115f16-b23b-4501-9339-c53081a42954",
+    "fields": {
+        "created_at": "2016-01-26T13:54:31.279Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-07T09:14:59.286Z",
+        "last_modified_by": 1,
+        "question_input": "Python is:",
+        "question_display": "<p>Python is:</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "d9a87a5d-89d7-49f9-9692-61f4d60ce0ab",
+    "fields": {
+        "created_at": "2016-01-30T16:03:37.443Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-30T16:08:47.215Z",
+        "last_modified_by": 1,
+        "question_input": "Use requests to make an HTTP request: \n\nThe goal of this quiz is to ensure you've installed requests under a virtualenv. Execute the below code snippet and paste the output\n```\nimport requests\n\n# Make an HTTP requests to the specified url. If you're new to HTTP, read https://wikipedia.org/wiki/HTTP. But you don't need to know HTTP to answer the quiz. \nresponse = requests.get(\"https://gist.githubusercontent.com/pixyj/4501ce855c2f3d14d518/raw/a25e71525f9453f32e0e678d86fc73f18ffe9fcb/\")\n\nprint(len(response.content))\n```",
+        "question_display": "<p>Use requests to make an HTTP request:</p>\n<p>The goal of this quiz is to ensure you've installed requests under a virtualenv. Execute the below code snippet and paste the output</p>\n<pre><code>import requests\n\n# Make an HTTP requests to the specified url. If you're new to HTTP, read https://wikipedia.org/wiki/HTTP. But you don't need to know HTTP to answer the quiz. \nresponse = requests.get(&quot;https://gist.githubusercontent.com/pixyj/4501ce855c2f3d14d518/raw/a25e71525f9453f32e0e678d86fc73f18ffe9fcb/&quot;)\n\nprint(len(response.content))\n</code></pre>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "daf9e675-929c-4d93-a645-276df93aaac1",
+    "fields": {
+        "created_at": "2016-02-02T12:20:49.607Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T12:21:51.608Z",
+        "last_modified_by": 1,
+        "question_input": "```\ndef is_equal(x, y):\n    x == y\n\na = is_equal(1, 2)\n```\nWhat is `a` after the above code is executed? ",
+        "question_display": "<pre><code>def is_equal(x, y):\n    x == y\n\na = is_equal(1, 2)\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "dd2c098f-53da-4843-b94b-8753deaf51e1",
+    "fields": {
+        "created_at": "2016-01-26T12:45:12.918Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:38:16.155Z",
+        "last_modified_by": 1,
+        "question_input": "When you call a function which could raise an Exception, it is necessary to encapsulate the function call within a `try ... except` statement. ",
+        "question_display": "<p>When you call a function which could raise an Exception, it is necessary to encapsulate the function call within a <code>try ... except</code> statement.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "e9458702-e1a2-4ebe-b47a-7ff4f88d60a0",
+    "fields": {
+        "created_at": "2016-02-01T14:35:37.399Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:19:24.732Z",
+        "last_modified_by": 1,
+        "question_input": "```\nclass Hello:\n\n    def say_hello(this):\n        return \"hello\"\n\n    @classmethod\n    def say_goodbye():\n        return \"goodbye\"\n\nh = Hello()\nx = h.say_hello()\n\ny = Hello.say_goodbye()\n```\nLet's say you are working in an interactive session and you paste the above code. What are `x` and `y`?",
+        "question_display": "<pre><code>class Hello:\n\n    def say_hello(this):\n        return &quot;hello&quot;\n\n    @classmethod\n    def say_goodbye():\n        return &quot;goodbye&quot;\n\nh = Hello()\nx = h.say_hello()\n\ny = Hello.say_goodbye()\n</code></pre>\n<p>Let's say you are working in an interactive session and you paste the above code. What are <code>x</code> and <code>y</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "e9dc031e-7d57-4f63-b409-9adc7ad3e632",
+    "fields": {
+        "created_at": "2016-01-15T07:52:41.293Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:53:04.153Z",
+        "last_modified_by": 1,
+        "question_input": "    x = ['a', 'b', 'c', 'd']\n    y = len(x)\n\nWhat is `y`? ",
+        "question_display": "<pre><code>x = ['a', 'b', 'c', 'd']\ny = len(x)\n</code></pre>\n<p>What is <code>y</code>?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "eb91deb9-9e1b-48b0-9704-1770fe1b5a45",
+    "fields": {
+        "created_at": "2016-01-26T14:14:53.172Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:18:19.016Z",
+        "last_modified_by": 1,
+        "question_input": "```\nimport math\n\n\nclass Point():\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    \n    def distance_from_origin(self):\n        self.distance = math.sqrt(x*x + y*y)\n        return self.distance\n\np = Point(3, 4)\ndistance = p.distance_from_origin(p)\n```\nWhat is `distance`? ",
+        "question_display": "<pre><code>import math\n\n\nclass Point():\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    \n    def distance_from_origin(self):\n        self.distance = math.sqrt(x*x + y*y)\n        return self.distance\n\np = Point(3, 4)\ndistance = p.distance_from_origin(p)\n</code></pre>\n<p>What is <code>distance</code>?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "f1235486-8e80-47f3-adad-a5db214433d5",
+    "fields": {
+        "created_at": "2016-01-16T16:08:04.065Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:09:01.688Z",
+        "last_modified_by": 1,
+        "question_input": "Inserting an item into a dictionary is ___________.",
+        "question_display": "<p>Inserting an item into a dictionary is ___________.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "f4bdc22b-f948-4560-a337-38afdc642fff",
+    "fields": {
+        "created_at": "2016-01-17T12:55:02.214Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:57:26.349Z",
+        "last_modified_by": 1,
+        "question_input": "Another one:  \n\n`A.py`: \n```\ndef hello():\n    print(\"hello\")\n```\n`B.py`: \n```\nimport A\n\n\ndef hello():\n    print(\"world\")\n\nif __name__ == \"__main__\":\n    B.hello()\n```\n$ `python B.py` ",
+        "question_display": "<p>Another one:</p>\n<p><code>A.py</code>:</p>\n<pre><code>def hello():\n    print(&quot;hello&quot;)\n</code></pre>\n<p><code>B.py</code>:</p>\n<pre><code>import A\n\n\ndef hello():\n    print(&quot;world&quot;)\n\nif __name__ == &quot;__main__&quot;:\n    B.hello()\n</code></pre>\n<p>$ <code>python B.py</code></p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "f9291aa7-e7f8-4ab5-a88b-349ab842ffd6",
+    "fields": {
+        "created_at": "2016-01-17T13:59:28.917Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T14:08:32.599Z",
+        "last_modified_by": 1,
+        "question_input": "Using `import *` is considered a good practice. ",
+        "question_display": "<p>Using <code>import *</code> is considered a good practice.</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "f93cb03f-db3b-46d2-aa21-90ea097b6f26",
+    "fields": {
+        "created_at": "2016-01-15T07:54:43.051Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T15:24:50.734Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx  = [1, 2, 3, 4]\ny = x[0:]\n\nx[0] = 0\n\n```\nWhat is `y` after the above code is executed ?",
+        "question_display": "<pre><code>x  = [1, 2, 3, 4]\ny = x[0:]\n\nx[0] = 0\n\n</code></pre>\n<p>What is <code>y</code> after the above code is executed ?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "f9c2cbd5-755e-4abb-9b54-59b42813424a",
+    "fields": {
+        "created_at": "2016-01-15T07:53:14.101Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:54:34.295Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx  = [1, 2, 3, 4]\ny = x[0:]\n```\nWhat is `y` ?",
+        "question_display": "<pre><code>x  = [1, 2, 3, 4]\ny = x[0:]\n</code></pre>\n<p>What is <code>y</code> ?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
+    "pk": "fb487580-d8cc-4f76-9026-c3a513a5d84a",
+    "fields": {
+        "created_at": "2016-01-31T08:14:11.601Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T08:15:59.581Z",
+        "last_modified_by": 1,
+        "question_input": "```\ndef subtract(x, y):\n    return x - y\n\nx = 1\ny = 2\na = subtract(x=y, y=x)\n```\nWhat is `a` after the above code snippet is executed? ",
+        "question_display": "<pre><code>def subtract(x, y):\n    return x - y\n\nx = 1\ny = 2\na = subtract(x=y, y=x)\n</code></pre>\n<p>What is <code>a</code> after the above code snippet is executed?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "09c8e336-03bd-431b-8c69-b531e8109234",
+    "fields": {
+        "created_at": "2016-01-15T07:53:04.159Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:53:04.159Z",
+        "last_modified_by": 1,
+        "quiz": "e9dc031e-7d57-4f63-b409-9adc7ad3e632",
+        "answer": "4"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "0fb2dba4-e085-4b1a-a0ec-d130e2660ad0",
+    "fields": {
+        "created_at": "2016-02-02T14:14:02.668Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T14:14:02.668Z",
+        "last_modified_by": 1,
+        "quiz": "b62c6faf-8688-410a-b4ea-ca65a518bddb",
+        "answer": "120"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "16598982-eef4-4fcf-b3be-7f07da557fb4",
+    "fields": {
+        "created_at": "2016-01-18T11:58:07.308Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-18T11:58:07.308Z",
+        "last_modified_by": 1,
+        "quiz": "6dd0ddf4-3228-4fc5-a152-8c0ec0d27add",
+        "answer": "\"spam and eggs\""
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "55988aba-dfb1-4041-be94-f142a63ae02d",
+    "fields": {
+        "created_at": "2016-01-15T07:17:04.717Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:17:04.717Z",
+        "last_modified_by": 1,
+        "quiz": "857ac00f-eb46-488c-9ddc-54bf6c19e82e",
+        "answer": "'cd'"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "575f1d4b-223d-4ac2-9346-359f14ff6ae6",
+    "fields": {
+        "created_at": "2016-02-02T13:06:04.559Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:06:04.559Z",
+        "last_modified_by": 1,
+        "quiz": "4c66a15a-d9c9-4af5-8c19-6105f494b274",
+        "answer": "10"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "63b84ef1-20cb-4317-b91c-0acf8e2d2173",
+    "fields": {
+        "created_at": "2016-01-18T11:58:07.309Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-18T11:58:07.309Z",
+        "last_modified_by": 1,
+        "quiz": "6dd0ddf4-3228-4fc5-a152-8c0ec0d27add",
+        "answer": "\"\"\"spam and eggs\"\"\""
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "771b8dcc-8fe6-4915-8668-4e48b64eca2c",
+    "fields": {
+        "created_at": "2016-02-02T07:46:57.809Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:46:57.809Z",
+        "last_modified_by": 1,
+        "quiz": "af2bcff0-585f-4fc4-9542-b2e206aa514f",
+        "answer": "\"\"\"Spam and Eggs\"\"\""
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "8a140779-064b-4480-b999-8d8d3609f3cd",
+    "fields": {
+        "created_at": "2016-01-15T07:17:04.720Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:17:04.720Z",
+        "last_modified_by": 1,
+        "quiz": "857ac00f-eb46-488c-9ddc-54bf6c19e82e",
+        "answer": "\"\"\"cd\"\"\""
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "98473ecb-9ce7-4cce-8f2a-859f9c73f743",
+    "fields": {
+        "created_at": "2016-02-02T07:46:57.808Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:46:57.808Z",
+        "last_modified_by": 1,
+        "quiz": "af2bcff0-585f-4fc4-9542-b2e206aa514f",
+        "answer": "\"Spam and Eggs\""
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "a5589215-4db6-459a-b3fd-ff1a6c945e3b",
+    "fields": {
+        "created_at": "2016-01-30T16:08:47.219Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-30T16:08:47.219Z",
+        "last_modified_by": 1,
+        "quiz": "d9a87a5d-89d7-49f9-9692-61f4d60ce0ab",
+        "answer": "11357"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "b0b82563-8f21-4548-9170-70e29c40ae23",
+    "fields": {
+        "created_at": "2016-02-02T07:46:57.807Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:46:57.807Z",
+        "last_modified_by": 1,
+        "quiz": "af2bcff0-585f-4fc4-9542-b2e206aa514f",
+        "answer": "Spam and Eggs"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "b4491ca8-d4db-4ccb-b45b-137d474b0ec9",
+    "fields": {
+        "created_at": "2016-01-18T11:58:07.309Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-18T11:58:07.309Z",
+        "last_modified_by": 1,
+        "quiz": "6dd0ddf4-3228-4fc5-a152-8c0ec0d27add",
+        "answer": "'spam and eggs'"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "c61b6076-39df-4dc5-81bc-d8df61fb79e4",
+    "fields": {
+        "created_at": "2016-02-02T07:46:57.809Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:46:57.809Z",
+        "last_modified_by": 1,
+        "quiz": "af2bcff0-585f-4fc4-9542-b2e206aa514f",
+        "answer": "'Spam and Eggs'"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "c8bb0a72-cdc5-4017-a57a-a9fc11489bc3",
+    "fields": {
+        "created_at": "2016-01-31T02:05:58.861Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:05:58.861Z",
+        "last_modified_by": 1,
+        "quiz": "474cc026-5bd3-4e0a-b0f4-2d24bd4f95f5",
+        "answer": "spam and eggs"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "ca9f7871-b6d0-48f6-ae46-383fd75bc8db",
+    "fields": {
+        "created_at": "2016-01-16T14:24:13.203Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T14:24:13.203Z",
+        "last_modified_by": 1,
+        "quiz": "93377948-61fa-4caa-ab92-c58a20e4fb44",
+        "answer": "3"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "da81dc32-35ae-4afd-b8b6-2e98948e7ddb",
+    "fields": {
+        "created_at": "2016-01-15T07:17:04.716Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:17:04.716Z",
+        "last_modified_by": 1,
+        "quiz": "857ac00f-eb46-488c-9ddc-54bf6c19e82e",
+        "answer": "cd"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "dc38e4a0-c279-4416-bc38-d01510aae39e",
+    "fields": {
+        "created_at": "2016-02-03T08:18:01.569Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T08:18:01.569Z",
+        "last_modified_by": 1,
+        "quiz": "9c49f3c0-e646-4a65-9802-6a2042478b36",
+        "answer": "2"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "e069d25a-23de-4b26-9e61-9ed23dfb02f5",
+    "fields": {
+        "created_at": "2016-01-15T07:17:04.719Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:17:04.719Z",
+        "last_modified_by": 1,
+        "quiz": "857ac00f-eb46-488c-9ddc-54bf6c19e82e",
+        "answer": "\"cd\""
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "e4225658-6896-4da3-84f2-7768ca5a32fe",
+    "fields": {
+        "created_at": "2016-02-02T13:42:53.327Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:42:53.327Z",
+        "last_modified_by": 1,
+        "quiz": "9066d1e9-9cad-40af-a35d-8e1b3f0cfb5a",
+        "answer": "2"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "e9132a89-6439-42a1-9236-0da5f7d97541",
+    "fields": {
+        "created_at": "2016-01-18T11:58:07.307Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-18T11:58:07.307Z",
+        "last_modified_by": 1,
+        "quiz": "6dd0ddf4-3228-4fc5-a152-8c0ec0d27add",
+        "answer": "spam and eggs"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "f3e5559c-7402-4bd5-9c01-bd4fbfc006b5",
+    "fields": {
+        "created_at": "2016-01-15T07:16:04.793Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:16:04.793Z",
+        "last_modified_by": 1,
+        "quiz": "5ddc89a0-7d75-487c-b6dc-eee1828cee7e",
+        "answer": "2"
+    }
+}, {
+    "model": "quiz.shortanswer",
+    "pk": "fca015c6-f058-4764-97b6-1bb0803c9040",
+    "fields": {
+        "created_at": "2016-01-31T08:15:59.585Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T08:15:59.585Z",
+        "last_modified_by": 1,
+        "quiz": "fb487580-d8cc-4f76-9026-c3a513a5d84a",
+        "answer": "1"
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "00ffeed1-eaef-4a4f-9a07-cff3058eb190",
+    "fields": {
+        "created_at": "2016-01-26T14:21:07.448Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:21:07.448Z",
+        "last_modified_by": 1,
+        "quiz": "936be787-4c49-4b7e-b08a-70d0306cc2db",
+        "choice_input": "\"hello\"",
+        "choice_display": "<p>&quot;hello&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "029d166a-504d-4c6d-b3ca-ceb2ec72c4a0",
+    "fields": {
+        "created_at": "2016-02-01T13:56:01.926Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:56:01.926Z",
+        "last_modified_by": 1,
+        "quiz": "9a13e761-0f5e-4de5-946c-586e1ef00d7e",
+        "choice_input": "`x['spam']` = 3,  `x['eggs']` = 4",
+        "choice_display": "<p><code>x['spam']</code> = 3,  <code>x['eggs']</code> = 4</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "08d5c304-b8b4-4194-a8cb-72cdb63fceeb",
+    "fields": {
+        "created_at": "2016-01-15T07:13:43.966Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:13:43.966Z",
+        "last_modified_by": 1,
+        "quiz": "54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36",
+        "choice_input": "x = \"\"\"spam and eggs\"\"\"",
+        "choice_display": "<p>x = &quot;&quot;&quot;spam and eggs&quot;&quot;&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "0a3ffaa5-1ea0-4b01-9f8d-4c859cf77107",
+    "fields": {
+        "created_at": "2016-01-16T13:47:12.442Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T13:47:12.442Z",
+        "last_modified_by": 1,
+        "quiz": "3a283ba5-9bba-4c2b-838a-f40bc7add829",
+        "choice_input": "`a=1`, `b=2`, `c=3` ",
+        "choice_display": "<p><code>a=1</code>, <code>b=2</code>, <code>c=3</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "0d4d3bef-6ec5-4aa3-9154-5cd85db93c40",
+    "fields": {
+        "created_at": "2016-01-17T14:08:32.606Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T14:08:32.606Z",
+        "last_modified_by": 1,
+        "quiz": "f9291aa7-e7f8-4ab5-a88b-349ab842ffd6",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "0e3a81bf-bd97-4600-a6c2-a299992386b7",
+    "fields": {
+        "created_at": "2016-02-02T08:00:40.037Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.037Z",
+        "last_modified_by": 1,
+        "quiz": "bb961af3-d303-4576-bb88-25eab435ed34",
+        "choice_input": "`y` is 10000 (100 * 100)",
+        "choice_display": "<p><code>y</code> is 10000 (100 * 100)</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "0e67fef2-43ed-48b9-b240-a1e474a42256",
+    "fields": {
+        "created_at": "2016-02-02T08:00:40.034Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.034Z",
+        "last_modified_by": 1,
+        "quiz": "bb961af3-d303-4576-bb88-25eab435ed34",
+        "choice_input": "Internally, `x` is implemented using a balanced binary tree. ",
+        "choice_display": "<p>Internally, <code>x</code> is implemented using a balanced binary tree.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "0f4f09ba-2fcf-4544-bb8e-fb4dbacd49c1",
+    "fields": {
+        "created_at": "2016-01-15T07:13:43.965Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:13:43.965Z",
+        "last_modified_by": 1,
+        "quiz": "54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36",
+        "choice_input": "x = #spam and eggs",
+        "choice_display": "<p>x = #spam and eggs</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "1172510e-cb93-44f6-95cb-23796cde7b66",
+    "fields": {
+        "created_at": "2016-01-26T14:10:46.445Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:10:46.445Z",
+        "last_modified_by": 1,
+        "quiz": "7d7ff4e2-dead-4d91-a7f5-5878c58278bc",
+        "choice_input": "A `TypeError` is raised since the `say_hello` function does not have a `self` argument",
+        "choice_display": "<p>A <code>TypeError</code> is raised since the <code>say_hello</code> function does not have a <code>self</code> argument</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "153de222-70a1-4697-8c32-666ba3d60027",
+    "fields": {
+        "created_at": "2016-01-31T04:04:12.649Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T04:04:12.649Z",
+        "last_modified_by": 1,
+        "quiz": "029a01d6-37d8-494f-8341-bc285bff6ea2",
+        "choice_input": "hello",
+        "choice_display": "<p>hello</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "167ca812-f5f6-4541-942a-249fd510af79",
+    "fields": {
+        "created_at": "2016-02-02T08:00:40.035Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.035Z",
+        "last_modified_by": 1,
+        "quiz": "bb961af3-d303-4576-bb88-25eab435ed34",
+        "choice_input": "`x` is implemented using a hash table. ",
+        "choice_display": "<p><code>x</code> is implemented using a hash table.</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "1893005c-8667-4d65-9d24-e7ed50032b85",
+    "fields": {
+        "created_at": "2016-01-16T16:09:01.695Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:09:01.695Z",
+        "last_modified_by": 1,
+        "quiz": "f1235486-8e80-47f3-adad-a5db214433d5",
+        "choice_input": "an *O(log(n))* operation where `n` is the number of items in the dictionary",
+        "choice_display": "<p>an <em>O(log(n))</em> operation where <code>n</code> is the number of items in the dictionary</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "192f1872-baf5-48e0-8fbe-fe88292cac94",
+    "fields": {
+        "created_at": "2016-02-01T13:56:01.929Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:56:01.929Z",
+        "last_modified_by": 1,
+        "quiz": "9a13e761-0f5e-4de5-946c-586e1ef00d7e",
+        "choice_input": "`x['spam']` = 5,  `x['eggs']` = 4",
+        "choice_display": "<p><code>x['spam']</code> = 5,  <code>x['eggs']</code> = 4</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "1c296018-34e3-4a21-a7e5-bcdddc60cd51",
+    "fields": {
+        "created_at": "2016-02-01T13:02:31.991Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:02:31.991Z",
+        "last_modified_by": 1,
+        "quiz": "bd318ded-9600-405e-a7f6-672d9bee3d53",
+        "choice_input": "No",
+        "choice_display": "<p>No</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "1d0d151f-1cf9-49eb-b511-0ef0ea36c626",
+    "fields": {
+        "created_at": "2016-02-03T06:42:15.318Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:15.318Z",
+        "last_modified_by": 1,
+        "quiz": "46cea2a7-5ec5-4fd4-b125-60b378f191e8",
+        "choice_input": "`[1, 2, 3, 4]`",
+        "choice_display": "<p><code>[1, 2, 3, 4]</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "1d89705a-2933-4807-b1ec-025251d9d210",
+    "fields": {
+        "created_at": "2016-02-02T07:15:37.461Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:15:37.461Z",
+        "last_modified_by": 1,
+        "quiz": "34b02d69-4aca-4974-a6fd-77ecf51a7074",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "22e11ebc-c2a6-402f-9c1d-52e9f9aa742a",
+    "fields": {
+        "created_at": "2016-02-02T07:27:25.538Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:27:25.538Z",
+        "last_modified_by": 1,
+        "quiz": "0ecb214a-916d-4a39-bd75-721ce02a3805",
+        "choice_input": "from spam.hello import world",
+        "choice_display": "<p>from spam.hello import world</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "24340691-9da7-4769-8425-65e5631faced",
+    "fields": {
+        "created_at": "2016-02-02T12:21:51.617Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T12:21:51.617Z",
+        "last_modified_by": 1,
+        "quiz": "daf9e675-929c-4d93-a645-276df93aaac1",
+        "choice_input": "`False`",
+        "choice_display": "<p><code>False</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "244e3ba6-fffb-49b7-87c5-d56d79d64892",
+    "fields": {
+        "created_at": "2016-01-15T07:13:43.967Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:13:43.968Z",
+        "last_modified_by": 1,
+        "quiz": "54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36",
+        "choice_input": "x = r'spam and eggs'",
+        "choice_display": "<p>x = r'spam and eggs'</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "2b4603f4-f420-48b6-862d-84cc07b7492a",
+    "fields": {
+        "created_at": "2016-01-31T06:53:14.523Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T06:53:14.523Z",
+        "last_modified_by": 1,
+        "quiz": "20ad3b57-f281-4770-b2c3-16895e9a0da2",
+        "choice_input": "0x100000000eeeeeeeeeeeeeeed",
+        "choice_display": "<p>0x100000000eeeeeeeeeeeeeeed</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "2c0aa294-d6a9-491a-8193-05d50878f5d1",
+    "fields": {
+        "created_at": "2016-01-17T12:59:49.172Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:59:49.172Z",
+        "last_modified_by": 1,
+        "quiz": "500018e7-c5e5-4e71-909b-ffe852ce490d",
+        "choice_input": "helloworld",
+        "choice_display": "<p>helloworld</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "2c8ae4ed-d84c-4aec-a939-f24c23d677a7",
+    "fields": {
+        "created_at": "2016-01-31T02:14:56.067Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:14:56.067Z",
+        "last_modified_by": 1,
+        "quiz": "78ca9871-3292-4973-8e77-1ae629deaebe",
+        "choice_input": "The above code is invalid. A `KeyError` is raised.",
+        "choice_display": "<p>The above code is invalid. A <code>KeyError</code> is raised.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "2d05e030-5422-48ad-8dd9-2c393119b4cd",
+    "fields": {
+        "created_at": "2016-01-31T06:53:14.523Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T06:53:14.523Z",
+        "last_modified_by": 1,
+        "quiz": "20ad3b57-f281-4770-b2c3-16895e9a0da2",
+        "choice_input": "The code is invalid. An integer overflow error occurs. ",
+        "choice_display": "<p>The code is invalid. An integer overflow error occurs.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "33b93ffe-5912-4234-893d-85cc9d91facc",
+    "fields": {
+        "created_at": "2016-02-03T06:40:47.120Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:40:47.120Z",
+        "last_modified_by": 1,
+        "quiz": "c50cdc81-0377-4a15-a471-747a396b006d",
+        "choice_input": "`[1, 2, 3, 4, 5]`",
+        "choice_display": "<p><code>[1, 2, 3, 4, 5]</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "3569c97d-a010-4221-b758-552a7aaba9e9",
+    "fields": {
+        "created_at": "2016-02-03T06:39:48.854Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:39:48.854Z",
+        "last_modified_by": 1,
+        "quiz": "1dff1129-bbed-4913-b494-ab47ed8de378",
+        "choice_input": "`[1, 2]`",
+        "choice_display": "<p><code>[1, 2]</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "36051509-aacb-42ef-9609-c99026cb9d74",
+    "fields": {
+        "created_at": "2016-01-25T16:20:23.972Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T16:20:23.972Z",
+        "last_modified_by": 1,
+        "quiz": "62586230-e2bd-458c-9dbf-2515abd36e69",
+        "choice_input": "No, `__len__` must return an integer",
+        "choice_display": "<p>No, <code>__len__</code> must return an integer</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "38b0d150-81f1-4976-af68-b77864298c1a",
+    "fields": {
+        "created_at": "2016-01-15T07:13:43.966Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:13:43.966Z",
+        "last_modified_by": 1,
+        "quiz": "54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36",
+        "choice_input": "x = 'spam and eggs'",
+        "choice_display": "<p>x = 'spam and eggs'</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "398175dd-5ade-461f-b0c3-8e52e8aff26e",
+    "fields": {
+        "created_at": "2016-01-16T16:08:30.010Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:08:30.010Z",
+        "last_modified_by": 1,
+        "quiz": "86eb9ad5-990d-4995-9258-f4c2934dd573",
+        "choice_input": "an *O(log(n))* operation where `n` is the number of items in the dictionary",
+        "choice_display": "<p>an <em>O(log(n))</em> operation where <code>n</code> is the number of items in the dictionary</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "3c726bee-7560-4472-8afc-c4381331ae6a",
+    "fields": {
+        "created_at": "2016-01-26T14:21:07.449Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:21:07.449Z",
+        "last_modified_by": 1,
+        "quiz": "936be787-4c49-4b7e-b08a-70d0306cc2db",
+        "choice_input": "A `InitNotFoundError` is raised since an `__init__` method is not defined in the `Hello` class. ",
+        "choice_display": "<p>A <code>InitNotFoundError</code> is raised since an <code>__init__</code> method is not defined in the <code>Hello</code> class.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "43a159ba-e052-45d2-87ee-2b710a2d66f9",
+    "fields": {
+        "created_at": "2016-01-17T12:57:26.357Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:57:26.357Z",
+        "last_modified_by": 1,
+        "quiz": "f4bdc22b-f948-4560-a337-38afdc642fff",
+        "choice_input": "A `NameError` (name 'B' is not defined) is raised",
+        "choice_display": "<p>A <code>NameError</code> (name 'B' is not defined) is raised</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "457b4004-f2b0-4ab8-b214-5c75a2c7ed9d",
+    "fields": {
+        "created_at": "2016-01-15T07:14:35.084Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:14:35.084Z",
+        "last_modified_by": 1,
+        "quiz": "d082fee0-d2e9-491f-bacb-b61ca48f76e8",
+        "choice_input": "No",
+        "choice_display": "<p>No</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "460bb935-3a06-4e09-b68e-76e0b6626d40",
+    "fields": {
+        "created_at": "2016-01-16T13:46:49.704Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T13:46:49.704Z",
+        "last_modified_by": 1,
+        "quiz": "be923b41-727e-4fbc-a341-15af62c91952",
+        "choice_input": "`a = 1`, `b = [2, 3]`",
+        "choice_display": "<p><code>a = 1</code>, <code>b = [2, 3]</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "48355067-c739-4d77-a4a9-32964f59f8bd",
+    "fields": {
+        "created_at": "2016-01-26T14:18:19.025Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:18:19.025Z",
+        "last_modified_by": 1,
+        "quiz": "eb91deb9-9e1b-48b0-9704-1770fe1b5a45",
+        "choice_input": "5",
+        "choice_display": "<p>5</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "48773a34-3c5c-47ef-b900-ca03b2e0b54c",
+    "fields": {
+        "created_at": "2016-01-15T07:54:34.300Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:54:34.300Z",
+        "last_modified_by": 1,
+        "quiz": "f9c2cbd5-755e-4abb-9b54-59b42813424a",
+        "choice_input": "[2, 3, 4]",
+        "choice_display": "<p>[2, 3, 4]</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "487c0b33-4699-4755-b329-75bb978b0b42",
+    "fields": {
+        "created_at": "2016-01-16T16:01:42.643Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:01:42.643Z",
+        "last_modified_by": 1,
+        "quiz": "4bd54721-05df-4f35-9f99-ab1869a7d635",
+        "choice_input": "in lexicographic order",
+        "choice_display": "<p>in lexicographic order</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "49739c2b-dfc4-4dfd-b673-e1cdc23503c5",
+    "fields": {
+        "created_at": "2016-02-08T07:27:11.126Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-08T07:27:11.126Z",
+        "last_modified_by": 1,
+        "quiz": "b5e26951-41c5-42a6-acf3-bef22f7b51e5",
+        "choice_input": "1",
+        "choice_display": "<p>1</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "4b145312-545f-4d24-9786-d22672d12f36",
+    "fields": {
+        "created_at": "2016-02-03T06:42:15.320Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:15.320Z",
+        "last_modified_by": 1,
+        "quiz": "46cea2a7-5ec5-4fd4-b125-60b378f191e8",
+        "choice_input": "`[2, 3, 4, 5]`",
+        "choice_display": "<p><code>[2, 3, 4, 5]</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "4bc1633e-a749-44d1-8578-d543cabdd395",
+    "fields": {
+        "created_at": "2016-02-07T09:14:59.292Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-07T09:14:59.292Z",
+        "last_modified_by": 1,
+        "quiz": "d7115f16-b23b-4501-9339-c53081a42954",
+        "choice_input": "weakly typed",
+        "choice_display": "<p>weakly typed</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "4d0709ca-51a5-46d7-adec-892db0fd7689",
+    "fields": {
+        "created_at": "2016-01-15T07:15:16.840Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:15:16.841Z",
+        "last_modified_by": 1,
+        "quiz": "a5b07bde-9c86-4155-97d8-567638461c98",
+        "choice_input": "\"a b c d\"",
+        "choice_display": "<p>&quot;a b c d&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "4dc18187-8941-467e-a2a0-6dc72423b774",
+    "fields": {
+        "created_at": "2016-01-31T03:03:47.498Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T03:03:47.498Z",
+        "last_modified_by": 1,
+        "quiz": "24509f5f-e65b-4b64-8656-327391f7a2de",
+        "choice_input": "1",
+        "choice_display": "<p>1</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "4ec0ca8a-1b53-479f-9718-35d35ab97803",
+    "fields": {
+        "created_at": "2016-01-16T16:01:42.644Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:01:42.644Z",
+        "last_modified_by": 1,
+        "quiz": "4bd54721-05df-4f35-9f99-ab1869a7d635",
+        "choice_input": "in the order in which keys were added",
+        "choice_display": "<p>in the order in which keys were added</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "507ea5e7-ad3b-43d0-9005-860fd6286e7a",
+    "fields": {
+        "created_at": "2016-01-15T07:13:43.967Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:13:43.967Z",
+        "last_modified_by": 1,
+        "quiz": "54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36",
+        "choice_input": "x = \"spam and eggs\"",
+        "choice_display": "<p>x = &quot;spam and eggs&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "543ec2b8-84e8-4571-b1d1-5986c191b488",
+    "fields": {
+        "created_at": "2016-01-15T07:10:37.409Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:10:37.409Z",
+        "last_modified_by": 1,
+        "quiz": "7040b9c1-f7ec-4d2d-9dac-9b556bd39798",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "551f9cf5-548f-43ef-adc3-2814e363b716",
+    "fields": {
+        "created_at": "2016-01-16T13:46:49.702Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T13:46:49.702Z",
+        "last_modified_by": 1,
+        "quiz": "be923b41-727e-4fbc-a341-15af62c91952",
+        "choice_input": "The above code is invalid. A `ValueError` is raised. ",
+        "choice_display": "<p>The above code is invalid. A <code>ValueError</code> is raised.</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "5a1525bb-f9f9-4fe1-8cfb-261484c35be6",
+    "fields": {
+        "created_at": "2016-01-31T04:04:12.650Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T04:04:12.650Z",
+        "last_modified_by": 1,
+        "quiz": "029a01d6-37d8-494f-8341-bc285bff6ea2",
+        "choice_input": "world",
+        "choice_display": "<p>world</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "5a664fbf-decf-49d3-b1c8-5ae6a97f1ac9",
+    "fields": {
+        "created_at": "2016-01-17T12:59:49.171Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:59:49.171Z",
+        "last_modified_by": 1,
+        "quiz": "500018e7-c5e5-4e71-909b-ffe852ce490d",
+        "choice_input": "hello world",
+        "choice_display": "<p>hello world</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "5b24a142-4eeb-40eb-b392-cac67ad820b2",
+    "fields": {
+        "created_at": "2016-02-07T09:14:59.291Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-07T09:14:59.291Z",
+        "last_modified_by": 1,
+        "quiz": "d7115f16-b23b-4501-9339-c53081a42954",
+        "choice_input": "strongly typed",
+        "choice_display": "<p>strongly typed</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "5e5b77ae-0c3e-451b-8349-fea814fda69e",
+    "fields": {
+        "created_at": "2016-02-02T07:15:37.462Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:15:37.462Z",
+        "last_modified_by": 1,
+        "quiz": "34b02d69-4aca-4974-a6fd-77ecf51a7074",
+        "choice_input": "No, the directory needs to have an __init__.py file to be considered a package. ",
+        "choice_display": "<p>No, the directory needs to have an <strong>init</strong>.py file to be considered a package.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "64ef2c90-e6a7-4c5c-8d51-f702977cc13b",
+    "fields": {
+        "created_at": "2016-01-31T02:14:53.390Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:14:53.390Z",
+        "last_modified_by": 1,
+        "quiz": "94d1bac4-3fca-4027-9618-4bebdf10ac93",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "6676bd5c-76d2-42bf-9cde-94a1b825f311",
+    "fields": {
+        "created_at": "2016-02-03T06:43:48.178Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:43:48.178Z",
+        "last_modified_by": 1,
+        "quiz": "9f6b755e-cbaf-41d8-9a22-d6887679e784",
+        "choice_input": "A `TypeError` is raised since tuples are immutable and don't support item deletion. ",
+        "choice_display": "<p>A <code>TypeError</code> is raised since tuples are immutable and don't support item deletion.</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "6818da94-762f-4ef6-864c-e0cf48d28fc9",
+    "fields": {
+        "created_at": "2016-01-26T14:18:19.029Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:18:19.029Z",
+        "last_modified_by": 1,
+        "quiz": "eb91deb9-9e1b-48b0-9704-1770fe1b5a45",
+        "choice_input": "An `AttributeError` is raised since a new attribute is created in the `distance_From_origin` method. ",
+        "choice_display": "<p>An <code>AttributeError</code> is raised since a new attribute is created in the <code>distance_From_origin</code> method.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "69fe891e-4d85-4a24-b239-41bfb20198f2",
+    "fields": {
+        "created_at": "2016-01-25T16:20:23.973Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T16:20:23.973Z",
+        "last_modified_by": 1,
+        "quiz": "62586230-e2bd-458c-9dbf-2515abd36e69",
+        "choice_input": "No, `__len__` must return a numeric object whose value is ` >= 0 `",
+        "choice_display": "<p>No, <code>__len__</code> must return a numeric object whose value is <code>&gt;= 0</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "6e29ed98-3f9e-4ae3-b2da-f6732ad10b4b",
+    "fields": {
+        "created_at": "2016-02-03T06:39:48.855Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:39:48.855Z",
+        "last_modified_by": 1,
+        "quiz": "1dff1129-bbed-4913-b494-ab47ed8de378",
+        "choice_input": "`[1, 2, 5]`",
+        "choice_display": "<p><code>[1, 2, 5]</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "6e5e07a0-08ab-4e3b-b57c-21af01258350",
+    "fields": {
+        "created_at": "2016-02-02T13:38:01.763Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:38:01.763Z",
+        "last_modified_by": 1,
+        "quiz": "3e82c50a-f42c-4588-acb4-3f820ae6bc62",
+        "choice_input": "In the last statement, `i` is accessed outside its scope, so an `Exception` is raised. ",
+        "choice_display": "<p>In the last statement, <code>i</code> is accessed outside its scope, so an <code>Exception</code> is raised.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "6e78fe07-4331-4e8c-ab0e-0ffa7cafd8a3",
+    "fields": {
+        "created_at": "2016-02-02T08:00:40.037Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.037Z",
+        "last_modified_by": 1,
+        "quiz": "bb961af3-d303-4576-bb88-25eab435ed34",
+        "choice_input": "A `KeyError` is raised in the last statement since `x[100]` does not exist ",
+        "choice_display": "<p>A <code>KeyError</code> is raised in the last statement since <code>x[100]</code> does not exist</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "6f0ee59f-8c62-4443-a1f5-4f0a86c81548",
+    "fields": {
+        "created_at": "2016-02-01T13:02:31.989Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:02:31.989Z",
+        "last_modified_by": 1,
+        "quiz": "bd318ded-9600-405e-a7f6-672d9bee3d53",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "7020e8ea-5f3b-4872-bd8e-38e8827774ff",
+    "fields": {
+        "created_at": "2016-01-31T02:14:56.066Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:14:56.066Z",
+        "last_modified_by": 1,
+        "quiz": "78ca9871-3292-4973-8e77-1ae629deaebe",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "73a4fbf5-41cb-4e59-a23b-6d40a2a4a2cb",
+    "fields": {
+        "created_at": "2016-02-02T08:00:40.035Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.035Z",
+        "last_modified_by": 1,
+        "quiz": "bb961af3-d303-4576-bb88-25eab435ed34",
+        "choice_input": "Internally, a dictionary is implemented as an unbalanced tree. So `x` has degenerated into a linked-list. ",
+        "choice_display": "<p>Internally, a dictionary is implemented as an unbalanced tree. So <code>x</code> has degenerated into a linked-list.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "7532562c-6aca-43b3-8a5c-88f82e77e815",
+    "fields": {
+        "created_at": "2016-02-02T13:38:01.761Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:38:01.762Z",
+        "last_modified_by": 1,
+        "quiz": "3e82c50a-f42c-4588-acb4-3f820ae6bc62",
+        "choice_input": "9",
+        "choice_display": "<p>9</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "78cf69d0-edb8-45ab-819b-6c183ffdcd93",
+    "fields": {
+        "created_at": "2016-01-16T13:47:12.443Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T13:47:12.443Z",
+        "last_modified_by": 1,
+        "quiz": "3a283ba5-9bba-4c2b-838a-f40bc7add829",
+        "choice_input": "The above code is invalid. A `ValueError` is raised. ",
+        "choice_display": "<p>The above code is invalid. A <code>ValueError</code> is raised.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "80cd1c24-9b27-47ac-894d-94968ff037f1",
+    "fields": {
+        "created_at": "2016-01-31T03:03:47.495Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T03:03:47.495Z",
+        "last_modified_by": 1,
+        "quiz": "24509f5f-e65b-4b64-8656-327391f7a2de",
+        "choice_input": "12",
+        "choice_display": "<p>12</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "8264f710-40f8-4890-9248-f8c60c48bfdf",
+    "fields": {
+        "created_at": "2016-02-08T07:27:11.127Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-08T07:27:11.127Z",
+        "last_modified_by": 1,
+        "quiz": "b5e26951-41c5-42a6-acf3-bef22f7b51e5",
+        "choice_input": "2",
+        "choice_display": "<p>2</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "83552faf-76ff-47ae-b21c-1815ecbada40",
+    "fields": {
+        "created_at": "2016-02-01T14:30:29.782Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T14:30:29.782Z",
+        "last_modified_by": 1,
+        "quiz": "8beebdf0-fe91-4c31-9592-bb8b0e8fa7ea",
+        "choice_input": "No",
+        "choice_display": "<p>No</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "8355fb01-1f87-4a4d-b5c9-6fd00f531450",
+    "fields": {
+        "created_at": "2016-02-01T13:38:16.160Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:38:16.160Z",
+        "last_modified_by": 1,
+        "quiz": "dd2c098f-53da-4843-b94b-8753deaf51e1",
+        "choice_input": "No",
+        "choice_display": "<p>No</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "85e3ffef-695d-430b-ab9e-e8ffb24cedcd",
+    "fields": {
+        "created_at": "2016-02-03T06:40:47.122Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:40:47.122Z",
+        "last_modified_by": 1,
+        "quiz": "c50cdc81-0377-4a15-a471-747a396b006d",
+        "choice_input": "An `IndexError` is raised. ",
+        "choice_display": "<p>An <code>IndexError</code> is raised.</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "85f84f51-4621-459f-8976-e439bbb5b4bb",
+    "fields": {
+        "created_at": "2016-01-15T07:15:16.838Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:15:16.838Z",
+        "last_modified_by": 1,
+        "quiz": "a5b07bde-9c86-4155-97d8-567638461c98",
+        "choice_input": "An `IndexError` is raised since `a` does not have 100 characters.",
+        "choice_display": "<p>An <code>IndexError</code> is raised since <code>a</code> does not have 100 characters.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "861bed21-7e73-4810-9348-6e9fc378cc6b",
+    "fields": {
+        "created_at": "2016-01-15T07:54:34.303Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:54:34.303Z",
+        "last_modified_by": 1,
+        "quiz": "f9c2cbd5-755e-4abb-9b54-59b42813424a",
+        "choice_input": "1",
+        "choice_display": "<p>1</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "86f0a7e7-05c3-4ee1-b0ad-64356b85cd68",
+    "fields": {
+        "created_at": "2016-02-01T15:19:24.740Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:19:24.740Z",
+        "last_modified_by": 1,
+        "quiz": "e9458702-e1a2-4ebe-b47a-7ff4f88d60a0",
+        "choice_input": "x: \"hello\"\n\ny: \"goodbye\"",
+        "choice_display": "<p>x: &quot;hello&quot;</p>\n<p>y: &quot;goodbye&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "8854d710-da4b-47eb-9626-95886935c4d1",
+    "fields": {
+        "created_at": "2016-02-03T06:42:28.909Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:28.909Z",
+        "last_modified_by": 1,
+        "quiz": "695a3aab-fb7e-4257-9ac3-c967ef93e003",
+        "choice_input": "An `IndexError` is raised. ",
+        "choice_display": "<p>An <code>IndexError</code> is raised.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "8de4d718-5bf4-4e62-adac-08d346f2846b",
+    "fields": {
+        "created_at": "2016-02-02T15:24:50.740Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T15:24:50.740Z",
+        "last_modified_by": 1,
+        "quiz": "f93cb03f-db3b-46d2-aa21-90ea097b6f26",
+        "choice_input": "[0]",
+        "choice_display": "<p>[0]</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "8f9de553-3794-4ae8-8f7a-f7d1739249c4",
+    "fields": {
+        "created_at": "2016-02-02T07:27:25.543Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:27:25.543Z",
+        "last_modified_by": 1,
+        "quiz": "0ecb214a-916d-4a39-bd75-721ce02a3805",
+        "choice_input": "import spam.hello as hello",
+        "choice_display": "<p>import spam.hello as hello</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "9444de00-fec6-4073-ba33-0f6c0cff8eae",
+    "fields": {
+        "created_at": "2016-02-02T15:24:50.737Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T15:24:50.737Z",
+        "last_modified_by": 1,
+        "quiz": "f93cb03f-db3b-46d2-aa21-90ea097b6f26",
+        "choice_input": "[1, 2, 3, 4]\n",
+        "choice_display": "<p>[1, 2, 3, 4]</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "9515b403-0dc0-4dfd-a106-54ec79afb6e8",
+    "fields": {
+        "created_at": "2016-01-16T16:08:30.012Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:08:30.012Z",
+        "last_modified_by": 1,
+        "quiz": "86eb9ad5-990d-4995-9258-f4c2934dd573",
+        "choice_input": "an *O(n)* operation where `n` is the number of items in the dictionary",
+        "choice_display": "<p>an <em>O(n)</em> operation where <code>n</code> is the number of items in the dictionary</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "96d38a9d-aa4a-4e18-a476-cca70c640030",
+    "fields": {
+        "created_at": "2016-01-17T12:52:40.732Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:52:40.732Z",
+        "last_modified_by": 1,
+        "quiz": "4adad563-eb5a-4141-bd1b-e12e7c782731",
+        "choice_input": "hello",
+        "choice_display": "<p>hello</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "9e9179e9-63dc-4326-b6df-ac84f7afb94f",
+    "fields": {
+        "created_at": "2016-02-02T13:38:01.763Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T13:38:01.763Z",
+        "last_modified_by": 1,
+        "quiz": "3e82c50a-f42c-4588-acb4-3f820ae6bc62",
+        "choice_input": "10",
+        "choice_display": "<p>10</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "a262d9f3-b20d-4f2b-a14c-1b58c51eee29",
+    "fields": {
+        "created_at": "2016-01-15T07:54:34.301Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:54:34.301Z",
+        "last_modified_by": 1,
+        "quiz": "f9c2cbd5-755e-4abb-9b54-59b42813424a",
+        "choice_input": "[1, 2, 3]",
+        "choice_display": "<p>[1, 2, 3]</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "a3572942-342c-4568-9499-a44f388c98f4",
+    "fields": {
+        "created_at": "2016-01-25T16:20:23.973Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T16:20:23.973Z",
+        "last_modified_by": 1,
+        "quiz": "62586230-e2bd-458c-9dbf-2515abd36e69",
+        "choice_input": "No, `__len__` must return an integer whose value is ` >= 0 `",
+        "choice_display": "<p>No, <code>__len__</code> must return an integer whose value is <code>&gt;= 0</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "a581456d-1a27-4921-9ea8-51bbc8bc9caa",
+    "fields": {
+        "created_at": "2016-01-25T16:20:23.969Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T16:20:23.969Z",
+        "last_modified_by": 1,
+        "quiz": "62586230-e2bd-458c-9dbf-2515abd36e69",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "a9ea3265-f700-419a-a5dd-f4179f31f372",
+    "fields": {
+        "created_at": "2016-02-02T07:27:25.542Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:27:25.542Z",
+        "last_modified_by": 1,
+        "quiz": "0ecb214a-916d-4a39-bd75-721ce02a3805",
+        "choice_input": "from spam import hello.world",
+        "choice_display": "<p>from spam import hello.world</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "aa63e681-f5a8-433f-9276-a0b8795c05e2",
+    "fields": {
+        "created_at": "2016-02-02T07:27:25.536Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:27:25.536Z",
+        "last_modified_by": 1,
+        "quiz": "0ecb214a-916d-4a39-bd75-721ce02a3805",
+        "choice_input": "from spam import hello",
+        "choice_display": "<p>from spam import hello</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "aa91e302-5fe3-4cee-9773-376623d55a99",
+    "fields": {
+        "created_at": "2016-01-17T12:57:26.355Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:57:26.355Z",
+        "last_modified_by": 1,
+        "quiz": "f4bdc22b-f948-4560-a337-38afdc642fff",
+        "choice_input": "hello",
+        "choice_display": "<p>hello</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "aa9f6f75-94a9-429e-927a-de8d5555df62",
+    "fields": {
+        "created_at": "2016-02-01T13:56:01.931Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:56:01.931Z",
+        "last_modified_by": 1,
+        "quiz": "9a13e761-0f5e-4de5-946c-586e1ef00d7e",
+        "choice_input": "`x['spam']` = 5,  `x['eggs']` = 6",
+        "choice_display": "<p><code>x['spam']</code> = 5,  <code>x['eggs']</code> = 6</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "ad8e61b3-0e70-4451-bee6-d6c024c91b9a",
+    "fields": {
+        "created_at": "2016-01-31T02:20:21.165Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:20:21.165Z",
+        "last_modified_by": 1,
+        "quiz": "754a0a80-1004-4503-ac9f-b740da5625a0",
+        "choice_input": "The above code is invalid. A `KeyError` is raised since the `bacon` variable does not exist in the string to be formatted. ",
+        "choice_display": "<p>The above code is invalid. A <code>KeyError</code> is raised since the <code>bacon</code> variable does not exist in the string to be formatted.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "ae2e9c90-6c69-48c1-a87f-e2b3dd9744e9",
+    "fields": {
+        "created_at": "2016-01-31T02:14:53.391Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:14:53.391Z",
+        "last_modified_by": 1,
+        "quiz": "94d1bac4-3fca-4027-9618-4bebdf10ac93",
+        "choice_input": "The above code is invalid. A `KeyError` is raised.",
+        "choice_display": "<p>The above code is invalid. A <code>KeyError</code> is raised.</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "ae45a150-4fc4-4d11-8a4c-b2fefe46ca01",
+    "fields": {
+        "created_at": "2016-02-01T13:56:01.928Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:56:01.928Z",
+        "last_modified_by": 1,
+        "quiz": "9a13e761-0f5e-4de5-946c-586e1ef00d7e",
+        "choice_input": "`x['spam']` = 3,  `x['eggs']` = 6",
+        "choice_display": "<p><code>x['spam']</code> = 3,  <code>x['eggs']</code> = 6</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "b0e41a0f-a753-4739-9e05-0ec129207160",
+    "fields": {
+        "created_at": "2016-02-01T13:38:16.159Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T13:38:16.159Z",
+        "last_modified_by": 1,
+        "quiz": "dd2c098f-53da-4843-b94b-8753deaf51e1",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "b4a13347-cdab-414b-960a-b4dae30f1e78",
+    "fields": {
+        "created_at": "2016-01-15T07:54:34.301Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:54:34.301Z",
+        "last_modified_by": 1,
+        "quiz": "f9c2cbd5-755e-4abb-9b54-59b42813424a",
+        "choice_input": "[1, 2, 3, 4]",
+        "choice_display": "<p>[1, 2, 3, 4]</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "b89aa449-a9db-4a61-afab-587108929efe",
+    "fields": {
+        "created_at": "2016-01-17T12:52:40.735Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:52:40.735Z",
+        "last_modified_by": 1,
+        "quiz": "4adad563-eb5a-4141-bd1b-e12e7c782731",
+        "choice_input": "hello world",
+        "choice_display": "<p>hello world</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "b8e8694b-de7a-44a6-9a84-9d5aabc228c2",
+    "fields": {
+        "created_at": "2016-02-02T07:27:25.544Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T07:27:25.544Z",
+        "last_modified_by": 1,
+        "quiz": "0ecb214a-916d-4a39-bd75-721ce02a3805",
+        "choice_input": "import spam.hello.world as world",
+        "choice_display": "<p>import spam.hello.world as world</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "ba89ee51-ec7f-448c-b983-a53b407da930",
+    "fields": {
+        "created_at": "2016-02-02T12:21:51.614Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T12:21:51.615Z",
+        "last_modified_by": 1,
+        "quiz": "daf9e675-929c-4d93-a645-276df93aaac1",
+        "choice_input": "`True`",
+        "choice_display": "<p><code>True</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "bc3b1651-78ac-4ff0-9fb9-517c3d7818ab",
+    "fields": {
+        "created_at": "2016-01-16T16:08:30.011Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:08:30.011Z",
+        "last_modified_by": 1,
+        "quiz": "86eb9ad5-990d-4995-9258-f4c2934dd573",
+        "choice_input": "an *O(1)* operation",
+        "choice_display": "<p>an <em>O(1)</em> operation</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "bc655ae7-efa4-4864-92c6-08e29ce0046b",
+    "fields": {
+        "created_at": "2016-01-31T02:12:05.249Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:12:05.250Z",
+        "last_modified_by": 1,
+        "quiz": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "bcf1ae69-4001-4f8c-ba2a-588512ae1494",
+    "fields": {
+        "created_at": "2016-01-15T07:54:34.302Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:54:34.302Z",
+        "last_modified_by": 1,
+        "quiz": "f9c2cbd5-755e-4abb-9b54-59b42813424a",
+        "choice_input": "[1]",
+        "choice_display": "<p>[1]</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "c20e8607-95c7-472e-8c18-3b3d12afd8fe",
+    "fields": {
+        "created_at": "2016-01-31T02:20:21.164Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:20:21.164Z",
+        "last_modified_by": 1,
+        "quiz": "754a0a80-1004-4503-ac9f-b740da5625a0",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "c3bc8e63-c816-46f6-87cb-c514e71dd4d6",
+    "fields": {
+        "created_at": "2016-02-02T15:24:50.741Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T15:24:50.741Z",
+        "last_modified_by": 1,
+        "quiz": "f93cb03f-db3b-46d2-aa21-90ea097b6f26",
+        "choice_input": "[1]",
+        "choice_display": "<p>[1]</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "c46f62ba-6ecf-4f88-8de8-d0a19252e0f0",
+    "fields": {
+        "created_at": "2016-02-03T06:42:15.323Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:15.323Z",
+        "last_modified_by": 1,
+        "quiz": "46cea2a7-5ec5-4fd4-b125-60b378f191e8",
+        "choice_input": "An `IndexError` is raised. ",
+        "choice_display": "<p>An <code>IndexError</code> is raised.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "c60fe63b-6199-43de-970f-1ed77d20ba7f",
+    "fields": {
+        "created_at": "2016-01-17T12:57:26.357Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:57:26.357Z",
+        "last_modified_by": 1,
+        "quiz": "f4bdc22b-f948-4560-a337-38afdc642fff",
+        "choice_input": "hello world",
+        "choice_display": "<p>hello world</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "c795321b-e548-4cb9-80d7-517b0e5e4037",
+    "fields": {
+        "created_at": "2016-02-02T15:24:50.738Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T15:24:50.738Z",
+        "last_modified_by": 1,
+        "quiz": "f93cb03f-db3b-46d2-aa21-90ea097b6f26",
+        "choice_input": "[0, 2, 3, 4]",
+        "choice_display": "<p>[0, 2, 3, 4]</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "cc4b4877-247b-46ad-bac0-73e95cbd3bad",
+    "fields": {
+        "created_at": "2016-01-17T14:08:32.608Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T14:08:32.608Z",
+        "last_modified_by": 1,
+        "quiz": "f9291aa7-e7f8-4ab5-a88b-349ab842ffd6",
+        "choice_input": "No",
+        "choice_display": "<p>No</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "cd20824f-2dd7-49e5-81c3-d7f0d92aa3a0",
+    "fields": {
+        "created_at": "2016-01-31T03:03:47.500Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T03:03:47.500Z",
+        "last_modified_by": 1,
+        "quiz": "24509f5f-e65b-4b64-8656-327391f7a2de",
+        "choice_input": "2",
+        "choice_display": "<p>2</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "cdab47fd-8b9c-43e4-954f-443c9cb1678f",
+    "fields": {
+        "created_at": "2016-02-01T15:56:57.958Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:56:57.958Z",
+        "last_modified_by": 1,
+        "quiz": "2a824be1-03a6-4b99-9daf-10b9917715a5",
+        "choice_input": "The above code is invalid. A `KeyError` is raised since the `bacon` variable does not exist in the format string",
+        "choice_display": "<p>The above code is invalid. A <code>KeyError</code> is raised since the <code>bacon</code> variable does not exist in the format string</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "cddee9a4-7ac4-43eb-b55f-4e25ed45018c",
+    "fields": {
+        "created_at": "2016-01-26T14:10:46.444Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-26T14:10:46.444Z",
+        "last_modified_by": 1,
+        "quiz": "7d7ff4e2-dead-4d91-a7f5-5878c58278bc",
+        "choice_input": "\"hello\"",
+        "choice_display": "<p>&quot;hello&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "ce4a49e8-456e-4955-ad56-e0afa56afb6c",
+    "fields": {
+        "created_at": "2016-02-07T09:14:59.290Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-07T09:14:59.290Z",
+        "last_modified_by": 1,
+        "quiz": "d7115f16-b23b-4501-9339-c53081a42954",
+        "choice_input": "statically typed",
+        "choice_display": "<p>statically typed</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "d271045f-62af-4163-9e7e-1e2560e77c76",
+    "fields": {
+        "created_at": "2016-01-31T02:12:05.250Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T02:12:05.250Z",
+        "last_modified_by": 1,
+        "quiz": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
+        "choice_input": "The above code is not valid. A `KeyError`: is raised\n",
+        "choice_display": "<p>The above code is not valid. A <code>KeyError</code>: is raised</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "d37383c6-d86b-4102-8113-b46a1b717adb",
+    "fields": {
+        "created_at": "2016-01-17T12:52:40.734Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:52:40.734Z",
+        "last_modified_by": 1,
+        "quiz": "4adad563-eb5a-4141-bd1b-e12e7c782731",
+        "choice_input": "world",
+        "choice_display": "<p>world</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "d54f843b-0fee-4947-be9b-f1487b5fc89d",
+    "fields": {
+        "created_at": "2016-02-03T06:43:48.176Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:43:48.176Z",
+        "last_modified_by": 1,
+        "quiz": "9f6b755e-cbaf-41d8-9a22-d6887679e784",
+        "choice_input": "`(2, 3, 4, )`",
+        "choice_display": "<p><code>(2, 3, 4, )</code></p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "d79c0767-8a9b-4205-9572-38c1fcaa7667",
+    "fields": {
+        "created_at": "2016-02-02T12:21:51.618Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T12:21:51.618Z",
+        "last_modified_by": 1,
+        "quiz": "daf9e675-929c-4d93-a645-276df93aaac1",
+        "choice_input": "`None`",
+        "choice_display": "<p><code>None</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "d9a47a4a-1844-4c56-a1c9-a5048f275bf6",
+    "fields": {
+        "created_at": "2016-01-16T16:09:01.696Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:09:01.696Z",
+        "last_modified_by": 1,
+        "quiz": "f1235486-8e80-47f3-adad-a5db214433d5",
+        "choice_input": "an amortized *O(1)* operation",
+        "choice_display": "<p>an amortized <em>O(1)</em> operation</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "db05b381-904e-4cab-a558-9fdc0607a205",
+    "fields": {
+        "created_at": "2016-01-16T16:01:42.644Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:01:42.644Z",
+        "last_modified_by": 1,
+        "quiz": "4bd54721-05df-4f35-9f99-ab1869a7d635",
+        "choice_input": "in an unordered fashion",
+        "choice_display": "<p>in an unordered fashion</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "dc88ad51-101b-4eba-81c5-d45a52168b19",
+    "fields": {
+        "created_at": "2016-02-07T09:14:59.290Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-07T09:14:59.290Z",
+        "last_modified_by": 1,
+        "quiz": "d7115f16-b23b-4501-9339-c53081a42954",
+        "choice_input": "dynamically typed",
+        "choice_display": "<p>dynamically typed</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "dd41f947-7b16-4aba-ac42-c3429abc2952",
+    "fields": {
+        "created_at": "2016-02-02T08:00:40.036Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-02T08:00:40.036Z",
+        "last_modified_by": 1,
+        "quiz": "bb961af3-d303-4576-bb88-25eab435ed34",
+        "choice_input": "y is `None`",
+        "choice_display": "<p>y is <code>None</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "e2625898-b19c-4fbb-aa49-54f305e7dcd1",
+    "fields": {
+        "created_at": "2016-02-01T15:19:24.745Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:19:24.745Z",
+        "last_modified_by": 1,
+        "quiz": "e9458702-e1a2-4ebe-b47a-7ff4f88d60a0",
+        "choice_input": "x: The `say_hello` method does not have a `self` keyword argument. So a `TypeError` is raised. \n\ny: \"goodbye\"",
+        "choice_display": "<p>x: The <code>say_hello</code> method does not have a <code>self</code> keyword argument. So a <code>TypeError</code> is raised.</p>\n<p>y: &quot;goodbye&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "e7559f39-54b8-4479-961a-99032fe82bb6",
+    "fields": {
+        "created_at": "2016-01-16T16:09:01.697Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-16T16:09:01.697Z",
+        "last_modified_by": 1,
+        "quiz": "f1235486-8e80-47f3-adad-a5db214433d5",
+        "choice_input": "an *O(n)* operation where `n` is the number of items in the dictionary",
+        "choice_display": "<p>an <em>O(n)</em> operation where <code>n</code> is the number of items in the dictionary</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "eab17819-a9a4-43b3-9340-8ad7a754d404",
+    "fields": {
+        "created_at": "2016-01-25T16:20:23.970Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-25T16:20:23.970Z",
+        "last_modified_by": 1,
+        "quiz": "62586230-e2bd-458c-9dbf-2515abd36e69",
+        "choice_input": "No, `__len__` must return a numeric object. ",
+        "choice_display": "<p>No, <code>__len__</code> must return a numeric object.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "eaf7903c-cda3-4f85-9e04-a8c7f694bd3c",
+    "fields": {
+        "created_at": "2016-02-03T06:42:28.908Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-03T06:42:28.908Z",
+        "last_modified_by": 1,
+        "quiz": "695a3aab-fb7e-4257-9ac3-c967ef93e003",
+        "choice_input": "`[1, 2]`",
+        "choice_display": "<p><code>[1, 2]</code></p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "ec32361e-fc85-4d47-a9a8-4ed287a842b0",
+    "fields": {
+        "created_at": "2016-01-31T03:03:47.497Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-31T03:03:47.497Z",
+        "last_modified_by": 1,
+        "quiz": "24509f5f-e65b-4b64-8656-327391f7a2de",
+        "choice_input": "21",
+        "choice_display": "<p>21</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "eca05ad9-ed6f-4b83-a86f-be17a0f82905",
+    "fields": {
+        "created_at": "2016-02-01T14:30:29.781Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T14:30:29.781Z",
+        "last_modified_by": 1,
+        "quiz": "8beebdf0-fe91-4c31-9592-bb8b0e8fa7ea",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "f0c7de93-e1c9-47ac-9077-b95eb9165a72",
+    "fields": {
+        "created_at": "2016-01-17T12:59:49.172Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:59:49.172Z",
+        "last_modified_by": 1,
+        "quiz": "500018e7-c5e5-4e71-909b-ffe852ce490d",
+        "choice_input": "hello\n\nworld",
+        "choice_display": "<p>hello</p>\n<p>world</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "f12f41b1-9e83-4438-92b8-c8507e2ab12a",
+    "fields": {
+        "created_at": "2016-01-15T07:10:37.408Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:10:37.408Z",
+        "last_modified_by": 1,
+        "quiz": "7040b9c1-f7ec-4d2d-9dac-9b556bd39798",
+        "choice_input": "\"spam \"",
+        "choice_display": "<p>&quot;spam &quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "f5a791a3-b12a-4724-867a-d36614feba96",
+    "fields": {
+        "created_at": "2016-02-01T15:19:24.743Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:19:24.743Z",
+        "last_modified_by": 1,
+        "quiz": "e9458702-e1a2-4ebe-b47a-7ff4f88d60a0",
+        "choice_input": "x: \"hello\"\n\ny: The `say_goodbye` classmethod does not have a mandatory positional argument. So a `TypeError` is raised. ",
+        "choice_display": "<p>x: &quot;hello&quot;</p>\n<p>y: The <code>say_goodbye</code> classmethod does not have a mandatory positional argument. So a <code>TypeError</code> is raised.</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "f8a6b249-ad23-443b-8511-1c92936f214c",
+    "fields": {
+        "created_at": "2016-02-01T15:56:57.957Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-01T15:56:57.957Z",
+        "last_modified_by": 1,
+        "quiz": "2a824be1-03a6-4b99-9daf-10b9917715a5",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "f9e6afbf-4247-4892-8c2f-3fc9e8a9d45c",
+    "fields": {
+        "created_at": "2016-01-17T12:57:26.356Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-17T12:57:26.356Z",
+        "last_modified_by": 1,
+        "quiz": "f4bdc22b-f948-4560-a337-38afdc642fff",
+        "choice_input": "world",
+        "choice_display": "<p>world</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "fce86633-27b5-4a4f-b26d-3ca513b4d7bb",
+    "fields": {
+        "created_at": "2016-01-15T07:14:35.082Z",
+        "created_by": 1,
+        "last_modified_at": "2016-01-15T07:14:35.082Z",
+        "last_modified_by": 1,
+        "quiz": "d082fee0-d2e9-491f-bacb-b61ca48f76e8",
+        "choice_input": "Yes",
+        "choice_display": "<p>Yes</p>\n",
+        "is_correct": false
+    }
+}]
