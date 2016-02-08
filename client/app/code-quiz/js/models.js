@@ -65,8 +65,8 @@ var CodeQuizAttemptModel = Backbone.Model.extend({
             promise.resolve();
 
             //reset for next attempt
-            delete self.attributes.id;
-            delete self.attributes.state;
+            delete this.attributes.id;
+            delete this.attributes.state;
 
         }
         else if(EVALUATION_STATES[state] == "EVALUATING") {
@@ -104,15 +104,18 @@ var AttemptCollection = Backbone.Collection.extend({
 
 var AttemptStore = function(options) {
     this._conceptId = options.conceptId;
+
+    this._attempts = {};
     if(!options.attemptCollection) {
         this._attemptCollection = new AttemptCollection([], {
             conceptId: options.conceptId
         });
     }
     else {
-        this._attemptCollection = options._attemptCollection;
+        this._attemptCollection = options.attemptCollection;
+        this.initializeAttempts();
     }
-    this._attempts = {};
+
 };
 
 AttemptStore.prototype = {
