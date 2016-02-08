@@ -8,15 +8,39 @@ var LoginForm = React.createClass({
     render: function() {
         return (
             <div id="login-form">
-                <div>
-                    <a href="/accounts/google/login/?process=login">
-                        <img id="google-signin-img" 
-                             src="/dist/images/google-signin.png" 
+                <a href="/accounts/google/login/?process=login">
+                    <div className="signin-item card" 
+                         data-url="/accounts/google/login/?process=login"
+                         onClick={this.onSigninItemClicked}>
+
+                        <img className="signin-image" 
+                             src="/dist/images/google-signin.jpg" 
                              alt="Sign in with Google" />
-                    </a>
-                </div>
+                             <div>Sign in with Google</div>
+                    </div>
+                </a>
+                <a href="/accounts/github/login/?process=login">
+                    <div className="signin-item card" 
+                         data-url="/accounts/github/login/?process=login"
+                         onClick={this.onSigninItemClicked}>
+                            <img className="signin-image" 
+                                 src="/dist/images/github-signin.png" 
+                                 alt="Sign in with GitHub" />
+                            <div>Sign in with GitHub</div>
+                    </div>
+                </a>
             </div>
         );
+    },
+
+    onSigninItemClicked: function(evt) {
+        return;
+        var el = $(evt.target);
+        var url = el.attr("url");
+        if(!url) {
+            url = el.parent().attr("url");
+        }
+        window.location = url;
     }
 });
 

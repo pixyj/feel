@@ -21,9 +21,26 @@
     }
 }
 
-#google-signin-img {
-    max-width: 80%;
+.signin-image {
+    height: 80px;
+    float: left;
+    margin-right: 20%;
 }
+
+@media(max-width: 992px) {
+    .signin-image {
+        margin-right: 5%;
+    }
+}
+
+.signin-item {
+    line-height: 80px;
+    height: 80px;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: initial;
+}
+
 
 #logout {
     position: absolute;
@@ -65,7 +82,7 @@
 .overlay:after {
     content: "X";
     position: fixed;
-    right: 3rem;
+    right: 1rem;
     top: 1rem;
     cursor: pointer;
     z-index: 3;
@@ -80,7 +97,6 @@
     width: 100%;
     display: block;
     z-index: 4;
-    text-align: center;
 }
 
 @media(min-width: 992px) {

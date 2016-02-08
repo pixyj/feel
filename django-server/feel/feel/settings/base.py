@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 
     #'raven.contrib.django.raven_compat',
 
@@ -114,9 +115,16 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 2
 
 SOCIALACCOUNT_PROVIDERS = \
-    { 'google':
-        { 'SCOPE': ['profile', 'email'],
-          'AUTH_PARAMS': { 'access_type': 'online' } }}
+    {
+        'google': { 
+            'SCOPE': ['profile', 'email'],
+            'AUTH_PARAMS': { 'access_type': 'online' }
+        },
+        'github': {
+            'SCOPE': ['email'],
+            'AUTH_PARAMS': { 'access_type': 'online' }
+        }
+    }
 
 
 
