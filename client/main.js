@@ -204,7 +204,7 @@ var Router = Backbone.Router.extend({
 
     notFound: function() {
         this.resetPage();
-        var h4 = $("<h4>").html("Oops. Page Not found.").css({
+        var h4 = $("<h4>").html("Oops... Page Not found.").css({
             "margin-top": "3%",
             "text-align": "center"
         });
@@ -249,7 +249,7 @@ var triggerResize = function() {
 triggerResize = _.debounce(triggerResize, 500);
 
 var listenToResize = function() {
-    //$(window).resize(triggerResize);
+    $(window).resize(triggerResize);
 };
 
 var init = function() {
