@@ -6,6 +6,8 @@ var Backbone = require("lib").Backbone;
 
 var utils = require("utils");
 var RadioGroup = require("radio-group.jsx").RadioGroup;
+var MarkdownDisplayComponent = require("markdown-and-preview.jsx").MarkdownDisplayComponent;
+var md = require("md");
 
 var models = require("./models");
 var CreatorStore = models.CreatorStore;
@@ -76,6 +78,7 @@ Store.prototype = {
     //provide a declarative way to proxy methods defined in Creator and Student stores
     creatorAPIs: {
         'getCourseName': 'getName',
+        'getCourseIntro': 'getCourseIntro',
         'getRootConcept': 'getRootConcept',
         'getConceptURL': 'getConceptURL',
         'getConceptAndPrereqsSubgraph': 'getConceptAndPrereqsSubgraph'
@@ -724,6 +727,24 @@ var PageComponent = React.createClass({
 
     render: function() {
 
+        var intro = "";
+        var takePretest = "";
+        if(this.state.state === StudentStates.NEW_VISITOR) {
+            var mdContent = this.props.store.getCourseIntro();
+            var html = md.mdAndMathToHtml(mdContent);
+            intro = <MarkdownDisplayComponent className="card" 
+                                              id="course-intro" 
+                                              display={html} />
+
+            takePretest = <div className="card">
+                            <button className="btn btn-large waves-effect" 
+                                    id="course-start-pretest-btn"
+                                    onClick={this.scrollToPretest}>
+                                Get Started by taking a simple pretest
+                            </button>
+                          </div>
+        }
+
         var StateComponentClass = StudentStateComponents[this.state.state];
         var stateComponent = <StateComponentClass 
                                 store={this.props.store} 
@@ -733,6 +754,11 @@ var PageComponent = React.createClass({
         return (
             <div>
                 <div className="row">
+                    <div className="col-xs-12">
+                        {intro}
+                        {takePretest}
+                        <h4 id="course-concepts-and-deps-heading" className="center"> Concepts and Dependencies </h4>
+                    </div>
                     <div className="col-xs-12" ref="graphContainer">
                     </div>
                     <div className="col-xs-12" ref="stateComponent">
@@ -763,6 +789,13 @@ var PageComponent = React.createClass({
 
     deactivateCurrentConcept: function() {
         this.graphView.deactivateCurrentNode();
+    },
+
+    scrollToPretest: function() {
+        var el = $(".course-homepage-state-component");
+        $(document.body).animate({
+            scrollTop: el.offset().top - 20
+        }, 2000);
     }
 
 });

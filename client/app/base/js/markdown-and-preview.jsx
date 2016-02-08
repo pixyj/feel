@@ -92,9 +92,12 @@ var MarkdownDisplayComponentMixin = {
     render: function() {
         var className = this.props.className || "";
         var display = this.props.display;
+        var id = this.props.id || "";
 
         return (
-            <div className={className} dangerouslySetInnerHTML={{__html: display}} />
+            <div className={className}
+                 id={id}
+                 dangerouslySetInnerHTML={{__html: display}} />
         );
         
     }

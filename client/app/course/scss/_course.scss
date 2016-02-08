@@ -3,7 +3,7 @@
 .radio-item {
     cursor: pointer;
     vertical-align: middle;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin-bottom: 1rem;
     background: #FAFAFA;
     color: black;
@@ -20,6 +20,20 @@
 .radio-item-selected {
     color: white;
     background: #9C27B0;
+}
+
+#course-intro {
+    padding: 1.5rem;
+    font-size: 1.3rem;
+}
+
+#course-start-pretest-btn {
+    width: 100%;
+}
+
+#course-concepts-and-deps-heading {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
 }
 
 #course-pretest-container {
@@ -51,7 +65,7 @@
 }
 
 .course-homepage-state-component {
-    min-height: 500px;
+    min-height: 200px;
     margin-top: 4rem;
     padding: 1.5rem;
 }

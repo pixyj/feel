@@ -232,6 +232,10 @@ CreatorStore.prototype = {
         this._course.save();
     },
 
+    getCourseIntro: function() {
+        return this._course.get("intro");
+    },
+
     isPublished: function() {
         return this._course.attributes.isPublished;
     },
