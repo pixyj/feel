@@ -73,6 +73,15 @@ class CodeQuizAttempt(UUIDModel):
                                               result=True)\
                                         .count()
 
+    @classmethod
+    def get_user_answered_quiz_ids(self, user_key, quiz_ids):
+        return CodeQuizAttempt.objects.filter(user_key=user_key).\
+                                   filter(codequiz__in=quiz_ids).\
+                                   filter(result=True).\
+                                   only("codequiz_id")
+
+
+
     @property
     def outputs(self):
 

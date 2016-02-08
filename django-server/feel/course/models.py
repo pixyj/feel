@@ -10,6 +10,8 @@ from core.models import TimestampedModel, UUIDModel, SlugModel
 from core import search
 
 from concept.models import Concept
+from quiz.models import QuizAttempt
+from codequiz.models import CodeQuizAttempt
 
 
 class Course(TimestampedModel, UUIDModel):
@@ -28,6 +30,10 @@ class Course(TimestampedModel, UUIDModel):
     #todo -> Change to courseconcept 
     @property
     def concepts(self):
+        return self.courseconcepts
+
+    @property
+    def courseconcepts(self):
         return CourseConcept.courseconcepts.items(self)
 
     @property
@@ -60,7 +66,6 @@ class Course(TimestampedModel, UUIDModel):
         return self.get_cacheable_attr('_pretest_quizzes', self._pretest_cache_key)
 
     def get_cacheable_attr(self, attr, cache_key):
-        #import ipdb; ipdb.set_trace()
         cached_attr = cache.get(cache_key)
         if cached_attr is not None:
             return cached_attr
@@ -77,12 +82,76 @@ class Course(TimestampedModel, UUIDModel):
         return "/course/{}/".format(slugify(self.name))
 
     def get_student_progress(self, user_key):
+        cached_quiz_ids = cache.get(self._quiz_ids_and_codequiz_ids_cache_key)
+        if cached_quiz_ids is not None:
+            #print("Fetching quiz_ids from cache")
+            return self._get_student_progress_from_cached_quiz_ids(self, cached_quiz_ids)
         concept_progress = {}
-
         for cc in self.concepts:
             concept = cc.concept
             concept_progress[str(concept.id)] = concept.get_student_progress(user_key)
         return concept_progress
+
+    def _get_student_progress_from_cached_quiz_ids(self, user_key, quiz_ids_by_concept):
+        all_quiz_ids = []
+        all_codequiz_ids = []
+        for concept_id, ids in quiz_ids_by_concept.items():
+            all_quiz_ids.extend(ids['quiz_ids'].keys())
+            all_codequiz_ids.extend(ids['codequiz_ids'].keys())
+        answered_quiz_ids = QuizAttempt.objects.get_user_answered_quiz_ids(user_key, all_quiz_ids)
+        answered_codequiz_ids = CodeQuizAttempt.get_user_answered_quiz_ids(user_key, all_quiz_ids)
+
+        answered_quiz_dict = {quiz_id: quiz_id for quiz_id in answered_quiz_ids}
+        answered_codequiz_dict = {quiz_id: quiz_id for quiz_id in answered_codequiz_ids}
+
+        progress = {}
+        for concept_id, ids in quiz_ids_by_concept.items():
+            quiz_ids = ids['quiz_ids']
+            codequiz_ids = ids['codequiz_ids']
+
+            answered_quiz_count = 0
+            answered_codequiz_count = 0
+
+            for quiz_id, _ in quiz_ids.items():
+                if quiz_id in answered_quiz_dict:
+                    answered_quiz_count += 1
+            for quiz_id, _ in codequiz_ids.items():
+                if quiz_id in answered_codequiz_dict:
+                    answered_codequiz_count += 1
+
+            quiz = {
+                "answered": answered_quiz_count,
+                "total": len(quiz_ids)
+            }
+            codequiz = {
+                "answered": answered_codequiz_count,
+                "total": len(codequiz_ids)
+            }
+            progress[str(concept_id)] = {
+                "quiz": quiz,
+                "codequiz": codequiz
+            }
+        return progress
+
+    @property
+    def _quiz_ids_and_codequiz_ids_cache_key(self):
+        return "course:{}:quiz_ids_and_codequiz_ids".format(self.id)
+
+    def cache_quiz_ids_and_codequiz_ids(self):
+        concept_quiz_and_code_quiz_ids = {}
+        for cc in self.courseconcepts:
+            concept = cc.concept
+            quiz_ids = concept.get_quiz_ids()
+            codequiz_ids = concept.get_codequiz_ids()
+            concept_quiz_and_code_quiz_ids[concept.id] = {
+                "quiz_ids": {quiz_id: quiz_id for quiz_id in quiz_ids},
+                "codequiz_ids": {quiz_id: quiz_id for quiz_id in quiz_ids}
+            }
+        key = self._quiz_ids_and_codequiz_ids_cache_key
+        return cache.set(key, concept_quiz_and_code_quiz_ids)
+
+    def evict_quiz_ids_and_codequiz_ids_from_cache(self):
+        return cache.delete(self._quiz_ids_and_codequiz_ids_cache_key)
 
     def publish_and_slugify(self):
         self.is_published = True
@@ -126,17 +195,22 @@ class Course(TimestampedModel, UUIDModel):
             CourseConcept.objects.create(**attrs)
 
     def cache_content(self):
-        courseconcepts = [c for c in self.courseconcept_set.select_related('concept').all()]
+        courseconcepts = CourseConcept.courseconcepts.items(self)
         for cc in courseconcepts:
-            cc.cache_page()
+            cc.cache_content()
         self.cache_attr('_pretest_quizzes', self._pretest_cache_key)
         self.cache_attr('_dependencies', self._dependencies_cache_key)
+        self.cache_quiz_ids_and_codequiz_ids()
+        CourseConcept.courseconcepts.cache_items(self)
 
     def evict_content_from_cache(self):
-        for c in self.courseconcept_set.select_related('concept'):
-            c.concept.evict_cached_page()
+        courseconcepts = [c for c in self.courseconcept_set.select_related('concept').all()]
+        for cc in courseconcepts:
+            cc.evict_content_from_cache()
         self.evict_attr_from_cache(self._pretest_cache_key)
         self.evict_attr_from_cache(self._dependencies_cache_key)
+        self.evict_quiz_ids_and_codequiz_ids_from_cache()
+        CourseConcept.courseconcepts.evict_items_from_cache(self)
 
     def add_concept(self, name):
         concept = Concept.objects.create(created_by=self.created_by,\
@@ -144,6 +218,7 @@ class Course(TimestampedModel, UUIDModel):
         courseconcept = CourseConcept.objects.create(course=self,concept=concept)
         return concept
 
+    # Search
     def create_and_load_search_indices(self):
         self._create_and_load_concept_name_index()
         self._create_and_load_concept_text_content_index()
@@ -203,8 +278,22 @@ class CourseSlug(SlugModel):
 
 class CourseConceptManager(models.Manager):
 
+    def _get_items_cache_key(self, course):
+        return "course:{}:concepts".format(course.id)
+    
     def items(self, course):
-        return course.courseconcept_set.select_related('concept').only('concept').all()
+        key = self._get_items_cache_key(course)
+        cached_data = cache.get(key)
+        if cached_data is not None:
+            return cached_data
+        return course.courseconcept_set.select_related('concept').all()
+
+    def cache_items(self, course):
+        items = self.items(course)
+        return cache.set(self._get_items_cache_key(course), items)
+
+    def evict_items_from_cache(self, course):
+        return cache.delete(self._get_items_cache_key(course))
 
 
 class CourseConcept(TimestampedModel, UUIDModel):
@@ -223,8 +312,11 @@ class CourseConcept(TimestampedModel, UUIDModel):
         self.save()
         return self.slug
 
-    def cache_page(self):
-        self.concept.cache_page()
+    def cache_content(self):
+        self.concept.cache_content()
+
+    def evict_content_from_cache(self):
+        self.concept.evict_content_from_cache()
 
     def __str__(self):
         return "{} belonging to {}".format(self.concept, self.course)

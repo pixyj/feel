@@ -109,6 +109,12 @@ class QuizUserAttemptManager(models.Manager):
     def get_answered_quiz_count_in(self, user_key, quiz_ids):
         return self.get_user_attempts_in_quizzes(user_key, quiz_ids).filter(result=True).count()
 
+    def get_user_answered_quiz_ids(self, user_key, quiz_ids):
+        return QuizAttempt.objects.filter(user_key=user_key).\
+                                   filter(quiz__in=quiz_ids).\
+                                   filter(result=True).\
+                                   only("quiz_id")
+
 
     def attribute_to_user(self, user, user_key):
         return self.filter(user_key=user_key).update(user_key=user.id, user=user)

@@ -68,28 +68,80 @@ class Concept(TimestampedModel, UUIDModel):
     def evict_cached_page(self):
         key = self._page_cache_key
         return cache.delete(key)
+    
+    # Quizzes
+
+    @property
+    def _quiz_ids_cache_key(self):
+        return "concept:{}:quiz_ids".format(self.id)
 
     def get_quiz_ids(self):
+        key = self._quiz_ids_cache_key
+        data = cache.get(key)
+        if data is not None:
+            return data
         sections = self.conceptsection_set.all()
         section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
-
         quiz_ids = []
         for section, quizzes in section_quizzes.items():
             quiz_ids.extend([quiz['id'] for quiz in quizzes])
         return quiz_ids
 
+    def cache_quiz_ids(self):
+        data = self.get_quiz_ids()
+        key = self._quiz_ids_cache_key
+        cache.set(key, data)
+        return data
+
+    def evict_cached_quiz_ids(self):
+        key = self._quiz_ids_cache_key
+        return cache.delete(key)
+
     def get_user_quizattempts(self, user_key):
         quiz_ids = self.get_quiz_ids()
         return QuizAttempt.objects.get_user_attempts_in_quizzes(user_key, quiz_ids)
 
+    # Code Quizzes
+
+    @property
+    def _codequiz_ids_cache_key(self):
+        return "concept:{}:codequiz_ids".format(self.id)
+
     def get_codequiz_ids(self):
+        key = self._codequiz_ids_cache_key
+        data = cache.get(key)
+        if data is not None:
+            return data
         sections = self.conceptsection_set.all()
         return ConceptSection.get_codequiz_ids(sections)
+
+    def cache_codequiz_ids(self):
+        data = self.get_codequiz_ids()
+        key = self._codequiz_ids_cache_key
+        cache.set(key, data)
+        return data
+
+    def evict_cached_codequiz_ids(self):
+        key = self._codequiz_ids_cache_key
+        return cache.delete(key) 
 
     def get_user_codequizattempts(self, user_key):
         quiz_ids = self.get_codequiz_ids()
         return CodeQuizAttempt.get_user_attempts_in_quizzes(user_key, quiz_ids)
 
+    # Top Level Cache APIs
+
+    def cache_content(self):
+        self.cache_page()
+        self.cache_quiz_ids()
+        self.cache_codequiz_ids()
+
+    def evict_content_from_cache(self):
+        self.evict_cached_page()
+        self.evict_cached_quiz_ids()
+        self.evict_cached_codequiz_ids()
+
+    # Student APIs
     def fetch_student_page(self):
         sections = self.conceptsection_set.all()
         section_quizzes = ConceptSection.get_quizzes_in_sections(sections)
@@ -126,6 +178,7 @@ class Concept(TimestampedModel, UUIDModel):
             "total": len(ids)
         }
 
+    # Creator APIs
     @classmethod
     def get_concepts_created_by_user(self, user):
         fields = ('name', 'id', 'created_at', 'last_modified_at', )
@@ -170,7 +223,7 @@ class Concept(TimestampedModel, UUIDModel):
             obj['question_input'] = question_input
             objects.append(obj)
         return objects
-        
+
     def __str__(self):
         s = "{} created by {} - Published? {}"
         return s.format(self.name, self.created_by, self.is_published)
