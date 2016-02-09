@@ -38,6 +38,14 @@ var GraphStore = Backbone.Model.extend({
         this._promise = $.Deferred();
     },
 
+    getCourseName: function() {
+        return this._course.attributes.name;
+    },
+
+    getConceptName: function() {
+        return this._concepts.findWhere({slug: this.options.conceptSlug}).attributes.name;
+    },
+
     fetch: function() {
         var items = [this._concepts, this._dependencies];
         var promises = _.map(items, function(item) {
@@ -45,11 +53,11 @@ var GraphStore = Backbone.Model.extend({
         });
 
         var self = this;
-        $.when.apply($, promises).then(function() {
+        return $.when.apply($, promises).then(function() {
             self._setupDataStructuresAfterModelsAreFetched();
             self._promise.resolve();
         });
-        return this._mergedPromise;
+        
     },
 
     _setupDataStructuresAfterModelsAreFetched: function() {
@@ -215,7 +223,11 @@ var render = function(options ,element) {
     ReactDOM.render(<PageComponent {...options} />, element);
     app.element = element;
 
-    app.graphStore.fetch();
+    app.graphStore.fetch().then(function() {
+        var store = app.graphStore;
+        var title = "{0}, {1} - ConceptCoaster".format(store.getConceptName(), options.courseSlug);
+        document.title = title;
+    });
 };
 
 unmount = function() {

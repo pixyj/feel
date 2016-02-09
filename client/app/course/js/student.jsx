@@ -835,12 +835,14 @@ var render = function(options, element) {
         ProgressBar.setProgress(0.8);
         ReactDOM.render(<PageComponent store={store} />, element); 
         ProgressBar.setProgress(1);
+
+        document.title = "{0} - ConceptCoaster".format(store.getCourseName());
     });
 
     app.store = store;
     app.element = element;
 
-    window.store = store;
+
 
 };
 
