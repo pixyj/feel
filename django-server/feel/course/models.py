@@ -334,7 +334,6 @@ class ConceptDependency(TimestampedModel, UUIDModel):
     def description(self):
         return str(self)
     
-
     def __str__(self):
         return "{} -> {}".format(self.start.concept.name, self.end.concept.name)
 
