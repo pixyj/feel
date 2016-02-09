@@ -482,7 +482,7 @@
         "position": 0,
         "type": 5,
         "data": {
-            "input": "Read [Section 1](https://docs.python.org/3/tutorial/appetite.html) to [Section 3.1 (https://docs.python.org/3/tutorial/introduction.html) of the Python tutorial. "
+            "input": "Read [Section 1](https://docs.python.org/3/tutorial/appetite.html) to [Section 3.1](https://docs.python.org/3/tutorial/introduction.html) of the Python tutorial. "
         }
     }
 }, {
