@@ -23,8 +23,13 @@ ____
     sudo apt-get update
 ____
 
-### 5. Install build-essential
+### 5. Install build-essential and libffi-dev
+
     sudo apt-get install build-essential
+
+    # Required for algoliasearch package
+    sudo apt-get install libffi-dev
+
 ____
 
 ### 8 Install git
