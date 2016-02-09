@@ -244,7 +244,7 @@ var PageComponent = React.createClass({
         return (
             <div className="student-quiz-container">
                 <div className="student-quiz-number">
-                    <p>{this.props.index || 0 + 1}.</p>
+                    <p>{this.props.index || 1}.</p>
                 </div>
                 <div className="student-quiz-body">
                     <MarkdownDisplayComponent   display={problemStatementDisplay} 
@@ -302,7 +302,7 @@ var ConceptSectionItemComponent = React.createClass({
             isAnswered = this.props.isAnswered || false;
             content = <PageComponent    store={this.store} 
                                         isAnswered={isAnswered} 
-                                        index={this.props.index} />
+                                        index={this.props.index + 1} />
         }
         return (
             <div>

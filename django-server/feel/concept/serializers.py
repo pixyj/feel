@@ -29,15 +29,22 @@ class ConceptSectionSerializer(serializers.ModelSerializer):
             ordered_quizzes = []
             for quiz_id in quiz_ids:
                 ordered_quizzes.append(quiz_dict[quiz_id])
-
             del ret['data']['quiz_ids']
             ret['data']['quizzes'] = ordered_quizzes
+
         elif instance.has_codequizzes():
             quiz_ids = ret['data']['quiz_ids']
             models = CodeQuiz.objects.filter(pk__in=quiz_ids)
             quizzes = CodeQuizSerializer(models, many=True).data
+            
+            quiz_dict = {}
+            for quiz in quizzes:
+                quiz_dict[quiz['id']] = quiz
+            ordered_quizzes = []
+            for quiz_id in quiz_ids:
+                ordered_quizzes.append(quiz_dict[quiz_id])
             del ret['data']['quiz_ids']
-            ret['data']['quizzes'] = quizzes
+            ret['data']['quizzes'] = ordered_quizzes
         return ret
 
     class Meta:
