@@ -282,10 +282,11 @@ var View = Backbone.View.extend({
         });
         el.find(".graph-node-title").addClass("graph-node-attempted-title");
         el.append(background);
-        if(progress === 1) {
-            var done = $("<span>").addClass("graph-node-done-span").html("🏆");
-            el.append(done);
-        }
+        
+        // if(progress === 1) {
+        //     var done = $("<span>").addClass("graph-node-done-span").html("🏆");
+        //     el.append(done);
+        // }
 
     },
 
