@@ -216,6 +216,18 @@
     }
 }, {
     "model": "quiz.quiz",
+    "pk": "5d300c42-7d32-49ae-a64b-0ab5fcdb73d6",
+    "fields": {
+        "created_at": "2016-02-09T11:42:00.394Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:43:08.763Z",
+        "last_modified_by": 1,
+        "question_input": "```\nx = [0, 1, 2]\n\na = 2 in x\n```\nWhat is `a` after the above code is executed? ",
+        "question_display": "<pre><code>x = [0, 1, 2]\n\na = 2 in x\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 2
+    }
+}, {
+    "model": "quiz.quiz",
     "pk": "5ddc89a0-7d75-487c-b6dc-eee1828cee7e",
     "fields": {
         "created_at": "2016-01-15T07:15:54.425Z",
@@ -468,6 +480,18 @@
     }
 }, {
     "model": "quiz.quiz",
+    "pk": "b3755251-02f2-47a7-8a66-cd410dee0161",
+    "fields": {
+        "created_at": "2016-02-09T11:39:51.887Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:41:02.499Z",
+        "last_modified_by": 1,
+        "question_input": "```'\nx = [0, 1, 2]\ny = [3, 4, 5]\n\nx.extend(y)\nx[3] = 6\n\na = y[0]\n```\n\nWhat is `a` after the above code is executed?",
+        "question_display": "<pre><code class=\"language-'\">x = [0, 1, 2]\ny = [3, 4, 5]\n\nx.extend(y)\nx[3] = 6\n\na = y[0]\n</code></pre>\n<p>What is <code>a</code> after the above code is executed?</p>\n",
+        "quiz_type": 1
+    }
+}, {
+    "model": "quiz.quiz",
     "pk": "b5e26951-41c5-42a6-acf3-bef22f7b51e5",
     "fields": {
         "created_at": "2016-02-01T13:29:53.143Z",
@@ -544,7 +568,7 @@
     "fields": {
         "created_at": "2016-01-31T02:08:00.917Z",
         "created_by": 1,
-        "last_modified_at": "2016-01-31T02:12:05.245Z",
+        "last_modified_at": "2016-02-09T06:46:46.874Z",
         "last_modified_by": 1,
         "question_input": "```\na = \"{spam} and {eggs}\".format(\"spam\", \"eggs\")\n```\nWhat is `a`?",
         "question_display": "<pre><code>a = &quot;{spam} and {eggs}&quot;.format(&quot;spam&quot;, &quot;eggs&quot;)\n</code></pre>\n<p>What is <code>a</code>?</p>\n",
@@ -852,6 +876,17 @@
     }
 }, {
     "model": "quiz.shortanswer",
+    "pk": "bc2a0bc8-d489-4e1d-9906-9501fae869e4",
+    "fields": {
+        "created_at": "2016-02-09T11:41:02.504Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:41:02.504Z",
+        "last_modified_by": 1,
+        "quiz": "b3755251-02f2-47a7-8a66-cd410dee0161",
+        "answer": "3"
+    }
+}, {
+    "model": "quiz.shortanswer",
     "pk": "c61b6076-39df-4dc5-81bc-d8df61fb79e4",
     "fields": {
         "created_at": "2016-02-02T07:46:57.809Z",
@@ -985,6 +1020,19 @@
         "choice_input": "`x['spam']` = 3,  `x['eggs']` = 4",
         "choice_display": "<p><code>x['spam']</code> = 3,  <code>x['eggs']</code> = 4</p>\n",
         "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "049aaffe-77b9-46d6-aaa4-44519a71498d",
+    "fields": {
+        "created_at": "2016-02-09T11:43:08.766Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:43:08.766Z",
+        "last_modified_by": 1,
+        "quiz": "5d300c42-7d32-49ae-a64b-0ab5fcdb73d6",
+        "choice_input": "`True`",
+        "choice_display": "<p><code>True</code></p>\n",
+        "is_correct": true
     }
 }, {
     "model": "quiz.choice",
@@ -1170,6 +1218,19 @@
     }
 }, {
     "model": "quiz.choice",
+    "pk": "1edf28a2-f711-4e4a-9be9-62dee773ca11",
+    "fields": {
+        "created_at": "2016-02-09T06:46:46.879Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T06:46:46.879Z",
+        "last_modified_by": 1,
+        "quiz": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
+        "choice_input": "The above code is not valid. A `KeyError` is raised\n",
+        "choice_display": "<p>The above code is not valid. A <code>KeyError</code> is raised</p>\n",
+        "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
     "pk": "22e11ebc-c2a6-402f-9c1d-52e9f9aa742a",
     "fields": {
         "created_at": "2016-02-02T07:27:25.538Z",
@@ -1335,6 +1396,19 @@
         "quiz": "936be787-4c49-4b7e-b08a-70d0306cc2db",
         "choice_input": "A `InitNotFoundError` is raised since an `__init__` method is not defined in the `Hello` class. ",
         "choice_display": "<p>A <code>InitNotFoundError</code> is raised since an <code>__init__</code> method is not defined in the <code>Hello</code> class.</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "425deadb-e751-4f8c-a600-83a6f59636c6",
+    "fields": {
+        "created_at": "2016-02-09T11:43:08.768Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:43:08.768Z",
+        "last_modified_by": 1,
+        "quiz": "5d300c42-7d32-49ae-a64b-0ab5fcdb73d6",
+        "choice_input": "`None`",
+        "choice_display": "<p><code>None</code></p>\n",
         "is_correct": false
     }
 }, {
@@ -1859,6 +1933,19 @@
     }
 }, {
     "model": "quiz.choice",
+    "pk": "8b8ef1f1-9f1c-491f-8ff9-7ea49e279f18",
+    "fields": {
+        "created_at": "2016-02-09T06:46:46.878Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T06:46:46.878Z",
+        "last_modified_by": 1,
+        "quiz": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
+        "choice_input": "\"spam and eggs\"",
+        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
+        "is_correct": false
+    }
+}, {
+    "model": "quiz.choice",
     "pk": "8de4d718-5bf4-4e62-adac-08d346f2846b",
     "fields": {
         "created_at": "2016-02-02T15:24:50.740Z",
@@ -2145,19 +2232,6 @@
     }
 }, {
     "model": "quiz.choice",
-    "pk": "bc655ae7-efa4-4864-92c6-08e29ce0046b",
-    "fields": {
-        "created_at": "2016-01-31T02:12:05.249Z",
-        "created_by": 1,
-        "last_modified_at": "2016-01-31T02:12:05.250Z",
-        "last_modified_by": 1,
-        "quiz": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
-        "choice_input": "\"spam and eggs\"",
-        "choice_display": "<p>&quot;spam and eggs&quot;</p>\n",
-        "is_correct": false
-    }
-}, {
-    "model": "quiz.choice",
     "pk": "bcf1ae69-4001-4f8c-ba2a-588512ae1494",
     "fields": {
         "created_at": "2016-01-15T07:54:34.302Z",
@@ -2301,19 +2375,6 @@
     }
 }, {
     "model": "quiz.choice",
-    "pk": "d271045f-62af-4163-9e7e-1e2560e77c76",
-    "fields": {
-        "created_at": "2016-01-31T02:12:05.250Z",
-        "created_by": 1,
-        "last_modified_at": "2016-01-31T02:12:05.250Z",
-        "last_modified_by": 1,
-        "quiz": "ced1cbb5-2900-4a94-acdf-2a16460fc69f",
-        "choice_input": "The above code is not valid. A `KeyError`: is raised\n",
-        "choice_display": "<p>The above code is not valid. A <code>KeyError</code>: is raised</p>\n",
-        "is_correct": true
-    }
-}, {
-    "model": "quiz.choice",
     "pk": "d37383c6-d86b-4102-8113-b46a1b717adb",
     "fields": {
         "created_at": "2016-01-17T12:52:40.734Z",
@@ -2402,6 +2463,19 @@
         "choice_input": "y is `None`",
         "choice_display": "<p>y is <code>None</code></p>\n",
         "is_correct": true
+    }
+}, {
+    "model": "quiz.choice",
+    "pk": "e04e466a-35a1-465c-8799-06ed20a04088",
+    "fields": {
+        "created_at": "2016-02-09T11:43:08.767Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:43:08.767Z",
+        "last_modified_by": 1,
+        "quiz": "5d300c42-7d32-49ae-a64b-0ab5fcdb73d6",
+        "choice_input": "`False`",
+        "choice_display": "<p><code>False</code></p>\n",
+        "is_correct": false
     }
 }, {
     "model": "quiz.choice",

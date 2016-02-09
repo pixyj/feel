@@ -4,13 +4,13 @@
     "fields": {
         "created_at": "2016-02-04T17:15:24.794Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-07T14:59:58.361Z",
+        "last_modified_at": "2016-02-09T12:44:46.340Z",
         "last_modified_by": 1,
         "name": "Python Tutorial",
         "is_published": true,
-        "intro": "Welcome! This course complements [The Python tutorial](https://docs.python.org/3/tutorial/) at [https://www.python.org/](https://www.python.org/) with quizzes, coding exercises and additional information. \r\n\r\n**How it works**\r\n\r\n1. Study a section from the official tutorial and try out examples on your interpreter. \r\n2. Answer quizzes to test your understanding and write some code to get the hang of the concept. \r\n3. Move on to the next concept.",
+        "intro": "Welcome! This course complements [The Python 3 tutorial](https://docs.python.org/3/tutorial/) at [https://www.python.org/](https://www.python.org/) with quizzes, coding exercises and additional information. \r\n\r\n**Prerequisites**\r\nYou can program in at least one programming language. \r\n\r\n**How it works**\r\n\r\n1. Study a section from the official tutorial and try out examples on your Python 3 interpreter. \r\n2. Answer quizzes to test your understanding and write some code to get the hang of the concept. \r\n3. Move on to the next concept.",
         "how_to_learn": "",
-        "where_to_go_from_here": "Congratulations on completing the tutorial. It's time to use Python in your next project, where the real learning begins. \r\n\r\nThis is not a comprehensive course and there are many more features in Python. But you're now equipped with the knowledge to learn advanced concepts as and when you need them. \r\n\r\nTo dive deeper: \r\n\r\n* Read the source code of your favourite packages. \r\n* Watch [Pycon](https://www.youtube.com/results?search_query=pycon) talks. \r\n* Read Python related  on your favourite social networks.  \r\n* Consider using Python in your projects and spend more time with it!"
+        "where_to_go_from_here": "Congratulations on completing the tutorial. It's time to use Python in your next project, where the real learning begins. \r\n\r\nThis is not a comprehensive course and there are many more features in Python. But you're now equipped with the knowledge to learn advanced concepts as and when you need them. \r\n\r\nTo dive deeper: \r\n\r\n* Read the source code of your favourite packages. \r\n* Watch [Pycon](https://www.youtube.com/results?search_query=pycon) talks. \r\n* Read Python tips and tricks on your favourite social networks.  \r\n* Consider using Python in your projects and spend more time with it!"
     }
 }, {
     "model": "course.courseslug",

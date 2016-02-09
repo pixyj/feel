@@ -26,7 +26,7 @@
     "fields": {
         "created_at": "2016-01-16T13:41:15.718Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-02T08:48:17.387Z",
+        "last_modified_at": "2016-02-09T13:03:04.724Z",
         "last_modified_by": 1,
         "name": "Tuples",
         "is_published": false
@@ -37,7 +37,7 @@
     "fields": {
         "created_at": "2016-01-17T08:41:55.373Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-02T12:56:35.753Z",
+        "last_modified_at": "2016-02-09T13:18:40.672Z",
         "last_modified_by": 1,
         "name": "Defining Functions 2",
         "is_published": false
@@ -136,7 +136,7 @@
     "fields": {
         "created_at": "2016-01-26T13:27:41.944Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-03T08:22:53.705Z",
+        "last_modified_at": "2016-02-09T12:37:24.810Z",
         "last_modified_by": 1,
         "name": "Introduction",
         "is_published": false
@@ -180,7 +180,7 @@
     "fields": {
         "created_at": "2016-02-03T08:11:51.283Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-07T12:18:55.084Z",
+        "last_modified_at": "2016-02-09T11:43:12.115Z",
         "last_modified_by": 1,
         "name": "Lists 2",
         "is_published": false
@@ -213,7 +213,7 @@
     "fields": {
         "created_at": "2016-01-24T16:16:46.022Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-01T14:30:02.361Z",
+        "last_modified_at": "2016-02-09T11:53:47.128Z",
         "last_modified_by": 1,
         "name": "Magic Methods and Protocols",
         "is_published": false
@@ -231,6 +231,21 @@
     }
 }, {
     "model": "concept.conceptsection",
+    "pk": "002cb33d-e5c5-4866-a4a7-a3c8447d047d",
+    "fields": {
+        "created_at": "2016-02-09T13:09:45.091Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T13:18:40.673Z",
+        "last_modified_by": 1,
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "position": 1,
+        "type": 3,
+        "data": {
+            "quiz_ids": ["09febd95-27fd-489a-b346-f42a5fcd3839", "5515aa37-b63b-4e44-afee-df2bcd54b0e6"]
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
     "pk": "004470de-e258-46fa-b0c9-1cb00f35ad06",
     "fields": {
         "created_at": "2016-02-02T08:32:28.301Z",
@@ -241,8 +256,8 @@
         "position": 2,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["93377948-61fa-4caa-ab92-c58a20e4fb44"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -258,24 +273,9 @@
         "position": 2,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["f9c2cbd5-755e-4abb-9b54-59b42813424a", "f93cb03f-db3b-46d2-aa21-90ea097b6f26"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "0723d29d-22a8-4a4f-b833-9ebccac26aab",
-    "fields": {
-        "created_at": "2016-02-02T08:48:17.392Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-02T08:48:17.392Z",
-        "last_modified_by": 1,
-        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
-        "position": 2,
-        "type": 5,
-        "data": {
-            "input": "Here are a few situations where tuples are commonly used. \n\n##### Returning multiple values from a function\n\n```\ndef square_and_cube(num):\n    square = num * num\n    cube = num * num * num\n    return (square, cube, ) \n\nresult = square_and_cube(4)\na, b = result   # Tuple unpacking\nprint(a)        # a = 16\nprint(b)        # b = 64\n```\n**[Visualize on Python Tutor](http://pythontutor.com/visualize.html#code=def+square_and_cube\\(num%29%3A%0A++++square+%3D+num+*+num%0A++++cube+%3D+num+*+num+*+num%0A++++return+\\(square,+cube,+%29+%0A%0Aresult+%3D+square_and_cube\\(4%29%0Aa,+b+%3D+result+++%23+Tuple+unpacking%0Aprint\\(a%29++++++++%23+a+%3D+16%0Aprint\\(b%29++++++++%23+b+%3D+64&mode=display&origin=opt-frontend.js&cumulative=false&heapPrimitives=false&textReferences=false&py=3&rawInputLstJSON=%5B%5D&curInstr=10)**\n\n##### As a lightweight immutable alternative to a list. \n\nTuples are used where you want to configure your app using a global variable during the start of the process, but not allow any function to modify its items. \n\n```\nMY_MUSIC_DIRS = ('/home/spam/Music', '/home/spam/Documents/Music', '/home/spam/Downloads/Music',  )\n\n# You can iterate over items of a  tuple\nfor dir in MY_MUSIC_DIRS:\n    print(dir)\n```\n\nWhen a function tries to modify `MY_MUSIC_DIRS`, \n```\nMY_MUSIC_DIRS[0] = '/home/spam/music'\n```\nyou get this error - `TypeError: 'tuple' object does not support item assignment`. \n\n**Caveat**: \n\nHowever, if you have a mutable object in a tuple, it can be modified. \n\n```\nspam = []\neggs = (spam, 'a', 'b' )\neggs[0].append(1)\nprint(spam) # spam = [1] No error is raised. \n``` \n\n**Caution**: \n\nWhen you create a tuple which consists of just one item, ensure that you include a trailing comma, otherwise, the expression will not considered as a tuple. \n\n```\nspam = (1)         # WRONG\n# The right hand side is evaluated to an integer. \n# So spam = 1, an integer\n\n\nspam = (1, )       # RIGHT\n\n```"
         }
     }
 }, {
@@ -290,8 +290,8 @@
         "position": 3,
         "type": 0,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["e9458702-e1a2-4ebe-b47a-7ff4f88d60a0"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -322,8 +322,8 @@
         "position": 2,
         "type": 0,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["4c66a15a-d9c9-4af5-8c19-6105f494b274"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -339,8 +339,8 @@
         "position": 2,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["d9a87a5d-89d7-49f9-9692-61f4d60ce0ab"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -356,8 +356,25 @@
         "position": 1,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["34b02d69-4aca-4974-a6fd-77ecf51a7074", "f9291aa7-e7f8-4ab5-a88b-349ab842ffd6"],
+            "show_quiz_creator": false,
+            "show_quiz_filter": false
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "12a42fd4-b280-4c5d-ae1c-9b6b0f06ba2c",
+    "fields": {
+        "created_at": "2016-02-09T13:03:04.729Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T13:03:04.729Z",
+        "last_modified_by": 1,
+        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
+        "position": 3,
+        "type": 0,
+        "data": {
+            "quiz_ids": ["be923b41-727e-4fbc-a341-15af62c91952"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -374,6 +391,23 @@
         "type": 5,
         "data": {
             "input": "The default return value of a function is `None`. Unlike languages such as Ruby, the result of the last expression is not returned by the function. For example: \n\n```\ndef inc(num):\n    result = num + 1\n\nx = 1\ny = inc(x) \nprint(y is None) # True\n```\n\nSo, you have to explicitly write a `return` statement. \n\n\n```\ndef inc(num):\n    return num + 1\n\nx = 1\ny = inc(x) \nprint(y is None) # False\nprint(y == 2)    # True\n```"
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "143c17bb-738a-47f6-9904-288b76761d3e",
+    "fields": {
+        "created_at": "2016-02-09T13:09:45.095Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T13:09:45.095Z",
+        "last_modified_by": 1,
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "position": 4,
+        "type": 2,
+        "data": {
+            "quiz_ids": ["fb487580-d8cc-4f76-9026-c3a513a5d84a"],
+            "show_quiz_creator": false,
+            "show_quiz_filter": false
         }
     }
 }, {
@@ -438,6 +472,21 @@
     }
 }, {
     "model": "concept.conceptsection",
+    "pk": "2388ed3a-bc24-4af5-bd4e-87ba326b5d3c",
+    "fields": {
+        "created_at": "2016-02-09T12:37:24.813Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T12:37:24.814Z",
+        "last_modified_by": 1,
+        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
+        "position": 0,
+        "type": 5,
+        "data": {
+            "input": "Read [Section 1](https://docs.python.org/3/tutorial/appetite.html) to [Section 3.1 (https://docs.python.org/3/tutorial/introduction.html) of the Python tutorial. "
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
     "pk": "266292a3-cc60-487b-b35f-ec1aaaa16ead",
     "fields": {
         "created_at": "2016-02-02T07:36:49.690Z",
@@ -468,51 +517,51 @@
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "2c42f744-2dd0-40fb-aa8e-5ca828f0655b",
+    "pk": "29dacc32-21ab-46c1-b3ce-21725113b8c6",
     "fields": {
-        "created_at": "2016-02-03T08:22:53.710Z",
+        "created_at": "2016-02-09T13:03:04.726Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-03T08:22:53.710Z",
-        "last_modified_by": 1,
-        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
-        "position": 2,
-        "type": 2,
-        "data": {
-            "show_quiz_creator": false,
-            "quiz_ids": ["d7115f16-b23b-4501-9339-c53081a42954", "20ad3b57-f281-4770-b2c3-16895e9a0da2"],
-            "show_quiz_filter": false
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "2f14c971-bbd1-4d57-8430-878e440cf5e3",
-    "fields": {
-        "created_at": "2016-02-02T08:48:17.391Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-02T08:48:17.391Z",
+        "last_modified_at": "2016-02-09T13:03:04.726Z",
         "last_modified_by": 1,
         "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
-        "position": 1,
-        "type": 2,
+        "position": 0,
+        "type": 5,
         "data": {
+            "input": "Read [Section 5.3](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences) of the Python tutorial and [http://openbookproject.net/thinkcs/python/english3e/tuples.html](http://openbookproject.net/thinkcs/python/english3e/tuples.html)."
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "2b4cdc43-51c8-405b-bdaf-4488624293f3",
+    "fields": {
+        "created_at": "2016-02-09T11:43:12.123Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:43:12.123Z",
+        "last_modified_by": 1,
+        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
+        "position": 2,
+        "type": 0,
+        "data": {
+            "quiz_ids": ["9c49f3c0-e646-4a65-9802-6a2042478b36"],
             "show_quiz_creator": false,
-            "quiz_ids": ["3a283ba5-9bba-4c2b-838a-f40bc7add829", "be923b41-727e-4fbc-a341-15af62c91952"],
             "show_quiz_filter": false
         }
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "303fc066-4bfd-4ec0-b52b-0b8792e1aa61",
+    "pk": "2bb07d39-ae1d-460a-80f6-7b57e5b88591",
     "fields": {
-        "created_at": "2016-02-02T07:47:05.348Z",
+        "created_at": "2016-02-09T12:37:24.817Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-02T07:47:05.348Z",
+        "last_modified_at": "2016-02-09T12:37:24.818Z",
         "last_modified_by": 1,
-        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
         "position": 3,
-        "type": 5,
+        "type": 0,
         "data": {
-            "input": "**Functions as first class objects**: \n\nSee my [Quora answer - Why are functions considered first class objects in Python?](https://www.quora.com/Why-are-functions-considered-first-class-objects-in-Python/answer/Pramod-Lakshmanan?share=1) for a detailed explanation. "
+            "quiz_ids": ["b5e26951-41c5-42a6-acf3-bef22f7b51e5"],
+            "show_quiz_creator": false,
+            "show_quiz_filter": false
         }
     }
 }, {
@@ -547,21 +596,6 @@
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "3332e569-8593-4e7e-816e-bb1450fcf3a4",
-    "fields": {
-        "created_at": "2016-02-03T08:22:53.708Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-03T08:22:53.708Z",
-        "last_modified_by": 1,
-        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
-        "position": 0,
-        "type": 5,
-        "data": {
-            "input": "Read [Section 1](https://docs.python.org/3/tutorial/appetite.html) to [Section 3.1 (https://docs.python.org/3/tutorial/introduction.html) of the Python tutorial. "
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
     "pk": "33c378c6-6d2f-49db-b51a-716fe66ceafa",
     "fields": {
         "created_at": "2016-02-03T07:16:52.362Z",
@@ -587,8 +621,8 @@
         "position": 1,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["ced1cbb5-2900-4a94-acdf-2a16460fc69f", "78ca9871-3292-4973-8e77-1ae629deaebe", "474cc026-5bd3-4e0a-b0f4-2d24bd4f95f5", "754a0a80-1004-4503-ac9f-b740da5625a0", "94d1bac4-3fca-4027-9618-4bebdf10ac93"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -619,8 +653,8 @@
         "position": 4,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["24509f5f-e65b-4b64-8656-327391f7a2de"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -651,56 +685,9 @@
         "position": 3,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["7040b9c1-f7ec-4d2d-9dac-9b556bd39798"],
-            "show_quiz_filter": false
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "41543430-59f9-42a1-9233-949880fd267b",
-    "fields": {
-        "created_at": "2016-02-01T14:30:02.368Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-01T14:30:02.368Z",
-        "last_modified_by": 1,
-        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
-        "position": 1,
-        "type": 2,
-        "data": {
             "show_quiz_creator": false,
-            "quiz_ids": ["62586230-e2bd-458c-9dbf-2515abd36e69"],
             "show_quiz_filter": false
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "4218c7e0-27a5-4274-8a4f-59e725d47d76",
-    "fields": {
-        "created_at": "2016-02-01T14:30:02.366Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-01T14:30:02.366Z",
-        "last_modified_by": 1,
-        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
-        "position": 0,
-        "type": 5,
-        "data": {
-            "input": "The Python tutorial does not have a specific section on Magic Methods, but it's an important concept that powers many of the core abstractions.\n\nLet's learn with an example. I love examples, don't you? So, we have been using the `len` operator to find the length of  lists, strings, tuples and sets. To refresh your memory: (Or if you came here from the home page, \ud83d\ude03) \n\n```\nspam = ['s', 'p', 'a', 'm' ]\nlen(spam) # 4\n\neggs = 'eggs'\nlen(eggs) # 4\n\nsingle_digit_primes = (2, 3, 5, 7)\nlen(single_digit_primes) # 4\n```\nSo how does `len` work across a variety of data types? Well, all the above data types have implemented the `__len__` magic method. When you call the `len` function on an object, then the interpreter checks if the object has a `__len__` magic method and executes it. So the `len` *function*  is basically a wrapper around the `__len__` *method*\n\n```\nspam = ['s', 'p', 'a', 'm' ]\nspam.__len__()# 4\n\neggs = 'eggs'\nspam.__len__ # 4\n\nsingle_digit_primes = (2, 3, 5, 7)\nsingle_digit_primes.__len__() # 4\n\n``` \nIs it starting to make sense now? `__len__` is a *magic method*. It provides a consistent interface across data types where a `len` function makes sense. The best part is that we can implement `__len__` in our own classes too. \n\nAnother example: Read the code and paste it in your interpreter. The `print` functions indicate how `len` is a proxy for `__len__`\n\n```\n# We need the math module to calculate square root. \nimport math\n\nclass Shape2D():\n    def __init__(self, *args):\n        self._points = args\n\n    def __len__(self):\n        print(\"Inside {}. Call it magic. Call it true.\".format(self.__len__.__name__))\n        # Now, we can invoke the len built-in function on Shape2D objects. \n        return len(self._points)\n        \n\nline = Shape2D((1, 2, ), (3, 4, ))\nlen(line) # 2\n\ntriangle = Shape2D((0, 0, ), (0, 3, ), (4, 0, ))\nlen(triangle) # 3\n```\n**[Visualize on Python Tutor](http://pythontutor.com/visualize.html#code=import+math%0A%0Aclass+Shape2D\\(%29%3A%0A++++def+__init__\\(self,+*args%29%3A%0A++++++++self._points+%3D+args%0A%0A++++def+__len__\\(self%29%3A%0A++++++++print\\(%22Inside+%7B%7D.+Call+it+magic.+Call+it+true.%22.format\\(self.__len__.__name__%29%29%0A++++++++%23+Now,+we+can+invoke+the+len+built-in+function+on+Shape2D+objects.+%0A++++++++return+len\\(self._points%29%0A++++++++%0A%0Aline+%3D+Shape2D\\(\\(1,+2,+%29,+\\(3,+4,+%29%29%0Aprint\\(len\\(line%29%29%0A%0Atriangle+%3D+Shape2D\\(\\(0,+0,+%29,+\\(0,+3,+%29,+\\(4,+0,+%29%29%0Aprint\\(len\\(triangle%29%29&mode=display&origin=opt-frontend.js&cumulative=false&heapPrimitives=false&textReferences=false&py=3&rawInputLstJSON=%5B%5D&curInstr=20)**\n\n_____\n \nRefer [http://www.rafekettler.com/magicmethods.html](http://www.rafekettler.com/magicmethods.html) and [http://stackoverflow.com/questions/2657627/why-does-python-use-magic-methods](http://stackoverflow.com/questions/2657627/why-does-python-use-magic-methods) to learn more. "
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "42fb5480-4e7f-4b25-8681-4129e57af17c",
-    "fields": {
-        "created_at": "2016-02-02T07:47:05.346Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-02T07:47:05.346Z",
-        "last_modified_by": 1,
-        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
-        "position": 2,
-        "type": 5,
-        "data": {
-            "input": "**Defining functions with variadic arguments**\n\nApart from the use cases mentioned in the Python tutorial, `*args` and `**kwargs` are also useful when the author may not know the exact arguments accepted by their function, similar to how the [arguments object](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/arguments) works in JavaScript.  "
         }
     }
 }, {
@@ -716,6 +703,36 @@
         "type": 3,
         "data": {
             "quiz_ids": ["2d6fbed5-83cb-4e0a-9f98-3050b7bb1ce8"]
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "4c62aa23-0d2b-442a-ba24-b0a83b9f298e",
+    "fields": {
+        "created_at": "2016-02-09T13:09:45.094Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T13:09:45.094Z",
+        "last_modified_by": 1,
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "position": 3,
+        "type": 5,
+        "data": {
+            "input": "**Functions as first class objects**: \n\nSee my [Quora answer - Why are functions considered first class objects in Python?](https://www.quora.com/Why-are-functions-considered-first-class-objects-in-Python/answer/Pramod-Lakshmanan?share=1) for a detailed explanation. "
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "4d77f145-6851-4850-aede-939154f3696a",
+    "fields": {
+        "created_at": "2016-02-09T12:37:24.815Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T12:37:24.815Z",
+        "last_modified_by": 1,
+        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
+        "position": 1,
+        "type": 5,
+        "data": {
+            "input": "Here's some additional information that answers a few common questions. \n\n\n**Python is an interpreted language**: The source code is compiled to bytecode and the interpreter executes bytecode instructions. \n\n_________\n\n**Python is a dynamically typed language**: In the tutorial, you saw that you don't have to declare data types of variables. \n\n```\nx = 1\ntype(x) # int\n```\n_________\n\n**Python is a strongly typed language**: The interpreter does not perform implicit type conversion. \n```\nx = 1\ny = \"1\" \nx + y # Is an invalid statement\n```\n*Output*: \n```\nTypeError: unsupported operand type(s) for +: 'int' and 'str'\n```\n_________\n**Everything is an object**: Each variable holds a reference to an object. Even integer and strings are objects. Every object has a unique `id` associated with it. \n\n```\nx = 1\na = id(x) # 4386378016 (This value is not deterministic)\ny = x\nb = id(y) # 4386378016\n```\nHere, both `x` and `y` point to the same object. The assignment statement does not create a copy of the object, but simply creates an additional reference. Functions, classes and modules are objects too.\n\n**[Visualize on Python Tutor](http://pythontutor.com/visualize.html#code=x+%3D+1%0Aa+%3D+id\\(x%29+%23+4386378016%0Ay+%3D+x%0Ab+%3D+id\\(y%29+%23+4386378016&mode=display&origin=opt-frontend.js&cumulative=false&heapPrimitives=false&textReferences=false&py=3&rawInputLstJSON=%5B%5D&curInstr=4)** [1]\n\nLet's build on the previous example: \n```\nx = 1\ny = x\nx = 2\n```\nIntegers are immutable objects. So, in the last statement, the interpreter creates a new object and assigns it  to `x`. `y` remains unchanged. We'll come across mutable data types such as `lists`. If `x` and `y` are referring to the same list, and `x` modifies the list, then `y` would refer to the modified object too. \n_________\n**Variables are mutable**: You can reassign multiple objects to the same variable during the course of a program. However, using this feature may cause the code to be less readable. The following code is valid. \n```\nx = 1\nx = 2\nx = \"a string\" \n```\n\n_________\n\n**Python is a garbage-collected language**: The interpreter uses reference counting to collect garbage. The garbage collector also has more sophisticated strategies [under the hood](https://hg.python.org/cpython/file/tip/Modules/gcmodule.c). \n\n__________\n[1] (Thanks to Suraj for making the suggestion) [Listen to this episode on talkpython.fm](https://talkpython.fm/episodes/show/22/cpython-internals-and-learning-python-with-pythontutor.com) for the story behind Python Tutor. "
         }
     }
 }, {
@@ -745,8 +762,25 @@
         "position": 4,
         "type": 0,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["bb961af3-d303-4576-bb88-25eab435ed34"],
+            "show_quiz_creator": false,
+            "show_quiz_filter": false
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "545bf220-ee36-404b-aeb5-b0bda340093c",
+    "fields": {
+        "created_at": "2016-02-09T11:53:47.132Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:53:47.132Z",
+        "last_modified_by": 1,
+        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
+        "position": 1,
+        "type": 2,
+        "data": {
+            "quiz_ids": ["62586230-e2bd-458c-9dbf-2515abd36e69"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -782,6 +816,38 @@
     }
 }, {
     "model": "concept.conceptsection",
+    "pk": "59103771-ec5b-4334-b4a8-a42cc84968fa",
+    "fields": {
+        "created_at": "2016-02-09T11:53:47.132Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:53:47.132Z",
+        "last_modified_by": 1,
+        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
+        "position": 2,
+        "type": 5,
+        "data": {
+            "input": "`len` does not just use a magic method under the hood, it is also a protocol. As explained in [http://www.rafekettler.com/magicmethods.html](http://www.rafekettler.com/magicmethods.html)\n\n>>Python protocols are totally informal and require no explicit\ndeclarations to implement. Rather, they're more like guidelines.\n\nIf you're coming from Java, protocols may seem like interfaces. Yes, you're right. But there is an important difference. The Python interpreter checks if a protocol method exists only at run-time. If one does not exist, then an Exception is raised. \n\nAnother protocol we've come across is the Iteration Protocol, exposed using the `in` keyword. \n\nLet's extend our `Shape2d` class and provide an API to iterate through all the points using the `in` operator. Are you excited? I am.\n\nTo provide an iterator protocol, we must implement the   `___iter__` magic method. \n\n```\nclass Shape2D():\n    def __init__(self, *args):\n        # Underscore is used for \"private\" variables. \n        # But this is just a convention in the community. \n        # There is no notion private variables within the language itself. \n        # We follow the \"We're all adults here\" philosophy. \n        # But you don't have to be 18 to learn Python. \n        self._points = args\n\n    def __len__(self):\n        print(\"Inside {}. Call it magic. Call it true.\".format(self.__len__.__name__))\n        # Now, we can invoke the len built-in function on Shape2D objects. \n        return len(self._points)\n\n\n    def __iter__(self):\n        for point in self._points:\n            yield point\n        \ntriangle = Shape2D((0, 0, ), (0, 3, ), (4, 0, ))\nfor point in triangle:\n    x, y = point\n    message = \"Point ({}, {})\".format(x, y)\n    print(message) \n```\nOutput: \n```\nPoint (0, 0)\nPoint (0, 3)\nPoint (4, 0)\n```\n\nIn the previous examples, `len`  and `iter` did not implement any application logic. Now, we'll implement an iterator to iterate through points from scratch \u2013 without using a for loop in our code  \u2013 and get the same behaviour. \n\nComments in the code explain the flow. The control flow is mostly controlled by the interpreter. So use [http://pythontutor.com/](http://pythontutor.com/) to grok how it works. \n\n```\nclass Shape2D():\n    def __init__(self, *args):\n        # Underscore is used for \"private\" variables. \n        # But this is just a convention in the community. \n        # There is no notion private variables within the language itself. \n        # We follow the \"We're all adults here\" philosophy. \n        # But you don't have to be 18 to learn Python. \n        self._points = args\n\n    def __len__(self):\n        print(\"Inside {}. Call it magic. Call it true.\".format(self.__len__.__name__))\n        # Now, we can invoke the len built-in function on Shape2D objects. \n        return len(self._points)\n\n    def __iter__(self):\n        # This magic method is called by Python before starting the loop\n        # Reset iter_index.\n        self._iter_index = 0\n        return self\n    \n    def __next__(self):\n        # This magic method is called by Python to get the next item\n        index = self._iter_index\n\n        # Special case. Looping is complete. \n        if index == len(self._points):\n            # The for loop stops when a `StopIteration` exception is raised. \n            # If you use a for loop, it takes care of catching the exception\n            # and stopping the loop. You don't have to enclose looping within\n            # a try-catch clause yourself. \n            raise StopIteration\n\n        # Normal case. Return next item and increment iter_index\n        point = self._points[index]\n        self._iter_index += 1\n        return point\n\n```\n\n"
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "597885f7-de92-47db-b4b1-21729b8717df",
+    "fields": {
+        "created_at": "2016-02-09T11:53:47.134Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:53:47.134Z",
+        "last_modified_by": 1,
+        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
+        "position": 4,
+        "type": 0,
+        "data": {
+            "quiz_ids": ["8beebdf0-fe91-4c31-9592-bb8b0e8fa7ea"],
+            "show_quiz_creator": false,
+            "show_quiz_filter": false
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
     "pk": "5d8da336-6fcb-40b1-a042-bbe75709a009",
     "fields": {
         "created_at": "2016-02-04T17:21:37.490Z",
@@ -812,34 +878,17 @@
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "67881265-6c9b-4f25-9ff4-df9bdc8b5fb9",
+    "pk": "63776cbe-ca86-46fe-a5fb-9fef2ba47ba8",
     "fields": {
-        "created_at": "2016-02-02T08:48:17.393Z",
+        "created_at": "2016-02-09T11:53:47.131Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-02T08:48:17.393Z",
+        "last_modified_at": "2016-02-09T11:53:47.131Z",
         "last_modified_by": 1,
-        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
-        "position": 3,
-        "type": 0,
+        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
+        "position": 0,
+        "type": 5,
         "data": {
-            "quiz_ids": ["be923b41-727e-4fbc-a341-15af62c91952"]
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "67909f16-f36d-46b4-a951-1f9e23bb8036",
-    "fields": {
-        "created_at": "2016-02-07T12:18:55.088Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-07T12:18:55.088Z",
-        "last_modified_by": 1,
-        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
-        "position": 2,
-        "type": 0,
-        "data": {
-            "show_quiz_creator": false,
-            "quiz_ids": ["9c49f3c0-e646-4a65-9802-6a2042478b36"],
-            "show_quiz_filter": false
+            "input": "The Python tutorial does not have a specific section on Magic Methods, but it's an important concept that powers many of the core abstractions.\n\nLet's learn with an example. I love examples, don't you? So, we have been using the `len` operator to find the length of  lists, strings, tuples and sets. \n\n```\nspam = ['s', 'p', 'a', 'm' ]\nlen(spam) # 4\n\neggs = 'eggs'\nlen(eggs) # 4\n\nsingle_digit_primes = (2, 3, 5, 7)\nlen(single_digit_primes) # 4\n```\nSo how does `len` work across a variety of data types? Well, all the above data types have implemented the `__len__` magic method. When you call the `len` function on an object, then the interpreter checks if the object has a `__len__` magic method and executes it. So the `len` *function*  is basically a wrapper around the `__len__` *method*\n\n```\nspam = ['s', 'p', 'a', 'm' ]\nspam.__len__()# 4\n\neggs = 'eggs'\nspam.__len__ # 4\n\nsingle_digit_primes = (2, 3, 5, 7)\nsingle_digit_primes.__len__() # 4\n\n``` \nIs it starting to make sense now? `__len__` is a *magic method*. It provides a consistent interface across data types where a `len` function makes sense. The best part is that we can implement `__len__` in our own classes too. \n\nAnother example: Read the code and paste it in your interpreter. The `print` functions indicate how `len` is a proxy for `__len__`\n\n```\n# We need the math module to calculate square root. \nimport math\n\nclass Shape2D():\n    def __init__(self, *args):\n        self._points = args\n\n    def __len__(self):\n        print(\"Inside {}. Call it magic. Call it true.\".format(self.__len__.__name__))\n        # Now, we can invoke the len built-in function on Shape2D objects. \n        return len(self._points)\n        \n\nline = Shape2D((1, 2, ), (3, 4, ))\nlen(line) # 2\n\ntriangle = Shape2D((0, 0, ), (0, 3, ), (4, 0, ))\nlen(triangle) # 3\n```\n**[Visualize on Python Tutor](http://pythontutor.com/visualize.html#code=import+math%0A%0Aclass+Shape2D\\(%29%3A%0A++++def+__init__\\(self,+*args%29%3A%0A++++++++self._points+%3D+args%0A%0A++++def+__len__\\(self%29%3A%0A++++++++print\\(%22Inside+%7B%7D.+Call+it+magic.+Call+it+true.%22.format\\(self.__len__.__name__%29%29%0A++++++++%23+Now,+we+can+invoke+the+len+built-in+function+on+Shape2D+objects.+%0A++++++++return+len\\(self._points%29%0A++++++++%0A%0Aline+%3D+Shape2D\\(\\(1,+2,+%29,+\\(3,+4,+%29%29%0Aprint\\(len\\(line%29%29%0A%0Atriangle+%3D+Shape2D\\(\\(0,+0,+%29,+\\(0,+3,+%29,+\\(4,+0,+%29%29%0Aprint\\(len\\(triangle%29%29&mode=display&origin=opt-frontend.js&cumulative=false&heapPrimitives=false&textReferences=false&py=3&rawInputLstJSON=%5B%5D&curInstr=20)**\n\n_____\n \nRefer [http://www.rafekettler.com/magicmethods.html](http://www.rafekettler.com/magicmethods.html) and [http://stackoverflow.com/questions/2657627/why-does-python-use-magic-methods](http://stackoverflow.com/questions/2657627/why-does-python-use-magic-methods) to learn more. "
         }
     }
 }, {
@@ -929,8 +978,8 @@
         "position": 1,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["4adad563-eb5a-4141-bd1b-e12e7c782731", "029a01d6-37d8-494f-8341-bc285bff6ea2", "f4bdc22b-f948-4560-a337-38afdc642fff", "500018e7-c5e5-4e71-909b-ffe852ce490d"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -1006,39 +1055,9 @@
         "position": 1,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["1dff1129-bbed-4913-b494-ab47ed8de378", "695a3aab-fb7e-4257-9ac3-c967ef93e003", "c50cdc81-0377-4a15-a471-747a396b006d", "46cea2a7-5ec5-4fd4-b125-60b378f191e8"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "8646346d-9c34-42a7-ad50-e2816b188463",
-    "fields": {
-        "created_at": "2016-02-02T07:47:05.350Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-02T07:47:05.350Z",
-        "last_modified_by": 1,
-        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
-        "position": 5,
-        "type": 0,
-        "data": {
-            "quiz_ids": ["af2bcff0-585f-4fc4-9542-b2e206aa514f"]
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "87c29ce2-fd89-4a25-981f-12489e3e7599",
-    "fields": {
-        "created_at": "2016-02-01T14:30:02.375Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-01T14:30:02.375Z",
-        "last_modified_by": 1,
-        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
-        "position": 3,
-        "type": 3,
-        "data": {
-            "quiz_ids": ["3a232ee5-2c4b-46f9-aed0-df2ecf333e63"]
         }
     }
 }, {
@@ -1058,34 +1077,32 @@
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "90db587c-5329-4765-a673-b87216bb719a",
+    "pk": "8a3e088e-7b36-48f5-b032-5e198c46dc44",
     "fields": {
-        "created_at": "2016-02-02T07:47:05.349Z",
+        "created_at": "2016-02-09T13:03:04.728Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-02T07:47:05.349Z",
+        "last_modified_at": "2016-02-09T13:03:04.728Z",
         "last_modified_by": 1,
-        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
-        "position": 4,
-        "type": 2,
+        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
+        "position": 2,
+        "type": 5,
         "data": {
-            "show_quiz_creator": false,
-            "quiz_ids": ["fb487580-d8cc-4f76-9026-c3a513a5d84a"],
-            "show_quiz_filter": false
+            "input": "Here are a few situations where tuples are commonly used. \n\n##### Returning multiple values from a function\n\n```\ndef square_and_cube(num):\n    square = num * num\n    cube = num * num * num\n    return (square, cube, ) \n\nresult = square_and_cube(4)\na, b = result   # Tuple unpacking\nprint(a)        # a = 16\nprint(b)        # b = 64\n```\n**[Visualize on Python Tutor](http://pythontutor.com/visualize.html#code=def+square_and_cube\\(num%29%3A%0A++++square+%3D+num+*+num%0A++++cube+%3D+num+*+num+*+num%0A++++return+\\(square,+cube,+%29+%0A%0Aresult+%3D+square_and_cube\\(4%29%0Aa,+b+%3D+result+++%23+Tuple+unpacking%0Aprint\\(a%29++++++++%23+a+%3D+16%0Aprint\\(b%29++++++++%23+b+%3D+64&mode=display&origin=opt-frontend.js&cumulative=false&heapPrimitives=false&textReferences=false&py=3&rawInputLstJSON=%5B%5D&curInstr=10)**\n\n##### As a lightweight immutable alternative to a list. \n\nTuples are used where you want to configure your app using a global variable during the start of the process, but not allow any function to modify its items. \n\n```\nMY_MUSIC_DIRS = ('/home/spam/Music', '/home/spam/Documents/Music', '/home/spam/Downloads/Music',  )\n\n# You can iterate over items of a  tuple\nfor dir in MY_MUSIC_DIRS:\n    print(dir)\n```\n\nWhen a function tries to modify `MY_MUSIC_DIRS`, \n```\nMY_MUSIC_DIRS[0] = '/home/spam/music'\n```\nyou get this error - `TypeError: 'tuple' object does not support item assignment`. \n\n**Caveat**: \n\nHowever, if you have a mutable object in a tuple, it can be modified. \n\n```\nspam = []\neggs = (spam, 'a', 'b' )\neggs[0].append(1)\nprint(spam) # spam = [1] No error is raised. \n``` \n\n**Caution**: \n\nWhen you create a tuple which consists of just one item, ensure that you include a trailing comma, otherwise, the expression will not considered as a tuple. \n\n```\nspam = (1)         # WRONG\n# The right hand side is evaluated to an integer. \n# spam is an integer\n\n\nspam = (1, )       # RIGHT\n# spam is a tuple\n```"
         }
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "9289fc42-d010-48bc-8a4b-5687b71d3e30",
+    "pk": "8b8e8f70-a146-4bd1-99d7-48e06a1ec581",
     "fields": {
-        "created_at": "2016-02-01T14:30:02.377Z",
+        "created_at": "2016-02-09T13:09:45.092Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-01T14:30:02.377Z",
+        "last_modified_at": "2016-02-09T13:09:45.093Z",
         "last_modified_by": 1,
-        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
-        "position": 4,
-        "type": 0,
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "position": 2,
+        "type": 5,
         "data": {
-            "quiz_ids": ["8beebdf0-fe91-4c31-9592-bb8b0e8fa7ea"]
+            "input": "**Defining functions with variadic arguments**\n\nApart from the use cases mentioned in the Python tutorial, `*args` and `**kwargs` are also useful when the author may not know the exact arguments accepted by their function, similar to how the [arguments object](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/arguments) works in JavaScript.  "
         }
     }
 }, {
@@ -1130,8 +1147,8 @@
         "position": 1,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["dd2c098f-53da-4843-b94b-8753deaf51e1"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -1163,21 +1180,6 @@
         "type": 5,
         "data": {
             "input": "\n**repr and str functions**\n\nPython has an `eval` function which evaluates strings that are valid expressions . For example:  \n\n```\nx = 1\ny = eval('x + 2')  # y = 3\n``` \n\n`repr` is meant to return an unambiguous string representation of an object so that it can be reconstructed using `eval`  or for debugging purposes. \n\n```\nspam = [1, 2, 3]\nspam_repr = repr(spam) # spam_repr = '[1, 2, 3]'\neggs = eval(spam_repr) # eggs = [1, 2, 3]\ntype(eggs)             # list\n```\n\nWhereas `str` is meant for humans.  When you define your own objects, it's possible to have human readable sentences for `str` where you can omit certain details. Data types such as lists and dictionaries return identical output for both `repr` and `str` .\n\nSee [Difference between repr and str in Python](https://stackoverflow.com/questions/1436703/difference-between-str-and-repr-in-python) for more details. \n\nWe'll implement custom `str` methods when we learn about classes. "
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "a014d200-23b2-4b57-87ff-b3709a83b25c",
-    "fields": {
-        "created_at": "2016-02-02T07:47:05.343Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-02T07:47:05.343Z",
-        "last_modified_by": 1,
-        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
-        "position": 0,
-        "type": 5,
-        "data": {
-            "input": "Read [Section 4.7](https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions) of the Python tutorial. \n\n_______\n\n**Passing arguments using unpacking**\n\n\nSo you define a beautiful function that adds two objects\n```\ndef add_x_and_y(x, y):\n    return x + y\n```\n\nAnd let's say you accept a message from an external process into a dictionary with keys that match the names of the arguments of add_x_and_y\n```\ninput_dict = {'x': 1, 'y': 2}\n```\nAnd you want to call `add_x_and_y` with arguments corresponding to keys in the dictionary. \n\nMethod 1: Boring and not DRY. \n```\nx, y = input_dict['x'], input_dict['y']\nresult = add_x_and_y(x, y)\n# result = 3\n```\nMethod 2: Why not let argument unpacking do the job for us? \n```\nresult = add_x_and_y(**input_dict)\n# result = 3\n```\nInternally, Python does what we did manually in Method 1. \n\nSo, `**` unpacks a dictionary into keyword arguments.  Similarly, `*` unpacks a sequence into positional arguments\n\n```\nmy_list = [1, 2]\nresult = add_x_and_y(*my_list)\n# result = 3\n```"
         }
     }
 }, {
@@ -1252,8 +1254,8 @@
         "position": 5,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["54c7a4c9-c7d6-4a99-b0fd-24a3b4be2a36", "857ac00f-eb46-488c-9ddc-54bf6c19e82e", "a5b07bde-9c86-4155-97d8-567638461c98", "d082fee0-d2e9-491f-bacb-b61ca48f76e8"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -1299,8 +1301,8 @@
         "position": 3,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["f1235486-8e80-47f3-adad-a5db214433d5", "4bd54721-05df-4f35-9f99-ab1869a7d635", "86eb9ad5-990d-4995-9258-f4c2934dd573"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
@@ -1406,24 +1408,24 @@
         "position": 1,
         "type": 2,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["eb91deb9-9e1b-48b0-9704-1770fe1b5a45", "936be787-4c49-4b7e-b08a-70d0306cc2db", "7d7ff4e2-dead-4d91-a7f5-5878c58278bc"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "c69d905d-e228-47d6-9213-d186be81d385",
+    "pk": "c6669151-1297-4aef-8865-dc63f80efd7a",
     "fields": {
-        "created_at": "2016-02-01T14:30:02.370Z",
+        "created_at": "2016-02-09T11:43:12.119Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-01T14:30:02.370Z",
+        "last_modified_at": "2016-02-09T11:43:12.119Z",
         "last_modified_by": 1,
-        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
-        "position": 2,
+        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
+        "position": 0,
         "type": 5,
         "data": {
-            "input": "`len` does not just use a magic method under the hood, it is also a protocol. As explained in [http://www.rafekettler.com/magicmethods.html](http://www.rafekettler.com/magicmethods.html)\n\n>>Python protocols are totally informal and require no explicit\ndeclarations to implement. Rather, they're more like guidelines.\n\nIf you're coming from Java, protocols may seem like interfaces. Yes, you're right. But there is an important difference. The Python interpreter checks if a protocol method exists only at run-time. If one does not exist, then an Exception is raised. \n\nAnother protocol we've come across is the Iteration Protocol, exposed using the `in` keyword. \n\nLet's extend our `Shape2d` class and provide an API to iterate through all the points using the `in` operator. Are you excited? I am.\n\nTo provide an iterator protocol, we must implement the   `___iter__` magic method. \n\n```\nclass Shape2D():\n    def __init__(self, *args):\n        # Underscore is used for \"private\" variables. \n        # But this is just a convention in the community. \n        # There is no notion private variables within the language itself. \n        # We follow the \"We're all adults here\" philosophy. \n        # But you don't have to be 18 to learn Python. \n        self._points = args\n\n    def __len__(self):\n        print(\"Inside {}. Call it magic. Call it true.\".format(self.__len__.__name__))\n        # Now, we can invoke the len built-in function on Shape2D objects. \n        return len(self._points)\n\n\n    def __iter__(self):\n        for point in self._points:\n            yield point\n        \ntriangle = Shape2D((0, 0, ), (0, 3, ), (4, 0, ))\nfor point in triangle:\n    x, y = point\n    message = \"Point ({}, {})\".format(x, y)\n    print(message) \n```\nOutput: \n```\nPoint (0, 0)\nPoint (0, 3)\nPoint (4, 0)\n```\n\nIn the previous examples, `len`  and `iter` did not implement any application logic. Now, we'll implement an iterator to iterate through points from scratch \u2013 without using a for loop in our code  \u2013 and get the same behaviour. \n\nComments in the code explain the flow. The control flow is mostly controlled by the interpreter. So use [http://pythontutor.com/](http://pythontutor.com/) to grok how it works. \n\n```\nclass Shape2D():\n    def __init__(self, *args):\n        # Underscore is used for \"private\" variables. \n        # But this is just a convention in the community. \n        # There is no notion private variables within the language itself. \n        # We follow the \"We're all adults here\" philosophy. \n        # But you don't have to be 18 to learn Python. \n        self._points = args\n\n    def __len__(self):\n        print(\"Inside {}. Call it magic. Call it true.\".format(self.__len__.__name__))\n        # Now, we can invoke the len built-in function on Shape2D objects. \n        return len(self._points)\n\n    def __iter__(self):\n        # This magic method is called by Python before starting the loop\n        # Reset iter_index.\n        self._iter_index = 0\n        return self\n    \n    def __next__(self):\n        # This magic method is called by Python to get the next item\n        index = self._iter_index\n\n        # Special case. Looping is complete. \n        if index == len(self._points):\n            # The for loop stops when a `StopIteration` exception is raised. \n            # If you use a for loop, it takes care of catching the exception\n            # and stopping the loop. You don't have to enclose looping within\n            # a try-catch clause yourself. \n            raise StopIteration\n\n        # Normal case. Return next item and increment iter_index\n        point = self._points[index]\n        self._iter_index += 1\n        return point\n\n```\n\n"
+            "input": "Read [Section 5.1](https://docs.python.org/3/tutorial/datastructures.html#more-on-lists) of the Python tutorial. "
         }
     }
 }, {
@@ -1443,68 +1445,6 @@
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "cf010018-1d03-47f3-a0d1-b42673bf3549",
-    "fields": {
-        "created_at": "2016-02-02T07:47:05.345Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-02T07:47:05.345Z",
-        "last_modified_by": 1,
-        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
-        "position": 1,
-        "type": 3,
-        "data": {
-            "quiz_ids": ["5515aa37-b63b-4e44-afee-df2bcd54b0e6", "09febd95-27fd-489a-b346-f42a5fcd3839"]
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "d1bfe56c-55dc-4f0a-b382-6d7d23b80734",
-    "fields": {
-        "created_at": "2016-02-07T12:18:55.086Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-07T12:18:55.086Z",
-        "last_modified_by": 1,
-        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
-        "position": 0,
-        "type": 5,
-        "data": {
-            "input": "Read [Section 5.1](https://docs.python.org/3/tutorial/datastructures.html#more-on-lists) of the Python tutorial. "
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "d30142db-677c-4bc0-b513-c40e4a9fc059",
-    "fields": {
-        "created_at": "2016-02-03T08:22:53.709Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-03T08:22:53.709Z",
-        "last_modified_by": 1,
-        "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
-        "position": 1,
-        "type": 5,
-        "data": {
-            "input": "Here's some additional information that answers a few common questions. \n\n\n**Python is an interpreted language**: The source code is compiled to bytecode and the interpreter executes bytecode instructions. \n\n_________\n\n**Python is a dynamically typed language**: In the tutorial, you saw that you don't have to declare data types of variables. \n\n```\nx = 1\ntype(x) # int\n```\n_________\n\n**Python is a strongly typed language**: The interpreter does not perform implicit type conversion. \n```\nx = 1\ny = \"1\" \nx + y # Is an invalid statement\n```\n*Output*: \n```\nTypeError: unsupported operand type(s) for +: 'int' and 'str'\n```\n_________\n**Everything is an object**: Each variable holds a reference to an object. Even integer and strings are objects. Every object has a unique `id` associated with it. \n\n```\nx = 1\na = id(x) # 4386378016 (This value is not deterministic)\ny = x\nb = id(y) # 4386378016\n```\nHere, both `x` and `y` point to the same object. The assignment statement does not create a copy of the object, but simply creates an additional reference. Functions, classes and modules are objects too.\n\n**[Visualize on Python Tutor](http://pythontutor.com/visualize.html#code=x+%3D+1%0Aa+%3D+id\\(x%29+%23+4386378016%0Ay+%3D+x%0Ab+%3D+id\\(y%29+%23+4386378016&mode=display&origin=opt-frontend.js&cumulative=false&heapPrimitives=false&textReferences=false&py=3&rawInputLstJSON=%5B%5D&curInstr=4)** [1]\n\nLet's build on the previous example: \n```\nx = 1\ny = x\nx = 2\n```\nIntegers are immutable objects. So, in the last statement, the interpreter creates a new object and assigns it  to `x`. `y` remains unchanged. We'll come across mutable data types such as `lists`. If `x` and `y` are referring to the same list, and `x` modifies the list, then `y` would refer to the modified object too. \n_________\n**Variables are mutable**: You can reassign multiple objects to the same variable during the course of a program. However, using this feature may cause the code to be less readable. The following code is valid. \n```\nx = 1\nx = 2\nx = \"a string\" \n```\n\n_________\n\n**Python is a garbage-collected language**: The interpreter uses reference counting to collect garbage. The garbage collector also has more sophisticated strategies [under the hood](https://hg.python.org/cpython/file/tip/Modules/gcmodule.c). \n\n__________\n[1] (Thanks to Suraj for making the suggestion) [Listen to this episode on talkpython.fm](https://talkpython.fm/episodes/show/22/cpython-internals-and-learning-python-with-pythontutor.com) for the story behind Python Tutor. "
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
-    "pk": "d598295c-cfb8-40a7-b8ff-aa08a486bf2f",
-    "fields": {
-        "created_at": "2016-02-07T12:18:55.087Z",
-        "created_by": 1,
-        "last_modified_at": "2016-02-07T12:18:55.087Z",
-        "last_modified_by": 1,
-        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
-        "position": 1,
-        "type": 2,
-        "data": {
-            "show_quiz_creator": false,
-            "quiz_ids": ["9c49f3c0-e646-4a65-9802-6a2042478b36"],
-            "show_quiz_filter": false
-        }
-    }
-}, {
-    "model": "concept.conceptsection",
     "pk": "d71bdb4d-9cd9-4162-a892-38ad4bae3ebf",
     "fields": {
         "created_at": "2016-02-02T15:26:15.063Z",
@@ -1520,18 +1460,48 @@
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "da55f995-08f9-4ced-9d4f-e62784938aca",
+    "pk": "d781fd98-4817-4707-ad9f-6a2d2debbcc0",
     "fields": {
-        "created_at": "2016-02-03T08:22:53.711Z",
+        "created_at": "2016-02-09T13:09:45.086Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-03T08:22:53.711Z",
+        "last_modified_at": "2016-02-09T13:09:45.087Z",
+        "last_modified_by": 1,
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "position": 0,
+        "type": 5,
+        "data": {
+            "input": "Read [Section 4.7](https://docs.python.org/3/tutorial/controlflow.html#more-on-defining-functions) of the Python tutorial. \n\n_______\n\n**Passing arguments using unpacking**\n\n\nSo you define a beautiful function that adds two objects\n```\ndef add_x_and_y(x, y):\n    return x + y\n```\n\nAnd let's say you accept a message from an external process into a dictionary with keys that match the names of the arguments of add_x_and_y\n```\ninput_dict = {'x': 1, 'y': 2}\n```\nAnd you want to call `add_x_and_y` with arguments corresponding to keys in the dictionary. \n\nMethod 1: Boring and not DRY. \n```\nx, y = input_dict['x'], input_dict['y']\nresult = add_x_and_y(x, y)\n# result = 3\n```\nMethod 2: Why not let argument unpacking do the job for us? \n```\nresult = add_x_and_y(**input_dict)\n# result = 3\n```\nInternally, Python does what we did manually in Method 1. \n\nSo, `**` unpacks a dictionary into keyword arguments.  Similarly, `*` unpacks a sequence into positional arguments\n\n```\nmy_list = [1, 2]\nresult = add_x_and_y(*my_list)\n# result = 3\n```"
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "db460cd0-8487-43c0-bb25-ff5ea4214f33",
+    "fields": {
+        "created_at": "2016-02-09T12:37:24.816Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T12:37:24.816Z",
         "last_modified_by": 1,
         "concept": "bb788973-59e5-4b26-9028-6df83f16e760",
-        "position": 3,
-        "type": 0,
+        "position": 2,
+        "type": 2,
         "data": {
+            "quiz_ids": ["d7115f16-b23b-4501-9339-c53081a42954", "20ad3b57-f281-4770-b2c3-16895e9a0da2", "b5e26951-41c5-42a6-acf3-bef22f7b51e5"]
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "de433b39-b70c-49c4-8bdd-201747f70ca7",
+    "fields": {
+        "created_at": "2016-02-09T13:03:04.727Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T13:03:04.727Z",
+        "last_modified_by": 1,
+        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
+        "position": 1,
+        "type": 2,
+        "data": {
+            "quiz_ids": ["be923b41-727e-4fbc-a341-15af62c91952", "3a283ba5-9bba-4c2b-838a-f40bc7add829"],
             "show_quiz_creator": false,
-            "quiz_ids": ["b5e26951-41c5-42a6-acf3-bef22f7b51e5"],
             "show_quiz_filter": false
         }
     }
@@ -1562,24 +1532,26 @@
         "position": 4,
         "type": 0,
         "data": {
-            "show_quiz_creator": false,
             "quiz_ids": ["3e82c50a-f42c-4588-acb4-3f820ae6bc62"],
+            "show_quiz_creator": false,
             "show_quiz_filter": false
         }
     }
 }, {
     "model": "concept.conceptsection",
-    "pk": "e5da7356-9f4f-426d-bf3b-512d8fb8a912",
+    "pk": "e4e54de7-60c0-4961-b8db-7da6dd3ad646",
     "fields": {
-        "created_at": "2016-02-02T08:48:17.390Z",
+        "created_at": "2016-02-09T13:09:45.098Z",
         "created_by": 1,
-        "last_modified_at": "2016-02-02T08:48:17.390Z",
+        "last_modified_at": "2016-02-09T13:09:45.098Z",
         "last_modified_by": 1,
-        "concept": "1f31f0ca-52bc-4686-bcab-71d8065db415",
-        "position": 0,
-        "type": 5,
+        "concept": "1f758ac7-e684-48b6-bb04-dab6661723db",
+        "position": 5,
+        "type": 0,
         "data": {
-            "input": "Read [Section 5.3](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences) of the Python tutorial and [http://openbookproject.net/thinkcs/python/english3e/tuples.html](http://openbookproject.net/thinkcs/python/english3e/tuples.html)."
+            "quiz_ids": ["af2bcff0-585f-4fc4-9542-b2e206aa514f"],
+            "show_quiz_creator": false,
+            "show_quiz_filter": false
         }
     }
 }, {
@@ -1595,6 +1567,36 @@
         "type": 5,
         "data": {
             "input": "Read [Section 9](https://docs.python.org/3/tutorial/classes.html)  of the Python tutorial. "
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "f04fb246-ff80-45ad-b954-6e478567d7bf",
+    "fields": {
+        "created_at": "2016-02-09T11:53:47.133Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:53:47.133Z",
+        "last_modified_by": 1,
+        "concept": "eb935b25-985d-42b9-8ec7-d0f118e89c53",
+        "position": 3,
+        "type": 3,
+        "data": {
+            "quiz_ids": ["3a232ee5-2c4b-46f9-aed0-df2ecf333e63"]
+        }
+    }
+}, {
+    "model": "concept.conceptsection",
+    "pk": "f156a25d-0ae3-4c82-9c84-c6ec19fd9782",
+    "fields": {
+        "created_at": "2016-02-09T11:43:12.121Z",
+        "created_by": 1,
+        "last_modified_at": "2016-02-09T11:43:12.121Z",
+        "last_modified_by": 1,
+        "concept": "d04d8ce8-63ec-44f3-ac94-1eb8510c3aa9",
+        "position": 1,
+        "type": 2,
+        "data": {
+            "quiz_ids": ["9c49f3c0-e646-4a65-9802-6a2042478b36", "b3755251-02f2-47a7-8a66-cd410dee0161", "5d300c42-7d32-49ae-a64b-0ab5fcdb73d6"]
         }
     }
 }, {

@@ -226,4 +226,76 @@
         "memory_limit": 262144,
         "test_cases": []
     }
+}, {
+    "model": "codequiz.codequizattempt",
+    "pk": "7db383b7-92f5-485d-985a-e90b176f15b1",
+    "fields": {
+        "codequiz": "06c05954-76bc-4fa5-b435-a7e888429a9f",
+        "user": null,
+        "user_key": "pm1rtyb78d754m80vroshz42afiuu4p8",
+        "state": 2,
+        "code": "# Your function named \"square\" here\r\ndef square(n):\r\n    return n*n\r\n\r\n\r\n\r\n# You don't have to worry about this part of the code. \r\n# Here, we accept a string as a command line argument, \r\n# convert it from a string to an integer, \r\n# call the square function and print its result. \r\nif __name__ == \"__main__\":\r\n    str_num = input()\r\n    num = int(str_num)\r\n    print(square(num))",
+        "result": true,
+        "response": {
+            "result": {
+                "custom_score": null,
+                "stdout": ["1\n", "0\n", "1\n", "4\n", "1024\n"],
+                "created_at": "20160208T190259Z",
+                "server": "ip-10-10-133-202.ec2.internal",
+                "compilemessage": "",
+                "result": 0,
+                "codechecker_hash": "run-fxSpAxQK29c2Oukuk0PD",
+                "callback_url": "",
+                "hash": "run-1454958178-1843130742",
+                "response_s3_path": "2016_02_08_19/topKRP13xSOjELZe875y69CdwaTM2sbNzg0YQVqWnfrhBIum4G56b8e66239ecd0.32361323",
+                "censored_compile_message": "",
+                "censored_stderr": ["", "", "", "", ""],
+                "signal": [0, 0, 0, 0, 0],
+                "custom_status": null,
+                "message": ["Success", "Success", "Success", "Success", "Success"],
+                "time": [0.0099999997764826, 0.0099999997764826, 0.0099999997764826, 0.0099999997764826, 0.0099999997764826],
+                "memory": [5414912, 5414912, 5419008, 5427200, 5419008],
+                "error_code": 0,
+                "stderr": [false, false, false, false, false],
+                "diff_status": [0, 0, 0, 0, 0]
+            }
+        },
+        "created_at": "2016-02-08T19:02:57.127Z"
+    }
+}, {
+    "model": "codequiz.codequizattempt",
+    "pk": "d2dd6a83-de07-45e9-acbe-52abd5487b56",
+    "fields": {
+        "codequiz": "3a232ee5-2c4b-46f9-aed0-df2ecf333e63",
+        "user": 1,
+        "user_key": "1",
+        "state": 2,
+        "code": "class Fruit():\n    def __init__(self, name, price, quantity):\n        self.name = name\n        self.price = price\n        self.quantity = quantity\n        \n    def __eq__(self, other):\n        return self.price*self.quantity == other.price*other.quantity\n\n\n# Test code begins now. You don't have to worry about the following code. \nif __name__ == \"__main__\":\n    import sys\n    items = []\n    for line in sys.stdin:\n        name, price, quantity = line.strip().split(\",\")\n        price = int(price)\n        quantity = int(quantity)\n        item = Fruit(name, price, quantity)\n        items.append(item)\n    \n    # Compare each item with another. This is an O(n^2) operation. But our \n    # test cases are small enough. \n    outputs = []\n    for i, one in enumerate(items):\n        for j, two in enumerate(items):\n            result = 1 if one == two else 0\n            outputs.append(str(result))\n    output_string = \"\\n\".join(outputs)\n    print(output_string)",
+        "result": true,
+        "response": {
+            "result": {
+                "custom_score": null,
+                "stdout": ["1\n1\n0\n0\n1\n1\n0\n0\n0\n0\n1\n1\n0\n0\n1\n1\n"],
+                "created_at": "20160209T115635Z",
+                "server": "ip-10-10-158-209.ec2.internal",
+                "compilemessage": "",
+                "result": 0,
+                "codechecker_hash": "run-C0e1Zd1SOCYzVXepaEtx",
+                "callback_url": "",
+                "hash": "run-1455018994-1250214972",
+                "response_s3_path": "2016_02_09_11/s0WfP8c4a2UmTKXiAOLn3RlGxquMoHNkbIBEC1wp5ZY7zjVJgF56b9d3f28ce567.09538725",
+                "censored_compile_message": "",
+                "censored_stderr": [""],
+                "signal": [0],
+                "custom_status": null,
+                "message": ["Success"],
+                "time": [0.0099999997764826],
+                "memory": [5410816],
+                "error_code": 0,
+                "stderr": [false],
+                "diff_status": [0]
+            }
+        },
+        "created_at": "2016-02-09T11:56:33.560Z"
+    }
 }]
