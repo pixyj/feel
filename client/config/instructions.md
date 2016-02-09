@@ -103,7 +103,26 @@ ____
     
     sudo apt-get install nginx
 
-### 15 Install postgresql-9.4
+### 15 Install and run Redis
+
+    wget http://download.redis.io/releases/redis-3.0.7.tar.gz
+    tar xzf redis-3.0.7.tar.gz
+    cd redis-3.0.7
+    make
+
+
+##### 15.1 Redis configuration: 
+
+Add these lines to `/etc/rc.local` to fix Redis warnings
+
+    echo never > /sys/kernel/mm/transparent_hugepage/enabled
+    sysctl -w net.core.somaxconn=65535
+
+##### 15.2 Run Redis:
+    cd src
+    ./redis-server
+
+### 16 Install postgresql-9.4
     
     #See http://askubuntu.com/a/638750/78690 for the madness
 
