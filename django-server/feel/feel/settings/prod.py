@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'conceptcoaster.com']
+ALLOWED_HOSTS = ['localhost', 'conceptcoaster.com', os.environ['PROD_VM_DOMAIN']]
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
