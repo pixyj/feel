@@ -142,7 +142,7 @@ var UpNextComponent = React.createClass({
                 content =   <div className="center card">
                                 <h5>
                                 {this.END_OF_TUTORIAL_MESSAGE} <br/> <br/>
-                                Go to your <a href={props.courseURL}>dashboard</a> and study a concept you may have not completed yet. 
+                                Go to your <a href={props.courseURL}>dashboard</a> and study a concept you may have not have completed yet. 
                                 </h5>
                             </div>
             }
