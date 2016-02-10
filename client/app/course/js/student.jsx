@@ -756,7 +756,7 @@ var PageComponent = React.createClass({
                             <button className="btn btn-large waves-effect" 
                                     id="course-start-pretest-btn"
                                     onClick={this.scrollToPretest}>
-                                Get Started by taking a simple pretest
+                                Start Pretest
                             </button>
                           </div>
         }
