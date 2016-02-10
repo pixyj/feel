@@ -304,7 +304,7 @@ var StartLearningAtMixin = {
 
     componentDidMount: function() {
         var el = $("#course-start-learning-at-container");
-        $(document.body).animate({
+        $('body,html').animate({
             scrollTop: el.offset().top - 20
         }, 500);
     },
@@ -519,7 +519,7 @@ var PretestComponent = React.createClass({
 
     _scrollToTop: function() {
         this.$pretest = this.$pretest || $("#course-pretest-container");
-        this.$documentBody = this.$documentBody || $(document.body);
+        this.$documentBody = this.$documentBody || $('body,html');
         this.$documentBody.animate({
             scrollTop: this.$pretest.offset().top
         }, 500);
@@ -756,7 +756,7 @@ var PageComponent = React.createClass({
                             <button className="btn btn-large waves-effect" 
                                     id="course-start-pretest-btn"
                                     onClick={this.scrollToPretest}>
-                                Start Pretest
+                                    Start Pretest
                             </button>
                           </div>
         }
@@ -809,7 +809,7 @@ var PageComponent = React.createClass({
 
     scrollToPretest: function() {
         var el = $(".course-homepage-state-component");
-        $(document.body).animate({
+        $('body,html').animate({
             scrollTop: el.offset().top - 20
         }, 2000);
     }

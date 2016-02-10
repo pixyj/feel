@@ -113,7 +113,7 @@ var scrollToQuiz = function() {
     if(!quizEl.length) {
         return;
     }
-    $(document.body).animate({
+    $('body,html').animate({
         scrollTop: quizEl.offset().top - 50
     }, 500);
 };
