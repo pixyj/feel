@@ -46,7 +46,7 @@ var SearchModel = Backbone.Model.extend({
             var lowerCaseSentence = sentences[i].toLowerCase();
             var matchPosition = lowerCaseSentence.indexOf(query);
             if(matchPosition !== -1) {
-                return sentences[i];
+                return sentences[i] + " ... ";
             }
         }
         // assert(false) ? 
