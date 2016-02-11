@@ -127,6 +127,10 @@ var SearchHits = React.createClass({
         };
     },
 
+    componentWillMount: function() {
+        this._page = $("#page-full");
+    },
+
     componentDidMount: function() {
         this.props.model.on("change:hits", this.updateHits, this);
     },
@@ -143,8 +147,10 @@ var SearchHits = React.createClass({
     render: function() {
 
         if(!this.state.hits.length) {
+            this._page.show();
             return <div></div>
         }
+        this._page.hide();
 
         var list = this.createList({
             ComponentClass: SearchHitItem,

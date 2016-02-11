@@ -1,14 +1,16 @@
 @import 'base/scss/base-variables';
 
-#search-hits-container {
-    position: relative;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
 
 #search-hits {
-    width: 100%;
-    z-index: 5;
+    position: fixed;
+    top: $top-bar-height + 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    z-index: 10;
+    max-height: 100vh;
+    overflow-y: scroll;
+    width: 90%;
+    left: 5%;
 }
 
 #search-overlay {
@@ -19,12 +21,12 @@
     height: 100vh;
     text-align: center;
     display: block;
-    z-index: 4;
+    z-index: 9;
     background-color: rgba(255,255,255,0.97);
 }
 
 @media(max-width: 992px) {
-    #search-overlay {
+    #search-hits, #search-overlay {
         // Each item in top-bar occupies full row.
         // And there are 3 items. 
         top: $top-bar-height*3 + 1rem;  
