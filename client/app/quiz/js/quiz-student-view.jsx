@@ -239,7 +239,7 @@ var QuizAnswerSubmitMixin = {
             secondaryBtn = "";
         }
         else {
-            secondaryBtn = <button className="btn waves-effect waves-light btn-large btn-secondary"
+            secondaryBtn = <button className="btn waves-effect waves-light btn-large btn-secondary student-quiz-no-idea-btn"
                                    disabled={isSubmitDisabled} 
                                    onClick={this.onSkipBtnClicked} >
                                     No idea
@@ -252,17 +252,17 @@ var QuizAnswerSubmitMixin = {
             <div>
                 {answerSubmitView}
                 <div className="row">
-                    <div className="col-xs-5 col-md-3">
+                    <div className="col-xs-6 col-md-3">
                         <button className="btn waves-effect waves-light btn-large" 
                                 onClick={this.checkAnswer} 
                                 disabled={isSubmitDisabled} >
                                 Submit
                         </button>
                     </div>
-                    <div className="col-xs-4 col-md-5">
+                    <div className="col-xs-6 col-md-5">
                         <span className={feedbackClass}> {feedback} </span>
                     </div>
-                    <div className="col-xs-3 col-md-4">
+                    <div className="col-xs-12 col-md-4">
                         {secondaryBtn}
                     </div>
                 </div>

@@ -143,6 +143,12 @@
 }
 
 @media (max-width: $screen-md_min) {
+    .student-quiz-no-idea-btn {
+        margin-top: 0.75rem;
+    }
+}
+
+@media (max-width: $screen-md_min) {
 
     .student-quiz-number: {
         width: 14%;
