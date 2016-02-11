@@ -211,6 +211,7 @@ APP_LOGGING = {
 
 for app in MY_APPS:
     LOGGING['loggers'][app] = APP_LOGGING
+LOGGING['loggers']['evaluate_code'] = APP_LOGGING
 
 ###############################################################################
 ALGOLIA = {
