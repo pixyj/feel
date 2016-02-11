@@ -44,3 +44,39 @@ Serving static resources using Nginx is also fine. It is able to handle 4000 con
 * Damn, Python is slow. I'm tempted to learn Elixir! But it will be a few months (years?) before I become as productive as I'm with Python.
 
 * Should I switch to MySQL because it has better tooling and more hosting options? The only PostgreSQL-specific thing I'm using is `JSONField` from `django.contrib.postgres`. 
+
+
+
+____________________________________
+
+
+## February 10th, 2016: 
+
+
+#### Setup:
+
+* Run all the processes (Nginx, uWSGI, Postgres, Redis, codechecker proxy to HackerRank API) on a 4 core, 14 GB RAM Azure VM. 
+* Use 6 uWSGI worker processes. (Changing this did not make palpable difference)
+* Use 2 Nginx worker processes.  
+* Testing was performed directly on the VM without using Cloudflare proxy. 
+
+#### Changes incorporated from previous test: 
+
+* Cached requests common to all students. Only student-specific requests like Progress, QuizAttempts hit the database. 
+* The site now runs on a bigger machine.
+* Added retries for GET requests on the client. 
+
+### Summary: 
+
+The bottleneck continues to be the CPU usage due to the uWsgi processes. Nginx, Postgres and Redis did not occupy more than 2% of the CPU. Only 700 MB of RAM was used before the CPU maxed out. 
+
+#### Results: 
+
+uWSGI handles 35-40 requests per second with 500 concurrent users and maxes out the CPU at this level( memory usage at 700 MB of RAM). With 500 concurrent users making requests as per the tasks at `locustfile.py`, the median HTTP response time is around 10ms for cached content! Whoa! But /api/v1/user, /student-progress and quiz attempts (both GET and POST) remains slow. with response times varying between 1s to 5s.  Unfortunately, Opbeat was not working yesterday. I reached their support. But I fell asleep soon. I'll probably test again to find the bottleneck functions and queries. 
+
+#### Next Up: 
+
+* Find the bottlenecks in the uwsgi/django tier. See if any other configurations in uWSGI help. 
+* Check with the community if they're seeing better performance levels.   
+* I wasted 12 GB of RAM. So run the site with a higher CPU to RAM ratio. 
+
