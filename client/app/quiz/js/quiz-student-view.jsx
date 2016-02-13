@@ -75,7 +75,7 @@ var ShortAnswerSubmitView = React.createClass({
     }
 });
 
-var ChoiceSingleCheckView = React.createClass({
+var ChoiceItem = React.createClass({
 
     getInitialState: function() {
         return {
@@ -133,16 +133,21 @@ var MCQSubmitView = React.createClass({
         for(var i = 0; i < length; i++) {
             var choice = this.props.store.choices[i];
             var domId = "quiz-preview-checkbox-" + i;
-            var row = <ChoiceSingleCheckView 
+            var row = <ChoiceItem 
                             choice={choice} 
                             key={domId} 
                             ref={domId}
                             disabled={this.props.disabled} />
             rows.push(row);
         }
+        var multipleCorrectChoicesIndication = "";
+        if(this.hasMultipleCorrectChoices()) {
+            multipleCorrectChoicesIndication = <div className="quiz-multi-choice-indication">⚠ This quiz has multiple correct choices</div>
+        }
         return (
             <div className="quiz-student-choice-container">
                 {rows}
+                {multipleCorrectChoicesIndication}
             </div>
         );
     },
@@ -182,6 +187,13 @@ var MCQSubmitView = React.createClass({
             answer: "",
             choices: selectedChoices.join(", ")
         };
+    },
+    
+    hasMultipleCorrectChoices: function() {
+        var correctChoices = _.filter(this.props.store.choices, function(choice) {
+            return choice.isCorrect === true;
+        });
+        return correctChoices.length > 1; 
     },
 
     reset: function() {

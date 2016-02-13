@@ -109,6 +109,12 @@
     background-color: #FBFBFB;
 }
 
+.quiz-multi-choice-indication {
+    margin-bottom: 0.75rem;
+    color: $brand-color;
+    font-weight: bold;
+}
+
 .quiz-student-guess-ago {
     margin-left: 10px;
 }
