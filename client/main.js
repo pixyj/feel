@@ -251,7 +251,7 @@ var triggerResize = function() {
 triggerResize = _.debounce(triggerResize, 500);
 
 var listenToResize = function() {
-    $(window).resize(triggerResize);
+    //$(window).resize(triggerResize);
 };
 
 var init = function() {
