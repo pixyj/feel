@@ -148,6 +148,12 @@
     }
 }
 
+@media (min-width: $screen-md_min) {
+    .student-quiz-no-idea-btn {
+        float: right;
+    }
+}
+
 @media (max-width: $screen-md_min) {
 
     .student-quiz-number: {

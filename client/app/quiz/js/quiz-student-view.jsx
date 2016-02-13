@@ -217,11 +217,14 @@ var QuizAnswerSubmitMixin = {
 
         var feedback = this.getResultFeedback();
         var feedbackClass = "quiz-feedback ";
+        var feedbackEl = "";
         if(result) {
             feedbackClass += "quiz-correct-result-feedback quiz-status-transition"
+            feedbackEl = <span className={feedbackClass}> {feedback} </span>
         }
         else if(result === false) {
             feedbackClass += "quiz-incorrect-result-feedback"
+            feedbackEl = <span className={feedbackClass}> {feedback} </span>
         }
 
         var submitDisabledMessage = "";
@@ -239,11 +242,14 @@ var QuizAnswerSubmitMixin = {
             secondaryBtn = "";
         }
         else {
-            secondaryBtn = <button className="btn waves-effect waves-light btn-large btn-secondary student-quiz-no-idea-btn"
-                                   disabled={isSubmitDisabled} 
-                                   onClick={this.onSkipBtnClicked} >
-                                    No idea
-                            </button>
+            var secondaryBtnClasses = "btn waves-effect waves-light btn-large btn-secondary student-quiz-no-idea-btn"
+            secondaryBtn =  
+                                <button className={secondaryBtnClasses}
+                                       disabled={isSubmitDisabled} 
+                                       onClick={this.onSkipBtnClicked} >
+                                        No idea
+                                </button>
+                            
         }
 
 
@@ -252,20 +258,19 @@ var QuizAnswerSubmitMixin = {
             <div>
                 {answerSubmitView}
                 <div className="row">
-                    <div className="col-xs-6 col-md-3">
+                    <div className="col-xs-12 col-md-6">
                         <button className="btn waves-effect waves-light btn-large" 
                                 onClick={this.checkAnswer} 
                                 disabled={isSubmitDisabled} >
                                 Submit
                         </button>
                     </div>
-                    <div className="col-xs-6 col-md-5">
-                        <span className={feedbackClass}> {feedback} </span>
-                    </div>
-                    <div className="col-xs-12 col-md-4">
+                    <div className="col-xs-12 col-md-6">
+                        {feedbackEl}
                         {secondaryBtn}
                     </div>
                 </div>
+
                 { submitDisabledMessage }
             </div>
 
