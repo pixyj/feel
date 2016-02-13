@@ -192,7 +192,7 @@ class QuizAttemptView(APIView):
         attrs = {
             "quiz_id": quiz.id,
             "result": data['result'],
-            "answer": data['answer'],
+            "answer": data['answer'] or "",
             "choices": ','.join((str(choice_id) for choice_id in data['choices'])),
             "user": user,
             "user_key": user_key,
