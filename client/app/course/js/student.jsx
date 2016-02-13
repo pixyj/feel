@@ -771,6 +771,7 @@ var PageComponent = React.createClass({
             <div>
                 <div className="row">
                     <div className="col-xs-12">
+                        {takePretest}
                         {intro}
                         {takePretest}
                         <h4 id="course-concepts-and-deps-heading" className="center"> Concepts and Dependencies </h4>
@@ -779,7 +780,9 @@ var PageComponent = React.createClass({
                     </div>
                     <div className="col-xs-12" ref="stateComponent">
                         {stateComponent}
-                    </div> 
+                    </div>
+                </div>
+                <div id="course-student-page-bottom-gap">
                 </div>
             </div>
         );
@@ -810,8 +813,9 @@ var PageComponent = React.createClass({
     scrollToPretest: function() {
         var el = $(".course-homepage-state-component");
         $('body,html').animate({
-            scrollTop: el.offset().top - 20
-        }, 2000);
+            scrollTop: el.offset().top
+        }, 6000);
+        var x = 1;
     }
 
 });
