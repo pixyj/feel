@@ -56,4 +56,4 @@ This is a single-page-app built using
 _______
 ## Development
 
-The application is in an exploratory stage, and may undergo drastic changes. The course-creator is not open to the public yet. I'm getting feedback from students and instructors. Issues are noted in a spreadsheet and I there no tests either. I'd love to hear your feedback. 
+The application is in an exploratory stage, and may undergo drastic changes. The course-creator is not open to the public yet. I'm getting feedback from students and instructors. Issues are noted in a private spreadsheet and there no tests either. I'd love to hear your feedback. 
