@@ -53,6 +53,12 @@ This is a single-page-app built using
 * PostgreSQL as the primary datastore
 * Redis for caching
 
+* HackerRank to evaluate code
+* Algolia for search
+* Opbeat to measure django performance
+* Cloudflare for HTTPS, CDN
+* Azure and Digital Ocean VMs for hosting. 
+
 _______
 ## Development
 
