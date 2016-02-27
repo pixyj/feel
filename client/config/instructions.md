@@ -144,7 +144,7 @@ Add these lines to `/etc/rc.local` to fix Redis warnings
     sudo vim /etc/postgresql/9.4/main/pg_hba.conf
 
 
-    sudo vim /etc/postgresql/9.4/main/pg_hba.conf
+    sudo vim /etc/postgresql/9.4/main/postgresql.conf
 
 ##### 16.3 Restart Postgres
     
