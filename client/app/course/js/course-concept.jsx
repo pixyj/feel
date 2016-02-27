@@ -126,10 +126,17 @@ var UpNextComponent = React.createClass({
 
         var self = this;
         this.props.store.getReady().then(function() {
-            self.setState({
-                isReady: true
-            });
+            self.timer = setTimeout(function() {
+                self.setState({
+                    isReady: true
+                });
+            }, 1000);
+
         });
+    },
+
+    componentWillUnmount: function() {
+        clearTimeout(this._timer);
     },
 
     render: function() {
