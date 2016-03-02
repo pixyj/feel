@@ -50,13 +50,12 @@ var View = Backbone.View.extend({
 
 });
 
-
+// singleton
 var view = null;
 
 var init = function() {
     if(view === null) {
         view = new View();
-        window.p = view;
     }
 };
 
