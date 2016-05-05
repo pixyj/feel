@@ -92,12 +92,12 @@ $gray-base:              #000 !default;
 $gray-dark:              lighten($gray-base, 20%) !default;   // #333
 
 $code-color:                  #c7254e !default;
-$code-bg:                     #f9f2f4 !default;
+$code-bg:                     #ffffdd !default;
 
 $kbd-color:                   #fff !default;
 $kbd-bg:                      #333 !default;
 
-$pre-bg:                      #f5f5f5 !default;
-$pre-color:                   $gray-dark !default;
+$pre-bg:                      $code-bg;
+$pre-color:                   black !default;
 $pre-border-color:            #ccc !default;
 $pre-scrollable-max-height:   340px !default;
