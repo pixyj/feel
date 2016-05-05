@@ -52,7 +52,6 @@ This is a single-page-app built using
 * Django as a JSON/HTTP server
 * PostgreSQL as the primary datastore
 * Redis for caching
-
 * HackerRank to evaluate code
 * Algolia for search
 * Opbeat to measure django performance
