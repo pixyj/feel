@@ -6,6 +6,8 @@ var md = require("md");
 var utils = require("utils");
 
 var ListMixin = require("list-mixin.jsx").ListMixin;
+var MarkdownAndPreview = require("markdown-and-preview.jsx");
+var MarkdownDisplayComponent = MarkdownAndPreview.MarkdownDisplayComponent;
 
 var SubmitThrottleMixin = require("submit-throttle.jsx").SubmitThrottleMixin;
 
@@ -28,7 +30,7 @@ var ShortAnswerSubmitView = React.createClass({
                        value={this.state.guess || ""} 
                        id={id} 
                        disabled={this.props.disabled} />
-                <label htmlFor={id}>Your answer</label>
+                       <label htmlFor={id}>Your answer</label>
             </div>
         );
     },
@@ -372,7 +374,7 @@ var QuizQuestionView = React.createClass({
         var html = this.props.questionDisplay || constants.QUESTION_PLACEHOLDER;
 
         return (
-            <div className="quiz-question-preview md" dangerouslySetInnerHTML={{__html: html}}></div>
+            <MarkdownDisplayComponent display={html} className="quiz-question-preview md" />
         );
     }
 });
@@ -488,6 +490,8 @@ var StudentSingleQuizView = React.createClass({
             hr = <hr className="student-quiz-end-line" />
         }
 
+        var questionDisplay = md.mdAndMathToHtml(this.props.quiz.questionInput);
+
         return (
             <div id={"quiz-" + this.props.quiz.id}>
                 <div className="student-quiz-container">
@@ -498,7 +502,7 @@ var StudentSingleQuizView = React.createClass({
 
                     <div className="student-quiz-body">
                         <QuizQuestionView 
-                            questionDisplay={this.props.quiz.questionDisplay} 
+                            questionDisplay={questionDisplay} 
                             ref="questionView" />
                         {answerSubmitView}
                     </div>

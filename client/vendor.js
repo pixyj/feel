@@ -8,7 +8,8 @@ var React = require("react");
 window.React = React;
 window.ReactDOM = require("react-dom");
 
-window.commonmark = require("./app/vendor/commonmark/commonmark");
+window.Remarkable = require("remarkable");
+window.hljs = require("highlight.js");
 
 require("./app/vendor/ace/ace");
 require("./app/vendor/ace/mode-python");

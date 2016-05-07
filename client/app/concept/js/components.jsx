@@ -8,9 +8,9 @@ var utils = require("utils");
 var tags = require("tags.jsx");
 var md = require("md");
 var MarkdownAndPreview = require("markdown-and-preview.jsx");
-MarkdownAndPreviewMixin = MarkdownAndPreview.MarkdownAndPreviewAttrs;
-MarkdownDisplayMixin = MarkdownAndPreview.MarkdownDisplayMixin;
-MarkdownDisplayComponent = MarkdownAndPreview.MarkdownDisplayComponent;
+var MarkdownAndPreviewMixin = MarkdownAndPreview.MarkdownAndPreviewAttrs;
+var MarkdownDisplayMixin = MarkdownAndPreview.MarkdownDisplayMixin;
+var MarkdownDisplayComponent = MarkdownAndPreview.MarkdownDisplayComponent;
 
 //var visualize = require("./../../matrixviz/js/api");
 //var matrixMultiply = visualize.matrixMultiply;
