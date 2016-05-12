@@ -92,7 +92,7 @@ $gray-base:              #000 !default;
 $gray-dark:              lighten($gray-base, 20%) !default;   // #333
 
 $code-color:                  #c7254e !default;
-$code-bg:                     #ffffff !default;
+$code-bg:                     rgba(33, 150, 243, 0.06) !default;
 
 $kbd-color:                   #fff !default;
 $kbd-bg:                      #333 !default;
