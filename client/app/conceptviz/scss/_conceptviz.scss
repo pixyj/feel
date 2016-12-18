@@ -26,6 +26,12 @@
     transition: 0.5s ease;   
 }
 
+.graph-node:hover {
+    color: white;
+    background: $call-to-action-color;
+    transition: 0.5s ease;
+}
+
 .graph-node-active span {
     color: white;
 }
