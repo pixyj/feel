@@ -81,7 +81,6 @@ Store.prototype = {
         'getCourseIntro': 'getCourseIntro',
         'getRootConcept': 'getRootConcept',
         'getConceptURL': 'getConceptURL',
-        'getConceptAndPrereqsSubgraph': 'getConceptAndPrereqsSubgraph'
     },
 
     studentAPIs: {
@@ -124,6 +123,17 @@ Store.prototype = {
             }
         }
         return graph;
+    },
+
+    getConceptAndPrereqsSubgraph: function(id) {
+        subgraph = this._creator.getConceptAndPrereqsSubgraph(id);
+        var self = this;
+        _.each(subgraph.levels, function(level) {
+            _.each(level, function(concept) {
+                concept.url = "/course/{0}/{1}/".format(self.id, concept.slug); 
+            });
+        });
+        return subgraph;
     },
 
     getAttemptStore: function() {
