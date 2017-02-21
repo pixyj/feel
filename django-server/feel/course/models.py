@@ -72,7 +72,8 @@ class Course(TimestampedModel, UUIDModel):
         return getattr(self, attr)
 
     def cache_attr(self, attr, cache_key):
-        return cache.set(cache_key, getattr(self, attr))
+        value = getattr(self, attr)
+        return cache.set(cache_key, value, timeout=None)
 
     def evict_attr_from_cache(self, cache_key):
         return cache.delete(cache_key)
@@ -148,7 +149,7 @@ class Course(TimestampedModel, UUIDModel):
                 "codequiz_ids": {quiz_id: quiz_id for quiz_id in quiz_ids}
             }
         key = self._quiz_ids_and_codequiz_ids_cache_key
-        return cache.set(key, concept_quiz_and_code_quiz_ids)
+        return cache.set(key, concept_quiz_and_code_quiz_ids, timeout=None)
 
     def evict_quiz_ids_and_codequiz_ids_from_cache(self):
         return cache.delete(self._quiz_ids_and_codequiz_ids_cache_key)
@@ -290,7 +291,7 @@ class CourseConceptManager(models.Manager):
 
     def cache_items(self, course):
         items = self.items(course)
-        return cache.set(self._get_items_cache_key(course), items)
+        return cache.set(self._get_items_cache_key(course), items, timeout=None)
 
     def evict_items_from_cache(self, course):
         return cache.delete(self._get_items_cache_key(course))

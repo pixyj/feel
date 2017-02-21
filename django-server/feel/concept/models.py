@@ -90,7 +90,7 @@ class Concept(TimestampedModel, UUIDModel):
     def cache_quiz_ids(self):
         data = self.get_quiz_ids()
         key = self._quiz_ids_cache_key
-        cache.set(key, data)
+        cache.set(key, data, timeout=None)
         return data
 
     def evict_cached_quiz_ids(self):
@@ -118,7 +118,7 @@ class Concept(TimestampedModel, UUIDModel):
     def cache_codequiz_ids(self):
         data = self.get_codequiz_ids()
         key = self._codequiz_ids_cache_key
-        cache.set(key, data)
+        cache.set(key, data, timeout=None)
         return data
 
     def evict_cached_codequiz_ids(self):
